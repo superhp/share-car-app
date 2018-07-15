@@ -16,7 +16,7 @@
     <modules>
         <module>api</module>
         <module>service</module>
-        <module>app</module>
+        <module>repository</module>
     </modules>
 
     <packaging>pom</packaging>
