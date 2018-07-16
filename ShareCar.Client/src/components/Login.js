@@ -1,16 +1,13 @@
+// @flow
 import React, { Component }  from 'react';
 import FacebookLogin from 'react-facebook-login';
 import history from '../helpers/history';
 import AuthenticationService from '../services/authenticationService';
 
-class Login extends Component {
-    constructor() {
-        super();
+class Login extends Component<{}> {
+    authService: AuthenticationService = new AuthenticationService();
 
-        this.authService = new AuthenticationService();
-    }
-
-    responseFacebook = (response) => {
+    responseFacebook = (response: any) => {
         console.log(response);
     
         this.authService.loginWithFacebook(response.accessToken, this.userAuthenticated);

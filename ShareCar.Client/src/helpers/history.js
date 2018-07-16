@@ -1,3 +1,4 @@
-import { createBrowserHistory } from 'history';
+// @flow
+import createHistory from 'history/createBrowserHistory';
 
-export default createBrowserHistory();
+export default createHistory();

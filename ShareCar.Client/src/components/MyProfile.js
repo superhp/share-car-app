@@ -1,23 +1,24 @@
+// @flow
 import React, { Component }  from 'react';
 import UserService from '../services/userService';
 import AuthenticationService from '../services/authenticationService';
 import history from '../helpers/history';
 
-class Login extends Component {
-    constructor() {
-        super();
+type MyProfileState = {
+    loading: boolean,
+    user: User | null
+};
 
-        this.state = ({ loading: true, user: null });
-
-        this.userService = new UserService();
-        this.authService = new AuthenticationService();
-    }
+class MyProfile extends Component<{}, MyProfileState> {
+    userService = new UserService();
+    authService = new AuthenticationService();
+    state: MyProfileState = { loading: true, user: null };
 
     componentDidMount() {
         this.userService.getLoggedInUser(this.updateLoggedInUser)
     }
 
-    updateLoggedInUser = (user) => {
+    updateLoggedInUser = (user: User) => {
         this.setState({ loading: false, user: user });
     }
 
@@ -30,8 +31,12 @@ class Login extends Component {
     }
 
     render() {
-        let content = this.state.loading ? 
-        <p><em>Loading...</em></p> :
+        const content =
+        this.state.loading
+        ? <p><em>Loading...</em></p>
+        : this.state.user === null
+        ? <p>The user failed to load</p>
+        :
         <div>              
             <div>
                 <img alt="Profile" src={ this.state.user.pictureUrl }/>
@@ -43,7 +48,7 @@ class Login extends Component {
             <div>
                 <button type="button" onClick={this.logout}>Logout</button>
             </div>
-        </div>
+        </div>;
         
         return <div>
             <h1>My profile</h1>
@@ -52,4 +57,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default MyProfile;

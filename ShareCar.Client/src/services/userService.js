@@ -1,14 +1,15 @@
+// @flow
 import api from '../helpers/axiosHelper';
 
 class UserService {
 
-    getLoggedInUser = (callback) => {
+    getLoggedInUser = (callback: User => void) => {
         api.get('user')
         .then((response) => {
-            callback(response.data);
+            callback((response.data: User));
         })
         .catch(function (error) {
-            console.log(error);
+            console.error(error);
         });
     }
 }

@@ -1,8 +1,9 @@
+// @flow
 import api from '../helpers/axiosHelper';
 
 class AuthenticationService {
 
-    loginWithFacebook = (accessToken, callback) => {
+    loginWithFacebook = (accessToken: AccessToken, callback: () => void) => {
         api.post('authentication/facebook', {
             accessToken: accessToken
         })
@@ -11,18 +12,18 @@ class AuthenticationService {
                 callback();
         })
         .catch(function (error) {
-            console.log(error);
+            console.error(error);
         });
     }
 
-    logout = (callback) => {
+    logout = (callback: () => void) => {
         api.post('authentication/logout')
         .then((response) => {
             if (response.status === 200)
                 callback();
         })
         .catch(function (error) {
-            console.log(error);
+            console.error(error);
         });
     }
 }

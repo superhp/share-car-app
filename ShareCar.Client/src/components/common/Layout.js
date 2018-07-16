@@ -1,8 +1,17 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import logo from '../../logo.svg';
 import './Layout.css';
 
-class Layout extends Component {
+type LayoutProps = {
+    children?: React.Node
+};
+
+type LayoutState = {
+    user: User | null
+};
+
+class Layout extends React.Component<LayoutProps, LayoutState> {
     constructor() {
         super();
 
