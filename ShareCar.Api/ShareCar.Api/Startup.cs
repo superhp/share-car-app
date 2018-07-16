@@ -25,7 +25,7 @@ namespace ShareCar.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("SecretKey")));
+            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JwtSecretKey")));
         }
 
         public IConfiguration Configuration { get; }
