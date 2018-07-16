@@ -1,6 +1,6 @@
-package com.cognizant.sharecar.repository;
+package com.cognizant.sharecar.repository.spi.implementation;
 
-import com.cognizant.sharecar.service.spi.EchoRepository;
+import com.cognizant.sharecar.repository.spi.EchoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
