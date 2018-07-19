@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Db.Entities
+namespace ShareCar.Logic.Identity
 {
-    class User
+    class UserLogic
     {
+        public 
     }
 }

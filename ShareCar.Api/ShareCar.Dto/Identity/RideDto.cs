@@ -5,15 +5,14 @@ using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Ride
+    public class RideDto
     {
         public int RideId { get; set; }
         public int FromId { get; set; }
         public int ToId { get; set; }
         public int DriverId { get; set; }
-        public List<UserAutentification> Passenger { get; set; }
         public DateTime DateTime { get; set; }
-        public List<Request> Requests { get; set; }
+        public List<RequestDto> Requests { get; set; }
         [ForeignKey("FromId")]
         public Address FromAddress { get; set; }
         [ForeignKey("ToId")]

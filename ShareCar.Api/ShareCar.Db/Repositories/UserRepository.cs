@@ -10,16 +10,16 @@ namespace ShareCar.Db.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<UserAutentification> _userManager;
 
-        public UserRepository(UserManager<User> userManager)
+        public UserRepository(UserManager<UserAutentification> userManager)
         {
             _userManager = userManager;
         }
 
         public async Task CreateFacebookUser(FacebookUserDataDto userDto)
         {
-            var appUser = new User
+            var appUser = new UserAutentification
             {
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,

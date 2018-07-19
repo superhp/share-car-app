@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Points
+    public class PointsDto
     {
         public Role Role { get; set; }
         public int PointCount { get; set; }

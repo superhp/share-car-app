@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Request
+    public class RequestDto
     {
         public int RequestId { get; set; }
         public int PassengerId { get; set; }
@@ -14,9 +14,9 @@ namespace ShareCar.Db.Entities
         public Status Status { get; set; }
         
         [ForeignKey("PassengerId")]
-        public UserAutentification Passenger { get; set;}
+        public User Passenger { get; set;}
         [ForeignKey("DriverId")]
-        public UserAutentification Driver { get; set; }
+        public User Driver { get; set; }
         [ForeignKey("AddressId")]
         public Address RequestAddress { get; set; }
     }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Passenger
+    public class PassengerDto
     {
         public int UserId { get; set; }
         public UserAutentification User { get; set; }

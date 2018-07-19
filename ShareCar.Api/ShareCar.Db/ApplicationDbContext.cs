@@ -4,7 +4,7 @@ using ShareCar.Db.Entities;
 
 namespace ShareCar.Db
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<UserAutentification>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

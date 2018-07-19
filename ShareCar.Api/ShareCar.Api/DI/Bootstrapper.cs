@@ -23,11 +23,14 @@ namespace ShareCar.Api.DI
         {
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddScoped<IIdentity, FacebookIdentity>();
+            services.AddSingleton<IUserManagment, UserManagment>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
         }
+
+
     }
 }
