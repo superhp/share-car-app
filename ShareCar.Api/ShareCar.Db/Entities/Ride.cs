@@ -11,7 +11,7 @@ namespace ShareCar.Db.Entities
         public int FromId { get; set; }
         public int ToId { get; set; }
         public int DriverId { get; set; }
-        public List<User> Passenger { get; set; }
+        public List<Passenger> Passenger { get; set; }
         public DateTime DateTime { get; set; }
         public List<Request> Requests { get; set; }
         [ForeignKey("FromId")]
