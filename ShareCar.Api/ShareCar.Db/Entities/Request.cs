@@ -8,8 +8,8 @@ namespace ShareCar.Db.Entities
     public class Request
     {
         public int RequestId { get; set; }
-        public int PassengerId { get; set; }
-        public int DriverId { get; set; }
+        public string PassengerId { get; set; }
+        public string DriverId { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }
         

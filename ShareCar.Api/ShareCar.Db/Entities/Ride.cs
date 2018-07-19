@@ -10,7 +10,7 @@ namespace ShareCar.Db.Entities
         public int RideId { get; set; }
         public int FromId { get; set; }
         public int ToId { get; set; }
-        public int DriverId { get; set; }
+        public string DriverId { get; set; }
         public List<Passenger> Passenger { get; set; }
         public DateTime DateTime { get; set; }
         public List<Request> Requests { get; set; }
