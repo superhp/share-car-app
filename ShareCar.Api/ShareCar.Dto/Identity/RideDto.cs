@@ -10,12 +10,10 @@ namespace ShareCar.Db.Entities
         public int RideId { get; set; }
         public int FromId { get; set; }
         public int ToId { get; set; }
-        public int DriverId { get; set; }
+        public string DriverEmail { get; set; }
+        public List<PassengerDto> Passenger { get; set; }
         public DateTime DateTime { get; set; }
         public List<RequestDto> Requests { get; set; }
-        [ForeignKey("FromId")]
-        public Address FromAddress { get; set; }
-        [ForeignKey("ToId")]
-        public Address ToAddress { get; set; }
+
     }
 }

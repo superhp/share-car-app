@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Identity;
 using ShareCar.Db.DatabaseQueries;
-
 namespace ShareCar.Api.DI
 {
     public class Bootstrapper

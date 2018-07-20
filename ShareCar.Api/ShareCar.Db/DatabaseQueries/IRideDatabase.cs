@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Db.Database_queries
+namespace ShareCar.Db.DatabaseQueries
 {
-    interface IRideDatabase
+   public interface IRideDatabase
     {
         Ride FindRideById(int id);
         Ride FindRideByDate(DateTime date);

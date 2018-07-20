@@ -6,29 +6,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
+using ShareCar.Logic.Identity;
+
 namespace ShareCar.Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/Ride")]
     public class RideController : Controller
     {
-        private TasksDb _dbContext;
+        private readonly IRideLogic rideLogic;
 
         [HttpGet]
         public IActionResult GetByRide(int rideId)
         {
 
-            Ride item = _dbContext.Rides.Where(t => t.RideId == rideId);
 
+          RideDto ride = rideLogic.FindRideById(rideId);
 
-
-            if (item == null)
+            if(ride == null)
             {
                 return BadRequest();
             }
-
-            return Ok(MapToDto(item));
-
+            return Ok(ride);
         }
 
 
@@ -37,7 +36,7 @@ namespace ShareCar.Api.Controllers
         public IActionResult GetByDriver(int driverId)
         {
 
-            Ride item = _dbContext.Rides.Where(t => t.DriverId == driverId);
+        //    Ride item = _dbContext.Rides.Where(t => t.DriverId == driverId);
 
             if (item == null)
             {
@@ -52,7 +51,7 @@ namespace ShareCar.Api.Controllers
         public IActionResult Get(DateTime rideDate)
         {
 
-            Ride item = _dbContext.Rides.Where(t => t.date == rideDate);
+        //    Ride item = _dbContext.Rides.Where(t => t.date == rideDate);
 
             if (item == null)
             {
@@ -67,7 +66,7 @@ namespace ShareCar.Api.Controllers
         public IActionResult GetFrom(string addressFrom)
         {
 
-            Ride item = _dbContext.Rides.Where(t => t.from == addressFrom);
+         //   Ride item = _dbContext.Rides.Where(t => t.from == addressFrom);
 
             if (item == null)
             {
@@ -87,14 +86,14 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Error occured while passing parameters");
             }
 
-            Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
+       //     Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
 
             if (item == null)
             {
                 return NotFound("Selected driver doesn't exist");
             }
 
-            Ride updatedRide = MapFromDto(ride);
+        //    Ride updatedRide = MapFromDto(ride);
 
             return Ok(MapToDto(item));
 
@@ -130,7 +129,7 @@ namespace ShareCar.Api.Controllers
         public IActionResult GetTo(string addressTo)
         {
 
-            Ride item = _dbContext.Rides.Where(t => t.to == addressTo);
+          //  Ride item = _dbContext.Rides.Where(t => t.to == addressTo);
 
             if (item == null)
             {

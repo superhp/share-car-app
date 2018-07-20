@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Db.Database_queries
+namespace ShareCar.Db.DatabaseQueries
 {
-    interface IUserDatabase
+    public interface IUserDatabase
     {
         bool CheckIfRegistered(string userEmail);
         void RegisterUser(User user);

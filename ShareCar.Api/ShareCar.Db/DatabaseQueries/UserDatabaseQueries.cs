@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
 
-namespace ShareCar.Db.Database_queries
+namespace ShareCar.Db.DatabaseQueries
 {
-    class UserDatabaseQueries : IUserDatabase
+    public class UserDatabaseQueries : IUserDatabase
     {
         public int CalculatePoints(string userEmail)
         {

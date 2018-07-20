@@ -113,7 +113,7 @@ namespace ShareCar.Api
 
         private static void AddIdentity(IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<UserAutentification>(o =>
+            var builder = services.AddIdentityCore<User>(o =>
             {
                 // configure identity options
                 o.Password.RequireDigit = false;

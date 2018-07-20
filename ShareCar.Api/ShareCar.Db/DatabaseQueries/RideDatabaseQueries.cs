@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
 
-namespace ShareCar.Db.Database_queries
+namespace ShareCar.Db.DatabaseQueries
 {
-    class RideDatabaseQueries : IRideDatabase
+    public class RideDatabaseQueries : IRideDatabase
     {
+
         public Ride FindRideByDate(DateTime date)
         {
             throw new NotImplementedException();

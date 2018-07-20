@@ -11,8 +11,6 @@ namespace ShareCar.Db.Entities
         public int PointCount { get; set; }
         public int UserId { get; set; }
 
-        [ForeignKey("UserId")]
-        public UserAutentification User { get; set; }
     }
     public enum Role
     {
