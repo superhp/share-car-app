@@ -23,6 +23,9 @@ namespace ShareCar.Api.Controllers
             try
             {
                 var jwt = await _facebookIdentity.Login(facebookAccessToken);
+
+
+
                 AddJwtToCookie(jwt);
             }
             catch (Exception ex)
