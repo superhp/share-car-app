@@ -6,8 +6,8 @@ namespace ShareCar.Db.Entities
 {
     public class Passenger
     {
-        public int UserId { get; set; }
-        public UserAutentification User { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
         public int RideId { get; set; }
         public Ride Ride { get; set; }
         public bool Completed{ get; set; }

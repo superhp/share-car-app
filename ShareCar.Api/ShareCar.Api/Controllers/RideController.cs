@@ -109,7 +109,10 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Error occured while passing parameters");
             }
 
-            Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
+            //Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
+
+
+
 
             if (item == null)
             {

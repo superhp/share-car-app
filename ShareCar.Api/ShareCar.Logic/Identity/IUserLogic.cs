@@ -6,9 +6,10 @@ using System.Text;
 
 namespace ShareCar.Logic.Identity
 {
-    public interface IUserManagment
+    public interface IUserLogic
     {
-         void CheckIfRegistered(UserDto user);
+         bool CheckIfRegistered(IdentityUser<string> user);
+         void RegisterUser(IdentityUser<string> user);
          int CalculatePoints(IdentityUser<string> user);
     }
 }

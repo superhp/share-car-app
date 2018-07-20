@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Identity;
+using ShareCar.Db.DatabaseQueries;
 
 namespace ShareCar.Api.DI
 {
@@ -23,7 +24,11 @@ namespace ShareCar.Api.DI
         {
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddScoped<IIdentity, FacebookIdentity>();
-            services.AddSingleton<IUserManagment, UserManagment>();
+            services.AddSingleton<IUserLogic, UserLogic>();
+            services.AddSingleton<IRideLogic, RideLogic>();
+            services.AddSingleton<IUserDatabase, UserDatabaseQueries>();
+            services.AddSingleton<IRideDatabase, RideDatabaseQueries>();
+
         }
 
         private static void RegisterRepositories(IServiceCollection services)

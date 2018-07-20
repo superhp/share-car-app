@@ -8,6 +8,16 @@ namespace ShareCar.Db
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
+        }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Ride> Rides { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Passenger>().HasKey(x => new { x.UserId, x.RideId });
         }
     }
 }

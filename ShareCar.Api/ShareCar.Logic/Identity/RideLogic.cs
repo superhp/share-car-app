@@ -5,29 +5,36 @@ using System.Text;
 
 namespace ShareCar.Logic.Identity
 {
-    class RideLogic : IRide
+    public class RideLogic : IRideLogic
     {
-        public bool FindRideByDate(DateTime date)
+
+        public RideLogic()
+        {
+
+        }
+
+        public RideDto FindRideByDate(DateTime date)
         {
             throw new NotImplementedException();
         }
 
-        public bool FindRideByDestination(AddressDto address)
+        public RideDto FindRideByDestination(AddressDto address)
         {
             throw new NotImplementedException();
         }
 
-        public bool FindRideByDriver(string email)
+        public RideDto FindRideByDriver(string email)
         {
             throw new NotImplementedException();
         }
 
-        public bool FindRideById(int id)
+
+        public RideDto FindRideById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public bool FindRideByStartPoint(AddressDto address)
+        public RideDto FindRideByStartPoint(AddressDto address)
         {
             throw new NotImplementedException();
         }
