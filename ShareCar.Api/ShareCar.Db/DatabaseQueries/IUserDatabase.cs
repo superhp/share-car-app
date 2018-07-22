@@ -9,7 +9,7 @@ namespace ShareCar.Db.DatabaseQueries
     public interface IUserDatabase
     {
         bool CheckIfRegistered(string userEmail);
-        void RegisterUser(User user);
+        void RegisterUser(Person user);
         int CalculatePoints(string userEmail);
     }
 }

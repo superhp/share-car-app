@@ -12,7 +12,7 @@ namespace ShareCar.Db.Entities
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public UserAutentification User { get; set; }
+        public User User { get; set; }
     }
     public enum Role
     {

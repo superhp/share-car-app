@@ -3,49 +3,105 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.DatabaseQueries;
+using ShareCar.Logic.ObjectMapping;
+using ShareCar.Dto.Identity;
+
 namespace ShareCar.Logic.Identity
 {
     public class RideLogic : IRideLogic
     {
         private readonly IRideDatabase _rideDatabase;
-
-        public RideLogic()
-        {
-
-        }
+        private RideMapper _rideMapper = new RideMapper();
+        private AddressMapper _addressMapper = new AddressMapper();
 
         public RideDto FindRideById(int id)
         {
             Ride ride = _rideDatabase.FindRideById(id);
 
+            if(ride == null)
+            {
+                return null;
+            }
+
+            return _rideMapper.MapToDto(ride);
         }
 
-        public RideDto FindRideByDate(DateTime date)
+        public IEnumerable<RideDto> FindRidesByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            IEnumerable <Ride> Rides = _rideDatabase.FindRidesByDate(date);
 
+            return MapToList(Rides);
         }
 
-        public RideDto FindRideByDestination(AddressDto address)
+        public IEnumerable<RideDto> FindRidesByDriver(string email)
         {
-            throw new NotImplementedException();
+            IEnumerable<Ride> Rides = _rideDatabase.FindRidesByDriver(email);
+            return MapToList(Rides);
         }
 
-        public RideDto FindRideByDriver(string email)
+
+        public IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address)
         {
-            throw new NotImplementedException();
+            Address EntityAddress = _addressMapper.MapToEntity(address);
+            IEnumerable<Ride> Rides = _rideDatabase.FindRidesByStartPoint(EntityAddress);
+            return MapToList(Rides);
         }
 
-
-        public RideDto FindRideByStartPoint(AddressDto address)
+        public IEnumerable<RideDto> FindRidesByDestination(AddressDto address)
         {
-            throw new NotImplementedException();
+            Address EntityAddress = _addressMapper.MapToEntity(address);
+            IEnumerable<Ride> Rides = _rideDatabase.FindRidesByDestination(EntityAddress);
+            return MapToList(Rides);
         }
 
-        private RideDto MapToDto(Ride ride)
+        public bool UpdateRide(RideDto ride)
         {
+
+            bool addNewRide = ValidateNewRide();
+
+            if (addNewRide)
+            {
+                _rideDatabase.UpdateRide(_rideMapper.MapToEntity(ride));
+                return true;
+            }
+            return false;
+        }
+
+        public bool AddRide(RideDto ride)
+        {
+
+            bool addNewRide = ValidateNewRide();
+
+            if (addNewRide)
+            {                
+                _rideDatabase.AddRide(_rideMapper.MapToEntity(ride));
+                return true;
+            }
+            return false;
+        }
+
+        // Method checks if updated/added ride won't have same time as other ride of same driver
+        private bool ValidateNewRide()
+        {
+            // Ride Entity should have arival time
             throw new NotImplementedException();
         }
 
+        // Returns a list of mapped objects
+        private IEnumerable<RideDto> MapToList(IEnumerable<Ride> Rides)
+        {
+            if (Rides == null)
+            {
+                return null;
+            }
+
+            List<RideDto> DtoRides = new List<RideDto>();
+
+            foreach (var ride in Rides)
+            {
+                DtoRides.Add(_rideMapper.MapToDto(ride));
+            }
+            return DtoRides;
+        }
     }
 }

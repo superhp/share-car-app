@@ -8,9 +8,12 @@ namespace ShareCar.Db.DatabaseQueries
    public interface IRideDatabase
     {
         Ride FindRideById(int id);
-        Ride FindRideByDate(DateTime date);
-        Ride FindRideByDestination(Address address);
-        Ride FindRideByStartPoint(Address address);
+        IEnumerable<Ride> FindRidesByDriver(string email);
+        IEnumerable<Ride> FindRidesByDate(DateTime date);
+        IEnumerable<Ride> FindRidesByDestination(Address address);
+        IEnumerable<Ride> FindRidesByStartPoint(Address address);
+        void UpdateRide(Ride ride);
+        void AddRide(Ride ride);
 
     }
 }

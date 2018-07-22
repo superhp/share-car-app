@@ -13,13 +13,13 @@ namespace ShareCar.Logic.Identity
 {
     public class FacebookIdentity : IIdentity
     {
-        private readonly UserManager<UserAutentification> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly FacebookAuthSettings _fbAuthSettings;
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<UserAutentification> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
         {
             _fbAuthSettings = fbAuthSettings.Value;
             _userManager = userManager;
@@ -87,7 +87,7 @@ namespace ShareCar.Logic.Identity
             }
         }
 
-        private async Task<string> GenerateJwt(UserAutentification localUser)
+        private async Task<string> GenerateJwt(User localUser)
         {
             var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
             var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);

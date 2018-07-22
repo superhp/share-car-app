@@ -10,7 +10,7 @@ namespace ShareCar.Logic.Identity
     {
         public UserLogic()
         {
-
+            
         }
 
         public bool CheckIfRegistered(IdentityUser<string> user)

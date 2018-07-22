@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ShareCar.Db.Entities
+namespace ShareCar.Dto.Identity
 {
     public class RequestDto
     {

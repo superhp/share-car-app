@@ -2,30 +2,62 @@
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
+using System.Linq;
+using ShareCar.Logic.ObjectMapping;
 
 namespace ShareCar.Db.DatabaseQueries
 {
     public class RideDatabaseQueries : IRideDatabase
     {
+        private readonly ApplicationDbContext _databaseContext;
+        private readonly RideMapper _rideMapper;
 
-        public Ride FindRideByDate(DateTime date)
+
+
+        public RideDatabaseQueries(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _databaseContext = context;
+            _rideMapper = new RideMapper();
         }
 
-        public Ride FindRideByDestination(Address address)
+
+        public void AddRide(Ride ride)
         {
-            throw new NotImplementedException();
+            _databaseContext.Rides.Add(ride);
+        }
+
+        public IEnumerable<Ride> FindRidesByDate(DateTime date)
+        {
+            return _databaseContext.Rides.Where(x => x.RideDateTime == date);
+
+        }
+
+        public IEnumerable<Ride> FindRidesByDestination(Address address)
+        {
+            return _databaseContext.Rides.Where(x => x.To == address);
         }
 
         public Ride FindRideById(int id)
         {
-            throw new NotImplementedException();
+            return _databaseContext.Rides.Single(x => x.RideId == id);
         }
 
-        public Ride FindRideByStartPoint(Address address)
+        public IEnumerable<Ride> FindRidesByStartPoint(Address address)
         {
-            throw new NotImplementedException();
+            return _databaseContext.Rides.Where(x => x.From == address);
+        }
+
+        public void UpdateRide(Ride ride)
+        {
+            Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
+
+            _rideMapper.MapEntityToEntity(toUpdate, ride);
+
+        }
+
+        public IEnumerable<Ride> FindRidesByDriver(string email)
+        {
+            return _databaseContext.Rides.Where(x => x.DriverEmail == email);
         }
     }
 }

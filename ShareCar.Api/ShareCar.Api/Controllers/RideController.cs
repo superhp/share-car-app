@@ -17,15 +17,14 @@ namespace ShareCar.Api.Controllers
         private readonly IRideLogic rideLogic;
 
         [HttpGet]
-        public IActionResult GetByRide(int rideId)
+        public IActionResult GetRideById(int rideId)
         {
-
 
           RideDto ride = rideLogic.FindRideById(rideId);
 
-            if(ride == null)
+            if (ride == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             return Ok(ride);
         }
@@ -33,69 +32,65 @@ namespace ShareCar.Api.Controllers
 
 
         [HttpGet]
-        public IActionResult GetByDriver(int driverId)
+        public void GetRidesByDriver(string driverEmail)
         {
 
-        //    Ride item = _dbContext.Rides.Where(t => t.DriverId == driverId);
+            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDriver(driverEmail);
 
-            if (item == null)
-            {
-                return BadRequest();
-            }
+            SendResponse(Rides);
 
-            return Ok(MapToDto(item));
 
         }
 
         [HttpGet]
-        public IActionResult Get(DateTime rideDate)
+        public void GetRidesByDate(DateTime rideDate)
         {
 
-        //    Ride item = _dbContext.Rides.Where(t => t.date == rideDate);
+            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDate(rideDate);
 
-            if (item == null)
-            {
-                return BadRequest("Selected day doesn't have any rides");
-            }
-
-            return Ok(MapToDto(item));
+            SendResponse(Rides);
 
         }
 
         [HttpGet]
-        public IActionResult GetFrom(string addressFrom)
+        public void GetRidesByStartPoint(AddressDto addressFrom)
         {
 
-         //   Ride item = _dbContext.Rides.Where(t => t.from == addressFrom);
+            IEnumerable<RideDto> Rides = rideLogic.FindRidesByStartPoint(addressFrom);
 
-            if (item == null)
-            {
-                return BadRequest("There is no rides from given address");
-            }
-
-            return Ok(MapToDto(item));
+            SendResponse(Rides);
 
         }
 
-        // Any object update, if user doesn't change properti, it should be delivered unchanged
+        [HttpGet]
+        public void GetRidesByDestination(AddressDto addressTo)
+        {
+
+            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDestination(addressTo);
+
+            SendResponse(Rides);
+
+        }
+
+        // Any object update. If user doesn't change property, it should be delivered unchanged
         [HttpPut]
         public IActionResult Put(RideDto ride)
         {
             if (ride == null)
             {
-                return BadRequest("Error occured while passing parameters");
+                return BadRequest("Invalid parameter");
             }
 
-       //     Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
+            bool result = rideLogic.UpdateRide(ride);
 
-            if (item == null)
+            if(result)
             {
-                return NotFound("Selected driver doesn't exist");
+                return Ok();
             }
-
-        //    Ride updatedRide = MapFromDto(ride);
-
-            return Ok(MapToDto(item));
+            else
+            {
+                return BadRequest("Operation failed");
+            }
 
         }
 
@@ -105,65 +100,31 @@ namespace ShareCar.Api.Controllers
         {
             if (ride == null)
             {
-                return BadRequest("Error occured while passing parameters");
+                return BadRequest("Invalid parameter");
             }
 
-            //Ride item = _dbContext.Rides.Single(t => t.DriverId == ride.DriverId);
+            bool result = rideLogic.AddRide(ride);
 
-
-
-
-            if (item == null)
+            if (result)
             {
-                return NotFound("Selected driver doesn't exist");
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Operation failed");
             }
 
-            Ride updatedRide = MapFromDto(ride);
-
-            return Ok(MapToDto(item));
-
         }
 
-
-        [HttpPatch]
-        public IActionResult GetTo(string addressTo)
+        private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
 
-          //  Ride item = _dbContext.Rides.Where(t => t.to == addressTo);
-
-            if (item == null)
+            if (ride == null)
             {
-                return BadRequest("There is no rides to a given address");
+                return NotFound();
             }
-
-            return Ok(MapToDto(item));
-
+            return Ok(ride);
         }
-
-        private RideDto MapToDto(Ride ride)
-        {
-            return new RideDto
-            {
-                RideId = ride.RideId,
-                FromId = ride.FromId,
-                ToId = ride.ToId,
-                DriverId = ride.DriverId,
-                DateTime = ride.DateTime
-            };
-        }
-
-        private Ride MapFromDto(RideDto ride)
-        {
-            return new Ride
-            {
-                RideId = ride.RideId,
-                FromId = ride.FromId,
-                ToId = ride.ToId,
-                DriverId = ride.DriverId,
-                DateTime = ride.DateTime
-            };
-        }
-
 
     }
 

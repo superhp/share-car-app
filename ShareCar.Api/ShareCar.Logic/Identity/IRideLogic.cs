@@ -3,15 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Dto.Identity;
+
 namespace ShareCar.Logic.Identity
 {
     public interface IRideLogic
     {
-        RideDto FindRideByDriver(string email);
+        IEnumerable<RideDto> FindRidesByDriver(string email);
         RideDto FindRideById(int id);
-        RideDto FindRideByDate(DateTime date);
-        RideDto FindRideByDestination(AddressDto address);
-        RideDto FindRideByStartPoint(AddressDto address);
+        IEnumerable<RideDto> FindRidesByDate(DateTime date);
+        IEnumerable<RideDto> FindRidesByDestination(AddressDto address);
+        IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address);
+        bool UpdateRide(RideDto ride);
+        bool AddRide(RideDto ride);
 
     }
 }
