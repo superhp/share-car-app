@@ -9,10 +9,10 @@ namespace ShareCar.Db.Entities
     {
         public Role Role { get; set; }
         public int PointCount { get; set; }
-        public int UserId { get; set; }
+        public int UserEmail { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public Person Person { get; set; }
     }
     public enum Role
     {

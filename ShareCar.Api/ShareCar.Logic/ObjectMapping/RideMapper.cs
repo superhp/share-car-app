@@ -5,7 +5,7 @@ using System.Text;
 using ShareCar.Dto.Identity;
 namespace ShareCar.Logic.ObjectMapping
 {
-    class RideMapper
+    public class RideMapper
     {
         public Ride MapToEntity(RideDto ride)
         {

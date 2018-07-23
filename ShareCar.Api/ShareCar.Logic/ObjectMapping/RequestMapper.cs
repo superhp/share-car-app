@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ShareCar.Logic.ObjectMapping
 {
-    class RequestMapper
+    public class RequestMapper
     {
         public Request  MapToEntity(RequestDto request)
         {
