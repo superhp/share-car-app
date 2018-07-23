@@ -3,7 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Identity;
-using ShareCar.Db.DatabaseQueries;
+using ShareCar.Logic.;
 namespace ShareCar.Api.DI
 {
     public class Bootstrapper
