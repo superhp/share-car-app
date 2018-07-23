@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ShareCar.Db;
+using ShareCar.Db.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
-using ShareCar.Db.Entities;
 
-namespace ShareCar.Db.DatabaseQueries
+namespace ShareCar.Logic.DatabaseQueries
 {
-    public class UserDatabaseQueries : IUserDatabase
+    class UserQueries
     {
         private readonly ApplicationDbContext _databaseContext;
 

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ShareCar.Logic.ObjectMapping
 {
-    public class PassengerMapper
+    class PassengerMapper
     {
         public Passenger MapToEntity(PassengerDto passenger)
         {

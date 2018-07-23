@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ShareCar.Logic.ObjectMapping
 {
-    public class AddressMapper
+    class AddressMapper
     {
         public Address MapToEntity(AddressDto passenger)
         {
@@ -17,5 +17,6 @@ namespace ShareCar.Logic.ObjectMapping
         {
             throw new NotImplementedException();
         }
+
     }
 }

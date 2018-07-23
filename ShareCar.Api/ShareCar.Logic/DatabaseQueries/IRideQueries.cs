@@ -1,11 +1,10 @@
-﻿using ShareCar.Db.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Db.DatabaseQueries
+namespace ShareCar.Logic.DatabaseQueries
 {
-   public interface IRideDatabase
+    interface IRideQueries
     {
         Ride FindRideById(int id);
         IEnumerable<Ride> FindRidesByDriver(string email);
@@ -14,6 +13,5 @@ namespace ShareCar.Db.DatabaseQueries
         IEnumerable<Ride> FindRidesByStartPoint(Address address);
         void UpdateRide(Ride ride);
         void AddRide(Ride ride);
-
     }
 }

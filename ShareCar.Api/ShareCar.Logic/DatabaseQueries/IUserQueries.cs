@@ -1,12 +1,10 @@
-﻿using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Db.DatabaseQueries
+namespace ShareCar.Logic.DatabaseQueries
 {
-    public interface IUserDatabase
+    interface IUserQueries
     {
         bool CheckIfRegistered(string userEmail);
         void RegisterUser(Person user);

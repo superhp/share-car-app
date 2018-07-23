@@ -1,20 +1,21 @@
-﻿using System;
+﻿using ShareCar.Db;
+using ShareCar.Db.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using ShareCar.Db.Entities;
 using System.Linq;
-using ShareCar.Logic.ObjectMapping;
+using ShareCar.Infrastructure.ObjectMapping;
 
-namespace ShareCar.Db.DatabaseQueries
+namespace ShareCar.Logic.DatabaseQueries
 {
-    public class RideDatabaseQueries : IRideDatabase
+    class RideQueries
     {
         private readonly ApplicationDbContext _databaseContext;
         private readonly RideMapper _rideMapper;
 
 
 
-        public RideDatabaseQueries(ApplicationDbContext context)
+        public RideQueries(ApplicationDbContext context)
         {
             _databaseContext = context;
             _rideMapper = new RideMapper();

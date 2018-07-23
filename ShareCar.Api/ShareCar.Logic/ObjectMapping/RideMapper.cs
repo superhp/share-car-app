@@ -1,11 +1,12 @@
 ﻿using ShareCar.Db.Entities;
+using ShareCar.Dto.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ShareCar.Dto.Identity;
+
 namespace ShareCar.Logic.ObjectMapping
 {
-    public class RideMapper
+    class RideMapper
     {
         public Ride MapToEntity(RideDto ride)
         {
@@ -54,7 +55,7 @@ namespace ShareCar.Logic.ObjectMapping
             target.RideDateTime = example.RideDateTime;
             target.Passengers = example.Passengers;
             target.Requests = example.Requests;
-            
+
         }
 
     }

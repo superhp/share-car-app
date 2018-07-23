@@ -6,9 +6,10 @@ using System.Text;
 
 namespace ShareCar.Logic.ObjectMapping
 {
-    public class RequestMapper
+    class RequestMapper
     {
-        public Request  MapToEntity(RequestDto request)
+
+        public Request MapToEntity(RequestDto request)
         {
             throw new NotImplementedException();
         }
@@ -17,7 +18,5 @@ namespace ShareCar.Logic.ObjectMapping
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
