@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ShareCar.Db.DatabaseQueries;
 using ShareCar.Logic.ObjectMapping;
+using ShareCar.Logic.DatabaseQueries;
 using ShareCar.Dto.Identity;
 
 namespace ShareCar.Logic.Identity
 {
     public class RideLogic : IRideLogic
     {
-        private readonly IRideDatabase _rideDatabase;
+        private readonly IRideQueries _rideDatabase;
         private RideMapper _rideMapper = new RideMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 

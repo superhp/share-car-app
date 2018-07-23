@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ShareCar.Logic.DatabaseQueries
 {
-    class UserQueries : IUserQueries
+    public class UserQueries : IUserQueries
     {
         private readonly ApplicationDbContext _databaseContext;
 

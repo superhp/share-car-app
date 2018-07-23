@@ -1,7 +1,6 @@
 ﻿using ShareCar.Dto.Identity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ShareCar.Dto.Identity

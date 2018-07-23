@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ShareCar.Api.DI;
+using ShareCar.Logic.DI;
 using ShareCar.Api.Middleware;
 using ShareCar.Db;
 using ShareCar.Db.Entities;

@@ -3,8 +3,8 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Identity;
-using ShareCar.Db.DatabaseQueries;
-namespace ShareCar.Api.DI
+using ShareCar.Logic.DatabaseQueries;
+namespace ShareCar.Logic.DI
 {
     public class Bootstrapper
     {
@@ -25,8 +25,8 @@ namespace ShareCar.Api.DI
             services.AddScoped<IIdentity, FacebookIdentity>();
             services.AddSingleton<IUserLogic, UserLogic>();
             services.AddSingleton<IRideLogic, RideLogic>();
-            services.AddSingleton<IUserDatabase, UserDatabaseQueries>();
-            services.AddSingleton<IRideDatabase, RideDatabaseQueries>();
+            services.AddSingleton<IUserQueries, UserQueries>();
+            services.AddSingleton<IRideQueries, RideQueries>();
 
         }
 

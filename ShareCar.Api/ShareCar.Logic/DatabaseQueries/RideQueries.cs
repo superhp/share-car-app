@@ -8,7 +8,7 @@ using ShareCar.Logic.ObjectMapping;
 
 namespace ShareCar.Logic.DatabaseQueries
 {
-    class RideQueries
+    public class RideQueries : IRideQueries
     {
         private readonly ApplicationDbContext _databaseContext;
         private readonly RideMapper _rideMapper;
