@@ -10,7 +10,7 @@ namespace ShareCar.Db.Entities
     {
         [Key]
         public string Email { get; set; }
-        public List<Ride> Ride { get; set; }
+        //public List<Ride> Ride { get; set; }
         
     }
 }

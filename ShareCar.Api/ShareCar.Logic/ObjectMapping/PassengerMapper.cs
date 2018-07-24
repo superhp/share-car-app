@@ -10,12 +10,23 @@ namespace ShareCar.Logic.ObjectMapping
     {
         public Passenger MapToEntity(PassengerDto passenger)
         {
-            throw new NotImplementedException();
+            return new Passenger
+            {
+                RideId = passenger.RideId,
+                Email = passenger.Email,
+                Completed = passenger.Completed
+            };
         }
 
         public PassengerDto MapToDto(Passenger passenger)
         {
-            throw new NotImplementedException();
+            return new PassengerDto
+            {
+                RideId = passenger.RideId,
+                Email = passenger.Email,
+                Completed = passenger.Completed
+            };
+            
         }
     }
 }
