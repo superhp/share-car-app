@@ -8,7 +8,7 @@ namespace ShareCar.Dto.Identity
     public class PersonDto
     {
         public string Email { get; set; }
-        public List<RideDto> Ride { get; set; }
+        //public List<RideDto> Ride { get; set; }
 
     }
 }

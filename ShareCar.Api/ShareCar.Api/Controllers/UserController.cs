@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db;
 using ShareCar.Db.Repositories;
 
 namespace ShareCar.Api.Controllers
@@ -13,6 +14,7 @@ namespace ShareCar.Api.Controllers
 
         public UserController(IUserRepository userRepository)
         {
+
             _userRepository = userRepository;
         }
 
