@@ -36,7 +36,7 @@ namespace ShareCar.Api.Controllers
 
 
 
-        [HttpGet("{driverEmail}")]
+        [HttpGet("driverEmail={driverEmail}")]
         public void GetRidesByDriver(string driverEmail)
         {
 
@@ -47,7 +47,7 @@ namespace ShareCar.Api.Controllers
 
         }
 
-        [HttpGet("{rideDate}")]
+        [HttpGet("ridedate={rideDate}")]
         public void GetRidesByDate(DateTime rideDate)
         {
 
@@ -124,7 +124,7 @@ namespace ShareCar.Api.Controllers
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
 
-            if (ride == null)
+            if (ride.Count() == 0)
             {
                 return NotFound();
             }
