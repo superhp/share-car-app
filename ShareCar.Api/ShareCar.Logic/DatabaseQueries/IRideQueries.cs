@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShareCar.Logic.DatabaseQueries
 {
-    interface IRideQueries
+   public interface IRideQueries
     {
         Ride FindRideById(int id);
         IEnumerable<Ride> FindRidesByDriver(string email);

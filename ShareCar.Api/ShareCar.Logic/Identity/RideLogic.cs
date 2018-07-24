@@ -14,6 +14,11 @@ namespace ShareCar.Logic.Identity
         private RideMapper _rideMapper = new RideMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 
+        public RideLogic(IRideQueries rideQueries)
+        {
+            _rideQueries = rideQueries;
+        }
+
         public RideDto FindRideById(int id)
         {
             Ride ride = _rideQueries.FindRideById(id);
@@ -70,7 +75,11 @@ namespace ShareCar.Logic.Identity
         public bool AddRide(RideDto ride)
         {
 
-            bool addNewRide = ValidateNewRide();
+            
+            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
+          //  bool addNewRide = ValidateNewRide(); 
+
+         bool   addNewRide = true; // Will be deleted once validation appears
 
             if (addNewRide)
             {                
@@ -90,11 +99,6 @@ namespace ShareCar.Logic.Identity
         // Returns a list of mapped objects
         private IEnumerable<RideDto> MapToList(IEnumerable<Ride> Rides)
         {
-            if (Rides == null)
-            {
-                return null;
-            }
-
             List<RideDto> DtoRides = new List<RideDto>();
 
             foreach (var ride in Rides)

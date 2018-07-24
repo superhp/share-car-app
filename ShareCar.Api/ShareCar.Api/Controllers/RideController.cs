@@ -14,13 +14,18 @@ namespace ShareCar.Api.Controllers
     [Route("api/Ride")]
     public class RideController : Controller
     {
-        private readonly IRideLogic rideLogic;
+        private readonly IRideLogic _rideLogic;
 
-        [HttpGet]
+        public RideController(IRideLogic rideLogic)
+        {
+            _rideLogic = rideLogic;
+        }
+
+        [HttpGet("{rideId}")]
         public IActionResult GetRideById(int rideId)
         {
 
-          RideDto ride = rideLogic.FindRideById(rideId);
+            RideDto ride = _rideLogic.FindRideById(rideId);
 
             if (ride == null)
             {
@@ -31,57 +36,57 @@ namespace ShareCar.Api.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet("{driverEmail}")]
         public void GetRidesByDriver(string driverEmail)
         {
 
-            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDriver(driverEmail);
+            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDriver(driverEmail);
 
             SendResponse(Rides);
 
 
         }
 
-        [HttpGet]
+        [HttpGet("{rideDate}")]
         public void GetRidesByDate(DateTime rideDate)
         {
 
-            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDate(rideDate);
+            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDate(rideDate);
 
             SendResponse(Rides);
 
         }
 
-        [HttpGet]
+        [HttpGet("addressFrom={addressFrom}")]
         public void GetRidesByStartPoint(AddressDto addressFrom)
         {
 
-            IEnumerable<RideDto> Rides = rideLogic.FindRidesByStartPoint(addressFrom);
+            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByStartPoint(addressFrom);
 
             SendResponse(Rides);
 
         }
 
-        [HttpGet]
+        [HttpGet("addressTo={addressTo}")]
         public void GetRidesByDestination(AddressDto addressTo)
         {
 
-            IEnumerable<RideDto> Rides = rideLogic.FindRidesByDestination(addressTo);
+            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDestination(addressTo);
 
             SendResponse(Rides);
 
         }
-
+        
         // Any object update. If user doesn't change property, it should be delivered unchanged
         [HttpPut]
-        public IActionResult Put(RideDto ride)
+        public IActionResult Put([FromBody] RideDto ride)
         {
             if (ride == null)
             {
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = rideLogic.UpdateRide(ride);
+            bool result = _rideLogic.UpdateRide(ride);
 
             if(result)
             {
@@ -96,14 +101,14 @@ namespace ShareCar.Api.Controllers
 
         // Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
-        public IActionResult Post(RideDto ride)
+        public IActionResult Post([FromBody] RideDto ride)
         {
             if (ride == null)
             {
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = rideLogic.AddRide(ride);
+            bool result = _rideLogic.AddRide(ride);
 
             if (result)
             {

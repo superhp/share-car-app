@@ -38,14 +38,20 @@ namespace ShareCar.Logic.DatabaseQueries
 
         public bool CheckIfRegistered(string userEmail)
         {
-            return _databaseContext.People.Single(x => x.Email == userEmail) == null ? false : true;
-
-
+            try
+            {// Throws exception if user is not found
+                return _databaseContext.People.Single(x => x.Email == userEmail) == null ? false : true; 
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void RegisterUser(Person user)
         {
             _databaseContext.People.Add(user);
+            _databaseContext.SaveChanges();
         }
     }
 }

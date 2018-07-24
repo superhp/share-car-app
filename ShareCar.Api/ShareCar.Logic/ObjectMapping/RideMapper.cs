@@ -10,7 +10,34 @@ namespace ShareCar.Logic.ObjectMapping
     {
         public Ride MapToEntity(RideDto ride)
         {
-            throw new NotImplementedException();
+            PassengerMapper PassengerMapper = new PassengerMapper();
+            RequestMapper RequestMapper = new RequestMapper();
+
+            List<Passenger> EntityPassengers = new List<Passenger>();
+            List<Request> EntityRequests = new List<Request>();
+
+
+            foreach (var passenger in ride.Passengers)
+            {
+                EntityPassengers.Add(PassengerMapper.MapToEntity(passenger));
+            }
+
+            foreach (var request in ride.Requests)
+            {
+                EntityRequests.Add(RequestMapper.MapToEntity(request));
+            }
+
+            return new Ride
+            {
+                RideId = ride.RideId,
+                FromId = ride.FromId,
+                ToId = ride.ToId,
+                DriverEmail = ride.DriverEmail,
+                RideDateTime = ride.RideDateTime,
+                Passengers = EntityPassengers,
+                Requests = EntityRequests
+
+            };
         }
 
         public RideDto MapToDto(Ride ride)
@@ -31,7 +58,7 @@ namespace ShareCar.Logic.ObjectMapping
             {
                 DtoRequests.Add(RequestMapper.MapToDto(request));
             }
-
+            
             return new RideDto
             {
                 RideId = ride.RideId,
