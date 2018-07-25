@@ -15,8 +15,8 @@ namespace ShareCar.Db.Entities
         public DateTime RideDateTime { get; set; }
         public List<Request> Requests { get; set; }
         [ForeignKey("FromId")]
-        public Address From { get; set; }
+        public virtual Address From { get; set; }
         [ForeignKey("ToId")]
-        public Address To { get; set; }
+        public virtual Address To { get; set; }
     }
 }

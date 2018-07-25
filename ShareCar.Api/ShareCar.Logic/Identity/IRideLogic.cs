@@ -13,6 +13,7 @@ namespace ShareCar.Logic.Identity
         IEnumerable<RideDto> FindRidesByDate(DateTime date);
         IEnumerable<RideDto> FindRidesByDestination(AddressDto address);
         IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address);
+        IEnumerable<PassengerDto> FindPassengersByRideId(int rideId);
         bool UpdateRide(RideDto ride);
         bool AddRide(RideDto ride);
 

@@ -14,11 +14,11 @@ namespace ShareCar.Db.Entities
         public Status Status { get; set; }
         
         [ForeignKey("PassengerEmail")]
-        public Person Passenger { get; set;}
+        public virtual Person Passenger { get; set;}
         [ForeignKey("DriverEmail")]
-        public Person Driver { get; set; }
+        public virtual Person Driver { get; set; }
         [ForeignKey("AddressId")]
-        public Address RequestAddress { get; set; }
+        public virtual Address RequestAddress { get; set; }
     }
     public enum Status
     {

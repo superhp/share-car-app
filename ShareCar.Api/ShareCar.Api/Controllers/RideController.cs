@@ -15,6 +15,7 @@ namespace ShareCar.Api.Controllers
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
+        private readonly IPassengerLogic _passengerLogic;
 
         public RideController(IRideLogic rideLogic)
         {
@@ -76,7 +77,20 @@ namespace ShareCar.Api.Controllers
             SendResponse(Rides);
 
         }
-        
+
+        [HttpGet("rideId={rideId}")]
+        public IActionResult GetPassengersByRide(int rideId)
+        {
+            IEnumerable<PassengerDto> passengers = _rideLogic.FindPassengersByRideId(rideId);
+            if (passengers.ToList().Count != 0 )
+            {
+                return Ok(passengers);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
         // Any object update. If user doesn't change property, it should be delivered unchanged
         [HttpPut]
         public IActionResult Put([FromBody] RideDto ride)

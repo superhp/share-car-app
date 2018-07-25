@@ -12,6 +12,7 @@ namespace ShareCar.Logic.Identity
     {
         private readonly IRideQueries _rideQueries;
         private RideMapper _rideMapper = new RideMapper();
+        private PassengerMapper _passengerMapper = new PassengerMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 
         public RideLogic(IRideQueries rideQueries)
@@ -58,7 +59,12 @@ namespace ShareCar.Logic.Identity
             IEnumerable<Ride> Rides = _rideQueries.FindRidesByDestination(EntityAddress);
             return MapToList(Rides);
         }
+        public IEnumerable<PassengerDto> FindPassengersByRideId(int id)
+        {
+            IEnumerable<Passenger> Passengers = _rideQueries.FindPassengersByRideId(id);
 
+            return MapToList(Passengers);
+        }
         public bool UpdateRide(RideDto ride)
         {
 
@@ -106,6 +112,21 @@ namespace ShareCar.Logic.Identity
                 DtoRides.Add(_rideMapper.MapToDto(ride));
             }
             return DtoRides;
+        }
+        private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> Passengers)
+        {
+            if (Passengers == null)
+            {
+                return null;
+            }
+
+            List<PassengerDto> DtoPassengers = new List<PassengerDto>();
+
+            foreach (var passenger in Passengers)
+            {
+                DtoPassengers.Add(_passengerMapper.MapToDto(passenger));
+            }
+            return DtoPassengers;
         }
     }
 }

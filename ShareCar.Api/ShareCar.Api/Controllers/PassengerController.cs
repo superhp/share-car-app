@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Identity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShareCar.Api.Controllers
 {
@@ -17,10 +14,10 @@ namespace ShareCar.Api.Controllers
         [HttpGet]
         public IActionResult GetPassengersByEmail(string email)
         {
-            IEnumerable<PassengerDto> passengers = passengerLogic.FindPassengersByEmail(email);
-            if (passengers != null)
+            IEnumerable<PassengerDto> passengerRides = passengerLogic.FindPassengersByEmail(email);
+            if (passengerRides != null)
             {
-                return Ok(passengers);
+                return Ok(passengerRides);
             }
             else
             {

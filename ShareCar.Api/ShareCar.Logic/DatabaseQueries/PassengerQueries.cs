@@ -21,6 +21,7 @@ namespace ShareCar.Logic.DatabaseQueries
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)
         {
+            
             return _databaseContext.Passengers.Where(x => x.RideId == id);
         }
     }

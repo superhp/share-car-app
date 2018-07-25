@@ -48,14 +48,17 @@ namespace ShareCar.Logic.DatabaseQueries
             {
                 return null;
             }
-            }
+        }
 
         public IEnumerable<Ride> FindRidesByStartPoint(Address address)
         {
 
                 return _databaseContext.Rides.Where(x => x.From == address);
-            }
-
+        }
+        public IEnumerable<Passenger> FindPassengersByRideId(int id)
+        {
+            return _databaseContext.Passengers.Where(x => x.RideId == id);
+        }
         public void UpdateRide(Ride ride)
         {
             Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShareCar.Db;
 using ShareCar.Db.Repositories;
+using ShareCar.Dto.Identity;
+using ShareCar.Logic.Identity;
 
 namespace ShareCar.Api.Controllers
 {
@@ -11,10 +13,10 @@ namespace ShareCar.Api.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPassengerLogic passengerLogic;
 
         public UserController(IUserRepository userRepository)
         {
-
             _userRepository = userRepository;
         }
 
@@ -25,7 +27,20 @@ namespace ShareCar.Api.Controllers
             return Ok(userDto);
         }
 
-
+        [HttpGet]
+        [Route("{email}")]
+        public IActionResult GetPassengersByEmail(string email)
+        {
+            IEnumerable<PassengerDto> passengerRides = passengerLogic.FindPassengersByEmail(email);
+            if (passengerRides != null)
+            {
+                return Ok(passengerRides);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
 
     }
