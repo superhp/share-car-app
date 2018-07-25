@@ -81,6 +81,14 @@ namespace ShareCar.Api.Controllers
         [HttpPut]
         public IActionResult Put([FromBody] RideDto ride)
         {
+            ride = new RideDto();
+            ride.RideId = 5;
+            ride.FromId = 4;
+            ride.ToId = 4;
+            ride.Passengers = new List<PassengerDto>();
+            ride.Requests = new List<RequestDto>();
+            ride.DriverEmail = "e@g.com";
+
             if (ride == null)
             {
                 return BadRequest("Invalid parameter");

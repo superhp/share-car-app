@@ -16,17 +16,18 @@ namespace ShareCar.Logic.ObjectMapping
             List<Passenger> EntityPassengers = new List<Passenger>();
             List<Request> EntityRequests = new List<Request>();
 
-
-            foreach (var passenger in ride.Passengers)
-            {
-                EntityPassengers.Add(PassengerMapper.MapToEntity(passenger));
-            }
-
-            foreach (var request in ride.Requests)
-            {
-                EntityRequests.Add(RequestMapper.MapToEntity(request));
-            }
-
+            
+                foreach (var passenger in ride.Passengers)
+                {
+                    EntityPassengers.Add(PassengerMapper.MapToEntity(passenger));
+                }
+            
+            
+                foreach (var request in ride.Requests)
+                {
+                    EntityRequests.Add(RequestMapper.MapToEntity(request));
+                }
+            
             return new Ride
             {
                 RideId = ride.RideId,

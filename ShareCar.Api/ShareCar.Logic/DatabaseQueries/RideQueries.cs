@@ -56,12 +56,21 @@ namespace ShareCar.Logic.DatabaseQueries
                 return _databaseContext.Rides.Where(x => x.From == address);
             }
 
-        public void UpdateRide(Ride ride)
+        public bool UpdateRide(Ride ride)
         {
-            Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
+            try
+            {
+                Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
+                 _rideMapper.MapEntityToEntity(toUpdate, ride);
+                 _databaseContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                // Should be validation which returns certain error message
+                return false;
+            }
 
-            _rideMapper.MapEntityToEntity(toUpdate, ride);
-            _databaseContext.SaveChanges();
         }
 
         public IEnumerable<Ride> FindRidesByDriver(string email)

@@ -62,19 +62,24 @@ namespace ShareCar.Logic.Identity
         public bool UpdateRide(RideDto ride)
         {
 
-            bool addNewRide = ValidateNewRide();
+            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
+            //  bool addNewRide = ValidateNewRide(); 
+
+            bool addNewRide = true; // Will be deleted once validation appears
 
             if (addNewRide)
             {
-                _rideQueries.UpdateRide(_rideMapper.MapToEntity(ride));
-                return true;
+               return _rideQueries.UpdateRide(_rideMapper.MapToEntity(ride));
+               
             }
             return false;
-        }
+        }   
 
         public bool AddRide(RideDto ride)
         {
 
+            ride.Passengers = new List<PassengerDto>();
+            ride.Requests = new List<RequestDto>();
             
             //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
           //  bool addNewRide = ValidateNewRide(); 
