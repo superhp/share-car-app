@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Entities;
@@ -10,12 +11,12 @@ using ShareCar.Logic.Identity;
 
 namespace ShareCar.Api.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
-        private readonly IPassengerLogic _passengerLogic;
 
         public RideController(IRideLogic rideLogic)
         {

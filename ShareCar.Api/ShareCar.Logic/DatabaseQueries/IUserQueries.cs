@@ -10,5 +10,6 @@ namespace ShareCar.Logic.DatabaseQueries
         bool CheckIfRegistered(string userEmail);
         void RegisterUser(Person user);
         int CalculatePoints(string userEmail);
+        IEnumerable<Passenger> FindPassengersByEmail(string email);
     }
 }

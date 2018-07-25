@@ -15,7 +15,11 @@ namespace ShareCar.Logic.DatabaseQueries
         {
             _databaseContext = context;
         }
+        public IEnumerable<Passenger> FindPassengersByEmail(string email)
+        {
+            return _databaseContext.Passengers.Where(x => x.Email == email);
 
+        }
         public int CalculatePoints(string userEmail)
         {
             IEnumerable<Ride> Rides = _databaseContext.Rides.Where(x => x.DriverEmail == userEmail);

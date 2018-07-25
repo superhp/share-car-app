@@ -12,6 +12,7 @@ namespace ShareCar.Logic.DatabaseQueries
         IEnumerable<Ride> FindRidesByDate(DateTime date);
         IEnumerable<Ride> FindRidesByDestination(Address address);
         IEnumerable<Ride> FindRidesByStartPoint(Address address);
+        IEnumerable<Passenger> FindPassengersByRideId(int rideId);
         bool UpdateRide(Ride ride);
         void AddRide(Ride ride);
     }

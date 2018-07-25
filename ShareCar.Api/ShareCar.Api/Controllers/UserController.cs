@@ -13,11 +13,12 @@ namespace ShareCar.Api.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPassengerLogic passengerLogic;
+        private readonly IUserLogic _userLogic;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IUserLogic userLogic)
         {
             _userRepository = userRepository;
+            _userLogic = userLogic;
         }
 
         public async Task<IActionResult> Get()
@@ -31,7 +32,7 @@ namespace ShareCar.Api.Controllers
         [Route("{email}")]
         public IActionResult GetPassengersByEmail(string email)
         {
-            IEnumerable<PassengerDto> passengerRides = passengerLogic.FindPassengersByEmail(email);
+            IEnumerable<PassengerDto> passengerRides = _userLogic.FindPassengersByEmail(email);
             if (passengerRides != null)
             {
                 return Ok(passengerRides);

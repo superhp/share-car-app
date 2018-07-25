@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShareCar.Dto.Identity
+﻿namespace ShareCar.Dto.Identity
 {
     public class PointsDto
     {

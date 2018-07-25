@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShareCar.Db.Entities
+﻿namespace ShareCar.Db.Entities
 {
     public class Passenger
     {
