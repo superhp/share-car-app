@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ShareCar.Logic.DatabaseQueries
 {
-    interface IUserQueries
+    public interface IUserQueries
     {
         bool CheckIfRegistered(string userEmail);
-        void RegisterUser(Person user);
+        void RegisterUser(User user);
         int CalculatePoints(string userEmail);
         IEnumerable<Passenger> FindPassengersByEmail(string email);
     }

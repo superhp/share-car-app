@@ -44,7 +44,7 @@ namespace ShareCar.Logic.DatabaseQueries
         {
             try
             {// Throws exception if user is not found
-                return _databaseContext.People.Single(x => x.Email == userEmail) == null ? false : true; 
+                return _databaseContext.User.Single(x => x.Email == userEmail) == null ? false : true; 
             }
             catch
             {
@@ -52,9 +52,9 @@ namespace ShareCar.Logic.DatabaseQueries
             }
         }
 
-        public void RegisterUser(Person user)
+        public void RegisterUser(User user)
         {
-            _databaseContext.People.Add(user);
+            _databaseContext.User.Add(user);
             _databaseContext.SaveChanges();
         }
     }

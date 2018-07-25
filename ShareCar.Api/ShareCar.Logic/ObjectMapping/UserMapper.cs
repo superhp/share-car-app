@@ -6,9 +6,9 @@ namespace ShareCar.Logic.ObjectMapping
 {
     class UserMapper
     {
-        public Person MapIdentityUserToPerson(IdentityUser<string> user)
+        public User MapIdentityUserToPerson(IdentityUser<string> user)
         {
-            return new Person
+            return new User
             {
                 Email = user.Email
             };

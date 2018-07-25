@@ -1,7 +1,6 @@
 ﻿using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using ShareCar.Logic.DatabaseQueries;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Dto.Identity;
@@ -34,36 +33,36 @@ namespace ShareCar.Logic.Identity
 
         public IEnumerable<RideDto> FindRidesByDate(DateTime date)
         {
-            IEnumerable <Ride> Rides = _rideQueries.FindRidesByDate(date);
+            IEnumerable <Ride> rides = _rideQueries.FindRidesByDate(date);
 
-            return MapToList(Rides);
+            return MapToList(rides);
         }
 
         public IEnumerable<RideDto> FindRidesByDriver(string email)
         {
-            IEnumerable<Ride> Rides = _rideQueries.FindRidesByDriver(email);
-            return MapToList(Rides);
+            IEnumerable<Ride> rides = _rideQueries.FindRidesByDriver(email);
+            return MapToList(rides);
         }
 
 
         public IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address)
         {
             Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> Rides = _rideQueries.FindRidesByStartPoint(EntityAddress);
-            return MapToList(Rides);
+            IEnumerable<Ride> rides = _rideQueries.FindRidesByStartPoint(EntityAddress);
+            return MapToList(rides);
         }
 
         public IEnumerable<RideDto> FindRidesByDestination(AddressDto address)
         {
             Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> Rides = _rideQueries.FindRidesByDestination(EntityAddress);
-            return MapToList(Rides);
+            IEnumerable<Ride> rides = _rideQueries.FindRidesByDestination(EntityAddress);
+            return MapToList(rides);
         }
         public IEnumerable<PassengerDto> FindPassengersByRideId(int id)
         {
-            IEnumerable<Passenger> Passengers = _rideQueries.FindPassengersByRideId(id);
+            IEnumerable<Passenger> passengers = _rideQueries.FindPassengersByRideId(id);
 
-            return MapToList(Passengers);
+            return MapToList(passengers);
         }
         public bool UpdateRide(RideDto ride)
         {
@@ -108,26 +107,26 @@ namespace ShareCar.Logic.Identity
         }
 
         // Returns a list of mapped objects
-        private IEnumerable<RideDto> MapToList(IEnumerable<Ride> Rides)
+        private IEnumerable<RideDto> MapToList(IEnumerable<Ride> rides)
         {
             List<RideDto> DtoRides = new List<RideDto>();
 
-            foreach (var ride in Rides)
+            foreach (var ride in rides)
             {
                 DtoRides.Add(_rideMapper.MapToDto(ride));
             }
             return DtoRides;
         }
-        private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> Passengers)
+        private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> passengers)
         {
-            if (Passengers == null)
+            if (passengers == null)
             {
                 return null;
             }
 
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();
 
-            foreach (var passenger in Passengers)
+            foreach (var passenger in passengers)
             {
                 DtoPassengers.Add(_passengerMapper.MapToDto(passenger));
             }

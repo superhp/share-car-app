@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Identity;
 
@@ -39,44 +36,31 @@ namespace ShareCar.Api.Controllers
 
 
         [HttpGet("driverEmail={driverEmail}")]
-        public void GetRidesByDriver(string driverEmail)
+        public IActionResult GetRidesByDriver(string driverEmail)
         {
-
-            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDriver(driverEmail);
-
-            SendResponse(Rides);
-
-
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDriver(driverEmail);
+            return SendResponse(rides);
         }
 
         [HttpGet("ridedate={rideDate}")]
-        public void GetRidesByDate(DateTime rideDate)
+        public IActionResult GetRidesByDate(DateTime rideDate)
         {
-
-            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDate(rideDate);
-
-            SendResponse(Rides);
-
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDate(rideDate);
+            return SendResponse(rides);
         }
 
         [HttpGet("addressFrom={addressFrom}")]
-        public void GetRidesByStartPoint(AddressDto addressFrom)
+        public IActionResult GetRidesByStartPoint(AddressDto addressFrom)
         {
-
-            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByStartPoint(addressFrom);
-
-            SendResponse(Rides);
-
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByStartPoint(addressFrom);
+            return SendResponse(rides);
         }
 
         [HttpGet("addressTo={addressTo}")]
-        public void GetRidesByDestination(AddressDto addressTo)
+        public IActionResult GetRidesByDestination(AddressDto addressTo)
         {
-
-            IEnumerable<RideDto> Rides = _rideLogic.FindRidesByDestination(addressTo);
-
-            SendResponse(Rides);
-
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDestination(addressTo);
+            return SendResponse(rides);
         }
 
         [HttpGet("rideId={rideId}")]
@@ -146,14 +130,12 @@ namespace ShareCar.Api.Controllers
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
-
             if (ride.Count() == 0)
             {
                 return NotFound();
             }
             return Ok(ride);
         }
-
     }
 
 

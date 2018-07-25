@@ -13,14 +13,13 @@ namespace ShareCar.Logic.Identity
 {
     public class UserLogic : IUserLogic
     {
-        private readonly ApplicationDbContext _databaseContext;
-        private readonly IUserQueries _userQueries;
         private readonly PassengerMapper _passengerMapper = new PassengerMapper();
         private readonly UserMapper _userMapper = new UserMapper();
+        private readonly IUserQueries _userQueries;
 
-        public UserLogic(ApplicationDbContext context)
+        public UserLogic(IUserQueries userQueries)
         {
-            _databaseContext = context;
+            _userQueries = userQueries;
         }
 
         public bool CheckIfRegistered(IdentityUser<string> user)

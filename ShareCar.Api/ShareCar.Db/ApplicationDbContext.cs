@@ -10,7 +10,7 @@ namespace ShareCar.Db
         {
 
         }
-        public DbSet<Person> People { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<Ride> Rides { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<Address> Addresses { get; set; }
