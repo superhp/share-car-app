@@ -35,7 +35,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public async Task<IEnumerable<RideDto>> FindRidesByDate(DateTime date, ClaimsPrincipal User)
         {
-            IEnumerable <Ride> rides = _rideQueries.FindRidesByDate(date, User);
+            IEnumerable <Ride> rides = await _rideRepository.FindRidesByDate(date, User);
 
             return MapToList(rides);
         }
@@ -49,14 +49,13 @@ namespace ShareCar.Logic.Ride_Logic
 
         public IEnumerable<RideDto> FindRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<Ride> rides = _rideQueries.FindRidesByStartPoint(addressFromId);
+            IEnumerable<Ride> rides = _rideRepository.FindRidesByStartPoint(addressFromId);
             return MapToList(rides);
         }
 
-        public IEnumerable<RideDto> FindRidesByDestination(AddressDto address)
+        public async Task<IEnumerable<RideDto>> FindRidesByDestination(int addressToId, ClaimsPrincipal User)
         {
-            Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> rides = _rideRepository.FindRidesByDestination(EntityAddress);
+            IEnumerable<Ride> rides = await _rideRepository.FindRidesByDestination(addressToId, User);
             return MapToList(rides);
         }
         public IEnumerable<PassengerDto> FindPassengersByRideId(int id)
