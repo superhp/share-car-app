@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using ShareCar.Logic.DatabaseQueries;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Dto.Identity;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ShareCar.Logic.Identity
 {
@@ -31,10 +34,9 @@ namespace ShareCar.Logic.Identity
             return _rideMapper.MapToDto(ride);
         }
 
-        public IEnumerable<RideDto> FindRidesByDate(DateTime date)
+        public async Task<IEnumerable<RideDto>> FindRidesByDate(DateTime date, ClaimsPrincipal User)
         {
-            IEnumerable <Ride> rides = _rideQueries.FindRidesByDate(date);
-
+            IEnumerable<Ride> rides = await _rideQueries.FindRidesByDate(date, User);
             return MapToList(rides);
         }
 
@@ -45,10 +47,9 @@ namespace ShareCar.Logic.Identity
         }
 
 
-        public IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address)
+        public IEnumerable<RideDto> FindRidesByStartPoint(int addressFromId)
         {
-            Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> rides = _rideQueries.FindRidesByStartPoint(EntityAddress);
+            IEnumerable<Ride> rides = _rideQueries.FindRidesByStartPoint(addressFromId);
             return MapToList(rides);
         }
 

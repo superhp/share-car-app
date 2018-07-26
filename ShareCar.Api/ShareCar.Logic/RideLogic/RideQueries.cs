@@ -2,9 +2,12 @@
 using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using ShareCar.Logic.ObjectMapping;
+using ShareCar.Db.Repositories;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ShareCar.Logic.DatabaseQueries
 {
@@ -12,13 +15,15 @@ namespace ShareCar.Logic.DatabaseQueries
     {
         private readonly ApplicationDbContext _databaseContext;
         private readonly RideMapper _rideMapper;
+        private readonly IUserRepository _userRepository;
 
 
 
-        public RideQueries(ApplicationDbContext context)
+        public RideQueries(ApplicationDbContext context, IUserRepository userRepository)
         {
             _databaseContext = context;
             _rideMapper = new RideMapper();
+            _userRepository = userRepository;
         }
 
 
@@ -28,9 +33,12 @@ namespace ShareCar.Logic.DatabaseQueries
             _databaseContext.SaveChanges();
         }
 
-        public IEnumerable<Ride> FindRidesByDate(DateTime date)
+        public async Task<IEnumerable<Ride>> FindRidesByDate(DateTime date, ClaimsPrincipal User)
         {
-                return _databaseContext.Rides.Where(x => x.RideDateTime == date);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            return _databaseContext.Rides
+                    .Where(y => y.DriverEmail == userDto.Email)
+                    .Where(x => x.RideDateTime == date);
         }
 
         public IEnumerable<Ride> FindRidesByDestination(Address address)
@@ -50,10 +58,9 @@ namespace ShareCar.Logic.DatabaseQueries
             }
         }
 
-        public IEnumerable<Ride> FindRidesByStartPoint(Address address)
+        public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId)
         {
-
-                return _databaseContext.Rides.Where(x => x.From == address);
+                return _databaseContext.Rides.Where(x => x.FromId == addressFromId);
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)
         {
@@ -77,6 +84,6 @@ namespace ShareCar.Logic.DatabaseQueries
         public IEnumerable<Ride> FindRidesByDriver(string email)
         {
                 return _databaseContext.Rides.Where(x => x.DriverEmail == email);         
-            }
+        }
     }
 }

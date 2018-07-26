@@ -47,28 +47,44 @@ namespace ShareCar.Logic.ObjectMapping
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();
             List<RequestDto> DtoRequests = new List<RequestDto>();
 
-
-            foreach (var passenger in ride.Passengers)
+            try
             {
-                DtoPassengers.Add(PassengerMapper.MapToDto(passenger));
+                foreach (var passenger in ride.Passengers)
+                {
+                    DtoPassengers.Add(PassengerMapper.MapToDto(passenger));
+                }
+
+                foreach (var request in ride.Requests)
+                {
+                    DtoRequests.Add(RequestMapper.MapToDto(request));
+                }
+
+                return new RideDto
+                {
+                    RideId = ride.RideId,
+                    FromId = ride.FromId,
+                    ToId = ride.ToId,
+                    DriverEmail = ride.DriverEmail,
+                    RideDateTime = ride.RideDateTime,
+                    Passengers = DtoPassengers,
+                    Requests = DtoRequests
+
+                };
+             }
+                catch (System.NullReferenceException)
+                {
+                return new RideDto
+                {
+                    RideId = ride.RideId,
+                    FromId = ride.FromId,
+                    ToId = ride.ToId,
+                    DriverEmail = ride.DriverEmail,
+                    RideDateTime = ride.RideDateTime,
+                    Passengers = null,
+                    Requests = null
+
+                };
             }
-
-            foreach (var request in ride.Requests)
-            {
-                DtoRequests.Add(RequestMapper.MapToDto(request));
-            }
-            
-            return new RideDto
-            {
-                RideId = ride.RideId,
-                FromId = ride.FromId,
-                ToId = ride.ToId,
-                DriverEmail = ride.DriverEmail,
-                RideDateTime = ride.RideDateTime,
-                Passengers = DtoPassengers,
-                Requests = DtoRequests
-
-            };
         }
 
         public void MapEntityToEntity(Ride target, Ride example)

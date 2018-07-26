@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Identity;
 
@@ -14,45 +16,34 @@ namespace ShareCar.Api.Controllers
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
+        private readonly IUserRepository _userRepository;
 
-        public RideController(IRideLogic rideLogic)
+
+        public RideController(IRideLogic rideLogic, IUserRepository userRepository)
         {
             _rideLogic = rideLogic;
+            _userRepository = userRepository;
         }
 
-        [HttpGet("{rideId}")]
-        public IActionResult GetRideById(int rideId)
+        [HttpGet]
+        public async Task<IActionResult> GetRidesByLoggedUser()
         {
-
-            RideDto ride = _rideLogic.FindRideById(rideId);
-
-            if (ride == null)
-            {
-                return NotFound();
-            }
-            return Ok(ride);
-        }
-
-
-
-        [HttpGet("driverEmail={driverEmail}")]
-        public IActionResult GetRidesByDriver(string driverEmail)
-        {
-            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDriver(driverEmail);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDriver(userDto.Email);
             return SendResponse(rides);
         }
 
         [HttpGet("ridedate={rideDate}")]
-        public IActionResult GetRidesByDate(DateTime rideDate)
+        public async Task<IActionResult> GetRidesByDate(DateTime rideDate)
         {
-            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDate(rideDate);
+            IEnumerable<RideDto> rides = await _rideLogic.FindRidesByDate(rideDate, User);
             return SendResponse(rides);
         }
 
-        [HttpGet("addressFrom={addressFrom}")]
-        public IActionResult GetRidesByStartPoint(AddressDto addressFrom)
+        [HttpGet("addressFromId={addressFromId}")]
+        public IActionResult GetRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<RideDto> rides = _rideLogic.FindRidesByStartPoint(addressFrom);
+            IEnumerable<RideDto> rides = _rideLogic.FindRidesByStartPoint(addressFromId);
             return SendResponse(rides);
         }
 
