@@ -38,6 +38,7 @@ namespace ShareCar.Logic.Request_Logic
         public bool AddRequest(RequestDto request)
         {
             request.SeenByDriver = false;
+            request.SeenByPassenger = true;
            return _requestQueries.AddRequest(_requestMapper.MapToEntity(request));
         }
 
@@ -49,7 +50,11 @@ namespace ShareCar.Logic.Request_Logic
 
         public IEnumerable<RequestDto> FindRequestsByDriverEmail(string email)
         {
+
             IEnumerable<Request> requests = _requestQueries.FindRequestsByDriverEmail(email);
+
+
+
             return MapToList(requests);
         }
         
@@ -59,8 +64,10 @@ namespace ShareCar.Logic.Request_Logic
             return MapToList(requests);
         }
 
+        // Should be called only by driver
         public bool UpdateRequest(RequestDto request)
         {
+            
                 return _requestQueries.UpdateRequest(_requestMapper.MapToEntity(request));
 
                     }

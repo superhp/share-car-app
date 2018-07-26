@@ -30,7 +30,7 @@ namespace ShareCar.Logic.Request_Logic
         {
             try
             {
-                return _databaseContext.Requests.Single(x => x.RequestId == id); // Throws exception if ride is not found
+                return _databaseContext.Requests.Single(x => x.RequestId == id); // Throws exception if request is not found
             }
             catch
             {

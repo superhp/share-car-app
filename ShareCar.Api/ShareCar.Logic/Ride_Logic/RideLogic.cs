@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Dto.Identity;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace ShareCar.Logic.Ride_Logic
