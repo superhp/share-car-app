@@ -170,7 +170,7 @@ namespace ShareCar.Db.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(maxLength: 256,nullable: false),
+                    UserId = table.Column<string>(maxLength: 256, nullable: false),
                     RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
