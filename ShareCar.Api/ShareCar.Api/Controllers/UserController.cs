@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Identity;
+using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
 {
@@ -12,10 +13,10 @@ namespace ShareCar.Api.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly Db.Repositories.IUserRepository _userRepository;
         private readonly IUserLogic _userLogic;
 
-        public UserController(IUserRepository userRepository, IUserLogic userLogic)
+        public UserController(Db.Repositories.IUserRepository userRepository, IUserLogic userLogic)
         {
             _userRepository = userRepository;
             _userLogic = userLogic;

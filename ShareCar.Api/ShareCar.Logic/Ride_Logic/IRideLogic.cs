@@ -6,7 +6,7 @@ using ShareCar.Dto.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Ride_Logic
 {
     public interface IRideLogic
     {

@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using ShareCar.Db;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.DatabaseQueries;
-using ShareCar.Logic.Identity;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.User_Logic
 {
     public class UserLogic : IUserLogic
     {
         private readonly PassengerMapper _passengerMapper = new PassengerMapper();
         private readonly UserMapper _userMapper = new UserMapper();
-        private readonly IUserQueries _userQueries;
+        private readonly IUserRepository _userQueries;
 
-        public UserLogic(IUserQueries userQueries)
+        public UserLogic(IUserRepository userQueries)
         {
             _userQueries = userQueries;
         }

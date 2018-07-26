@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace ShareCar.Logic.DatabaseQueries
+namespace ShareCar.Logic.Ride_Logic
 {
-    public class RideQueries : IRideQueries
+    public class RideRepository : IRideRepository
     {
         private readonly ApplicationDbContext _databaseContext;
         private readonly RideMapper _rideMapper;
@@ -19,7 +19,7 @@ namespace ShareCar.Logic.DatabaseQueries
 
 
 
-        public RideQueries(ApplicationDbContext context, IUserRepository userRepository)
+        public RideRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
             _rideMapper = new RideMapper();
@@ -58,9 +58,10 @@ namespace ShareCar.Logic.DatabaseQueries
             }
         }
 
-        public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId)
+        public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User)
         {
-                return _databaseContext.Rides.Where(x => x.FromId == addressFromId);
+                return _databaseContext.Rides
+                .Where(x => x.FromId == addressFromId);
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)
         {
