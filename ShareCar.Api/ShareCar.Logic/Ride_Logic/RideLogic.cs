@@ -1,27 +1,26 @@
 ﻿using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
-using ShareCar.Logic.DatabaseQueries;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
-        private readonly IRideQueries _rideQueries;
+        private readonly IRideRepository _rideRepository;
         private RideMapper _rideMapper = new RideMapper();
         private PassengerMapper _passengerMapper = new PassengerMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 
-        public RideLogic(IRideQueries rideQueries)
+        public RideLogic(IRideRepository rideRepository)
         {
-            _rideQueries = rideQueries;
+            _rideRepository = rideRepository;
         }
 
         public RideDto FindRideById(int id)
         {
-            Ride ride = _rideQueries.FindRideById(id);
+            Ride ride = _rideRepository.FindRideById(id);
 
             if(ride == null)
             {
@@ -33,14 +32,14 @@ namespace ShareCar.Logic.Identity
 
         public IEnumerable<RideDto> FindRidesByDate(DateTime date)
         {
-            IEnumerable <Ride> rides = _rideQueries.FindRidesByDate(date);
+            IEnumerable <Ride> rides = _rideRepository.FindRidesByDate(date);
 
             return MapToList(rides);
         }
 
         public IEnumerable<RideDto> FindRidesByDriver(string email)
         {
-            IEnumerable<Ride> rides = _rideQueries.FindRidesByDriver(email);
+            IEnumerable<Ride> rides = _rideRepository.FindRidesByDriver(email);
             return MapToList(rides);
         }
 
@@ -48,19 +47,19 @@ namespace ShareCar.Logic.Identity
         public IEnumerable<RideDto> FindRidesByStartPoint(AddressDto address)
         {
             Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> rides = _rideQueries.FindRidesByStartPoint(EntityAddress);
+            IEnumerable<Ride> rides = _rideRepository.FindRidesByStartPoint(EntityAddress);
             return MapToList(rides);
         }
 
         public IEnumerable<RideDto> FindRidesByDestination(AddressDto address)
         {
             Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> rides = _rideQueries.FindRidesByDestination(EntityAddress);
+            IEnumerable<Ride> rides = _rideRepository.FindRidesByDestination(EntityAddress);
             return MapToList(rides);
         }
         public IEnumerable<PassengerDto> FindPassengersByRideId(int id)
         {
-            IEnumerable<Passenger> passengers = _rideQueries.FindPassengersByRideId(id);
+            IEnumerable<Passenger> passengers = _rideRepository.FindPassengersByRideId(id);
 
             return MapToList(passengers);
         }
@@ -74,7 +73,7 @@ namespace ShareCar.Logic.Identity
 
             if (addNewRide)
             {
-               return _rideQueries.UpdateRide(_rideMapper.MapToEntity(ride));
+               return _rideRepository.UpdateRide(_rideMapper.MapToEntity(ride));
                
             }
             return false;
@@ -92,8 +91,8 @@ namespace ShareCar.Logic.Identity
          bool   addNewRide = true; // Will be deleted once validation appears
 
             if (addNewRide)
-            {                
-                _rideQueries.AddRide(_rideMapper.MapToEntity(ride));
+            {
+                _rideRepository.AddRide(_rideMapper.MapToEntity(ride));
                 return true;
             }
             return false;

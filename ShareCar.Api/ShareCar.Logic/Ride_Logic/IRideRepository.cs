@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace ShareCar.Logic.DatabaseQueries
+namespace ShareCar.Logic.Ride_Logic
 {
-   public interface IRideQueries
+   public interface IRideRepository
     {
         Ride FindRideById(int id);
         IEnumerable<Ride> FindRidesByDriver(string email);

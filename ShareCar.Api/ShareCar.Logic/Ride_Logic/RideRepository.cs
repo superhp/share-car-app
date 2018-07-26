@@ -6,16 +6,16 @@ using System.Text;
 using System.Linq;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.DatabaseQueries
+namespace ShareCar.Logic.Ride_Logic
 {
-    public class RideQueries : IRideQueries
+    public class RideRepository : IRideRepository
     {
         private readonly ApplicationDbContext _databaseContext;
         private readonly RideMapper _rideMapper;
 
 
 
-        public RideQueries(ApplicationDbContext context)
+        public RideRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
             _rideMapper = new RideMapper();

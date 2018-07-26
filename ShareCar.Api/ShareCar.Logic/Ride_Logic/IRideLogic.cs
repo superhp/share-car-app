@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Ride_Logic
 {
     public interface IRideLogic
     {

@@ -159,21 +159,15 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<bool>("Completed");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Email", "RideId");
 
                     b.HasIndex("RideId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Passengers");
-                });
-
-            modelBuilder.Entity("ShareCar.Db.Entities.Person", b =>
-                {
-                    b.Property<string>("Email")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Email");
-
-                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>
@@ -332,15 +326,14 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.Passenger", b =>
                 {
-                    b.HasOne("ShareCar.Db.Entities.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("Email")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
                         .WithMany("Passengers")
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ShareCar.Db.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>
@@ -350,11 +343,11 @@ namespace ShareCar.Db.Migrations
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ShareCar.Db.Entities.Person", "Driver")
+                    b.HasOne("ShareCar.Db.Entities.User", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverEmail");
 
-                    b.HasOne("ShareCar.Db.Entities.Person", "Passenger")
+                    b.HasOne("ShareCar.Db.Entities.User", "Passenger")
                         .WithMany()
                         .HasForeignKey("PassengerEmail");
 

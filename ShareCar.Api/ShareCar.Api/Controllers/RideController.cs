@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Identity;
+using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
     public class RideController : Controller
