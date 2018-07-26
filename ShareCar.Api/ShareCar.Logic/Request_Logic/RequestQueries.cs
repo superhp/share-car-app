@@ -6,7 +6,7 @@ using ShareCar.Db;
 using ShareCar.Db.Entities;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     class RequestQueries : IRequestQueries
     {
@@ -23,6 +23,7 @@ namespace ShareCar.Logic.RequestLogic
         {
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
+            return true; // No validation
         }
 
         public Request FindRequestByRequestId(int id)
@@ -37,16 +38,11 @@ namespace ShareCar.Logic.RequestLogic
             }
         }
 
-        public Request FindRequestByRideId(int rideId)
+        public IEnumerable<Request> FindRequestByRideId(int rideId)
         {
-            try
-            {
-                return _databaseContext.Requests.Single(x => x.RequestId == rideId); // Throws exception if ride is not found
-            }
-            catch
-            {
-                return null;
-            }
+
+                return _databaseContext.Requests.Where(x => x.RequestId == rideId); // Throws exception if ride is not found
+
         }
 
         public IEnumerable<Request> FindRequestsByDriverEmail(string email)
@@ -72,7 +68,10 @@ namespace ShareCar.Logic.RequestLogic
                 Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 _requestMapper.MapEntityToEntity(toUpdate, request);
                 _databaseContext.SaveChanges();
-
+                return true;
+            }
+            catch{
+                return false;
             }
         }
     }

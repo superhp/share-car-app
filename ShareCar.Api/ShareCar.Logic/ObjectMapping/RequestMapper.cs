@@ -16,5 +16,10 @@ namespace ShareCar.Logic.ObjectMapping
         {
             throw new NotImplementedException();
         }
+
+        internal void MapEntityToEntity(Request toUpdate, Request request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

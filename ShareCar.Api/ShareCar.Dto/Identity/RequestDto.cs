@@ -11,6 +11,8 @@ namespace ShareCar.Dto.Identity
         public string PassengerEmail { get; set; }
         public string DriverEmail { get; set; }
         public int AddressId { get; set; }
+        public bool SeenByDriver { get; set; } 
+        public bool SeenByPassenger { get; set; } 
         public Status Status { get; set; }
 
     }

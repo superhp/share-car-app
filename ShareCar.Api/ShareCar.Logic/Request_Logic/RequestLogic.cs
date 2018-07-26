@@ -5,7 +5,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     class RequestLogic : IRequestLogic
     {
@@ -17,6 +17,7 @@ namespace ShareCar.Logic.RequestLogic
         {
             _requestQueries = requestQueries;
         }
+
         public RequestDto FindRequestByRequestId(int id)
         {
             Request request = _requestQueries.FindRequestByRequestId(id);
@@ -27,16 +28,18 @@ namespace ShareCar.Logic.RequestLogic
             }
             else return _requestMapper.MapToDto(request);
         }
+
         public IEnumerable<RequestDto> FindRequestsByPassengerEmail(string email)
         {
             IEnumerable<Request> requests = _requestQueries.FindRequestsByPassengerEmail(email);
             return MapToList(requests);
         }
+
         public bool AddRequest(RequestDto request)
         {
+            request.SeenByDriver = false;
            return _requestQueries.AddRequest(_requestMapper.MapToEntity(request));
         }
-
 
         public IEnumerable<RequestDto> FindRequestByRideId(int rideId)
         {
@@ -49,9 +52,7 @@ namespace ShareCar.Logic.RequestLogic
             IEnumerable<Request> requests = _requestQueries.FindRequestsByDriverEmail(email);
             return MapToList(requests);
         }
-
         
-
         public IEnumerable<RequestDto> FindRidesByPickUpPoint(AddressDto address)
         {
             IEnumerable<Request> requests = _requestQueries.FindRidesByPickUpPoint(_addressMapper.MapToEntity(address));
