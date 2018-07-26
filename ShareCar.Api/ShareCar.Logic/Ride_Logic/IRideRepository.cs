@@ -12,7 +12,7 @@ namespace ShareCar.Logic.Ride_Logic
         IEnumerable<Ride> FindRidesByDriver(string email);
         Task<IEnumerable<Ride>> FindRidesByDate(DateTime date, ClaimsPrincipal User);
         IEnumerable<Ride> FindRidesByDestination(Address address);
-        IEnumerable<Ride> FindRidesByStartPoint(int addressFromId);
+        Task<IEnumerable<Ride>> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User);
         IEnumerable<Passenger> FindPassengersByRideId(int rideId);
         bool UpdateRide(Ride ride);
         void AddRide(Ride ride);
