@@ -61,9 +61,11 @@ namespace ShareCar.Logic.Ride_Logic
             }
         }
 
-        public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User)
+        public async Task<IEnumerable<Ride>> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User)
         {
-                return _databaseContext.Rides
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            return _databaseContext.Rides
+                .Where(y => y.DriverEmail == userDto.Email)
                 .Where(x => x.FromId == addressFromId);
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)

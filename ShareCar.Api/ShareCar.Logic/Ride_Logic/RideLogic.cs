@@ -47,9 +47,9 @@ namespace ShareCar.Logic.Ride_Logic
         }
 
 
-        public IEnumerable<RideDto> FindRidesByStartPoint(int addressFromId)
+        public async Task<IEnumerable<RideDto>> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User)
         {
-            IEnumerable<Ride> rides = _rideRepository.FindRidesByStartPoint(addressFromId);
+            IEnumerable<Ride> rides = await _rideRepository.FindRidesByStartPoint(addressFromId, User);
             return MapToList(rides);
         }
 
