@@ -41,10 +41,13 @@ namespace ShareCar.Logic.Ride_Logic
                     .Where(x => x.RideDateTime == date);
         }
 
-        public IEnumerable<Ride> FindRidesByDestination(Address address)
+        public async Task<IEnumerable<Ride>> FindRidesByDestination(int addressToId, ClaimsPrincipal User)
         {
-                return _databaseContext.Rides.Where(x => x.To == address);
-            }
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            return _databaseContext.Rides
+                .Where(x => x.DriverEmail == userDto.Email)
+                .Where(x => x.ToId == addressToId);
+        }
 
         public Ride FindRideById(int id)
         {

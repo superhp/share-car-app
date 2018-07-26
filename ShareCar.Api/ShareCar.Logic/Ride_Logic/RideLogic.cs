@@ -53,10 +53,9 @@ namespace ShareCar.Logic.Ride_Logic
             return MapToList(rides);
         }
 
-        public IEnumerable<RideDto> FindRidesByDestination(AddressDto address)
+        public async Task<IEnumerable<RideDto>> FindRidesByDestination(int addressToId, ClaimsPrincipal User)
         {
-            Address EntityAddress = _addressMapper.MapToEntity(address);
-            IEnumerable<Ride> rides = _rideRepository.FindRidesByDestination(EntityAddress);
+            IEnumerable<Ride> rides = await _rideRepository.FindRidesByDestination(addressToId, User);
             return MapToList(rides);
         }
         public IEnumerable<PassengerDto> FindPassengersByRideId(int id)

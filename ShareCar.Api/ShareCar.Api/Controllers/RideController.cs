@@ -48,10 +48,10 @@ namespace ShareCar.Api.Controllers
             return SendResponse(rides);
         }
 
-        [HttpGet("addressTo={addressTo}")]
-        public IActionResult GetRidesByDestination(AddressDto addressTo)
+        [HttpGet("addressToId={addressToId}")]
+        public async Task<IActionResult> GetRidesByDestination(int addressToId)
         {
-            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDestination(addressTo);
+            IEnumerable<RideDto> rides = await _rideLogic.FindRidesByDestination(addressToId, User);
             return SendResponse(rides);
         }
 
