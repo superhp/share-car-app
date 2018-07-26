@@ -36,7 +36,7 @@ type TodoItemFormState = {
       }
 
 
-function showDriverRequests(){
+ showDriverRequests(){
     axios.get('http://localhost:5963/api/Request/driver')
     .then(res => {
       const requests = res.data;
@@ -44,7 +44,11 @@ function showDriverRequests(){
     })
 };
 
-function showPassengerRequests(){
+    // This binding is necessary to make `this` work in the callback
+   // this.showPassengerRequests = this.showPassengerRequests.bind(this);
+  
+
+  showPassengerRequests(){
     axios.get('http://localhost:5963/api/Request/passenger')
     .then(res => {
       const requests = res.data;
@@ -70,7 +74,8 @@ function showPassengerRequests(){
 
         return(
 
-        
+            <div>
+
             <form onSubmit={this.handleSubmit.bind(this)}>
                 Address: <input type="text" name="address" defaultValue={""}/>
                 <br/>
@@ -82,12 +87,12 @@ function showPassengerRequests(){
 
 <button>Driver requests</button>       
 
-<button onClick="showPassengerRequests()">Passenger requests</button>
+<button onClick={this.showPassengerRequests}>Passenger requests</button>
 
     <ul>
     { this.state.requests.map(requests => 
     requests.seenByPassenger 
-    ?<li style={color: 'blue'}>{requests.requstId}</li>
+    ?<li>{requests.requstId}</li>
     : <li>{requests.requstId}</li>
     )
     
@@ -96,7 +101,7 @@ function showPassengerRequests(){
 
 
 
-
+</div>
 
         );
     }
