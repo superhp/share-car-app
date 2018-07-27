@@ -32,6 +32,7 @@ namespace ShareCar.Logic.RequestLogic
             IEnumerable<Request> requests = _requestQueries.FindRequestsByPassengerEmail(email);
             return MapToList(requests);
         }
+
         public bool AddRequest(RequestDto request)
         {
            return _requestQueries.AddRequest(_requestMapper.MapToEntity(request));

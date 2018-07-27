@@ -23,6 +23,7 @@ namespace ShareCar.Logic.RequestLogic
         {
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
+            return true;
         }
 
         public Request FindRequestByRequestId(int id)
@@ -37,11 +38,11 @@ namespace ShareCar.Logic.RequestLogic
             }
         }
 
-        public Request FindRequestByRideId(int rideId)
+        public IEnumerable<Request> FindRequestByRideId(int rideId)
         {
             try
             {
-                return _databaseContext.Requests.Single(x => x.RequestId == rideId); // Throws exception if ride is not found
+                return _databaseContext.Requests.Where(x => x.RequestId == rideId); // Throws exception if ride is not found
             }
             catch
             {
@@ -72,7 +73,12 @@ namespace ShareCar.Logic.RequestLogic
                 Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 _requestMapper.MapEntityToEntity(toUpdate, request);
                 _databaseContext.SaveChanges();
+                return true;
 
+            }
+            catch
+            {
+                return false;
             }
         }
     }

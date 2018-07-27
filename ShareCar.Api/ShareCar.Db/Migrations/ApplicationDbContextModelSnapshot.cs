@@ -183,6 +183,10 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<int?>("RideId");
 
+                    b.Property<bool>("SeenByDriver");
+
+                    b.Property<bool>("SeenByPassenger");
+
                     b.Property<int>("Status");
 
                     b.HasKey("RequestId");
