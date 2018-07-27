@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     public interface IRequestQueries
     {

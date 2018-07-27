@@ -64,6 +64,13 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(passengers);
         }
+
+        public async Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User)
+        {
+            IEnumerable<Passenger> rides = await _rideRepository.FindRidesByPassenger(User);
+
+            return MapToList(rides);
+        }
         public bool UpdateRide(RideDto ride)
         {
 

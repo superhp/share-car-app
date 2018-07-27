@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     public interface IRequestLogic
     {

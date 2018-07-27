@@ -6,7 +6,7 @@ using ShareCar.Db;
 using ShareCar.Db.Entities;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     class RequestQueries : IRequestQueries
     {

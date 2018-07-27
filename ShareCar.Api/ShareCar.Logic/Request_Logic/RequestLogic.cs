@@ -5,7 +5,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.ObjectMapping;
 
-namespace ShareCar.Logic.RequestLogic
+namespace ShareCar.Logic.Request_Logic
 {
     class RequestLogic : IRequestLogic
     {

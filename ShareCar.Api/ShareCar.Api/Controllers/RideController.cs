@@ -68,6 +68,21 @@ namespace ShareCar.Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        [Route("passengerRides")]
+        public async Task<IActionResult> GetRidesByPassenger()
+        {
+            IEnumerable<PassengerDto> passengerRides = await _rideLogic.FindRidesByPassenger(User);
+            if (passengerRides.ToList().Count != 0)
+            {
+                return Ok(passengerRides);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
         // Any object update. If user doesn't change property, it should be delivered unchanged
         [HttpPut]
         public IActionResult Put([FromBody] RideDto ride)
