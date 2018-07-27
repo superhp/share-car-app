@@ -15,6 +15,12 @@ namespace ShareCar.Logic.ObjectMapping
         public RequestDto MapToDto(Request request)
         {
             throw new NotImplementedException();
+
+        }
+
+        internal void MapEntityToEntity(Request toUpdate, Request request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

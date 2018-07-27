@@ -12,7 +12,8 @@ namespace ShareCar.Db.Entities
         public string DriverEmail { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }
-        
+        public bool SeenByDriver { get; set; }
+        public bool SeenByPassenger { get; set; }
         [ForeignKey("PassengerEmail")]
         public virtual User Passenger { get; set;}
         [ForeignKey("DriverEmail")]
