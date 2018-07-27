@@ -12,7 +12,6 @@ namespace ShareCar.Db.Entities
         public string DriverEmail { get; set; }
         public List<Passenger> Passengers { get; set; }
         public DateTime RideDateTime { get; set; }
-        public List<Request> Requests { get; set; }
         [ForeignKey("FromId")]
         public virtual Address From { get; set; }
         [ForeignKey("ToId")]

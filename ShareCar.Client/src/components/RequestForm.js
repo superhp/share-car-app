@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 // @flow
+=======
+
+>>>>>>> dev
 import * as React from "react";
 //import * as todoItem from "../../data/todoItem";
 //import { StatusInput } from "../TodoItem/StatusInput";
 //import { Loader } from "../Loader";
 import axios from 'axios';
+<<<<<<< HEAD
 
+=======
+import api from '../helpers/axiosHelper';
+>>>>>>> dev
 /*
 type TodoItemFormProps = {
     onUpdate: (item: TodoItem) => mixed,
@@ -17,7 +25,16 @@ type TodoItemFormState = {
     todoItem?: TodoItem
 }
 */
+<<<<<<< HEAD
  class RequestForm extends React.Component<{}>{
+=======
+ class RequestForm extends React.Component{
+    
+ 
+
+
+    
+>>>>>>> dev
     //state = {
     //    isLoading: true
    // }
@@ -37,7 +54,12 @@ type TodoItemFormState = {
 
 
  showDriverRequests(){
+<<<<<<< HEAD
     axios.get('http://localhost:5963/api/Request/driver')
+=======
+    
+    axios.get('http://localhost:5963/api/Default')
+>>>>>>> dev
     .then(res => {
       const requests = res.data;
       this.setState({ requests });
@@ -49,6 +71,7 @@ type TodoItemFormState = {
   
 
   showPassengerRequests(){
+<<<<<<< HEAD
     axios.get('http://localhost:5963/api/Request/passenger')
     .then(res => {
       const requests = res.data;
@@ -70,6 +93,42 @@ type TodoItemFormState = {
               console.log(res.data);
             })    }
 
+=======
+
+
+    api.get('Ride')
+    .then((response) => {
+        console.log((response.data: User));
+
+      //  callback((response.data: User));
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+
+
+
+    axios.get('http://localhost:5963/api/Default')
+    .then(res => {
+      const requests = res.data;
+      this.setState({ requests });
+    });
+};
+
+
+    handleSubmit(e) {
+        e.preventDefault();
+        let data = {
+            RideId: e.target.rideId.value,
+            AddressId: e.target.address.value,    
+        }
+          axios.post(`http://localhost:5963/api/Default`, data)
+            .then(res => {
+              console.log(res);
+              console.log(res.data);
+            })    };
+        
+>>>>>>> dev
     render(){
 
         return(
@@ -77,11 +136,20 @@ type TodoItemFormState = {
             <div>
 
             <form onSubmit={this.handleSubmit.bind(this)}>
+<<<<<<< HEAD
                 Address: <input type="text" name="address" defaultValue={""}/>
                 <br/>
                 Ride Id: <input type="text" name="rideId" defaultValue={""}/>
                 <br/>
              
+=======
+                AddressId: <input type="text" name="address" defaultValue={""}/>
+                <br/>
+                Ride Id: <input type="text" name="rideId" defaultValue={""}/>
+                <br/>
+
+
+>>>>>>> dev
                 <button>Save</button>       
             </form>
 

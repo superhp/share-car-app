@@ -11,11 +11,17 @@ namespace ShareCar.Db.Entities
         public string PassengerEmail { get; set; }
         public string DriverEmail { get; set; }
         public int AddressId { get; set; }
+        public int RideId { get; set; }
         public Status Status { get; set; }
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
+<<<<<<< HEAD
+=======
+        [ForeignKey("RideId")]
+        public virtual Ride RequestedRide { get; set;}
+>>>>>>> dev
         [ForeignKey("PassengerEmail")]
-        public virtual User Passenger { get; set;}
+        public virtual User Passenger { get; set; }
         [ForeignKey("DriverEmail")]
         public virtual User Driver { get; set; }
         [ForeignKey("AddressId")]

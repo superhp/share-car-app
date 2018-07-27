@@ -4,63 +4,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-<<<<<<< HEAD
-using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.Request_Logic;
-=======
-using ShareCar.Dto.Identity;
->>>>>>> dev
+using ShareCar.Logic.RequestLogic;
 
 namespace ShareCar.Api.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Request")]
-    public class RequestController : Controller
+    [Route("api/f")]
+    public class RC : Controller
     {
-<<<<<<< HEAD
         private readonly IRequestLogic _requestLogic;
-        private readonly IUserRepository _userRepository;
 
-             public RequestController(IRequestLogic requestLogic, IUserRepository userRepository)
-            {
-               _requestLogic = requestLogic;
-            _userRepository = userRepository;
-           }
-
+        public RC(IRequestLogic requestLogic)
+        {
+            _requestLogic = requestLogic;
+        }
         [HttpGet("{requestId}")]
         public IActionResult GetRequestById(int requestId)
         {
-=======
-        [HttpGet]
-        public void GetRequestById()
-        {/*
             RequestDto request = _requestLogic.FindRequestByRequestId(requestId);
             if (request == null)
             {
                 return NotFound("Operation failed");
-            }
-            return Ok(request);*/
-        }
-        [HttpPut]
-        public IActionResult Post([FromBody]  RideDto ride)
-        {/*
->>>>>>> dev
-            RequestDto request = _requestLogic.FindRequestByRequestId(requestId);
-            if (request == null)
-            {
-                return NotFound("Operation failed");
-<<<<<<< HEAD
             }
             return Ok(request);
         }
-        [HttpGet("/passengerEmail")]
-        public async Task<IActionResult> GetRequestByPassengerEmailAsync()
+
+     
+        [HttpGet("{passengerEmail}")]
+        public IActionResult GetRequestByPassengerEmail(string passengerEmail)
         {
-
-            var userDto = await _userRepository.GetLoggedInUser(User);
-
-            IEnumerable<RequestDto> request = _requestLogic.FindRequestsByPassengerEmail(userDto.Email);
+            IEnumerable<RequestDto> request = _requestLogic.FindRequestsByPassengerEmail(passengerEmail);
             if (request != null)
             {
                 return Ok(request);
@@ -70,12 +44,10 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Operation failed");
             }
         }
-        [HttpGet("/driverEmail")]
-        public async Task<IActionResult> GetRequestsByPassengerEmailAsync()
+        [HttpGet("{driverEmail}")]
+        public IActionResult GetRequestsByPassengerEmail(string driverEmail)
         {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-
-            IEnumerable<RequestDto> request = _requestLogic.FindRequestsByDriverEmail(userDto.Email);
+            IEnumerable<RequestDto> request = _requestLogic.FindRequestsByDriverEmail(driverEmail);
             if (request != null)
             {
                 return Ok(request);
@@ -132,30 +104,23 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Operation failed");
             }
         }
-
-        // Should be called only by driver
         [HttpPut]
-        public IActionResult Put([FromBody] string request)
+        public IActionResult Put([FromBody] RequestDto request)
         {
             if (request == null)
             {
                 return BadRequest("Invalid parameter");
             }
-            //  bool result = _requestLogic.UpdateRequest(request);
+            bool result = _requestLogic.UpdateRequest(request);
 
-            //   if (result)
+            if (result)
             {
                 return Ok();
             }
-            //    else
+            else
             {
-                //      return BadRequest("Operation failed");
+                return BadRequest("Operation failed");
             }
-=======
-            }*/
-            return Ok();
->>>>>>> dev
         }
     }
-
 }

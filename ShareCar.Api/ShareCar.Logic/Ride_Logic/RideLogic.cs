@@ -57,9 +57,9 @@ namespace ShareCar.Logic.Ride_Logic
             IEnumerable<Ride> rides = await _rideRepository.FindRidesByDestination(addressToId, User);
             return MapToList(rides);
         }
-        public IEnumerable<PassengerDto> FindPassengersByRideId(int id)
+        public async Task<IEnumerable<PassengerDto>> FindPassengersByRideId(int id, ClaimsPrincipal User)
         {
-            IEnumerable<Passenger> passengers = _rideRepository.FindPassengersByRideId(id);
+            IEnumerable<Passenger> passengers = await _rideRepository.FindPassengersByRideId(id, User);
 
             return MapToList(passengers);
         }
@@ -118,11 +118,6 @@ namespace ShareCar.Logic.Ride_Logic
         }
         private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> passengers)
         {
-            if (passengers == null)
-            {
-                return null;
-            }
-
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();
 
             foreach (var passenger in passengers)
@@ -131,5 +126,7 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return DtoPassengers;
         }
+
+
     }
 }

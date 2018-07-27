@@ -15,7 +15,7 @@ namespace ShareCar.Logic.Ride_Logic
         Task<IEnumerable<RideDto>> FindRidesByDate(DateTime date, ClaimsPrincipal User);
         Task<IEnumerable<RideDto>> FindRidesByDestination(int addressToId, ClaimsPrincipal User);
         Task<IEnumerable<RideDto>> FindRidesByStartPoint(int adressFromId, ClaimsPrincipal User);
-        IEnumerable<PassengerDto> FindPassengersByRideId(int rideId);
+        Task<IEnumerable<PassengerDto>> FindPassengersByRideId(int rideId, ClaimsPrincipal User);
         bool UpdateRide(RideDto ride);
         bool AddRide(RideDto ride);
 
