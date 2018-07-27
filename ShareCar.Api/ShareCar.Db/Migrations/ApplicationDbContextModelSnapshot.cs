@@ -177,7 +177,7 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("PassengerEmail");
 
-                    b.Property<int?>("RideId");
+                    b.Property<int>("RideId");
 
                     b.Property<bool>("SeenByDriver");
 
@@ -352,9 +352,10 @@ namespace ShareCar.Db.Migrations
                         .WithMany()
                         .HasForeignKey("PassengerEmail");
 
-                    b.HasOne("ShareCar.Db.Entities.Ride")
-                        .WithMany("Requests")
-                        .HasForeignKey("RideId");
+                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
+                        .WithMany()
+                        .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Ride", b =>

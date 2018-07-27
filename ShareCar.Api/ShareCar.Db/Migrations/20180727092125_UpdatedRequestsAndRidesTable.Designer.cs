@@ -12,8 +12,8 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180727072251_Seen attributes added to Request Entity")]
-    partial class SeenattributesaddedtoRequestEntity
+    [Migration("20180727092125_UpdatedRequestsAndRidesTable")]
+    partial class UpdatedRequestsAndRidesTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,7 +178,7 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("PassengerEmail");
 
-                    b.Property<int?>("RideId");
+                    b.Property<int>("RideId");
 
                     b.Property<bool>("SeenByDriver");
 
@@ -353,9 +353,10 @@ namespace ShareCar.Db.Migrations
                         .WithMany()
                         .HasForeignKey("PassengerEmail");
 
-                    b.HasOne("ShareCar.Db.Entities.Ride")
-                        .WithMany("Requests")
-                        .HasForeignKey("RideId");
+                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
+                        .WithMany()
+                        .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Ride", b =>

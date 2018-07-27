@@ -14,6 +14,9 @@ namespace ShareCar.Db.Entities
         public Status Status { get; set; }
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
+        public int RideId { get; set; }
+        [ForeignKey("RideId")]
+        public virtual Ride Ride { get; set; }
         [ForeignKey("PassengerEmail")]
         public virtual User Passenger { get; set;}
         [ForeignKey("DriverEmail")]
