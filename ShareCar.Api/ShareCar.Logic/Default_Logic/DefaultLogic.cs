@@ -20,14 +20,8 @@ namespace ShareCar.Logic.Default_Logic
         }
 
         public bool AddRequest(RequestDto requestDto)
-        {
-
-
-
-           return  _defaultRepository.AddRequest(MapToEntity(requestDto));
-
-           
-
+        {     
+           return  _defaultRepository.AddRequest(MapToEntity(requestDto));           
         }
 
         public IEnumerable<RequestDto> FindUsersRequests(bool driver, string email)
