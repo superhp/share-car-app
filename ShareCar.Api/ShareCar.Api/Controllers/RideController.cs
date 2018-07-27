@@ -11,7 +11,7 @@ using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
     public class RideController : Controller
