@@ -15,12 +15,12 @@ namespace ShareCar.Api.Controllers
     public class DefaultController : Controller
     {
         private readonly IDefaultLogic _requestLogic;
-  //      private readonly IUserRepository _userRepository;
+       // private readonly IUserRepository _userRepository;
 
         public DefaultController(IDefaultLogic requestLogic, IUserRepository userRepository)
         {
             _requestLogic = requestLogic;
-   //         _userRepository = userRepository;
+      //      _userRepository = userRepository;
         }
         
         [HttpGet]
