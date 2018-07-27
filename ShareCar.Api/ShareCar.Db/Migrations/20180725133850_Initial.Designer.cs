@@ -12,8 +12,8 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180727070107_Sen atributes added i REquet entity")]
-    partial class SenatributesaddediREquetentity
+    [Migration("20180725133850_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -183,10 +183,6 @@ namespace ShareCar.Db.Migrations
                     b.Property<string>("PassengerEmail");
 
                     b.Property<int?>("RideId");
-
-                    b.Property<bool>("SeenByDriver");
-
-                    b.Property<bool>("SeenByPassenger");
 
                     b.Property<int>("Status");
 
