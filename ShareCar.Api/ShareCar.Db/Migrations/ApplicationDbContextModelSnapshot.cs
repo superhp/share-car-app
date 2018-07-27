@@ -159,13 +159,9 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<bool>("Completed");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Email", "RideId");
 
                     b.HasIndex("RideId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Passengers");
                 });
@@ -326,14 +322,15 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.Passenger", b =>
                 {
+                    b.HasOne("ShareCar.Db.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Email")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
                         .WithMany("Passengers")
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ShareCar.Db.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>

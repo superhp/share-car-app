@@ -67,6 +67,7 @@ namespace ShareCar.Db.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.PrimaryKey("PK_AspNetUsers", x => x.Email);
                 });
 
@@ -139,7 +140,7 @@ namespace ShareCar.Db.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_Email",
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Email",
@@ -159,7 +160,7 @@ namespace ShareCar.Db.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_Email",
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Email",
@@ -320,6 +321,10 @@ namespace ShareCar.Db.Migrations
                 table: "Passengers",
                 column: "RideId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Passengers_Email",
+                table: "Passengers",
+                column: "Email");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_AddressId",
