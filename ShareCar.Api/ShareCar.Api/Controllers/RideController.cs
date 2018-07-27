@@ -56,9 +56,9 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("rideId={rideId}")]
-        public IActionResult GetPassengersByRide(int rideId)
+        public async Task<IActionResult> GetPassengersByRide(int rideId)
         {
-            IEnumerable<PassengerDto> passengers = _rideLogic.FindPassengersByRideId(rideId);
+            IEnumerable<PassengerDto> passengers = await _rideLogic.FindPassengersByRideId(rideId, User);
             if (passengers.ToList().Count != 0 )
             {
                 return Ok(passengers);

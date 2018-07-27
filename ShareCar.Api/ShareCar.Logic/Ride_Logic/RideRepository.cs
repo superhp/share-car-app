@@ -68,8 +68,9 @@ namespace ShareCar.Logic.Ride_Logic
                 .Where(y => y.DriverEmail == userDto.Email)
                 .Where(x => x.FromId == addressFromId);
         }
-        public IEnumerable<Passenger> FindPassengersByRideId(int id)
+        public async Task<IEnumerable<Passenger>> FindPassengersByRideId(int id, ClaimsPrincipal User)
         {
+            var userDto = await _userRepository.GetLoggedInUser(User);
             return _databaseContext.Passengers.Where(x => x.RideId == id);
         }
         public bool UpdateRide(Ride ride)

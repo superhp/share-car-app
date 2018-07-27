@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ShareCar.Db.Migrations
 {
-    public partial class SenatributesaddediREquetentity : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,7 +48,7 @@ namespace ShareCar.Db.Migrations
                     Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: false),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     FacebookId = table.Column<long>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
@@ -68,6 +68,7 @@ namespace ShareCar.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Email);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,7 +77,7 @@ namespace ShareCar.Db.Migrations
                 {
                     RideId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DriverEmail = table.Column<string>(nullable: true),
+                    DriverEmail = table.Column<string>(maxLength: 256, nullable: true),
                     FromId = table.Column<int>(nullable: false),
                     RideDateTime = table.Column<DateTime>(nullable: false),
                     ToId = table.Column<int>(nullable: false)
@@ -84,6 +85,12 @@ namespace ShareCar.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rides", x => x.RideId);
+                    table.ForeignKey(
+                        name: "FK_Rides_AspNetUsers_Email",
+                        column: x => x.DriverEmail,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Email",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Rides_Addresses_FromId",
                         column: x => x.FromId,
@@ -95,7 +102,7 @@ namespace ShareCar.Db.Migrations
                         column: x => x.ToId,
                         principalTable: "Addresses",
                         principalColumn: "AddressId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,7 +134,7 @@ namespace ShareCar.Db.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,7 +143,7 @@ namespace ShareCar.Db.Migrations
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -147,7 +154,7 @@ namespace ShareCar.Db.Migrations
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -156,7 +163,7 @@ namespace ShareCar.Db.Migrations
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -164,7 +171,7 @@ namespace ShareCar.Db.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(maxLength: 256, nullable: false),
                     RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -177,10 +184,10 @@ namespace ShareCar.Db.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        name: "FK_AspNetUserRoles_AspNetUsers_Email",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -188,7 +195,7 @@ namespace ShareCar.Db.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(maxLength: 256, nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
@@ -197,10 +204,10 @@ namespace ShareCar.Db.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        name: "FK_AspNetUserTokens_AspNetUsers_Email",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -208,10 +215,9 @@ namespace ShareCar.Db.Migrations
                 name: "Passengers",
                 columns: table => new
                 {
-                    Email = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(maxLength: 256, nullable: false),
                     RideId = table.Column<int>(nullable: false),
-                    Completed = table.Column<bool>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    Completed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -223,10 +229,10 @@ namespace ShareCar.Db.Migrations
                         principalColumn: "RideId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Passengers_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Passengers_AspNetUsers_Email",
+                        column: x => x.Email,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -237,11 +243,9 @@ namespace ShareCar.Db.Migrations
                     RequestId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddressId = table.Column<int>(nullable: false),
-                    DriverEmail = table.Column<string>(nullable: true),
-                    PassengerEmail = table.Column<string>(nullable: true),
+                    DriverEmail = table.Column<string>(maxLength: 256, nullable: false),
+                    PassengerEmail = table.Column<string>(maxLength: 256, nullable: true),
                     RideId = table.Column<int>(nullable: true),
-                    SeenByDriver = table.Column<bool>(nullable: false),
-                    SeenByPassenger = table.Column<bool>(nullable: false),
                     Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -257,13 +261,13 @@ namespace ShareCar.Db.Migrations
                         name: "FK_Requests_AspNetUsers_DriverEmail",
                         column: x => x.DriverEmail,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Requests_AspNetUsers_PassengerEmail",
                         column: x => x.PassengerEmail,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "Email",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Requests_Rides_RideId",
@@ -318,9 +322,9 @@ namespace ShareCar.Db.Migrations
                 column: "RideId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Passengers_UserId",
+                name: "IX_Passengers_Email",
                 table: "Passengers",
-                column: "UserId");
+                column: "Email");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_AddressId",
