@@ -4,6 +4,7 @@ import '../../styles/layout.css';
 import UserService from '../../services/userService';
 import AuthenticationService from '../../services/authenticationService';
 import history from '../../helpers/history';
+import '../../styles/layout.css';
 
 type LayoutProps = {
     children?: React.Node
@@ -37,7 +38,7 @@ userLoggedOut = () => {
             <div className="app">
                 <div className="content">
                     { this.props.children } 
-                    <button onClink={this.logout()}>Logout</button>
+                    <button className="btn btn-light logout-button" onClick={()=>{this.logout()}}>Logout</button>
                 </div>
             </div>
         );

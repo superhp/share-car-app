@@ -6,9 +6,9 @@
 }
 .roleImage {
     align-self:center;
-    height:40vh;
+    height:35vh;
     display: block;
-    margin:2em;
+    margin: 0 2em;
     border: 1px solid black;
 }
 .roleImage:hover {
