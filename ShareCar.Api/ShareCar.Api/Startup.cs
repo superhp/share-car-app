@@ -45,10 +45,12 @@ namespace ShareCar.Api
                         .AllowAnyHeader()
                         .AllowCredentials();
                 }));
+         
 
             ConfigureAuthentication(services);
 
             services.AddMvc();
+
 
             var applicationContainer = Bootstrapper.AddRegistrationsToDIContainer(services);
 
@@ -67,10 +69,11 @@ namespace ShareCar.Api
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-            }
+           }
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
             app.UseCors("CorsPolicy");
+           // app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
             app.UseMvc();
         }

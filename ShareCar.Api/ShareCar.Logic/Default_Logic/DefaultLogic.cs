@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
+using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Logic.Default_Logic
 {
@@ -10,10 +11,10 @@ namespace ShareCar.Logic.Default_Logic
     {
 
         private readonly IDefaultRepository _defaultRepository;
-     //   private RideMapper _rideMapper = new RideMapper();
-   //     private PassengerMapper _passengerMapper = new PassengerMapper();
-      //  private AddressMapper _addressMapper = new AddressMapper();
-
+        //   private RideMapper _rideMapper = new RideMapper();
+        //     private PassengerMapper _passengerMapper = new PassengerMapper();
+        //  private AddressMapper _addressMapper = new AddressMapper();
+        private readonly IRideLogic _rideLogic;
         public DefaultLogic(IDefaultRepository defaultRepository)
         {
             _defaultRepository = defaultRepository;
@@ -21,6 +22,9 @@ namespace ShareCar.Logic.Default_Logic
 
         public bool AddRequest(RequestDto requestDto)
         {     
+
+
+
            return  _defaultRepository.AddRequest(MapToEntity(requestDto));           
         }
 
@@ -29,14 +33,14 @@ namespace ShareCar.Logic.Default_Logic
 
             if (driver)
             {
-               IEnumerable<Request> entityRequest = _defaultRepository.FindDriverRequests(email);
+                IEnumerable<Request> entityRequest = _defaultRepository.FindDriverRequests(email);
+
                 List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
-                foreach(var request in entityRequest)
+                foreach (var request in entityRequest)
                 {
                     dtoRequests.Add(MapToDto(request));
                 }
                 return dtoRequests;
-
             }
             else
             {
@@ -62,9 +66,12 @@ namespace ShareCar.Logic.Default_Logic
             Request request = new Request();
 
             request.Status = (Db.Entities.Status)dtoRequest.Status;
+            request.PassengerEmail = dtoRequest.PassengerEmail;
             request.DriverEmail = dtoRequest.DriverEmail;
-            request.PassengerEmail = dtoRequest.DriverEmail;
+
             request.RequestId = dtoRequest.RequestId;
+            request.AddressId = dtoRequest.AddressId;
+
             return request;
         }
 
@@ -73,9 +80,12 @@ namespace ShareCar.Logic.Default_Logic
             RequestDto request = new RequestDto();
 
             request.Status = (Dto.Identity.Status)requestEntity.Status;
+            request.PassengerEmail = requestEntity.PassengerEmail;
             request.DriverEmail = requestEntity.DriverEmail;
-            request.PassengerEmail = requestEntity.DriverEmail;
+
             request.RequestId = requestEntity.RequestId;
+            request.AddressId = requestEntity.AddressId;
+
             return request;
         }
 

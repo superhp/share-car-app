@@ -8,28 +8,34 @@ using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.RequestLogic;
 using ShareCar.Logic.Default_Logic;
+using Microsoft.AspNetCore.Authorization;
+
 namespace ShareCar.Api.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Default")]
     public class DefaultController : Controller
     {
         private readonly IDefaultLogic _requestLogic;
-  //      private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
         public DefaultController(IDefaultLogic requestLogic, IUserRepository userRepository)
         {
             _requestLogic = requestLogic;
-   //         _userRepository = userRepository;
+            _userRepository = userRepository;
         }
         
         [HttpGet]
-        public  IActionResult GetUserRequestsAsync(bool driver)
+        public async Task<IActionResult> GetUserRequestsAsync(bool driver)
         {
-            //var userDto = await _userRepository.GetLoggedInUser(User);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+
+
             IEnumerable<RequestDto> request;
 
-                request = _requestLogic.FindUsersRequests(driver, /*userDto.Email*/ "fff");
+                request = _requestLogic.FindUsersRequests(driver, userDto.Email);
 
             return Ok();
         }

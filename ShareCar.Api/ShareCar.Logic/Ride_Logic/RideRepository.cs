@@ -92,5 +92,7 @@ namespace ShareCar.Logic.Ride_Logic
         {
                 return _databaseContext.Rides.Where(x => x.DriverEmail == email);         
         }
+
+
     }
 }
