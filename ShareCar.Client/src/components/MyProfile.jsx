@@ -4,11 +4,6 @@ import UserService from '../services/userService';
 import AuthenticationService from '../services/authenticationService';
 import history from '../helpers/history';
 
-type MyProfileState = {
-    loading: boolean,
-    user: User | null
-};
-
 class MyProfile extends Component<{}, MyProfileState> {
     userService = new UserService();
     authService = new AuthenticationService();

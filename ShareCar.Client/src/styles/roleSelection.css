@@ -1,0 +1,16 @@
+.roleContainer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+}
+.roleImage {
+    align-self:center;
+    height:35vh;
+    display: block;
+    margin: 0 2em;
+    border: 1px solid black;
+}
+.roleImage:hover {
+    background-color:gray;
+}

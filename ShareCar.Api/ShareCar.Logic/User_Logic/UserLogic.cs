@@ -34,27 +34,7 @@ namespace ShareCar.Logic.User_Logic
             return _userQueries.CalculatePoints(_userMapper.MapIdentityUserToPerson(user).Email);
         }
         
-
-        public IEnumerable<PassengerDto> FindPassengersByEmail(string email)
-        {
-            IEnumerable<Passenger> Passengers = _userQueries.FindPassengersByEmail(email);
-
-            return MapToList(Passengers);
+        
         }
-        private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> Passengers)
-        {
-            if (Passengers == null)
-            {
-                return null;
-            }
-
-            List<PassengerDto> DtoPassengers = new List<PassengerDto>();
-
-            foreach (var passenger in Passengers)
-            {
-                DtoPassengers.Add(_passengerMapper.MapToDto(passenger));
-            }
-            return DtoPassengers;
-        }
-    }
+    
 }

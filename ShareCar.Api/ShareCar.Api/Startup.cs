@@ -34,7 +34,7 @@ namespace ShareCar.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
@@ -45,12 +45,10 @@ namespace ShareCar.Api
                         .AllowAnyHeader()
                         .AllowCredentials();
                 }));
-         
 
             ConfigureAuthentication(services);
 
             services.AddMvc();
-
 
             var applicationContainer = Bootstrapper.AddRegistrationsToDIContainer(services);
 
@@ -66,10 +64,10 @@ namespace ShareCar.Api
             }
 
             // Automatic migrations 
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {           
+            /*using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
                 serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-           }
+            }*/
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
             app.UseCors("CorsPolicy");

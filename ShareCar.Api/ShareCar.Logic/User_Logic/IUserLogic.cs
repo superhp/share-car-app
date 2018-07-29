@@ -10,7 +10,6 @@ namespace ShareCar.Logic.User_Logic
     {
          bool CheckIfRegistered(IdentityUser<string> user);
          void RegisterUser(IdentityUser<string> user);
-         IEnumerable<PassengerDto> FindPassengersByEmail(string email);
          int CalculatePoints(IdentityUser<string> user);
     }
 }

@@ -33,7 +33,7 @@ namespace ShareCar.Logic.ObjectMapping
                 ToId = ride.ToId,
                 DriverEmail = ride.DriverEmail,
                 RideDateTime = ride.RideDateTime,
-                Passengers = EntityPassengers,
+                Passengers = EntityPassengers
 
             };
         }
@@ -44,6 +44,7 @@ namespace ShareCar.Logic.ObjectMapping
             RequestMapper RequestMapper = new RequestMapper();
 
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();
+            List<RequestDto> DtoRequests = new List<RequestDto>();
 
             try
             {
@@ -52,7 +53,7 @@ namespace ShareCar.Logic.ObjectMapping
                     DtoPassengers.Add(PassengerMapper.MapToDto(passenger));
                 }
 
-
+                
 
                 return new RideDto
                 {
@@ -62,6 +63,7 @@ namespace ShareCar.Logic.ObjectMapping
                     DriverEmail = ride.DriverEmail,
                     RideDateTime = ride.RideDateTime,
                     Passengers = DtoPassengers,
+                    Requests = DtoRequests
 
                 };
              }
