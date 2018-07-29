@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.RequestLogic;
-using ShareCar.Logic.Default_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ShareCar.Api.Controllers
@@ -15,12 +14,12 @@ namespace ShareCar.Api.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("api/Default")]
-    public class DefaultController : Controller
+    public class RideRequestController : Controller
     {
-        private readonly IDefaultLogic _requestLogic;
+        private readonly IRideRequestLogic _requestLogic;
         private readonly IUserRepository _userRepository;
 
-        public DefaultController(IDefaultLogic requestLogic, IUserRepository userRepository)
+        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository)
         {
             _requestLogic = requestLogic;
             _userRepository = userRepository;
@@ -37,7 +36,7 @@ namespace ShareCar.Api.Controllers
 
                 request = _requestLogic.FindUsersRequests(driver, userDto.Email);
 
-            return Ok();
+            return Ok(request);
         }
 
         [HttpPost]

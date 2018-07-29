@@ -15,11 +15,8 @@ namespace ShareCar.Db.Entities
         public Status Status { get; set; }
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
-<<<<<<< HEAD
-=======
         [ForeignKey("RideId")]
         public virtual Ride RequestedRide { get; set;}
->>>>>>> dev
         [ForeignKey("PassengerEmail")]
         public virtual User Passenger { get; set; }
         [ForeignKey("DriverEmail")]
@@ -29,8 +26,10 @@ namespace ShareCar.Db.Entities
     }
     public enum Status
     {
+
         WAITING,
         ACCEPTED,
         DENIED
     }
+
 }

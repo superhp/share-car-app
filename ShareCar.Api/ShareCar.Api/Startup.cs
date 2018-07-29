@@ -25,7 +25,7 @@ namespace ShareCar.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        //    _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JwtSecretKey")));
+            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JwtSecretKey")));
         }
 
         public IConfiguration Configuration { get; }
@@ -33,9 +33,9 @@ namespace ShareCar.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-        //    services.AddDbContext<ApplicationDbContext>(options =>
-       //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-       //     );
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            );
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
@@ -67,18 +67,12 @@ namespace ShareCar.Api
 
             // Automatic migrations 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-<<<<<<< HEAD
-      //          serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-            }
-=======
+            {           
                 serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
            }
->>>>>>> dev
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
             app.UseCors("CorsPolicy");
-           // app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
             app.UseMvc();
         }

@@ -5,17 +5,17 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Ride_Logic;
 
-namespace ShareCar.Logic.Default_Logic
+namespace ShareCar.Logic.RideRequest_Logic
 {
-    public class DefaultLogic : IDefaultLogic
+    public class RideRequestLogic : IRideRequestLogic
     {
 
-        private readonly IDefaultRepository _defaultRepository;
+        private readonly IRideRequestRepository _defaultRepository;
         //   private RideMapper _rideMapper = new RideMapper();
         //     private PassengerMapper _passengerMapper = new PassengerMapper();
         //  private AddressMapper _addressMapper = new AddressMapper();
         private readonly IRideLogic _rideLogic;
-        public DefaultLogic(IDefaultRepository defaultRepository)
+        public RideRequestLogic(IRideRequestRepository defaultRepository)
         {
             _defaultRepository = defaultRepository;
         }
@@ -30,7 +30,7 @@ namespace ShareCar.Logic.Default_Logic
 
         public IEnumerable<RequestDto> FindUsersRequests(bool driver, string email)
         {
-
+           // driver = true;
             if (driver)
             {
                 IEnumerable<Request> entityRequest = _defaultRepository.FindDriverRequests(email);
@@ -49,8 +49,11 @@ namespace ShareCar.Logic.Default_Logic
                 List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
                 foreach (var request in entityRequest)
                 {
+                    
                     dtoRequests.Add(MapToDto(request));
                 }
+
+
                 return dtoRequests;
             }
 

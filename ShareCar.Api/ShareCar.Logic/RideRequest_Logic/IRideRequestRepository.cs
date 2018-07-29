@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Logic.Default_Logic
+namespace ShareCar.Logic.RideRequest_Logic
 {
-    public interface IDefaultRepository
+    public interface IRideRequestRepository
     {
 
         bool AddRequest(Request request);

@@ -23,11 +23,7 @@ namespace ShareCar.Logic.Request_Logic
         {
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
-<<<<<<< HEAD:ShareCar.Api/ShareCar.Logic/Request_Logic/RequestQueries.cs
             return true; // No validation
-=======
-            return true;
->>>>>>> dev:ShareCar.Api/ShareCar.Logic/RequestLogic/RequestQueries.cs
         }
 
         public Request FindRequestByRequestId(int id)
@@ -44,11 +40,7 @@ namespace ShareCar.Logic.Request_Logic
 
         public IEnumerable<Request> FindRequestByRideId(int rideId)
         {
-<<<<<<< HEAD:ShareCar.Api/ShareCar.Logic/Request_Logic/RequestQueries.cs
 
-                return _databaseContext.Requests.Where(x => x.RequestId == rideId); // Throws exception if ride is not found
-
-=======
             try
             {
                 return _databaseContext.Requests.Where(x => x.RequestId == rideId); // Throws exception if ride is not found
@@ -57,7 +49,6 @@ namespace ShareCar.Logic.Request_Logic
             {
                 return null;
             }
->>>>>>> dev:ShareCar.Api/ShareCar.Logic/RequestLogic/RequestQueries.cs
         }
 
         public IEnumerable<Request> FindRequestsByDriverEmail(string email)
@@ -77,24 +68,18 @@ namespace ShareCar.Logic.Request_Logic
 
         public bool UpdateRequest(Request request)
         {
-          
-                try
+
+            try
             {
                 Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
-                _requestMapper.MapEntityToEntity(toUpdate, request);
+               // _requestMapper.MapEntityToEntity(toUpdate, request);
                 _databaseContext.SaveChanges();
                 return true;
-<<<<<<< HEAD:ShareCar.Api/ShareCar.Logic/Request_Logic/RequestQueries.cs
-            }
-            catch{
-                return false;
-=======
-
->>>>>>> dev:ShareCar.Api/ShareCar.Logic/RequestLogic/RequestQueries.cs
             }
             catch
             {
                 return false;
+
             }
         }
     }

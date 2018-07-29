@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using ShareCar.Logic.Default_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 using ShareCar.Logic.Identity;
 using ShareCar.Logic.Request_Logic;
 using ShareCar.Logic.Ride_Logic;
@@ -32,13 +32,9 @@ namespace ShareCar.Logic.DI
             services.AddSingleton<IRideLogic, RideLogic>();
 
             services.AddSingleton<IUserRepository, UserRepository>();
-<<<<<<< HEAD
-            services.AddSingleton<IRequestQueries, RequestQueries>();
-=======
-            services.AddSingleton<IRideRepository, RideRepository>();
-            services.AddSingleton<IDefaultLogic, DefaultLogic>();
-            services.AddSingleton<IDefaultRepository, DefaultRepository>();
->>>>>>> dev
+
+            services.AddSingleton<IRideRequestLogic, RideRequestLogic>();
+            services.AddSingleton<IRideRequestRepository, RideRequestRepository>();
 
         }
 

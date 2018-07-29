@@ -6,15 +6,15 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.ObjectMapping;
 using System.Linq;
-namespace ShareCar.Logic.Default_Logic
+namespace ShareCar.Logic.RideRequest_Logic
 {
-   public class DefaultRepository : IDefaultRepository
+   public class RideRequestRepository : IRideRequestRepository
     {
 
         private readonly ApplicationDbContext _databaseContext;
 
 
-        public DefaultRepository(ApplicationDbContext context)
+        public RideRequestRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
         }
@@ -22,6 +22,10 @@ namespace ShareCar.Logic.Default_Logic
 
         public bool AddRequest(Request request)
         {
+            request.DriverEmail = "edgar.reis447@gmail.com";
+            request.PassengerEmail = "ragde447@gmail.com";
+            request.Status = Db.Entities.Status.ACCEPTED;
+            request.RideId = 3;
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Logic.Default_Logic
+namespace ShareCar.Logic.RideRequest_Logic
 {
-    public interface IDefaultLogic
+    public interface IRideRequestLogic
     {
         IEnumerable<RequestDto> FindUsersRequests(bool driver, string email);
         bool UpdateRequest(RequestDto request);
