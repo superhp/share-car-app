@@ -116,7 +116,7 @@ console.log(this.state.driverRequests);
                 <button className="ride-requests-button">Save</button>       
             </form>
 
-<button>Driver requests</button>       
+<button className="ride-requests-button">Driver requests</button>       
 
 <button className="ride-requests-button" onClick={this.showPassengerRequests}>Passenger requests</button>
 
