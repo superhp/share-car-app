@@ -30,7 +30,6 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public IEnumerable<RequestDto> FindUsersRequests(bool driver, string email)
         {
-           // driver = true;
             if (driver)
             {
                 IEnumerable<Request> entityRequest = _defaultRepository.FindDriverRequests(email);
@@ -61,6 +60,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public bool UpdateRequest(RequestDto request)
         {
+
             return _defaultRepository.UpdateRequest(MapToEntity(request));
         }
 
