@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Person_Logic
 {
    public interface IPersonRepository
     {

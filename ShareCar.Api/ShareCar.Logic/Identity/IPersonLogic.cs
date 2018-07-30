@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Person_Logic
 {
     public interface IPersonLogic
     {

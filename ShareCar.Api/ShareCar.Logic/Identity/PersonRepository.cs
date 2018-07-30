@@ -4,7 +4,7 @@ using System.Text;
 using ShareCar.Db;
 using ShareCar.Db.Entities;
 using System.Linq;
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Person_Logic
 {
     class PersonRepository : IPersonRepository
     {

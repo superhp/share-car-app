@@ -4,7 +4,7 @@ using System.Text;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Person_Logic
 {
     public class PersonLogic : IPersonLogic
     {
@@ -24,13 +24,19 @@ namespace ShareCar.Logic.Identity
         public PersonDto GetPersonByEmail(string email)
         {
             Person person = _personRepository.GetPersonByEmail(email);
-            return new PersonDto
+            if (person != null)
             {
-                Email = person.Email,
-                FirstName = person.FirstName,
-                LastName = person.LastName
+                return new PersonDto
+                {
+                    Email = person.Email,
+                    FirstName = person.FirstName,
+                    LastName = person.LastName
 
-            };
+                };
+            } else
+            {
+                return null;
+            }
         }
     }
 }
