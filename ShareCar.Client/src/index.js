@@ -11,7 +11,7 @@ import Driver from "./components/Driver";
 import Passenger from "./components/Passenger";
 import UserProfile from "./components/UserProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+import "./src/index.css";
 
 ReactDOM.render(
   <Router history={history}>
