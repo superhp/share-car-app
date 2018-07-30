@@ -1,0 +1,21 @@
+.container.profileContainer {
+  display: flex;
+  justify-content: center;
+}
+
+input.editInput {
+  background-color: rgba(0, 255, 179, 0.89);
+}
+form.profileForm {
+  margin: 1em;
+}
+div.form-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.profileForm button {
+  width: 100%;
+}
+h1 {
+  text-align: center;
+}

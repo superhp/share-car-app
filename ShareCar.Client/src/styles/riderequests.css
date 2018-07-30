@@ -1,0 +1,21 @@
+/* Why is this not working */
+.ride-requests {
+    color: black;
+    margin: 10px;
+    align-items: flex-end;
+    text-align: right;
+    border-radius: 5px;
+}
+/* Why is this not working */
+.ride-requests-text {
+    margin: 10px;
+    align-items: flex-end;
+    border-radius: 5px;  
+}
+/* Why is this not working */
+.ride-requests-button {
+    margin: 5px;
+    align-items: flex-end;
+    border-radius: 5px;
+}
+/* Why is this not working */

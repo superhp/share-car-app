@@ -13,7 +13,7 @@ namespace ShareCar.Api.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/Default")]
+    [Route("api/RideRequest")]
     public class RideRequestController : Controller
     {
         private readonly IRideRequestLogic _requestLogic;
