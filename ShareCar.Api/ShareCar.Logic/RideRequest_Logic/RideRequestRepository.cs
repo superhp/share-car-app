@@ -25,7 +25,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             request.DriverEmail = "edgar.reis447@gmail.com";
             request.PassengerEmail = "ragde447@gmail.com";
             request.Status = Db.Entities.Status.ACCEPTED;
-            request.RideId = 3;
+            //request.RideId = 3;
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;
