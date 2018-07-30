@@ -23,7 +23,7 @@ class UserProfile extends Component<{}, UserProfileState> {
   render() {
     const content = this.state.loading ? (
       <p>
-        <em>Loading...</em>
+        <em>Loading.......</em>
       </p>
     ) : this.state.user === null ? (
       <p>The user failed to load</p>
