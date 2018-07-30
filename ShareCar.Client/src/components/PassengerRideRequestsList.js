@@ -1,7 +1,10 @@
 import * as React from "react";
 
-export class RideRequestsList extends React.Component {
+export class PassengerRideRequestsList extends React.Component {
+    
+
     render(){
+        
         return(
             <div>
 <tbody>
