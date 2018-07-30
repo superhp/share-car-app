@@ -65,7 +65,6 @@ console.log(this.state.names);
 getAddresses(){
 
 }*/
-<<<<<<< HEAD
   showPassengerRequests() {
     api
       .get("Default/false")
@@ -75,35 +74,6 @@ getAddresses(){
         console.log((response.data: User));
         const d = response.data;
         console.log(d);
-=======
-
-      showPassengerRequests(){
-        api.get('RideRequest/false')
-        .then((response) => {
-            console.log('ooooooooooooo');
-
-            console.log((response.data : User));
-            const d = response.data;
-    console.log(d);
-           
-    this.setState({passengerRequests : d});
-    
-    console.log(this.state.passengerRequests);
-    
-        })
-        .catch(function (error) {
-            console.error(error);
-        });
-    
-      };
-
-  showDriverRequests(){
-    api.get('RideRequest/true')
-    .then((response) => {
-        console.log((response.data : User));
-        const d = response.data;
-this.setState({driverRequests : d});
->>>>>>> 36aeb0c6f1812d6700573ab1a0171875406e7c6c
 
         this.setState({ passengerRequests: d });
 
@@ -111,7 +81,6 @@ this.setState({driverRequests : d});
       })
       .catch(function(error) {
         console.error(error);
-<<<<<<< HEAD
       });
   }
 
@@ -123,53 +92,6 @@ this.setState({driverRequests : d});
         console.log((response.data: User));
         const d = response.data;
         console.log(d);
-=======
-    });
-
-  };
-
-    handleSubmit(e) {
-        e.preventDefault();
-        let data = {
-            RideId: e.target.rideId.value,
-            AddressId: e.target.address.value,    
-        }
-          api.post(`http://localhost:5963/api/RideRequest`, data)
-            .then(res => {
-              console.log(res);
-              console.log(res.data);
-            })    };
-    
-
-    render(){
-
-        return(
-           
-            <div>
-            {this.props.driver 
-            ?            
-            <DriverRideRequestsList   requests ={this.state.driverRequests}/>
-            : <PassengerRideRequestsList  requests ={this.state.passengerRequests}/>
-            
-            }
-
-            <form  className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
-                
-                <span className="ride-requests-text">AddressId:</span>
-                 <input className="ride-requests" type="text" name="address" defaultValue={""}/>
-                <br/>
-                <span className="ride-requests-text">Ride Id:</span>
-                 <input className="ride-requests" type="text" name="rideId" defaultValue={""}/>
-                <br/>
-
-                <button className="ride-requests-button">Save</button>       
-            </form>
-
-<button className="ride-requests-button">Driver requests</button>       
-
-<button className="ride-requests-button" onClick={this.showPassengerRequests}>Passenger requests</button>
-
->>>>>>> cc91b127d9e90849eac117e1b48b159286e4a41d
 
         this.setState({ driverRequests: d });
 
