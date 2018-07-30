@@ -29,10 +29,12 @@ namespace ShareCar.Db.Repositories
                 PictureUrl = userDto.Picture.Data.Url
             };
 
+
             var result = await _userManager.CreateAsync(appUser, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
             if (!result.Succeeded)
                 throw new ArgumentException("Failed to create local user account.");
+            
         }
 
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
@@ -49,5 +51,7 @@ namespace ShareCar.Db.Repositories
 
             return userDto;
         }
+
+
     }
 }

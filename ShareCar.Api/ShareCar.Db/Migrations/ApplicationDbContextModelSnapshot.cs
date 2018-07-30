@@ -166,6 +166,20 @@ namespace ShareCar.Db.Migrations
                     b.ToTable("Passengers");
                 });
 
+            modelBuilder.Entity("ShareCar.Db.Entities.Person", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("People");
+                });
+
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>
                 {
                     b.Property<int>("RequestId")

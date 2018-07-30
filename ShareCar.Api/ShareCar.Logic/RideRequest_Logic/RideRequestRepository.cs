@@ -25,7 +25,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             request.DriverEmail = "ragde447@gmail.com";
             request.PassengerEmail = "edgar.reis447@gmail.com";
             request.Status = Db.Entities.Status.WAITING;
-            request.RideId = 4;
+            request.RideId = 1;
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;
@@ -48,13 +48,18 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public bool UpdateRequest(Request request)
         {
-            
-          Request toUpdate =  _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
-            toUpdate.Status = request.Status;
-            toUpdate.SeenByPassenger = false;
-            _databaseContext.SaveChanges();
-            return true;
-
+            try
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                toUpdate.Status = request.Status;
+                toUpdate.SeenByPassenger = false;
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
         

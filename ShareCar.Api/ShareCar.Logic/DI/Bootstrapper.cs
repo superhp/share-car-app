@@ -35,6 +35,8 @@ namespace ShareCar.Logic.DI
 
             services.AddSingleton<IRideRequestLogic, RideRequestLogic>();
             services.AddSingleton<IRideRequestRepository, RideRequestRepository>();
+            services.AddSingleton<IPersonRepository, PersonRepository>();
+            services.AddSingleton<IPersonLogic, PersonLogic>();
 
         }
 

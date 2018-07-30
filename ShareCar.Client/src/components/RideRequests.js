@@ -10,8 +10,10 @@ import {DriverRideRequestsList} from './DriverRideRequestList';
 
         state = {
             driverRequests: [],
-            passengerRequests: []
-
+            passengerRequests: [],
+names:[],
+addresses:[],
+dateTimes:[]
           }
             
 
@@ -39,6 +41,31 @@ console.log(this.state.passengerRequests);
     });
 
 }*/
+getNames(email){
+    api.get('Person/'+ email)
+    .then((response) => {
+let data = {
+    FirstName: response.FirstName,
+    LastName: response.LastName
+};
+
+const namesArray = this.state.names;
+
+namesArray.push(data);
+this.setState({names : namesArray});
+
+console.log(this.state.names);
+
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+};
+
+getAddresses(){
+    
+}
+
       showPassengerRequests(){
         api.get('Default/false')
         .then((response) => {
@@ -62,12 +89,17 @@ console.log(this.state.passengerRequests);
   showDriverRequests(){
     api.get('Default/true')
     .then((response) => {
-        console.log('ffffffffffffffff');
         console.log((response.data : User));
         const d = response.data;
 console.log(d);
        
 this.setState({driverRequests : d});
+
+this.state.driverRequests.map((req, i) => {     
+    console.log("&&&&&&&&&&&&&&&&&&Entered-------------------");                 
+    // Return the element. Also pass key     
+    //return (<Answer key={i} answer={answer} />) 
+});
 
 console.log(this.state.driverRequests);
 
