@@ -16,9 +16,32 @@ namespace ShareCar.Logic.Person_Logic
             _personRepository = personRepository;
         }
 
-        public void AddPerson(Person person)
+        public void AddPerson(PersonDto person)
         {
-            _personRepository.AddPerson(person);
+            Person _person = new Person
+            {
+                Email = person.Email,
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                LicensePlate = person.LicensePlate,
+                Phone = person.Phone
+            };
+            _personRepository.AddPerson(_person);
+
+        }
+
+        public void UpdatePerson(PersonDto person)
+        {
+            Person _person = new Person
+            {
+                Email = person.Email,
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                LicensePlate = person.LicensePlate,
+                Phone = person.Phone
+            };
+            _personRepository.UpdatePerson(_person);
+
         }
 
         public PersonDto GetPersonByEmail(string email)

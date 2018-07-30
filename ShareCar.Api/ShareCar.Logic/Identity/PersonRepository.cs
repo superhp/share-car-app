@@ -21,12 +21,18 @@ namespace ShareCar.Logic.Person_Logic
             _databaseContext.SaveChanges();
         }
 
+        public void UpdatePerson(Person person)
+        {
+            _databaseContext.People.Update(person);
+            _databaseContext.SaveChanges();
+        }
+
         public Person GetPersonByEmail(string email)
         {
             try {
                     return _databaseContext.People.Single(x => x.Email == email);
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return null;
             }
