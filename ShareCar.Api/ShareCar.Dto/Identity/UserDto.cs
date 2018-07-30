@@ -7,5 +7,7 @@
         public long? FacebookId { get; set; }
         public string PictureUrl { get; set; }
         public string Email { get; set; }
+        public string LicensePlate { get; set; }
+        public string Phone { get; set; }
     }
 }

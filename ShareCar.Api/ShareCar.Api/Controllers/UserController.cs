@@ -27,7 +27,17 @@ namespace ShareCar.Api.Controllers
             return Ok(userDto);
         }
 
-        
+        [Route("mock")]
+        public async Task<IActionResult> GetMockData()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            userDto.Phone = "861223591";
+            userDto.LicensePlate = "AHZ205";
+            return Ok(userDto);
+        }
+
+
+
 
 
     }
