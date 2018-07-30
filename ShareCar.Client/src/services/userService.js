@@ -13,11 +13,11 @@ class UserService {
       });
   };
 
-  getUserProfile = (callback: UserProfile => void) => {
+  getUserProfile = (callback: UserProfileData => void) => {
     api
       .get("user/mock")
       .then(response => {
-        callback((response.data: UserProfile));
+        callback((response.data: UserProfileData));
       })
       .catch(function(error) {
         console.error(error);
