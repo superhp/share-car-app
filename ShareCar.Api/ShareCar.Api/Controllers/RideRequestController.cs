@@ -24,17 +24,20 @@ namespace ShareCar.Api.Controllers
             _requestLogic = requestLogic;
             _userRepository = userRepository;
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetUserRequestsAsync(bool driver)
+
+        [HttpGet("{driver}")]
+        public async Task<IActionResult> GetUserRequestsAsync(string driver)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
+            bool isDriver = false;
 
+            if (driver == "true")
+                isDriver = true;
 
             IEnumerable<RequestDto> request;
 
-                request = _requestLogic.FindUsersRequests(driver, userDto.Email);
+                request = _requestLogic.FindUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }
