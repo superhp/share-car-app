@@ -6,6 +6,7 @@ import axios from 'axios';
 import api from '../helpers/axiosHelper';
 import {PassengerRideRequestsList} from './PassengerRideRequestsList';
 import {DriverRideRequestsList} from './DriverRideRequestList';
+import "../styles/riderequests.css";
  export class RideRequests extends React.Component{
 
         state = {
@@ -103,18 +104,21 @@ console.log(this.state.driverRequests);
             
             }
 
-            <form onSubmit={this.handleSubmit.bind(this)}>
-                AddressId: <input type="text" name="address" defaultValue={""}/>
+            <form  className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
+                
+                <span className="ride-requests-text">AddressId:</span>
+                 <input className="ride-requests" type="text" name="address" defaultValue={""}/>
                 <br/>
-                Ride Id: <input type="text" name="rideId" defaultValue={""}/>
+                <span className="ride-requests-text">Ride Id:</span>
+                 <input className="ride-requests" type="text" name="rideId" defaultValue={""}/>
                 <br/>
 
-                <button>Save</button>       
+                <button className="ride-requests-button">Save</button>       
             </form>
 
 <button>Driver requests</button>       
 
-<button onClick={this.showPassengerRequests}>Passenger requests</button>
+<button className="ride-requests-button" onClick={this.showPassengerRequests}>Passenger requests</button>
 
 
 </div>
