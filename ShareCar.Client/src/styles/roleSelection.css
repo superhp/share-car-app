@@ -10,6 +10,8 @@
     display: block;
     margin: 0 2em;
     border: 1px solid black;
+    border-radius: 5px;
+
 }
 .roleImage:hover {
     background-color:gray;
