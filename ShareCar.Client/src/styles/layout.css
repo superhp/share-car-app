@@ -1,5 +1,5 @@
 .app {
-  text-align: center;
+  color: solid black;
 }
 
 .app-logo {
@@ -24,12 +24,21 @@
 
 .content {
   margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 @keyframes app-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-button.logout-button {
+
+.logout-button {
+  flex: 1 100%;
   border: 1px solid black;
+  text-align: center;
+  display: block;
+  margin: auto;
+  padding: 5px 5px;
 }

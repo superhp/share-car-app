@@ -6,12 +6,12 @@ import axios from 'axios';
 import api from '../helpers/axiosHelper';
 import {PassengerRideRequestsList} from './PassengerRideRequestsList';
 import {DriverRideRequestsList} from './DriverRideRequestList';
+import "../styles/riderequests.css";
  export class RideRequests extends React.Component{
 
         state = {
             driverRequests: [],
             passengerRequests: []
-
           }
             
 
@@ -38,7 +38,35 @@ console.log(this.state.passengerRequests);
         console.error(error);
     });
 
+ }*//*
+getNames(email){
+    api.get('Person/'+ email)
+    .then((response) => {
+        console.log("==========================");
+        console.log(response);
+
+let data = {
+    FirstName: response.data.firstName,
+    LastName: response.data.lastName
+};
+
+const namesArray = this.state.names;
+
+namesArray.push(data);
+this.setState({names : namesArray});
+console.log('stststst');
+console.log(this.state.names);
+
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+};
+
+getAddresses(){
+
 }*/
+
       showPassengerRequests(){
         api.get('Default/false')
         .then((response) => {
@@ -62,11 +90,8 @@ console.log(this.state.passengerRequests);
   showDriverRequests(){
     api.get('Default/true')
     .then((response) => {
-        console.log('ffffffffffffffff');
         console.log((response.data : User));
         const d = response.data;
-console.log(d);
-       
 this.setState({driverRequests : d});
 
 console.log(this.state.driverRequests);
@@ -103,18 +128,21 @@ console.log(this.state.driverRequests);
             
             }
 
-            <form onSubmit={this.handleSubmit.bind(this)}>
-                AddressId: <input type="text" name="address" defaultValue={""}/>
+            <form  className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
+                
+                <span className="ride-requests-text">AddressId:</span>
+                 <input className="ride-requests" type="text" name="address" defaultValue={""}/>
                 <br/>
-                Ride Id: <input type="text" name="rideId" defaultValue={""}/>
+                <span className="ride-requests-text">Ride Id:</span>
+                 <input className="ride-requests" type="text" name="rideId" defaultValue={""}/>
                 <br/>
 
-                <button>Save</button>       
+                <button className="ride-requests-button">Save</button>       
             </form>
 
 <button>Driver requests</button>       
 
-<button onClick={this.showPassengerRequests}>Passenger requests</button>
+<button className="ride-requests-button" onClick={this.showPassengerRequests}>Passenger requests</button>
 
 
 </div>
