@@ -67,7 +67,7 @@ getAddresses(){
 }*/
   showPassengerRequests() {
     api
-      .get("Default/false")
+      .get("RideRequest/false")
       .then(response => {
         console.log("ooooooooooooo");
 
@@ -86,9 +86,8 @@ getAddresses(){
 
   showDriverRequests() {
     api
-      .get("Default/true")
+      .get("RideRequest/true")
       .then(response => {
-        console.log("ffffffffffffffff");
         console.log((response.data: User));
         const d = response.data;
         console.log(d);
@@ -108,7 +107,7 @@ getAddresses(){
       RideId: e.target.rideId.value,
       AddressId: e.target.address.value
     };
-    api.post(`http://localhost:5963/api/Default`, data).then(res => {
+    api.post(`http://localhost:5963/api/RideRequest`, data).then(res => {
       console.log(res);
       console.log(res.data);
     });
@@ -117,11 +116,11 @@ getAddresses(){
   render() {
     return (
       <div>
-        {this.props.driver ? (
+        {this.props.driver ? 
           <DriverRideRequestsList requests={this.state.driverRequests} />
-        ) : (
+         : 
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
-        )}
+        }
 
         <form className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
           <span className="ride-requests-text">AddressId:</span>
