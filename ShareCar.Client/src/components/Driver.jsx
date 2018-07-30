@@ -5,6 +5,7 @@ import { Router, Switch} from 'react-router';
 import UserService from '../services/userService';
 import AuthenticationService from '../services/authenticationService';
 import history from '../helpers/history';
+import {RideRequests} from './RideRequests';
 
 export default class Driver extends Component<{}, MyProfileState> {
     userService = new UserService();
@@ -24,6 +25,8 @@ export default class Driver extends Component<{}, MyProfileState> {
         <p>Failed</p> :
         <div className="roleContainer">
             <h1>Driver Page</h1>
+            <RideRequests driver = {true}/>
+
         </div>
         return(
         <div>

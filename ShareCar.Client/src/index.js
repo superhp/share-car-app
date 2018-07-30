@@ -8,8 +8,8 @@ import Login from './components/Login';
 import MyProfile from './components/MyProfile';
 import RoleSelection from './components/RoleSelection';
 import Driver from './components/Driver';
-import Passenger from './components/Driver';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Passenger from './components/Passenger';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 ReactDOM.render(
@@ -20,6 +20,7 @@ ReactDOM.render(
                 <Route exact path='/' component={ RoleSelection } />
                 <Route path='/driver' component={ Driver } />
                 <Route path='/passenger' component={ Passenger } />
+
             </Layout>
         </Switch>
     </Router>,
