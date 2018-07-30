@@ -9,7 +9,7 @@ import MyProfile from "./components/MyProfile";
 import RoleSelection from "./components/RoleSelection";
 import Driver from "./components/Driver";
 import Passenger from "./components/Passenger";
-/*import UserProfile from "./components/UserProfile";*/
+import UserProfile from "./components/UserProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
