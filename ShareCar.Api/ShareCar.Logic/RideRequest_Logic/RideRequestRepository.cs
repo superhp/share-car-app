@@ -23,9 +23,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         public bool AddRequest(Request request)
         {
             request.DriverEmail = "ragde447@gmail.com";
-            request.PassengerEmail = "edgar.reis447@gmail.com";
-            request.Status = Db.Entities.Status.ACCEPTED;
-            request.RideId = 4;
+            request.PassengerEmail = "ragde447@gmail.com";
+            request.Status = Db.Entities.Status.WAITING;
+            request.RideId = 3;
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;
@@ -33,7 +33,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public IEnumerable<Request> FindDriverRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email);
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Db.Entities.Status.WAITING);
         }
 
         public IEnumerable<Request> FindPassengerRequests(string email)
@@ -41,13 +41,25 @@ namespace ShareCar.Logic.RideRequest_Logic
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email);
         }
 
+        public Request FindRequestById(int id)
+        {
+            return _databaseContext.Requests.Single(x => x.RequestId == id);
+        }
+
         public bool UpdateRequest(Request request)
         {
-          Request toUpdate =  _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
-            toUpdate.Status = request.Status;
-            toUpdate.SeenByPassenger = false;
-            return true;
-
+            try
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                toUpdate.Status = request.Status;
+                toUpdate.SeenByPassenger = false;
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
         

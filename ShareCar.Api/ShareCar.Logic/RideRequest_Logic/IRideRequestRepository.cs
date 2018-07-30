@@ -10,7 +10,7 @@ namespace ShareCar.Logic.RideRequest_Logic
     {
 
         bool AddRequest(Request request);
-
+        Request FindRequestById(int id);
         IEnumerable<Request> FindPassengerRequests(string email);
         IEnumerable<Request> FindDriverRequests(string email);
         bool UpdateRequest(Request request);

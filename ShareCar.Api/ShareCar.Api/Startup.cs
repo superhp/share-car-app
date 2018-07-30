@@ -64,10 +64,10 @@ namespace ShareCar.Api
             }
 
             // Automatic migrations 
-            /*using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-            }*/
+            }
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
             app.UseCors("CorsPolicy");

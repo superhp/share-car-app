@@ -37,7 +37,7 @@ namespace ShareCar.Api.Controllers
 
             IEnumerable<RequestDto> request;
 
-                request = _requestLogic.FindUsersRequests(isDriver, userDto.Email);
+            request = _requestLogic.FindUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }
@@ -62,7 +62,7 @@ namespace ShareCar.Api.Controllers
             }
 
         }
-        [HttpPut]
+        [HttpPut("{response}")]
         public IActionResult Put([FromBody] RequestDto request)
         {
             if (request == null)
@@ -70,16 +70,13 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Invalid parameter");
             }
 
-            //     bool result = _requestLogic.AddRequest(request);
-
-            if (true)
+            bool result = _requestLogic.UpdateRequest(request);
+            if (result)
             {
                 return Ok();
             }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            return BadRequest("Invalid parameter");
+
 
         }
     }
