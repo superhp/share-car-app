@@ -35,10 +35,10 @@ namespace ShareCar.Api.Controllers
                 LastName = userDto.LastName
             };
 
-          //  Person check = _personLogic.GetPersonByEmail(userDto.Email);
+            PersonDto check = _personLogic.GetPersonByEmail(userDto.Email);
 
-        //    if(check == null)
-         //   _personLogic.AddPerson(person);
+           if(check == null)
+            _personLogic.AddPerson(person);
 
             return Ok(userDto);
         }

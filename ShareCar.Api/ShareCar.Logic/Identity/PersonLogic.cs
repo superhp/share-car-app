@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
+using ShareCar.Dto.Identity;
 
 namespace ShareCar.Logic.Identity
 {
@@ -20,9 +21,16 @@ namespace ShareCar.Logic.Identity
             _personRepository.AddPerson(person);
         }
 
-        public Person GetPersonByEmail(string email)
+        public PersonDto GetPersonByEmail(string email)
         {
-            return _personRepository.GetPersonByEmail(email);
+            Person person = _personRepository.GetPersonByEmail(email);
+            return new PersonDto
+            {
+                Email = person.Email,
+                FirstName = person.FirstName,
+                LastName = person.LastName
+
+            };
         }
     }
 }

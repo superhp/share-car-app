@@ -55,9 +55,9 @@ return(
 {
 this.props.requests.map(req =>
 <tr key={req.id}>
-<td>Who: {req.passengerEmail}</td> vardas pavarde
-<td>When: {/* todo*/}</td>  date time 
-<td>Where: {req.AddressId}</td>  miestas + st. + number
+<td>Who: {req.passengerFirstName} {req.passengerLastName}</td> 
+<td>When: {req.dateTime}</td>  
+<td>Where: {req.address}</td>  
 <button onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
 <button onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
 </tr>

@@ -23,9 +23,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         public bool AddRequest(Request request)
         {
             request.DriverEmail = "ragde447@gmail.com";
-            request.PassengerEmail = "edgar.reis447@gmail.com";
+            request.PassengerEmail = "ragde447@gmail.com";
             request.Status = Db.Entities.Status.WAITING;
-            request.RideId = 1;
+            request.RideId = 3;
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;
