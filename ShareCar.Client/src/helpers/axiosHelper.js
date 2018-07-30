@@ -3,7 +3,7 @@ import axios from 'axios';
 import history from './history';
 
 const api = axios.create({
-    baseURL: `http://localhost:5963/api/`,
+    baseURL: `https://localhost:44360/api/`,
     withCredentials: true
 });
 
