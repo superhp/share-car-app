@@ -68,7 +68,7 @@ getAddresses(){
 }*/
 
       showPassengerRequests(){
-        api.get('Default/false')
+        api.get('RideRequest/false')
         .then((response) => {
             console.log('ooooooooooooo');
 
@@ -88,7 +88,7 @@ getAddresses(){
       };
 
   showDriverRequests(){
-    api.get('Default/true')
+    api.get('RideRequest/true')
     .then((response) => {
         console.log((response.data : User));
         const d = response.data;
@@ -109,7 +109,7 @@ console.log(this.state.driverRequests);
             RideId: e.target.rideId.value,
             AddressId: e.target.address.value,    
         }
-          api.post(`http://localhost:5963/api/Default`, data)
+          api.post(`http://localhost:5963/api/RideRequest`, data)
             .then(res => {
               console.log(res);
               console.log(res.data);
