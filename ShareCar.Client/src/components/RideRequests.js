@@ -2,27 +2,24 @@ import * as React from "react";
 //import * as todoItem from "../../data/todoItem";
 //import { StatusInput } from "../TodoItem/StatusInput";
 //import { Loader } from "../Loader";
-import axios from 'axios';
-import api from '../helpers/axiosHelper';
-import {PassengerRideRequestsList} from './PassengerRideRequestsList';
-import {DriverRideRequestsList} from './DriverRideRequestList';
-import "../styles/riderequests.css";
- export class RideRequests extends React.Component{
+import axios from "axios";
+import api from "../helpers/axiosHelper";
+import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
+import { DriverRideRequestsList } from "./DriverRideRequestList";
 
-        state = {
-            driverRequests: [],
-            passengerRequests: []
+export class RideRequests extends React.Component {
+  state = {
+    driverRequests: [],
+    passengerRequests: []
+  };
 
-          }
-            
-
-componentWillMount(){
+  componentWillMount() {
     console.log(this.props.driver);
     this.props.driver
-    ? this.showDriverRequests()
-    : this.showPassengerRequests();
-};
-/*
+      ? this.showDriverRequests()
+      : this.showPassengerRequests();
+  }
+  /*
 componentDidMount(){
     api.get('Default')
     .then((response) => {
@@ -40,89 +37,94 @@ console.log(this.state.passengerRequests);
     });
 
 }*/
-      showPassengerRequests(){
-        api.get('Default/false')
-        .then((response) => {
-            console.log('ooooooooooooo');
+  showPassengerRequests() {
+    api
+      .get("Default/false")
+      .then(response => {
+        console.log("ooooooooooooo");
 
-            console.log((response.data : User));
-            const d = response.data;
-    console.log(d);
-           
-    this.setState({passengerRequests : d});
-    
-    console.log(this.state.passengerRequests);
-    
-        })
-        .catch(function (error) {
-            console.error(error);
-        });
-    
-      };
-
-  showDriverRequests(){
-    api.get('Default/true')
-    .then((response) => {
-        console.log('ffffffffffffffff');
-        console.log((response.data : User));
+        console.log((response.data: User));
         const d = response.data;
-console.log(d);
-       
-this.setState({driverRequests : d});
+        console.log(d);
 
-console.log(this.state.driverRequests);
+        this.setState({ passengerRequests: d });
 
-    })
-    .catch(function (error) {
+        console.log(this.state.passengerRequests);
+      })
+      .catch(function(error) {
         console.error(error);
-    });
+      });
+  }
 
-  };
+  showDriverRequests() {
+    api
+      .get("Default/true")
+      .then(response => {
+        console.log("ffffffffffffffff");
+        console.log((response.data: User));
+        const d = response.data;
+        console.log(d);
 
-    handleSubmit(e) {
-        e.preventDefault();
-        let data = {
-            RideId: e.target.rideId.value,
-            AddressId: e.target.address.value,    
-        }
-          api.post(`http://localhost:5963/api/Default`, data)
-            .then(res => {
-              console.log(res);
-              console.log(res.data);
-            })    };
-    
+        this.setState({ driverRequests: d });
 
-    render(){
+        console.log(this.state.driverRequests);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  }
 
-        return(
-           
-            <div>
-            {this.props.driver 
-            ?            
-            <DriverRideRequestsList   requests ={this.state.driverRequests}/>
-            : <PassengerRideRequestsList  requests ={this.state.passengerRequests}/>
-            
-            }
-
-            <form  className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
-                
-                <span className="ride-requests-text">AddressId:</span>
-                 <input className="ride-requests" type="text" name="address" defaultValue={""}/>
-                <br/>
-                <span className="ride-requests-text">Ride Id:</span>
-                 <input className="ride-requests" type="text" name="rideId" defaultValue={""}/>
-                <br/>
-
-                <button className="ride-requests-button">Save</button>       
-            </form>
-
-<button>Driver requests</button>       
-
-<button className="ride-requests-button" onClick={this.showPassengerRequests}>Passenger requests</button>
-
-
-</div>
-
-        );
+  handleSubmit(e) {
+    e.preventDefault();
+    let data = {
+      RideId: e.target.rideId.value,
+      AddressId: e.target.address.value
     };
+    api.post(`http://localhost:5963/api/Default`, data).then(res => {
+      console.log(res);
+      console.log(res.data);
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        {this.props.driver ? (
+          <DriverRideRequestsList requests={this.state.driverRequests} />
+        ) : (
+          <PassengerRideRequestsList requests={this.state.passengerRequests} />
+        )}
+
+        <form className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
+          <span className="ride-requests-text">AddressId:</span>
+          <input
+            className="ride-requests"
+            type="text"
+            name="address"
+            defaultValue={""}
+          />
+          <br />
+          <span className="ride-requests-text">Ride Id:</span>
+          <input
+            className="ride-requests"
+            type="text"
+            name="rideId"
+            defaultValue={""}
+          />
+          <br />
+
+          <button className="ride-requests-button">Save</button>
+        </form>
+
+        <button>Driver requests</button>
+
+        <button
+          className="ride-requests-button"
+          onClick={this.showPassengerRequests}
+        >
+          Passenger requests
+        </button>
+      </div>
+    );
+  }
 }
