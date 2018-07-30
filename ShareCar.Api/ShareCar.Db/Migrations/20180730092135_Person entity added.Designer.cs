@@ -12,8 +12,8 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180727092125_UpdatedRequestsAndRidesTable")]
-    partial class UpdatedRequestsAndRidesTable
+    [Migration("20180730092135_Person entity added")]
+    partial class Personentityadded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,6 +166,21 @@ namespace ShareCar.Db.Migrations
 
                     b.ToTable("Passengers");
                 });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.Person", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("People");
+                });
+
 
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>
                 {
@@ -353,7 +368,7 @@ namespace ShareCar.Db.Migrations
                         .WithMany()
                         .HasForeignKey("PassengerEmail");
 
-                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
+                    b.HasOne("ShareCar.Db.Entities.Ride", "RequestedRide")
                         .WithMany()
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -13,6 +13,7 @@ export class RideRequests extends React.Component {
     passengerRequests: []
   };
 
+
   componentWillMount() {
     console.log(this.props.driver);
     this.props.driver
@@ -36,7 +37,35 @@ console.log(this.state.passengerRequests);
         console.error(error);
     });
 
+ }*//*
+getNames(email){
+    api.get('Person/'+ email)
+    .then((response) => {
+        console.log("==========================");
+        console.log(response);
+
+let data = {
+    FirstName: response.data.firstName,
+    LastName: response.data.lastName
+};
+
+const namesArray = this.state.names;
+
+namesArray.push(data);
+this.setState({names : namesArray});
+console.log('stststst');
+console.log(this.state.names);
+
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+};
+
+getAddresses(){
+
 }*/
+<<<<<<< HEAD
   showPassengerRequests() {
     api
       .get("Default/false")
@@ -46,6 +75,35 @@ console.log(this.state.passengerRequests);
         console.log((response.data: User));
         const d = response.data;
         console.log(d);
+=======
+
+      showPassengerRequests(){
+        api.get('Default/false')
+        .then((response) => {
+            console.log('ooooooooooooo');
+
+            console.log((response.data : User));
+            const d = response.data;
+    console.log(d);
+           
+    this.setState({passengerRequests : d});
+    
+    console.log(this.state.passengerRequests);
+    
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    
+      };
+
+  showDriverRequests(){
+    api.get('Default/true')
+    .then((response) => {
+        console.log((response.data : User));
+        const d = response.data;
+this.setState({driverRequests : d});
+>>>>>>> 36aeb0c6f1812d6700573ab1a0171875406e7c6c
 
         this.setState({ passengerRequests: d });
 
