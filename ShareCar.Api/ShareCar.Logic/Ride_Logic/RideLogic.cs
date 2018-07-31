@@ -5,19 +5,22 @@ using ShareCar.Logic.ObjectMapping;
 using ShareCar.Dto.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using ShareCar.Logic.Address_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
+        private readonly IAddressLogic _addressLogic;
         private RideMapper _rideMapper = new RideMapper();
         private PassengerMapper _passengerMapper = new PassengerMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 
-        public RideLogic(IRideRepository rideRepository)
+        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic)
         {
             _rideRepository = rideRepository;
+            _addressLogic = addressLogic;
         }
 
         public RideDto FindRideById(int id)
@@ -36,13 +39,33 @@ namespace ShareCar.Logic.Ride_Logic
         {
             IEnumerable <Ride> rides = await _rideRepository.FindRidesByDate(date, User);
 
+
             return MapToList(rides);
         }
 
         public IEnumerable<RideDto> FindRidesByDriver(string email)
         {
             IEnumerable<Ride> rides = _rideRepository.FindRidesByDriver(email);
-            return MapToList(rides);
+
+
+            List<RideDto> dtoRide = new List<RideDto>();
+            int count = 0;
+            foreach (var ride in rides)
+            {
+                dtoRide.Add(_rideMapper.MapToDto(ride));
+                AddressDto fromAddress = _addressLogic.FindAddressById(ride.FromId);
+                dtoRide[count].FromCountry = fromAddress.Country;
+                dtoRide[count].FromCity = fromAddress.City;
+                dtoRide[count].FromStreet = fromAddress.Street;
+                dtoRide[count].FromNumber = fromAddress.Number;
+                AddressDto toAddress = _addressLogic.FindAddressById(ride.ToId);
+                dtoRide[count].ToCountry = toAddress.Country;
+                dtoRide[count].ToCity = toAddress.City;
+                dtoRide[count].ToStreet = toAddress.Street;
+                dtoRide[count].ToNumber = toAddress.Number;
+                count++;
+            }
+            return dtoRide;
         }
 
 
@@ -133,7 +156,7 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return DtoPassengers;
         }
-
+        
 
     }
 }
