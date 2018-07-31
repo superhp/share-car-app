@@ -6,6 +6,7 @@ import UserService from "../services/userService";
 import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
 import { RideRequests } from "./RideRequests";
+import { NavBar } from "./NavBar";
 export default class Driver extends Component<{}, MyProfileState> {
   userService = new UserService();
   state: MyProfileState = { loading: true, user: null };
@@ -27,8 +28,9 @@ export default class Driver extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="roleContainer">
-        <h1>Passenger Page</h1>
+        <h1 className="roleContainer">Passenger Page</h1>
         <RideRequests driver={false} />
+        <NavBar/>
       </div>
     );
     return <div>{content}</div>;

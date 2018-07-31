@@ -40,14 +40,18 @@ class RoleSelection extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="roleContainer">
+         <h1 className="roleContainer">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
           <img className="roleImage" src={driverLogo} />
         </Link>
+        <h1>Driver</h1>
+          
         <Link to="/passenger">
           {" "}
           <img className="roleImage" src={passengerLogo} />
         </Link>
+        <h1>Passenger</h1>
       </div>
     );
     return <div>{content}</div>;

@@ -1,16 +1,16 @@
 .roleContainer {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height:100vh;
 }
 .roleImage {
     align-self:center;
     justify-content: center;
     align-items: center;
     display: block;
-    height:35vh;
+    height: 20vh;
     margin: 20px;
     border: 1px solid black;
     border-radius: 5px;
