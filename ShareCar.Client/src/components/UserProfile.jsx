@@ -67,7 +67,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 value={this.state.user.email}
               />
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="exampleInputEmail1">First Name</label>
               <input
                 type="text"
@@ -78,7 +78,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 defaultValue={this.state.user.firstName}
               />
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="exampleInputEmail1">Last Name</label>
               <input
                 type="text"
@@ -89,7 +89,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 defaultValue={this.state.user.lastName}
               />
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="exampleInputEmail1">Phone Number</label>
               <input
                 type="text"
@@ -100,7 +100,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 defaultValue={this.state.user.phone}
               />
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="exampleInputEmail1">License Plate Number</label>
               <input
                 type="text"
@@ -111,7 +111,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 defaultValue={this.state.user.licensePlate}
               />
             </div>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" className="btn btn-primary">
               Save
             </button>
           </form>

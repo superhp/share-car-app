@@ -60,6 +60,9 @@ namespace ShareCar.Logic.Address_Logic
 
             return new AddressDto
             {
+                AddressId = address.AddressId,
+                Latitude = address.Latitude,
+                Longtitude = address.Longtitude,
                 City = address.City,
                 Country = address.Country,
                 Street = address.Street,

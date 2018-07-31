@@ -11,15 +11,16 @@ export class Rides extends React.Component {
     state = {
         driversRides: []
     };
-    componentWillMount() {
+    componentDidMount() {
         this.showDriversRides();
-        console.log(this.props.driversRides);
+
     }
     showDriversRides() {
         api
             .get("Ride")
             .then(response => {
                 const d = response.data;
+                console.log(response.data);
                 this.setState({ driversRides: d });
             })
             .catch(function (error) {

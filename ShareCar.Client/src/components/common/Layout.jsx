@@ -4,6 +4,7 @@ import "../../styles/layout.css";
 import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import history from "../../helpers/history";
+import NavBar from "../NavBar";
 
 type LayoutProps = {
   children?: React.Node
@@ -35,6 +36,7 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
       <div className="app">
         <div className="content">
           {this.props.children}
+          <NavBar />
           <button
             className="btn btn-light logout-button"
             onClick={() => {
