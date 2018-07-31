@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from "react";
+/*import React, { Component } from "react";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -32,3 +32,4 @@ export default class MapComponent extends Component<{}> {
     return <div id="map" />;
   }
 }
+*/
