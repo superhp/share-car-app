@@ -6,7 +6,7 @@ import history from "../helpers/history";
 
 type MyProfileState = {
   loading: boolean,
-  user: User | null
+  user: UserProfileData | null
 };
 class MyProfile extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -17,7 +17,7 @@ class MyProfile extends Component<{}, MyProfileState> {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
   }
 
-  updateLoggedInUser = (user: User) => {
+  updateLoggedInUser = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
   };
 
@@ -39,7 +39,7 @@ class MyProfile extends Component<{}, MyProfileState> {
     ) : (
       <div>
         <div>
-          <img alt="Profile" src={this.state.user.pictureUrl} />
+          <img alt="Profile" src={this.state.user.profilePicture} />
         </div>
         <div>
           {this.state.user.firstName} {this.state.user.lastName}

@@ -67,7 +67,7 @@ namespace ShareCar.Logic.ObjectMapping
 
                 };
              }
-                catch (System.NullReferenceException)
+                catch (System.NullReferenceException) // Will be deleted once it will be possible to add rides wrom frontend
                 {
                 return new RideDto
                 {
@@ -76,8 +76,8 @@ namespace ShareCar.Logic.ObjectMapping
                     ToId = ride.ToId,
                     DriverEmail = ride.DriverEmail,
                     RideDateTime = ride.RideDateTime,
-                    Passengers = null,
-                    Requests = null
+                    Passengers = new List<PassengerDto>(),
+                    Requests = new List<RequestDto>()
 
                 };
             }

@@ -16,10 +16,31 @@ namespace ShareCar.Logic.Address_Logic
         }
         public bool AddNewAddress(Address address)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _databaseContext.Addresses.Add(address);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Address GetAddress(int id)
+        public int GetAddressId(Address address)
+        {
+            try
+            {
+              return  _databaseContext.Addresses.Single(x => x.City == address.City && x.Street == address.Street && x.Number == address.Number).AddressId;
+            }
+            catch
+            {
+                return -1; // Address doesnt exist
+            }
+        }
+
+        public Address GetAddressById(int id)
         {
             try
             {

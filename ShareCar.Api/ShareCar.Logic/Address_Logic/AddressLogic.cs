@@ -13,15 +13,50 @@ namespace ShareCar.Logic.Address_Logic
         {
             _addressRepository = addressRepository;
         }
-        public bool AddNewAddress(Address address)
+        public bool AddNewAddress(AddressDto address)
         {
-            throw new NotImplementedException();
+            Address entityAddress = new Address
+            {
+                City = address.City,
+                Street = address.Street,
+                Number = address.Number
+            };
+            
+              return _addressRepository.AddNewAddress(entityAddress);
+
         }
 
-        public AddressDto GetAddress(int id)
+        public int GetAddressId(AddressDto address)
+        {
+
+            Address entityAddress = new Address
+            {
+                City = address.City,
+                Street = address.Street,
+                Number = address.Number
+            };
+
+
+            int id = _addressRepository.GetAddressId(entityAddress);
+
+            if (id == -1)
+            {
+                bool added = _addressRepository.AddNewAddress(entityAddress);
+
+                if (added)
+                {
+                    return _addressRepository.GetAddressId(entityAddress);
+                }
+            }
+
+            return id;
+
+        }
+
+        public AddressDto GetAddressById(int id)
         {
             
-         Address address = _addressRepository.GetAddress(id);
+         Address address = _addressRepository.GetAddressById(id);
 
             return new AddressDto
             {
