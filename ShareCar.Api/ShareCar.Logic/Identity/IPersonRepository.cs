@@ -6,7 +6,8 @@ namespace ShareCar.Logic.Person_Logic
 {
    public interface IPersonRepository
     {
-         void AddPerson(Person person);
+        void AddPerson(Person person);
+        void UpdatePerson(Person person);
         Person GetPersonByEmail(string email);
     }
 }

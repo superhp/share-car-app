@@ -8,7 +8,8 @@ namespace ShareCar.Logic.Person_Logic
 {
     public interface IPersonLogic
     {
-        void AddPerson(Person person);
+        void AddPerson(PersonDto person);
+        void UpdatePerson(PersonDto person);
         PersonDto GetPersonByEmail(string email);
     }
 }

@@ -43,12 +43,16 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] RequestDto request)
+        public async Task<IActionResult> PostAsync([FromBody] RequestDto request)
         {
             if (request == null)
             {
                 return BadRequest("Invalid parameter");
             }
+
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+            request.PassengerEmail = userDto.Email;
 
             bool result = _requestLogic.AddRequest(request);
 
