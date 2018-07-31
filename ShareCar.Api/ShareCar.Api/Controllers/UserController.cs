@@ -28,7 +28,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            Person person = new Person
+            PersonDto person = new PersonDto
             {
                 Email = userDto.Email,
                 FirstName = userDto.FirstName,
@@ -52,6 +52,19 @@ namespace ShareCar.Api.Controllers
             return Ok(userDto);
         }
 
+        [HttpPatch]
+        public IActionResult Post([FromBody] PersonDto person)
+        {
+            if (person == null)
+            {
+                return BadRequest("Invalid parameters");
+            }
+
+            _personLogic.UpdatePerson(person);
+
+            var updatedPerson = _personLogic.GetPersonByEmail(person.Email);
+            return Ok(updatedPerson);
+        }
 
 
 
