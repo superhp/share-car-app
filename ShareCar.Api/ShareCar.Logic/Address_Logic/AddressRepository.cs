@@ -40,11 +40,11 @@ namespace ShareCar.Logic.Address_Logic
             }
         }
 
-        public Address GetAddressById(int id)
+        public Address FindAddressById(int id)
         {
             try
             {
-           return _databaseContext.Addresses.Single(x => x.AddressId == id);
+           return _databaseContext.Addresses.SingleOrDefault(x => x.AddressId == id);
 
             }
             catch

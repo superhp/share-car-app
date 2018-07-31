@@ -11,6 +11,7 @@ import Driver from "./components/Driver";
 import Passenger from "./components/Passenger";
 import UserProfile from "./components/UserProfile";
 import MapComponent from "./components/MapComponent";
+import Ride from "./components/Rides";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
@@ -23,6 +24,8 @@ ReactDOM.render(
         <Route path="/driver" component={Driver} />
         <Route path="/passenger" component={Passenger} />
         <Route path="/map" component={MapComponent} />
+        <Route path="/profile" component={UserProfile} />
+        <Route path="/ride" component={Ride} />
       </Layout>
     </Switch>
   </Router>,

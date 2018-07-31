@@ -19,7 +19,18 @@ namespace ShareCar.Api.Controllers
         {
             _addressLogic = addressLogic;
         }
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetAddressById(int id)
+        {
+            AddressDto address = _addressLogic.FindAddressById(id);
+            if (address!=null)
+            {
+                return Ok(address);
+            }
+            return BadRequest();
 
+        }
         [HttpPost]
         public IActionResult GetAddressId([FromBody] AddressDto address)
         {

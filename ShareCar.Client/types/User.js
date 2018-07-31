@@ -19,8 +19,13 @@ type MyProfileState = {
   loading: boolean,
   user: UserProfileData | null
 };
-
 type RideData = {
   rideId: number,
   driverEmail: string
+};
+type Address = {
+  country: string,
+  city: string,
+  street: string,
+  number: string
 };
