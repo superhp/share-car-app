@@ -12,7 +12,7 @@ namespace ShareCar.Logic.RideRequest_Logic
     public class RideRequestLogic : IRideRequestLogic
     {
 
-        private readonly IRideRequestRepository _defaultRepository;
+        private readonly IRideRequestRepository _rideRequestRepository;
         //   private RideMapper _rideMapper = new RideMapper();
         //     private PassengerMapper _passengerMapper = new PassengerMapper();
         //  private AddressMapper _addressMapper = new AddressMapper();
@@ -22,7 +22,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public RideRequestLogic(IRideRequestRepository defaultRepository, IPersonLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic)
         {
-            _defaultRepository = defaultRepository;
+            _rideRequestRepository = defaultRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -34,14 +34,14 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.SeenByPassenger = true;
             string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
             requestDto.DriverEmail = driverEmail;
-           return  _defaultRepository.AddRequest(MapToEntity(requestDto));           
+           return  _rideRequestRepository.AddRequest(MapToEntity(requestDto));           
         }
 
         public IEnumerable<RequestDto> FindUsersRequests(bool driver, string email)
         {
             if (driver)
             {
-                IEnumerable<Request> entityRequest = _defaultRepository.FindDriverRequests(email);
+                IEnumerable<Request> entityRequest = _rideRequestRepository.FindDriverRequests(email);
 
                 List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
                 int count = 0;
@@ -67,14 +67,25 @@ namespace ShareCar.Logic.RideRequest_Logic
             }
             else
             {
-                IEnumerable<Request> entityRequest = _defaultRepository.FindPassengerRequests(email);
-
+                IEnumerable<Request> entityRequest = _rideRequestRepository.FindPassengerRequests(email);
                 List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
+
+                int count = 0;
                 foreach (var request in entityRequest)
                 {
-                    
+                    PersonDto passenger = _personLogic.GetPersonByEmail(request.DriverEmail);
+
                     dtoRequests.Add(MapToDto(request));
+                    dtoRequests[count].DriverFirstName = passenger.FirstName;
+                    dtoRequests[count].DriverLastName = passenger.LastName;
+
+                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+
+                    dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
+                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    count++;
                 }
+
 
 
                 return dtoRequests;
@@ -86,7 +97,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         {
             request.SeenByPassenger = false;            
 
-            return _defaultRepository.UpdateRequest(MapToEntity(request));
+            return _rideRequestRepository.UpdateRequest(MapToEntity(request));
         }
 
         private Request MapToEntity(RequestDto dtoRequest)
@@ -96,9 +107,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             request.Status = (Db.Entities.Status)dtoRequest.Status;
             request.PassengerEmail = dtoRequest.PassengerEmail;
             request.DriverEmail = dtoRequest.DriverEmail;
-
+            request.SeenByDriver = dtoRequest.SeenByDriver;
+            request.SeenByPassenger = dtoRequest.SeenByPassenger;
             request.RideId = dtoRequest.RideId;
             request.AddressId = dtoRequest.AddressId;
+            request.RequestId = dtoRequest.RequestId;
 
             return request;
         }
@@ -110,12 +123,24 @@ namespace ShareCar.Logic.RideRequest_Logic
             request.Status = (Dto.Identity.Status)requestEntity.Status;
             request.PassengerEmail = requestEntity.PassengerEmail;
             request.DriverEmail = requestEntity.DriverEmail;
-
+            request.SeenByDriver = requestEntity.SeenByDriver;
+            request.SeenByPassenger = requestEntity.SeenByPassenger;
             request.RequestId = requestEntity.RequestId;
             request.AddressId = requestEntity.AddressId;
 
             return request;
         }
 
+
+
+        void IRideRequestLogic.SeenByPassenger(int[] requests)
+        {
+            _rideRequestRepository.SeenByPassenger(requests);
+        }
+
+        void IRideRequestLogic.SeenByDriver(int[] requests)
+        {
+            _rideRequestRepository.SeenByDriver(requests);
+        }
     }
 }

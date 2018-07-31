@@ -14,6 +14,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         IEnumerable<Request> FindPassengerRequests(string email);
         IEnumerable<Request> FindDriverRequests(string email);
         bool UpdateRequest(Request request);
-
+        void SeenByPassenger(int[] requests);
+        void SeenByDriver(int[] requests);
     }
 }

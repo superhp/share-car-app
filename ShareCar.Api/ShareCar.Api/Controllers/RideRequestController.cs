@@ -64,8 +64,24 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest("Operation failed");
             }
-
         }
+
+        [HttpPost("seenPassenger")]
+        public IActionResult SeenRequestsPassenger([FromBody] int[] requests)
+        {
+            _requestLogic.SeenByPassenger(requests);
+
+            return Ok();
+        }
+
+        [HttpPost("seenDriver")]
+        public IActionResult SeenDriverPassenger([FromBody] int[] requests)
+        {
+            _requestLogic.SeenByDriver(requests);
+
+            return Ok();
+        }
+
         [HttpPut]
         public IActionResult Put([FromBody] RequestDto request)
         {

@@ -14,18 +14,16 @@ export class RideRequests extends React.Component {
 
 
   componentWillMount() {
-    console.log(this.props.driver);
     this.props.driver
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
-  /*
+  
 componentDidMount(){
     api.get('Default')
     .then((response) => {
         console.log((response.data : User));
         const d = response.data;
-console.log(d);
        
 this.setState({passengerRequests : d});
 
@@ -36,7 +34,7 @@ console.log(this.state.passengerRequests);
         console.error(error);
     });
 
- }*//*
+ }/*
 getNames(email){
     api.get('Person/'+ email)
     .then((response) => {
@@ -68,15 +66,28 @@ getAddresses(){
     api
       .get("RideRequest/false")
       .then(response => {
-        console.log("ooooooooooooo");
-
         console.log((response.data: User));
         const d = response.data;
-        console.log(d);
 
         this.setState({ passengerRequests: d });
+      }).then(() => {
 
-        console.log(this.state.passengerRequests);
+const unseenRequests = [];
+
+console.log(this.state.passengerRequests.length);
+
+for(var i = 0; i < this.state.passengerRequests.length; i++){
+if(!this.state.passengerRequests[i].seenByPassenger){
+  unseenRequests.push(this.state.passengerRequests[i].requestId);
+}
+}
+
+console.log(unseenRequests);
+if(unseenRequests.length != 0){
+        api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
+          console.log(res);         
+        });
+      }
       })
       .catch(function(error) {
         console.error(error);
@@ -89,16 +100,31 @@ getAddresses(){
       .then(response => {
         console.log((response.data: User));
         const d = response.data;
-        console.log(d);
 
         this.setState({ driverRequests: d });
 
         console.log(this.state.driverRequests);
-      })
-      .catch(function(error) {
-        console.error(error);
-      });
-  }
+      }).then(() => {
+
+        const unseenRequests = [];
+        
+        for(var i = 0; i < this.state.driverRequests.length; i++){
+        if(!this.state.driverRequests[i].seenByDriver){
+          unseenRequests.push(this.state.driverRequests[i].requestId);
+        }
+        }
+        
+        console.log(unseenRequests);
+        if(unseenRequests.length != 0){
+                api.post("RideRequest/seenDriver", unseenRequests).then(res => {
+                  console.log(res);         
+                });
+              }
+              })
+              .catch(function(error) {
+                console.error(error);
+              });
+            }
 /*
   handleSubmit(e) {
     e.preventDefault();
@@ -124,5 +150,5 @@ getAddresses(){
 
       </div>
     );
-  }
+  };
 }

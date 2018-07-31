@@ -22,10 +22,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public bool AddRequest(Request request)
         {
-   //         request.DriverEmail = "ragde447@gmail.com";
-  //          request.PassengerEmail = "ragde447@gmail.com";
-  ////          request.Status = Db.Entities.Status.WAITING;
-    //        request.RideId = 3;
+
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
             return true;
@@ -38,12 +35,34 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email);
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status == Db.Entities.Status.WAITING));
         }
 
         public Request FindRequestById(int id)
         {
             return _databaseContext.Requests.Single(x => x.RequestId == id);
+        }
+
+        public void SeenByDriver(int[] requests)
+        { 
+
+            foreach(int id in requests)
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                toUpdate.SeenByDriver = true;
+            }
+            _databaseContext.SaveChanges();
+
+        }
+
+        public void SeenByPassenger(int[] requests)
+        {
+            foreach (int id in requests)
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                toUpdate.SeenByPassenger = true;
+            }
+            _databaseContext.SaveChanges();
         }
 
         public bool UpdateRequest(Request request)

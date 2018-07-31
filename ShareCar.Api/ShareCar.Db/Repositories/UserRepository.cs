@@ -34,7 +34,7 @@ namespace ShareCar.Db.Repositories
 
             if (!result.Succeeded)
                 throw new ArgumentException("Failed to create local user account.");
-            
+         
         }
 
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)

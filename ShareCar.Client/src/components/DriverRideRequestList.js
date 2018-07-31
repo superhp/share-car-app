@@ -4,13 +4,15 @@ import api from '../helpers/axiosHelper';
 export class DriverRideRequestsList extends React.Component {
 
 
+
     sendRequestResponse(response, requestId){
         let data = {
             RequestId:requestId,
             Status :response
         };
-        console.log(data);
-            api.put(`http://localhost:5963/api/RideRequest/response`, data)
+        console.log(data);   
+      
+        api.put(`http://localhost:5963/api/RideRequest`, data)
             .then(res => {
               console.log(res.data);
             })    };

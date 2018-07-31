@@ -4,7 +4,7 @@ using System.Text;
 using ShareCar.Db;
 using ShareCar.Db.Entities;
 using System.Linq;
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Db.Repositories
 {
     class PersonRepository : IPersonRepository
     {
@@ -17,9 +17,16 @@ namespace ShareCar.Logic.Person_Logic
 
         public void AddPerson(Person person)
         {
-            _databaseContext.People.Add(person);
-            _databaseContext.SaveChanges();
-        }
+            try // For some reason method is called (somehow) when driver accepts or rejects requests, method call is untrackable by debbuging
+            {
+                _databaseContext.People.Add(person);
+                _databaseContext.SaveChanges();
+            }
+            catch
+            {
+
+            }
+            }
 
         public void UpdatePerson(Person person)
         {
