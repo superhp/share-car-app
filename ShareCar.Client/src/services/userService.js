@@ -2,22 +2,24 @@
 import api from "../helpers/axiosHelper";
 
 class UserService {
-  getLoggedInUser = (callback: User => void) => {
+  getLoggedInUser = (callback: UserProfileData => void) => {
     api
       .get("user")
       .then(response => {
-        callback((response.data: User));
+        callback((response.data: UserProfileData));
       })
       .catch(function(error) {
         console.error(error);
       });
   };
 
-  getUserProfile = (callback: UserProfileData => void) => {
+  updateUserProfile = (accessToken: AccessToken, callback: () => void) => {
     api
-      .get("user/mock")
+      .post("authentication/facebook", {
+        accessToken: accessToken
+      })
       .then(response => {
-        callback((response.data: UserProfileData));
+        if (response.status === 200) callback();
       })
       .catch(function(error) {
         console.error(error);

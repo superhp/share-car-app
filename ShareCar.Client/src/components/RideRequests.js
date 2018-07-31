@@ -6,7 +6,8 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-import {RideRequestForm} from "./RideRequestForm";
+import '../styles/riderequests.css';
+
 export class RideRequests extends React.Component {
   state = {
     driverRequests: [],
@@ -67,7 +68,7 @@ getAddresses(){
 }*/
   showPassengerRequests() {
     api
-      .get("RideRequest/false")
+      .get("Default/false")
       .then(response => {
         console.log("ooooooooooooo");
 
@@ -86,8 +87,9 @@ getAddresses(){
 
   showDriverRequests() {
     api
-      .get("RideRequest/true")
+      .get("Default/true")
       .then(response => {
+        console.log("ffffffffffffffff");
         console.log((response.data: User));
         const d = response.data;
         console.log(d);
@@ -100,31 +102,66 @@ getAddresses(){
         console.error(error);
       });
   }
-/*
+
   handleSubmit(e) {
     e.preventDefault();
     let data = {
       RideId: e.target.rideId.value,
       AddressId: e.target.address.value
     };
-    api.post(`http://localhost:5963/api/RideRequest`, data).then(res => {
+    api.post(`http://localhost:5963/api/Default`, data).then(res => {
       console.log(res);
       console.log(res.data);
     });
-  }*/
+  }
 
   render() {
     return (
       <div>
-        {this.props.driver ? 
+        {this.props.driver ? (
           <DriverRideRequestsList requests={this.state.driverRequests} />
-         : 
+        ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
-        }
+        )}
 
-       <RideRequestForm/>
+        <form className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
+        <div className="ride-requests-row">
+          <span className="ride-requests-text">
+          AddressId:
+          </span>
+          <input
+            className="ride-requests-input"
+            type="text"
+            name="address"
+            defaultValue={""}
+          />
+          </div>
+          <div className="ride-requests-row">
+           <span className="ride-requests-text">Ride Id:</span>
+            <input
+             className="ride-requests-input"
+             type="text"
+             name="rideId"
+              defaultValue={""}
+            />
+            </div>
+            </form>
+              <div className="ride-requests">
+                <button className="ride-requests-button">Save</button>
+              </div>
+        
+              <div className="ride-requests-row">
+                 <button className="ride-requests-button">Driver requests
+                 </button>
 
-      </div>
+                 <button
+                  className="ride-requests-button"
+                  onClick={this.showPassengerRequests}
+                  >
+                  Passenger requests
+                  </button>
+              </div>
+              </div>
     );
   }
 }
