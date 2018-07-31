@@ -97,7 +97,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             request.PassengerEmail = dtoRequest.PassengerEmail;
             request.DriverEmail = dtoRequest.DriverEmail;
 
-            request.RequestId = dtoRequest.RequestId;
+            request.RideId = dtoRequest.RideId;
             request.AddressId = dtoRequest.AddressId;
 
             return request;
