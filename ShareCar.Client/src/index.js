@@ -21,7 +21,6 @@ ReactDOM.render(
         <Route exact path="/" component={RoleSelection} />
         <Route path="/driver" component={Driver} />
         <Route path="/passenger" component={Passenger} />
-        <Route path="/profile" component={UserProfile} />
       </Layout>
     </Switch>
   </Router>,

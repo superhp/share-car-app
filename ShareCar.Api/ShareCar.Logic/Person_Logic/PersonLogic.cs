@@ -24,7 +24,8 @@ namespace ShareCar.Logic.Person_Logic
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 LicensePlate = person.LicensePlate,
-                Phone = person.Phone
+                Phone = person.Phone,
+                ProfilePicture = person.ProfilePicture
             };
             _personRepository.AddPerson(_person);
 
@@ -32,15 +33,17 @@ namespace ShareCar.Logic.Person_Logic
 
         public void UpdatePerson(PersonDto person)
         {
-            Person _person = new Person
+           var personToUpdate = _personRepository.GetPersonByEmail(person.Email);
+             
+            if (personToUpdate != null)
             {
-                Email = person.Email,
-                FirstName = person.FirstName,
-                LastName = person.LastName,
-                LicensePlate = person.LicensePlate,
-                Phone = person.Phone
-            };
-            _personRepository.UpdatePerson(_person);
+                personToUpdate.FirstName = person.FirstName;
+                personToUpdate.LastName = person.LastName;
+                personToUpdate.LicensePlate = person.LicensePlate;
+                personToUpdate.Phone = person.Phone;
+
+                _personRepository.UpdatePerson(personToUpdate);
+            }
 
         }
 
@@ -53,7 +56,10 @@ namespace ShareCar.Logic.Person_Logic
                 {
                     Email = person.Email,
                     FirstName = person.FirstName,
-                    LastName = person.LastName
+                    LastName = person.LastName,
+                    LicensePlate = person.LicensePlate,
+                    Phone = person.Phone,
+                    ProfilePicture = person.ProfilePicture
 
                 };
             } else

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShareCar.Db.Entities;
-using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Person_Logic;
 using ShareCar.Logic.User_Logic;
@@ -27,32 +24,25 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-
             PersonDto person = new PersonDto
             {
                 Email = userDto.Email,
                 FirstName = userDto.FirstName,
-                LastName = userDto.LastName
+                LastName = userDto.LastName,
+                ProfilePicture = userDto.PictureUrl
+                
             };
 
             PersonDto check = _personLogic.GetPersonByEmail(userDto.Email);
 
            if(check == null)
             _personLogic.AddPerson(person);
+            var personData = _personLogic.GetPersonByEmail(userDto.Email);
 
-            return Ok(userDto);
+            return Ok(personData);
         }
 
-        [Route("mock")]
-        public async Task<IActionResult> GetMockData()
-        {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            userDto.Phone = "861223591";
-            userDto.LicensePlate = "AHZ205";
-            return Ok(userDto);
-        }
-
-        [HttpPatch]
+        [HttpPost]
         public IActionResult Post([FromBody] PersonDto person)
         {
             if (person == null)
@@ -63,7 +53,13 @@ namespace ShareCar.Api.Controllers
             _personLogic.UpdatePerson(person);
 
             var updatedPerson = _personLogic.GetPersonByEmail(person.Email);
-            return Ok(updatedPerson);
+            if (updatedPerson != null)
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest("Invalid User");
+            }
         }
 
 
