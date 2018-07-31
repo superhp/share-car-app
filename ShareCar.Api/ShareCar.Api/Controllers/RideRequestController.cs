@@ -66,7 +66,7 @@ namespace ShareCar.Api.Controllers
             }
 
         }
-        [HttpPut("{response}")]
+        [HttpPut]
         public IActionResult Put([FromBody] RequestDto request)
         {
             if (request == null)

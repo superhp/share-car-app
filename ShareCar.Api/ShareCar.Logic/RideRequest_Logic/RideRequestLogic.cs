@@ -30,7 +30,8 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public bool AddRequest(RequestDto requestDto)
         {
-
+            requestDto.SeenByDriver = false;
+            requestDto.SeenByPassenger = true;
             string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
             requestDto.DriverEmail = driverEmail;
            return  _defaultRepository.AddRequest(MapToEntity(requestDto));           
@@ -83,6 +84,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public bool UpdateRequest(RequestDto request)
         {
+            request.SeenByPassenger = false;            
 
             return _defaultRepository.UpdateRequest(MapToEntity(request));
         }

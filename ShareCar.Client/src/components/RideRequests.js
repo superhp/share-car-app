@@ -6,7 +6,6 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-import {RideRequestForm} from "./RideRequestForm";
 export class RideRequests extends React.Component {
   state = {
     driverRequests: [],
@@ -122,7 +121,6 @@ getAddresses(){
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
         }
 
-       <RideRequestForm/>
 
       </div>
     );

@@ -1,4 +1,5 @@
 import * as React from "react";
+import {RideRequestForm} from "./RideRequestForm";
 
 export class PassengerRideRequestsList extends React.Component {
     
@@ -11,6 +12,7 @@ export class PassengerRideRequestsList extends React.Component {
 {
 this.props.requests.map(req =>
 <tr key={req.id}>
+<td>{req.seenByPassenger ? "" : "NEW"}</td> 
 <td>{req.driverEmail}</td>
 <td>Who: {req.driverFirstName} {req.driverLastName}</td>
 <td>When: {req.dateTime} </td>
@@ -19,6 +21,10 @@ this.props.requests.map(req =>
 
 )
 }
+
+       <RideRequestForm/>
+
+
 </tbody>
 </div>
         );

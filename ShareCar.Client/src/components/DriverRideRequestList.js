@@ -24,9 +24,11 @@ return(
 {
 this.props.requests.map(req =>
 <tr key={req.id}>
-<td>Who: {req.passengerFirstName} {req.passengerLastName}</td> 
-<td>When: {req.rideDate}</td>  
-<td>Where: {req.address}</td>  
+
+<td>{req.seenByDriver ? "" : "NEW"}</td> 
+<td>Who: {req.passengerFirstName} {req.passengerLastName}  </td> 
+<td>When: {req.rideDate}  </td>  
+<td>Where: {req.address}  </td>  
 <button onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
 <button onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
 </tr>
