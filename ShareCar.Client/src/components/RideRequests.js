@@ -6,6 +6,7 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
+import '../styles/riderequests.css';
 
 export class RideRequests extends React.Component {
   state = {
@@ -144,7 +145,7 @@ getAddresses(){
           <button className="ride-requests-button">Save</button>
         </form>
 
-        <button>Driver requests</button>
+        <button className="ride-requests-button">Driver requests</button>
 
         <button
           className="ride-requests-button"
