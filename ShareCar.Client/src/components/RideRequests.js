@@ -125,35 +125,43 @@ getAddresses(){
         )}
 
         <form className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
-          <span className="ride-requests-text">AddressId:</span>
+        <div className="ride-requests-row">
+          <span className="ride-requests-text">
+          AddressId:
+          </span>
           <input
-            className="ride-requests"
+            className="ride-requests-input"
             type="text"
             name="address"
             defaultValue={""}
           />
-          <br />
-          <span className="ride-requests-text">Ride Id:</span>
-          <input
-            className="ride-requests"
-            type="text"
-            name="rideId"
-            defaultValue={""}
-          />
-          <br />
+          </div>
+          <div className="ride-requests-row">
+           <span className="ride-requests-text">Ride Id:</span>
+            <input
+             className="ride-requests-input"
+             type="text"
+             name="rideId"
+              defaultValue={""}
+            />
+            </div>
+            </form>
+              <div className="ride-requests">
+                <button className="ride-requests-button">Save</button>
+              </div>
+        
+              <div className="ride-requests-row">
+                 <button className="ride-requests-button">Driver requests
+                 </button>
 
-          <button className="ride-requests-button">Save</button>
-        </form>
-
-        <button className="ride-requests-button">Driver requests</button>
-
-        <button
-          className="ride-requests-button"
-          onClick={this.showPassengerRequests}
-        >
-          Passenger requests
-        </button>
-      </div>
+                 <button
+                  className="ride-requests-button"
+                  onClick={this.showPassengerRequests}
+                  >
+                  Passenger requests
+                  </button>
+              </div>
+              </div>
     );
   }
 }
