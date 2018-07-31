@@ -19,3 +19,9 @@ div.form-group {
 h1 {
   text-align: center;
 }
+img.thumbnail {
+  height: 50px;
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+}
