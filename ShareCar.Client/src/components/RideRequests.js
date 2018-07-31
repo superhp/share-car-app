@@ -19,22 +19,7 @@ export class RideRequests extends React.Component {
       : this.showPassengerRequests();
   }
   
-componentDidMount(){
-    api.get('Default')
-    .then((response) => {
-        console.log((response.data : User));
-        const d = response.data;
-       
-this.setState({passengerRequests : d});
-
-console.log(this.state.passengerRequests);
-
-    })
-    .catch(function (error) {
-        console.error(error);
-    });
-
- }/*
+/*
 getNames(email){
     api.get('Person/'+ email)
     .then((response) => {

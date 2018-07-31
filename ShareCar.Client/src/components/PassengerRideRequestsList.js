@@ -8,7 +8,6 @@ export class PassengerRideRequestsList extends React.Component {
 
     render(){
         return(
-            <div>
 <tbody>
 {
 this.props.requests.map(req =>
@@ -28,7 +27,6 @@ this.props.requests.map(req =>
 
 
 </tbody>
-</div>
         );
     }
 }

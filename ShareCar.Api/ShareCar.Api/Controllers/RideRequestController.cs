@@ -35,9 +35,9 @@ namespace ShareCar.Api.Controllers
             if (driver == "true")
                 isDriver = true;
 
-            IEnumerable<RequestDto> request;
+            
 
-            request = _requestLogic.FindUsersRequests(isDriver, userDto.Email);
+            IEnumerable<RequestDto> request = await _requestLogic.FindUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }

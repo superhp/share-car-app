@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Address_Logic;
@@ -19,13 +22,15 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IRideLogic _rideLogic;
         private readonly IPersonLogic _personLogic;
         private readonly IAddressLogic _addressLogic;
+        private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IPersonLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic)
+        public RideRequestLogic(IRideRequestRepository defaultRepository, IPersonLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager)
         {
             _rideRequestRepository = defaultRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
+            _userManager = userManager;
         }
 
         public bool AddRequest(RequestDto requestDto)
@@ -36,62 +41,12 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.DriverEmail = driverEmail;
            return  _rideRequestRepository.AddRequest(MapToEntity(requestDto));           
         }
-
-        public IEnumerable<RequestDto> FindUsersRequests(bool driver, string email)
+        /*
+        public async System.Threading.Tasks.Task<IEnumerable<RequestDto>> FindUsersRequestsAsync(bool driver, string email)
         {
-            if (driver)
-            {
-                IEnumerable<Request> entityRequest = _rideRequestRepository.FindDriverRequests(email);
+        
 
-                List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
-                int count = 0;
-                foreach (var request in entityRequest)
-                {
-                    PersonDto passenger = _personLogic.GetPersonByEmail(request.PassengerEmail);
-
-                    dtoRequests.Add(MapToDto(request));
-                    dtoRequests[count].PassengerFirstName = passenger.FirstName;
-                    dtoRequests[count].PassengerLastName = passenger.LastName;
-
-                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
-
-                    dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
-                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
-                    count++;
-                }
-
-
-
-
-                return dtoRequests;
-            }
-            else
-            {
-                IEnumerable<Request> entityRequest = _rideRequestRepository.FindPassengerRequests(email);
-                List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
-
-                int count = 0;
-                foreach (var request in entityRequest)
-                {
-                    PersonDto passenger = _personLogic.GetPersonByEmail(request.DriverEmail);
-
-                    dtoRequests.Add(MapToDto(request));
-                    dtoRequests[count].DriverFirstName = passenger.FirstName;
-                    dtoRequests[count].DriverLastName = passenger.LastName;
-
-                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
-
-                    dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
-                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
-                    count++;
-                }
-
-
-
-                return dtoRequests;
-            }
-
-        }
+        }*/
 
         public bool UpdateRequest(RequestDto request)
         {
@@ -141,6 +96,63 @@ namespace ShareCar.Logic.RideRequest_Logic
         void IRideRequestLogic.SeenByDriver(int[] requests)
         {
             _rideRequestRepository.SeenByDriver(requests);
+        }
+
+        public async Task<IEnumerable<RequestDto>> FindUsersRequests(bool driver, string email)
+        {
+            if (driver)
+            {
+                IEnumerable<Request> entityRequest = _rideRequestRepository.FindDriverRequests(email);
+
+                List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
+                int count = 0;
+                foreach (var request in entityRequest)
+                {
+                    //PersonDto passenger = _personLogic.GetPersonByEmail(request.PassengerEmail);
+                    var user = await _userManager.FindByEmailAsync(request.PassengerEmail);
+                    
+
+                    dtoRequests.Add(MapToDto(request));
+                    dtoRequests[count].PassengerFirstName = user.FirstName;
+                    dtoRequests[count].PassengerLastName = user.LastName;
+
+                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+
+                    dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
+                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    count++;
+                }
+
+
+
+
+                return dtoRequests;
+            }
+            else
+            {
+                IEnumerable<Request> entityRequest = _rideRequestRepository.FindPassengerRequests(email);
+                List<RequestDto> dtoRequests = new List<RequestDto>();// = new IEnumerable<RequestDto>();
+
+                int count = 0;
+                foreach (var request in entityRequest)
+                {
+                    var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+
+                    dtoRequests.Add(MapToDto(request));
+                    dtoRequests[count].DriverFirstName = user.FirstName;
+                    dtoRequests[count].DriverLastName = user.LastName;
+
+                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+
+                    dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
+                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    count++;
+                }
+
+
+
+                return dtoRequests;
+            }
         }
     }
 }

@@ -35,17 +35,6 @@ namespace ShareCar.Api.Controllers
                 LastName = userDto.LastName
             };
 
-
-            ///-------------------------IMPORTANT
-            // This code can't be added in a place where creation of new user takes place, because server won't work(for unkown reason )
-            // Uncomment code when login with new account in order to add it to the database and then comment it back,
-            // because each time program will try to autentify user  there will be two calls, and on a second one PersonDto check won't be found
-            // and program will try to insert it (again), throw an error, which will crash program only on another atepmt to add any data to database
-      //      PersonDto check = _personLogic.GetPersonByEmail(userDto.Email);  
-
-        //   if(check == null)
-       //     _personLogic.AddPerson(person);
-
             return Ok(userDto);
         }
 
