@@ -14,6 +14,7 @@ namespace ShareCar.Db.Entities
         public string LastName { get; set; }
         public string LicensePlate { get; set; }
         public string Phone { get; set; }
+        public string ProfilePicture { get; set; }
 
         [ForeignKey("Email")]
         public virtual User User { get; set; }

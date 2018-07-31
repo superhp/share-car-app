@@ -8,7 +8,7 @@ namespace ShareCar.Logic.Address_Logic
     public interface IAddressRepository
     {
          bool AddNewAddress(Address address);
-         Address GetAddressById(int id);
+         Address FindAddressById(int id);
         int GetAddressId(Address address);
 
     }
