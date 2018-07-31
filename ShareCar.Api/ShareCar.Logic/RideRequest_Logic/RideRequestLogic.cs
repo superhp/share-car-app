@@ -52,7 +52,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].PassengerFirstName = passenger.FirstName;
                     dtoRequests[count].PassengerLastName = passenger.LastName;
 
-                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+                    AddressDto address = _addressLogic.FindAddressById(request.AddressId);
 
                     dtoRequests[count].Address = address.City + "  " + address.Street + "  " + address.Number;
                     dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
