@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.Identity;
+using ShareCar.Logic.Person_Logic;
 using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
@@ -43,7 +43,17 @@ namespace ShareCar.Api.Controllers
             return Ok(userDto);
         }
 
-        
+        [Route("mock")]
+        public async Task<IActionResult> GetMockData()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            userDto.Phone = "861223591";
+            userDto.LicensePlate = "AHZ205";
+            return Ok(userDto);
+        }
+
+
+
 
 
     }
