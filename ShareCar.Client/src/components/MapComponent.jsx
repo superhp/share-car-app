@@ -27,7 +27,16 @@ export default class MapComponent extends Component<{}> {
       map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
       map.getView().setZoom(13);
     }
+    function handleMapClick(evt)
+    {
+       var lonlat = map.getLonLatFromViewPortPx(evt.xy);
+       // use lonlat
+       alert(lonlat);
+    } 
   }
+
+
+  
   render() {
     return <div id="map" />;
   }

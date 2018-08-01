@@ -2,7 +2,7 @@ import * as React from "react";
 
 import axios from "axios";
 import api from "../helpers/axiosHelper";
-
+import MapComponent from "./MapComponent";
 export class RideRequestForm extends React.Component {
 
   handleSubmit(e) {
@@ -80,6 +80,7 @@ export class RideRequestForm extends React.Component {
           <button className="ride-requests-button">Save</button>
         </form>
 
+<MapComponent/>
 
       </div>
     );
