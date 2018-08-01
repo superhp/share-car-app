@@ -11,50 +11,31 @@ namespace ShareCar.Api.Controllers
     public class UserController : Controller
     {
         private readonly Db.Repositories.IUserRepository _userRepository;
-        private readonly IPersonLogic _personLogic;
+        private readonly IUserLogic _userLogic;
 
-        public UserController(Db.Repositories.IUserRepository userRepository, IPersonLogic logic)
+        public UserController(Db.Repositories.IUserRepository userRepository, IUserLogic userLogic)
         {
             _userRepository = userRepository;
-            _personLogic = logic;
+            _userLogic = userLogic;
         }
 
 
         public async Task<IActionResult> Get()
         {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            PersonDto person = new PersonDto
-            {
-                Email = userDto.Email,
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                ProfilePicture = userDto.PictureUrl
-                
-            };
-
-            var personData = _personLogic.GetPersonByEmail(userDto.Email);
-
-            return Ok(personData);
+            var userDto = await _userLogic.GetUserAsync(User);
+            return Ok(userDto);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] PersonDto person)
+        public async Task<IActionResult> Post([FromBody] UserDto user)
         {
-            if (person == null)
+            if (user == null)
             {
                 return BadRequest("Invalid parameters");
             }
 
-            _personLogic.UpdatePerson(person);
-
-            var updatedPerson = _personLogic.GetPersonByEmail(person.Email);
-            if (updatedPerson != null)
-            {
-                return Ok();
-            } else
-            {
-                return BadRequest("Invalid User");
-            }
+            await  Task.Run(()=>_userLogic.UpdateUserAsync(user, User));
+            return Ok();
         }
 
 

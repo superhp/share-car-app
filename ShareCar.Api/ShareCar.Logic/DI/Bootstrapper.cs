@@ -29,13 +29,10 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IIdentity, FacebookIdentity>();
             services.AddSingleton<IRideRepository, RideRepository>();
             services.AddSingleton<IRideLogic, RideLogic>();
-
             services.AddSingleton<IUserRepository, UserRepository>();
-
             services.AddSingleton<IRideRequestLogic, RideRequestLogic>();
             services.AddSingleton<IRideRequestRepository, RideRequestRepository>();
-            services.AddSingleton<IPersonRepository, PersonRepository>();
-            services.AddSingleton<IPersonLogic, PersonLogic>();
+            services.AddSingleton<IUserLogic, UserLogic>();
             services.AddSingleton<IAddressRepository, AddressRepository>();
             services.AddSingleton<IAddressLogic, AddressLogic>();
         }

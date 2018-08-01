@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.Identity
+namespace ShareCar.Logic.Person_Logic
 {
     public interface IJwtFactory
     {

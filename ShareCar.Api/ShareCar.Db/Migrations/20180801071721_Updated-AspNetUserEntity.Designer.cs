@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180801071721_Updated-AspNetUserEntity")]
+    partial class UpdatedAspNetUserEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,6 +165,25 @@ namespace ShareCar.Db.Migrations
                     b.HasIndex("RideId");
 
                     b.ToTable("Passengers");
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.Person", b =>
+                {
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("LicensePlate");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<string>("ProfilePicture");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Request", b =>
@@ -338,6 +358,14 @@ namespace ShareCar.Db.Migrations
                     b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
                         .WithMany("Passengers")
                         .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.Person", b =>
+                {
+                    b.HasOne("ShareCar.Db.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Email")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
