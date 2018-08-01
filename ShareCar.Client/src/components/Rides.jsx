@@ -1,5 +1,4 @@
 import UserService from "../services/userService";
-import RideService from "../services/rideService";
 import React, { Component } from "react";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
