@@ -17,11 +17,11 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         private readonly IRideRequestRepository _rideRequestRepository;
         private readonly IRideLogic _rideLogic;
-        private readonly IPersonLogic _personLogic;
+        private readonly IUserLogic _personLogic;
         private readonly IAddressLogic _addressLogic;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IPersonLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager)
+        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager)
         {
             _rideRequestRepository = defaultRepository;
             _personLogic = personLogic;

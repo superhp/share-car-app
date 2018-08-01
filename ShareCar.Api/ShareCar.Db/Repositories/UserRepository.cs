@@ -11,10 +11,12 @@ namespace ShareCar.Db.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<User> _userManager;
+        private readonly ApplicationDbContext _databaseContext;
 
-        public UserRepository(UserManager<User> userManager)
+        public UserRepository(UserManager<User> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _databaseContext = context;
         }
 
         public async Task CreateFacebookUser(FacebookUserDataDto userDto)
@@ -45,12 +47,17 @@ namespace ShareCar.Db.Repositories
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PictureUrl = user.PictureUrl
+                PictureUrl = user.PictureUrl,
+                Phone = user.Phone,
+                LicensePlate = user.LicensePlate               
             };
 
             return userDto;
         }
 
-
+        public async Task UpdateUserAsync(User user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
     }
 }
