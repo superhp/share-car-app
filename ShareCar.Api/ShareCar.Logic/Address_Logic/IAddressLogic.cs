@@ -1,8 +1,4 @@
-﻿using ShareCar.Db.Entities;
-using ShareCar.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ShareCar.Dto;
 
 namespace ShareCar.Logic.Address_Logic
 {

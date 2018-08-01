@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
+using ShareCar.Db.Repositories;
 using ShareCar.Db.Entities;
 using ShareCar.Dto;
 

@@ -7,7 +7,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Logic.User_Logic
 {
     public class UserLogic : IUserLogic
     {

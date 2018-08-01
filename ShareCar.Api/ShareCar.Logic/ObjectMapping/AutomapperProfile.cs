@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ShareCar.Dto;
 using ShareCar.Db.Entities;
+
 namespace ShareCar.Logic.ObjectMapping
 {
     public class AutomapperProfile : Profile

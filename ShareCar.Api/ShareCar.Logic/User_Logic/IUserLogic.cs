@@ -1,12 +1,8 @@
-﻿using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
-using System;
-using System.Collections.Generic;
+﻿using ShareCar.Dto.Identity;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Logic.User_Logic
 {
     public interface IUserLogic
     {
