@@ -139,12 +139,19 @@ namespace ShareCar.Logic.Ride_Logic
                     Number = ride.ToNumber
                 };
                 //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
-
                 ride.FromId = _addressLogic.GetAddressId(fromAddress);
                 ride.ToId = _addressLogic.GetAddressId(toAddress);
-                
+                if(ride.FromId == -1)
+                {
+                    _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                    ride.FromId = _addressLogic.GetAddressId(fromAddress);
+                }
+                if (ride.ToId == -1)
+                {
+                    _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+                    ride.ToId = _addressLogic.GetAddressId(toAddress);
+                }
+
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 return true;
             }
