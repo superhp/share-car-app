@@ -1,5 +1,7 @@
 import UserService from "../services/userService";
 import React, { Component } from "react";
+import { Route, Link } from "react-router-dom";
+import { Router, Switch } from "react-router";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
@@ -29,7 +31,15 @@ export class Rides extends React.Component {
     render() {
         return (
             <div>
-                <DriversRidesList driversRides={this.state.driversRides} />
+                <div>
+                    <Link to="/newRide">
+                        {" "}
+                        <button>Add new ride</button>
+                    </Link>
+                </div>
+                <div>
+                    <DriversRidesList driversRides={this.state.driversRides} />
+                </div>
             </div>
         );
     }

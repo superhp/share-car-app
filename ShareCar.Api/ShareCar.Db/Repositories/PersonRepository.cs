@@ -6,7 +6,7 @@ using ShareCar.Db.Entities;
 using System.Linq;
 namespace ShareCar.Db.Repositories
 {
-    class PersonRepository : IPersonRepository
+    public class PersonRepository : IPersonRepository
     {
         private readonly ApplicationDbContext _databaseContext;
 

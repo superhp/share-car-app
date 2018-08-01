@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.Person_Logic;
-using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
 {
@@ -14,7 +13,7 @@ namespace ShareCar.Api.Controllers
         private readonly Db.Repositories.IUserRepository _userRepository;
         private readonly IPersonLogic _personLogic;
 
-        public UserController(Db.Repositories.IUserRepository userRepository, IUserLogic userLogic, IPersonLogic logic)
+        public UserController(Db.Repositories.IUserRepository userRepository, IPersonLogic logic)
         {
             _userRepository = userRepository;
             _personLogic = logic;
