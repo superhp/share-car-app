@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using ShareCar.Logic.Address_Logic;
 using AutoMapper;
-
+using System.Linq;
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
@@ -156,7 +156,16 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return DtoPassengers;
         }
-        
 
+        public bool DoesUserBelongsToRide(string email, int rideId)
+        {
+            Ride ride = _rideRepository.FindRideById(rideId);
+
+            if(ride.DriverEmail == email || ride.Passengers.Any(x => x.Email == email))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -57,8 +57,14 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("rideId={rideId}")]
-        public  IActionResult GetPassengersByRide(int rideId)
+        public async Task<IActionResult> GetPassengersByRideAsync(int rideId)
         {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            if (!_rideLogic.DoesUserBelongsToRide(userDto.Email, rideId))
+            {
+                BadRequest("You don't belong to this ride");
+            }
+
 
             IEnumerable<PassengerDto> passengers =  _rideLogic.FindPassengersByRideId(rideId);
             if (passengers.ToList().Any())
