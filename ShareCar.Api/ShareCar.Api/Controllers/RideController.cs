@@ -112,14 +112,14 @@ namespace ShareCar.Api.Controllers
 
         // Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RideDto ride)
+        public IActionResult Post([FromBody] RideDto ride)
         {
             if (ride == null)
             {
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = await _rideLogic.AddRide(ride);
+            bool result =  _rideLogic.AddRide(ride);
 
             if (result)
             {

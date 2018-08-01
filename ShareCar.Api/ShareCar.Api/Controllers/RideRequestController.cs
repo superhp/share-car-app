@@ -51,7 +51,7 @@ namespace ShareCar.Api.Controllers
 
             request.PassengerEmail = userDto.Email;
 
-            bool result = await _requestLogic.AddRequest(request);
+            bool result = _requestLogic.AddRequest(request);
 
             if (result)
             {

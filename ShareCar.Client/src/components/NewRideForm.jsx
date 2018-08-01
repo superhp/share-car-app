@@ -19,9 +19,8 @@ export class NewRideForm extends React.Component {
             RideDateTime: e.target.rideDateTime.value
         };
         console.log(ride);
-        api.post(`http://localhost:44360/api/Ride`, ride).then(res => {
+        api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
             console.log(res);
-
         });
     }
     render() {
@@ -95,7 +94,7 @@ export class NewRideForm extends React.Component {
                         defaultValue={""}
                     />
                     <br />
-                    <button>Save</button>
+                    <button className="ride-requests-button">Save</button>
                 </form>
             </div>
         )

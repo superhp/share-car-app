@@ -18,7 +18,7 @@ namespace ShareCar.Logic.Address_Logic
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-        public Task<bool> AddNewAddress(AddressDto address)
+        public bool AddNewAddress(AddressDto address)
         {
             Address entityAddress = new Address
             {
@@ -31,7 +31,7 @@ namespace ShareCar.Logic.Address_Logic
 
         }
 
-        public async Task<int> GetAddressId(AddressDto address)
+        public int GetAddressId(AddressDto address)
         {
 
             Address entityAddress = _mapper.Map<AddressDto, Address>(address);
@@ -41,7 +41,7 @@ namespace ShareCar.Logic.Address_Logic
 
             if (id == -1)
             {
-                bool added = await _addressRepository.AddNewAddress(entityAddress);
+                bool added = _addressRepository.AddNewAddress(entityAddress);
 
                 if (added)
                 {
