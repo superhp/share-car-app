@@ -13,6 +13,7 @@ namespace ShareCar.Logic.Ride_Logic
     {
         private readonly IRideRepository _rideRepository;
         private readonly IAddressLogic _addressLogic;
+        private readonly IAddressRepository _addressRepository;
         private RideMapper _rideMapper = new RideMapper();
         private PassengerMapper _passengerMapper = new PassengerMapper();
         private AddressMapper _addressMapper = new AddressMapper();
@@ -122,6 +123,23 @@ namespace ShareCar.Logic.Ride_Logic
 
             if (addNewRide)
             {
+                AddressDto fromAddress = new AddressDto
+                {
+                    Country = ride.FromCountry,
+                    City = ride.FromCity,
+                    Street = ride.FromStreet,
+                    Number = ride.FromNumber
+                };
+                AddressDto toAddress = new AddressDto
+                {
+                    Country = ride.ToCountry,
+                    City = ride.ToCity,
+                    Street = ride.ToStreet,
+                    Number = ride.ToNumber
+                };
+                //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
+                _addressRepository.AddNewAddress(_addressMapper.MapToEntity(fromAddress));
+                _addressRepository.AddNewAddress(_addressMapper.MapToEntity(toAddress));
                 _rideRepository.AddRide(_rideMapper.MapToEntity(ride));
                 return true;
             }

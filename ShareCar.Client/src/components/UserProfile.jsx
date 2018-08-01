@@ -50,9 +50,9 @@ class UserProfile extends Component<{}, UserProfileState> {
           alt="Profile"
           src={this.state.user.profilePicture}
         />
-        <div className="container profileContainer">
+        <div className="container profile-container">
           <form
-            className="profileForm col-sm-6"
+            className="profile-form col-sm-6"
             onSubmit={this.handleSubmit.bind(this)}
           >
             <div className="form-group">
@@ -61,7 +61,7 @@ class UserProfile extends Component<{}, UserProfileState> {
                 type="email"
                 name="email"
                 disabled
-                className="form-control editInput"
+                className="form-control edit-input"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 value={this.state.user.email}
@@ -72,7 +72,7 @@ class UserProfile extends Component<{}, UserProfileState> {
               <input
                 type="text"
                 name="firstname"
-                className="form-control editInput"
+                className="form-control edit-input"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.firstName}
@@ -83,7 +83,7 @@ class UserProfile extends Component<{}, UserProfileState> {
               <input
                 type="text"
                 name="lastname"
-                className="form-control editInput"
+                className="form-control edit-input"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.lastName}
@@ -94,7 +94,7 @@ class UserProfile extends Component<{}, UserProfileState> {
               <input
                 type="text"
                 name="phone"
-                className="form-control editInput"
+                className="form-control edit-input"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.phone}
@@ -105,7 +105,7 @@ class UserProfile extends Component<{}, UserProfileState> {
               <input
                 type="text"
                 name="licenseplate"
-                className="form-control editInput"
+                className="form-control edit-input"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.licensePlate}
