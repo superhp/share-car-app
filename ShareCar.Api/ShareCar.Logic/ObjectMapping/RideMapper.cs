@@ -1,5 +1,6 @@
 ﻿using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
+using ShareCar.Logic.Address_Logic;
 using System.Collections.Generic;
 
 namespace ShareCar.Logic.ObjectMapping
@@ -10,10 +11,10 @@ namespace ShareCar.Logic.ObjectMapping
         {
             PassengerMapper PassengerMapper = new PassengerMapper();
             RequestMapper RequestMapper = new RequestMapper();
+            AddressMapper AddressMapper = new AddressMapper();
 
             List<Passenger> EntityPassengers = new List<Passenger>();
             List<Request> EntityRequests = new List<Request>();
-
             
                 foreach (var passenger in ride.Passengers)
                 {
