@@ -30,10 +30,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = false;
-
-            if (driver == "true")
-                isDriver = true;
+            bool isDriver = Boolean.Parse(driver);
 
             
 

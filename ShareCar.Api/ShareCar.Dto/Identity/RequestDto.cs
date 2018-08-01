@@ -17,7 +17,9 @@ namespace ShareCar.Dto.Identity
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
         public int RideId { get; set; }
-        public string Address { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; }
+        public string HouseNumber { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }
         public DateTime RideDate { get; set; }

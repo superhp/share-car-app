@@ -33,10 +33,6 @@ namespace ShareCar.Api.Controllers
                 
             };
 
-            PersonDto check = _personLogic.GetPersonByEmail(userDto.Email);
-
-          /* if(check == null)
-            _personLogic.AddPerson(person);*/
             var personData = _personLogic.GetPersonByEmail(userDto.Email);
 
             return Ok(personData);

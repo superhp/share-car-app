@@ -9,9 +9,12 @@ export class RideRequestForm extends React.Component {
     e.preventDefault();
     let request = {
       RideId: e.target.rideId.value,
-      AddressId : ""
-    };
-    const address = {
+      City: e.target.city.value,
+      Street: e.target.street.value,
+      HouseNumber: e.target.houseNumber.value    };
+      console.log(request);
+
+/*    const address = {
         City: e.target.city.value,
         Street: e.target.street.value,
         Number: e.target.number.value
@@ -24,7 +27,7 @@ export class RideRequestForm extends React.Component {
       console.log("============");
       if(res.status == 200)
 {
-request.AddressId = res.data;
+request.AddressId = res.data;*/
 
       api.post(`http://localhost:5963/api/RideRequest`, request).then(res => {
         console.log(res);
@@ -32,11 +35,6 @@ request.AddressId = res.data;
       });
 
 }
-// Request failed
-
-
-    });
-  }
 
   render() {
     return (
@@ -65,7 +63,7 @@ request.AddressId = res.data;
           <input
             className="ride-requests"
             type="text"
-            name="number"
+            name="houseNumber"
             defaultValue={""}
           />
           <br />
