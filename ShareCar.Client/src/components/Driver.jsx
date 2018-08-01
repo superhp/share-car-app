@@ -31,7 +31,6 @@ export default class Driver extends Component<{}, MyProfileState> {
       <div className="roleContainer">
         <h1 className="roleContainer">Driver Page</h1>
         <RideRequests driver={true} />
-        <NavBar/>
       </div>
     );
     return <div>{content}</div>;
