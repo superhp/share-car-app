@@ -38,7 +38,7 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
           {this.props.children}
           <NavBar />
           <button
-            className="btn btn-light logout-button"
+            className="logout-button"
             onClick={() => {
               this.logout();
             }}

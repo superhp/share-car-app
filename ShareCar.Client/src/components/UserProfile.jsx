@@ -47,7 +47,6 @@ class UserProfile extends Component<{}, UserProfileState> {
       <div>
         <img
           className="thumbnail"
-          alt="Profile"
           src={this.state.user.profilePicture}
         />
         <div className="container profile-container">
@@ -121,7 +120,7 @@ class UserProfile extends Component<{}, UserProfileState> {
 
     return (
       <div>
-        <h1>User Profile</h1>
+        <h1 className = "role-header">User Profile</h1>
         {content}
       </div>
     );
