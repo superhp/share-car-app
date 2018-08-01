@@ -59,6 +59,7 @@ namespace ShareCar.Api.Controllers
         [HttpGet("rideId={rideId}")]
         public  IActionResult GetPassengersByRide(int rideId)
         {
+
             IEnumerable<PassengerDto> passengers =  _rideLogic.FindPassengersByRideId(rideId);
             if (passengers.ToList().Any())
             {
