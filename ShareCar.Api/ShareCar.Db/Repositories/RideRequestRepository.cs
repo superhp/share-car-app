@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ShareCar.Db;
+﻿using System.Collections.Generic;
 using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
-using ShareCar.Logic.ObjectMapping;
 using System.Linq;
-namespace ShareCar.Logic.RideRequest_Logic
+
+namespace ShareCar.Db.Repositories
 {
    public class RideRequestRepository : IRideRequestRepository
     {

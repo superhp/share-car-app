@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
 
@@ -34,13 +34,13 @@ namespace ShareCar.Api.Controllers
 
             
 
-            IEnumerable<RequestDto> request = await _requestLogic.FindUsersRequests(isDriver, userDto.Email);
+            IEnumerable<RideRequestDto> request = await _requestLogic.FindUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] RequestDto request)
+        public async Task<IActionResult> PostAsync([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
@@ -80,7 +80,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] RequestDto request)
+        public IActionResult Put([FromBody] RideRequestDto request)
         {
             if (request == null)
             {

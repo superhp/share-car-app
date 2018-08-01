@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShareCar.Logic.Address_Logic
 {
-    class AddressRepository : IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
         private readonly ApplicationDbContext _databaseContext;
 

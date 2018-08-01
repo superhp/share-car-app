@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Logic.RideRequest_Logic
+namespace ShareCar.Db.Repositories
 {
     public interface IRideRequestRepository
     {

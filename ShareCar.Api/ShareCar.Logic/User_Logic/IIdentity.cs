@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Logic.User_Logic
 {
     public interface IIdentity
     {

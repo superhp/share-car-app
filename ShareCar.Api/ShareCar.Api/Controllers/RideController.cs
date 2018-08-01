@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
-using ShareCar.Dto.Identity;
-using ShareCar.Logic.Person_Logic;
+using ShareCar.Dto;
 using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Api.Controllers
@@ -26,6 +25,7 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
         }
 
+        // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
@@ -35,54 +35,59 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("ridedate={rideDate}")]
-        public async Task<IActionResult> GetRidesByDate(DateTime rideDate)
+        public  IActionResult GetRidesByDate(DateTime rideDate)
         {
-            IEnumerable<RideDto> rides = await _rideLogic.FindRidesByDate(rideDate, User);
+            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByDate(rideDate);
             return SendResponse(rides);
         }
 
         [HttpGet("addressFromId={addressFromId}")]
-        public async Task<IActionResult> GetRidesByStartPoint(int addressFromId)
+        public  IActionResult GetRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<RideDto> rides = await _rideLogic.FindRidesByStartPoint(addressFromId, User);
+            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByStartPoint(addressFromId);
             return SendResponse(rides);
         }
 
         [HttpGet("addressToId={addressToId}")]
-        public async Task<IActionResult> GetRidesByDestination(int addressToId)
+        public  IActionResult GetRidesByDestination(int addressToId)
         {
-            IEnumerable<RideDto> rides = await _rideLogic.FindRidesByDestination(addressToId, User);
+            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByDestination(addressToId);
             return SendResponse(rides);
         }
 
         [HttpGet("rideId={rideId}")]
-        public async Task<IActionResult> GetPassengersByRide(int rideId)
+        public async Task<IActionResult> GetPassengersByRideAsync(int rideId)
         {
-            IEnumerable<PassengerDto> passengers = await _rideLogic.FindPassengersByRideId(rideId, User);
-            if (passengers.ToList().Count != 0 )
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            if (!_rideLogic.DoesUserBelongsToRide(userDto.Email, rideId))
+            {
+                BadRequest("You don't belong to this ride");
+            }
+
+
+            IEnumerable<PassengerDto> passengers =  _rideLogic.FindPassengersByRideId(rideId);
+            if (passengers.ToList().Any())
             {
                 return Ok(passengers);
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
-
+        /*
         [HttpGet]
         [Route("passengerRides")]
         public async Task<IActionResult> GetRidesByPassenger()
         {
             IEnumerable<PassengerDto> passengerRides = await _rideLogic.FindRidesByPassenger(User);
-            if (passengerRides.ToList().Count != 0)
-            {
-                return Ok(passengerRides);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            
+                return Ok(passengerRides);            
+
         }
+        */
+
+
         // Any object update. If user doesn't change property, it should be delivered unchanged
         [HttpPut]
         public IActionResult Put([FromBody] RideDto ride)
@@ -129,7 +134,7 @@ namespace ShareCar.Api.Controllers
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
-            if (ride.Count() == 0)
+            if (ride.Any())
             {
                 return NotFound();
             }

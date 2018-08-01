@@ -1,11 +1,11 @@
 ﻿using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
-using ShareCar.Logic.ObjectMapping;
-using ShareCar.Dto.Identity;
-using System.Threading.Tasks;
-using System.Security.Claims;
+using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
+using AutoMapper;
+using System.Linq;
+using ShareCar.Db.Repositories;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -13,15 +13,13 @@ namespace ShareCar.Logic.Ride_Logic
     {
         private readonly IRideRepository _rideRepository;
         private readonly IAddressLogic _addressLogic;
-        private readonly IAddressRepository _addressRepository;
-        private RideMapper _rideMapper = new RideMapper();
-        private PassengerMapper _passengerMapper = new PassengerMapper();
-        private AddressMapper _addressMapper = new AddressMapper();
+        private readonly IMapper _mapper;
 
-        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IAddressRepository addressRepository)
+        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
+            _mapper = mapper;
             _addressRepository = addressRepository;
         }
 
@@ -34,12 +32,12 @@ namespace ShareCar.Logic.Ride_Logic
                 return null;
             }
 
-            return _rideMapper.MapToDto(ride);
+            return _mapper.Map<Ride, RideDto>(ride);
         }
 
-        public async Task<IEnumerable<RideDto>> FindRidesByDate(DateTime date, ClaimsPrincipal User)
+        public IEnumerable<RideDto> FindRidesByDate(DateTime date)
         {
-            IEnumerable <Ride> rides = await _rideRepository.FindRidesByDate(date, User);
+            IEnumerable <Ride> rides =  _rideRepository.FindRidesByDate(date);
 
 
             return MapToList(rides);
@@ -54,7 +52,7 @@ namespace ShareCar.Logic.Ride_Logic
             int count = 0;
             foreach (var ride in rides)
             {
-                dtoRide.Add(_rideMapper.MapToDto(ride));
+                dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
                 AddressDto fromAddress = _addressLogic.FindAddressById(ride.FromId);
                 dtoRide[count].FromCountry = fromAddress.Country;
                 dtoRide[count].FromCity = fromAddress.City;
@@ -71,30 +69,30 @@ namespace ShareCar.Logic.Ride_Logic
         }
 
 
-        public async Task<IEnumerable<RideDto>> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User)
+        public  IEnumerable<RideDto> FindRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<Ride> rides = await _rideRepository.FindRidesByStartPoint(addressFromId, User);
+            IEnumerable<Ride> rides =  _rideRepository.FindRidesByStartPoint(addressFromId);
             return MapToList(rides);
         }
 
-        public async Task<IEnumerable<RideDto>> FindRidesByDestination(int addressToId, ClaimsPrincipal User)
+        public  IEnumerable<RideDto> FindRidesByDestination(int addressToId)
         {
-            IEnumerable<Ride> rides = await _rideRepository.FindRidesByDestination(addressToId, User);
+            IEnumerable<Ride> rides =  _rideRepository.FindRidesByDestination(addressToId);
             return MapToList(rides);
         }
-        public async Task<IEnumerable<PassengerDto>> FindPassengersByRideId(int id, ClaimsPrincipal User)
+        public  IEnumerable<PassengerDto> FindPassengersByRideId(int id)
         {
-            IEnumerable<Passenger> passengers = await _rideRepository.FindPassengersByRideId(id, User);
+            IEnumerable<Passenger> passengers =  _rideRepository.FindPassengersByRideId(id);
 
             return MapToList(passengers);
         }
-
-        public async Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User)
+        /*
+        public async Task<IEnumerable<PassengerDto>> FindRidesByPassenger( User)
         {
             IEnumerable<Passenger> rides = await _rideRepository.FindRidesByPassenger(User);
 
             return MapToList(rides);
-        }
+        }*/
         public bool UpdateRide(RideDto ride)
         {
 
@@ -105,7 +103,7 @@ namespace ShareCar.Logic.Ride_Logic
 
             if (addNewRide)
             {
-               return _rideRepository.UpdateRide(_rideMapper.MapToEntity(ride));
+               return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
                
             }
             return false;
@@ -115,7 +113,7 @@ namespace ShareCar.Logic.Ride_Logic
         {
 
             ride.Passengers = new List<PassengerDto>();
-            ride.Requests = new List<RequestDto>();
+            ride.Requests = new List<RideRequestDto>();
             
             //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
           //  bool addNewRide = ValidateNewRide(); 
@@ -142,6 +140,17 @@ namespace ShareCar.Logic.Ride_Logic
                 bool x = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(fromAddress));
                 bool y = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(toAddress));
                 _rideRepository.AddRide(_rideMapper.MapToEntity(ride));
+                _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+                return true;
+            }
+            return false;
+        }
+
+        public bool DoesUserBelongsToRide(string email, int rideId)
+        {
+            Ride ride = _rideRepository.FindRideById(rideId);
+            if (ride.DriverEmail == email || ride.Passengers.Any(x => x.Email == email))
+            {
                 return true;
             }
             return false;
@@ -161,7 +170,7 @@ namespace ShareCar.Logic.Ride_Logic
 
             foreach (var ride in rides)
             {
-                DtoRides.Add(_rideMapper.MapToDto(ride));
+                DtoRides.Add(_mapper.Map<Ride, RideDto>(ride));
             }
             return DtoRides;
         }
@@ -171,7 +180,7 @@ namespace ShareCar.Logic.Ride_Logic
 
             foreach (var passenger in passengers)
             {
-                DtoPassengers.Add(_passengerMapper.MapToDto(passenger));
+                DtoPassengers.Add(_mapper.Map<Passenger,PassengerDto>(passenger));
             }
             return DtoPassengers;
         }

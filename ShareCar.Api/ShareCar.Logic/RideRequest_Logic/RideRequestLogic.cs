@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
-using ShareCar.Logic.Person_Logic;
+using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Ride_Logic;
+using ShareCar.Db.Repositories;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -42,14 +40,14 @@ namespace ShareCar.Logic.RideRequest_Logic
             return  _rideRequestRepository.AddRequest(MapToEntity(requestDto));           
         }
 
-        public bool UpdateRequest(RequestDto request)
+        public bool UpdateRequest(RideRequestDto request)
         {
             request.SeenByPassenger = false;            
 
             return _rideRequestRepository.UpdateRequest(MapToEntity(request));
         }
 
-        private Request MapToEntity(RequestDto dtoRequest)
+        private Request MapToEntity(RideRequestDto dtoRequest)
         {
             Request request = new Request();
 
@@ -65,11 +63,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             return request;
         }
 
-        private RequestDto MapToDto(Request requestEntity)
+        private RideRequestDto MapToDto(Request requestEntity)
         {
-            RequestDto request = new RequestDto();
+            RideRequestDto request = new RideRequestDto();
 
-            request.Status = (Dto.Identity.Status)requestEntity.Status;
+            request.Status = (Dto.Status)requestEntity.Status;
             request.PassengerEmail = requestEntity.PassengerEmail;
             request.DriverEmail = requestEntity.DriverEmail;
             request.SeenByDriver = requestEntity.SeenByDriver;
@@ -92,7 +90,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public async Task<IEnumerable<RequestDto>> FindUsersRequests(bool driver, string email)
+        public async Task<IEnumerable<RideRequestDto>> FindUsersRequests(bool driver, string email)
         {
 
             IEnumerable<Request> entityRequest;
@@ -109,9 +107,9 @@ namespace ShareCar.Logic.RideRequest_Logic
             }
         
 
-        public async Task<List<RequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
+        public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
-            List<RequestDto> dtoRequests = new List<RequestDto>();
+            List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
 
             int count = 0;
             foreach (var request in entityRequests)
