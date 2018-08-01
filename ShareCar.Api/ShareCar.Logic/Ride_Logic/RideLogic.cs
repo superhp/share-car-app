@@ -6,20 +6,23 @@ using ShareCar.Logic.Address_Logic;
 using AutoMapper;
 using System.Linq;
 using ShareCar.Db.Repositories;
+using System.Threading.Tasks;
 
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IMapper _mapper;
 
-        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper)
+        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
             _mapper = mapper;
+            _addressRepository = addressRepository;
         }
 
         public RideDto FindRideById(int id)
@@ -108,7 +111,7 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }   
 
-        public bool AddRide(RideDto ride)
+        public async Task<bool> AddRide(RideDto ride)
         {
 
             ride.Passengers = new List<PassengerDto>();
@@ -117,10 +120,28 @@ namespace ShareCar.Logic.Ride_Logic
             //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
           //  bool addNewRide = ValidateNewRide(); 
 
-         bool   addNewRide = true; // Will be deleted once validation appears
+         bool  addNewRide = true; // Will be deleted once validation appears
 
             if (addNewRide)
             {
+                AddressDto fromAddress = new AddressDto
+                {
+                    Country = ride.FromCountry,
+                    City = ride.FromCity,
+                    Street = ride.FromStreet,
+                    Number = ride.FromNumber
+                };
+                AddressDto toAddress = new AddressDto
+                {
+                    Country = ride.ToCountry,
+                    City = ride.ToCity,
+                    Street = ride.ToStreet,
+                    Number = ride.ToNumber
+                };
+                //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
+                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 return true;
             }

@@ -1,5 +1,7 @@
 ﻿using ShareCar.Db.Entities;
 using System.Linq;
+using System.Threading.Tasks;
+
 namespace ShareCar.Db.Repositories
 {
     public class AddressRepository : IAddressRepository
@@ -10,7 +12,7 @@ namespace ShareCar.Db.Repositories
         {
             _databaseContext = context;
         }
-        public bool AddNewAddress(Address address)
+        public async Task<bool> AddNewAddress(Address address)
         {
             try
             {
@@ -22,6 +24,7 @@ namespace ShareCar.Db.Repositories
             {
                 return false;
             }
+                
         }
 
         public int GetAddressId(Address address)
