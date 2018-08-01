@@ -28,8 +28,8 @@ export default class Driver extends Component<{}, MyProfileState> {
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-      <div className="roleContainer">
-        <h1 className="roleContainer">Driver Page</h1>
+      <div className="role-container">
+        <h1 className="role-container">Driver Page</h1>
         <RideRequests driver={true} />
       </div>
     );

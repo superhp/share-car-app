@@ -39,8 +39,8 @@ class RoleSelection extends Component<{}, MyProfileState> {
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-      <div className="roleContainer">
-         <h1 className="roleContainer">Choose a role:</h1> 
+      <div className="role-container">
+         <h1 className="role-container">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
           <img className="roleImage" src={driverLogo} />

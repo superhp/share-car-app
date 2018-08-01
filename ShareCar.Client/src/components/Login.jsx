@@ -24,7 +24,7 @@ class Login extends Component<{}> {
 
   render() {
     return (
-      <div className="loginContainer">
+      <div className="login-container">
       <img src={logo} />
         <h1>ShareCar Login</h1>
         <FacebookLogin

@@ -1,11 +1,11 @@
-.roleContainer {
+.role-container {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.roleImage {
+.role-image {
     align-self:center;
     justify-content: center;
     align-items: center;
@@ -16,6 +16,6 @@
     border-radius: 5px;
 
 }
-.roleImage:hover {
+.role-image:hover {
     background-color:rgb(0, 68, 255);
 }
