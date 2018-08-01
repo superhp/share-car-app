@@ -6,43 +6,33 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
 
-
-
 export class Rides extends React.Component {
-    state = {
-        driversRides: []
-    };
-    componentDidMount() {
-        this.showDriversRides();
-
-    }
-    showDriversRides() {
-        api
-            .get("Ride")
-            .then(response => {
-                const d = response.data;
-                console.log(response.data);
-                this.setState({ driversRides: d });
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    }
-    render() {
-        return (
-            <div>
-                <div>
-                    <Link to="/newRideForm">
-                        {" "}
-                        <button>Add new ride</button>
-                    </Link>
-                </div>
-                <div>
-                    <DriversRidesList driversRides={this.state.driversRides} />
-                </div>
-            </div>
-        );
-    }
+  state = {
+    driversRides: []
+  };
+  componentDidMount() {
+    this.showDriversRides();
+  }
+  showDriversRides() {
+    api
+      .get("Ride")
+      .then(response => {
+        const d = response.data;
+        console.log(response.data);
+        this.setState({ driversRides: d });
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  }
+  render() {
+    return (
+      <div>
+        <div>
+          <DriversRidesList driversRides={this.state.driversRides} />
+        </div>
+      </div>
+    );
+  }
 }
 export default Rides;
-

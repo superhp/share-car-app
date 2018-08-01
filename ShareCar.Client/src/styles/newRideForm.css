@@ -1,0 +1,19 @@
+div.form-group {
+  display: flex;
+  width: 100%;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+div.form-group label {
+  margin-right: 10px;
+  flex: 1;
+}
+div.form-group input {
+  margin-right: 10px;
+  flex: 3;
+}
+form.newRideForm {
+  display: flex;
+  flex-wrap: wrap;
+}
