@@ -38,8 +38,12 @@
 
 .logout-button {
   flex: 1 100%;
-  border: 1px solid black;
+  border: none;
   align-self: flex-end;
-  margin: 20px;
+  overflow: hidden;
+  position: fixed;
+  top: 20px;
   padding: 5px 5px;
+  margin: 5px;
+  border-radius: 5px;
 }
