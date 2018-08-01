@@ -9,7 +9,7 @@ using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Logic.Identity
 {
     public class FacebookIdentity : IIdentity
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using ShareCar.Dto.Identity;
 
-namespace ShareCar.Logic.Person_Logic
+namespace ShareCar.Logic.Identity
 {
     public class JwtFactory : IJwtFactory
     {

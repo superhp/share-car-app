@@ -1,11 +1,12 @@
 ﻿using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 using System.Collections.Generic;
 
 namespace ShareCar.Logic.ObjectMapping
 {
     class RideMapper
     {
+        /*
         public Ride MapToEntity(RideDto ride)
         {
             PassengerMapper PassengerMapper = new PassengerMapper();
@@ -44,7 +45,7 @@ namespace ShareCar.Logic.ObjectMapping
             RequestMapper RequestMapper = new RequestMapper();
 
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();
-            List<RequestDto> DtoRequests = new List<RequestDto>();
+            List<RideRequestDto> DtoRequests = new List<RideRequestDto>();
 
             try
             {
@@ -77,7 +78,7 @@ namespace ShareCar.Logic.ObjectMapping
                     DriverEmail = ride.DriverEmail,
                     RideDateTime = ride.RideDateTime,
                     Passengers = new List<PassengerDto>(),
-                    Requests = new List<RequestDto>()
+                    Requests = new List<RideRequestDto>()
 
                 };
             }
@@ -93,7 +94,7 @@ namespace ShareCar.Logic.ObjectMapping
             target.RideDateTime = example.RideDateTime;
             target.Passengers = example.Passengers;
 
-        }
+        }*/
 
     }
 }

@@ -6,7 +6,7 @@ using ShareCar.Db.Entities;
 using System.Linq;
 namespace ShareCar.Logic.Address_Logic
 {
-    class AddressRepository : IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
         private readonly ApplicationDbContext _databaseContext;
 

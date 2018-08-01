@@ -1,10 +1,10 @@
 ﻿using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 
 namespace ShareCar.Logic.ObjectMapping
 {
     class PassengerMapper
-    {
+    {/*
         public Passenger MapToEntity(PassengerDto passenger)
         {
             return new Passenger
@@ -24,6 +24,6 @@ namespace ShareCar.Logic.ObjectMapping
                 Completed = passenger.Completed
             };
             
-        }
+        }*/
     }
 }

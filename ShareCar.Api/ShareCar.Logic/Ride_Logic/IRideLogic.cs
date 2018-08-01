@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 using System.Threading.Tasks;
 using System.Security.Claims;
 
@@ -12,11 +12,11 @@ namespace ShareCar.Logic.Ride_Logic
     {
         IEnumerable<RideDto> FindRidesByDriver(string email);
         RideDto FindRideById(int id);
-        Task<IEnumerable<RideDto>> FindRidesByDate(DateTime date, ClaimsPrincipal User);
-        Task<IEnumerable<RideDto>> FindRidesByDestination(int addressToId, ClaimsPrincipal User);
-        Task<IEnumerable<RideDto>> FindRidesByStartPoint(int adressFromId, ClaimsPrincipal User);
-        Task<IEnumerable<PassengerDto>> FindPassengersByRideId(int rideId, ClaimsPrincipal User);
-        Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
+        IEnumerable<RideDto> FindRidesByDate(DateTime date);
+        IEnumerable<RideDto> FindRidesByDestination(int addressToId);
+        IEnumerable<RideDto> FindRidesByStartPoint(int adressFromId);
+        IEnumerable<PassengerDto> FindPassengersByRideId(int rideId);
+       // Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(RideDto ride);
         bool AddRide(RideDto ride);
 

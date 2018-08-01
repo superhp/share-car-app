@@ -15,6 +15,7 @@ using ShareCar.Db;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
+using AutoMapper;
 
 namespace ShareCar.Api
 {
@@ -49,6 +50,7 @@ namespace ShareCar.Api
             ConfigureAuthentication(services);
 
             services.AddMvc();
+            services.AddAutoMapper();
 
             var applicationContainer = Bootstrapper.AddRegistrationsToDIContainer(services);
 

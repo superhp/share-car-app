@@ -4,7 +4,7 @@ using System.Text;
 using ShareCar.Db;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.ObjectMapping;
+//using ShareCar.Logic.ObjectMapping;
 using System.Linq;
 namespace ShareCar.Logic.RideRequest_Logic
 {

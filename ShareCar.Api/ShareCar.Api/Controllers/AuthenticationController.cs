@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.Person_Logic;
+using ShareCar.Logic.Identity;
 
 namespace ShareCar.Api.Controllers
 {

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
+using ShareCar.Db.Repositories;
+using ShareCar.Dto;
 
 namespace ShareCar.Logic.Person_Logic
 {

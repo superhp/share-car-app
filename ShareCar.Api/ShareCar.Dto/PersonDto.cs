@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Dto.Identity
+namespace ShareCar.Dto
 {
    public class PersonDto
     {

@@ -1,5 +1,5 @@
 ﻿using ShareCar.Db.Entities;
-using ShareCar.Dto.Identity;
+using ShareCar.Dto;
 using System;
 
 namespace ShareCar.Logic.ObjectMapping
@@ -7,12 +7,12 @@ namespace ShareCar.Logic.ObjectMapping
     class RequestMapper
     {
 
-        public Request MapToEntity(RequestDto request)
+        public Request MapToEntity(RideRequestDto request)
         {
             throw new NotImplementedException();
         }
 
-        public RequestDto MapToDto(Request request)
+        public RideRequestDto MapToDto(Request request)
         {
             throw new NotImplementedException();
 
