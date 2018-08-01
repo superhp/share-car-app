@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
-using ShareCar.Logic.Person_Logic;
+using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
 {

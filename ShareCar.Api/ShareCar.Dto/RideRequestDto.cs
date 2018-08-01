@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Dto.Identity
+namespace ShareCar.Dto
 {
-    public class RequestDto
+    public class RideRequestDto
     {
         public int RequestId { get; set; }
         public string PassengerEmail { get; set; }

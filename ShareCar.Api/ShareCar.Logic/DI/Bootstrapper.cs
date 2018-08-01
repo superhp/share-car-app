@@ -2,10 +2,10 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using ShareCar.Logic.RideRequest_Logic;
-using ShareCar.Logic.Person_Logic;
+using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Ride_Logic;
-using ShareCar.Logic.Address_Logic;
 using ShareCar.Db.Repositories;
+using ShareCar.Logic.Address_Logic;
 
 namespace ShareCar.Logic.DI
 {

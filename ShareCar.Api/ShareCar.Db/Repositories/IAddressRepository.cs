@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace ShareCar.Logic.Address_Logic
+namespace ShareCar.Db.Repositories
 {
     public interface IAddressRepository
     {

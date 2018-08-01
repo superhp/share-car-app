@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ShareCar.Db;
-using ShareCar.Db.Entities;
+﻿using ShareCar.Db.Entities;
 using System.Linq;
-namespace ShareCar.Logic.Address_Logic
+using System.Threading.Tasks;
+
+namespace ShareCar.Db.Repositories
 {
-    class AddressRepository : IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
         private readonly ApplicationDbContext _databaseContext;
 
@@ -26,6 +24,7 @@ namespace ShareCar.Logic.Address_Logic
             {
                 return false;
             }
+                
         }
 
         public int GetAddressId(Address address)

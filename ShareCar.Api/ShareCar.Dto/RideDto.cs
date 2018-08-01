@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareCar.Dto.Identity
+namespace ShareCar.Dto
 {
     public class RideDto
     {
@@ -20,7 +20,7 @@ namespace ShareCar.Dto.Identity
         public string DriverEmail { get; set; }
         public List<PassengerDto> Passengers { get; set; }
         public DateTime RideDateTime { get; set; }
-        public List<RequestDto> Requests { get; set; }
+        public List<RideRequestDto> Requests { get; set; }
 
     }
 }
