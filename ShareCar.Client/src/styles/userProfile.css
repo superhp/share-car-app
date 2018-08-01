@@ -1,6 +1,13 @@
 .container.profile-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 50px;
+  
+}
+.role-header {
+  margin-top: 30px;
+  text-align: center;
+  margin-bottom: 0px;
 }
 
 input.edit-input {
@@ -11,14 +18,14 @@ form.profile-form {
 }
 div.form-group {
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
+
 }
 .profile-form button {
   width: 100%;
 }
-h1 {
-  text-align: center;
-}
+
 img.thumbnail {
   height: 50px;
   margin: 0 auto;
