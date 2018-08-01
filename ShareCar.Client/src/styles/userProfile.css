@@ -1,19 +1,19 @@
-.container.profileContainer {
+.container.profile-container {
   display: flex;
   justify-content: center;
 }
 
-input.editInput {
+input.edit-input {
   background-color: rgba(0, 255, 179, 0.89);
 }
-form.profileForm {
+form.profile-form {
   margin: 1em;
 }
 div.form-group {
   display: flex;
   flex-wrap: wrap;
 }
-.profileForm button {
+.profile-form button {
   width: 100%;
 }
 h1 {

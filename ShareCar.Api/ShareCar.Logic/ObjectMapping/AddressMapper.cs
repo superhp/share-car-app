@@ -6,11 +6,19 @@ using System.Text;
 
 namespace ShareCar.Logic.ObjectMapping
 {
-    class AddressMapper
+    public class AddressMapper
     {
-        public Address MapToEntity(AddressDto passenger)
+        public Address MapToEntity(AddressDto address)
         {
-            throw new NotImplementedException();
+            return new Address
+            {
+                Country = address.Country,
+                City = address.City,
+                Street = address.Street,
+                Number = address.Number,
+                Longtitude = address.Longtitude,
+                Latitude = address.Latitude
+            };
         }
 
         public AddressDto MapToDto(Address passenger)
