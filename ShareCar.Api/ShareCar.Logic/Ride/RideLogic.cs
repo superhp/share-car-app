@@ -18,10 +18,11 @@ namespace ShareCar.Logic.Ride_Logic
         private PassengerMapper _passengerMapper = new PassengerMapper();
         private AddressMapper _addressMapper = new AddressMapper();
 
-        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic)
+        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
+            _addressRepository = addressRepository;
         }
 
         public RideDto FindRideById(int id)
@@ -110,7 +111,7 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }   
 
-        public bool AddRide(RideDto ride)
+        public async Task<bool> AddRide(RideDto ride)
         {
 
             ride.Passengers = new List<PassengerDto>();
@@ -119,7 +120,7 @@ namespace ShareCar.Logic.Ride_Logic
             //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
           //  bool addNewRide = ValidateNewRide(); 
 
-         bool   addNewRide = true; // Will be deleted once validation appears
+         bool  addNewRide = true; // Will be deleted once validation appears
 
             if (addNewRide)
             {
@@ -138,8 +139,8 @@ namespace ShareCar.Logic.Ride_Logic
                     Number = ride.ToNumber
                 };
                 //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-                _addressRepository.AddNewAddress(_addressMapper.MapToEntity(fromAddress));
-                _addressRepository.AddNewAddress(_addressMapper.MapToEntity(toAddress));
+                bool x = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(fromAddress));
+                bool y = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(toAddress));
                 _rideRepository.AddRide(_rideMapper.MapToEntity(ride));
                 return true;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 
@@ -13,7 +14,7 @@ namespace ShareCar.Logic.Address_Logic
         {
             _addressRepository = addressRepository;
         }
-        public bool AddNewAddress(AddressDto address)
+        public Task<bool> AddNewAddress(AddressDto address)
         {
             Address entityAddress = new Address
             {
@@ -26,7 +27,7 @@ namespace ShareCar.Logic.Address_Logic
 
         }
 
-        public int GetAddressId(AddressDto address)
+        public async Task<int> GetAddressId(AddressDto address)
         {
 
             Address entityAddress = new Address
@@ -41,7 +42,7 @@ namespace ShareCar.Logic.Address_Logic
 
             if (id == -1)
             {
-                bool added = _addressRepository.AddNewAddress(entityAddress);
+                bool added = await _addressRepository.AddNewAddress(entityAddress);
 
                 if (added)
                 {

@@ -3,14 +3,15 @@ using ShareCar.Dto.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShareCar.Logic.Address_Logic
 {
    public interface IAddressLogic
     {
-        bool AddNewAddress(AddressDto address);
+        Task<bool> AddNewAddress(AddressDto address);
         AddressDto FindAddressById(int id);
-        int GetAddressId(AddressDto address);
+        Task<int> GetAddressId(AddressDto address);
 
     }
 }

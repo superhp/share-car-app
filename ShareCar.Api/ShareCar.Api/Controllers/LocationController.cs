@@ -32,9 +32,9 @@ namespace ShareCar.Api.Controllers
 
         }
         [HttpPost]
-        public IActionResult GetAddressId([FromBody] AddressDto address)
+        public async Task<IActionResult> GetAddressId([FromBody] AddressDto address)
         {
-            int addressId = _addressLogic.GetAddressId(address);
+            int addressId = await _addressLogic.GetAddressId(address);
 
             if (addressId != -1)
                 return Ok(addressId);

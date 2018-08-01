@@ -4,6 +4,8 @@ using System.Text;
 using ShareCar.Db;
 using ShareCar.Db.Entities;
 using System.Linq;
+using System.Threading.Tasks;
+
 namespace ShareCar.Logic.Address_Logic
 {
     class AddressRepository : IAddressRepository
@@ -14,7 +16,7 @@ namespace ShareCar.Logic.Address_Logic
         {
             _databaseContext = context;
         }
-        public bool AddNewAddress(Address address)
+        public async Task<bool> AddNewAddress(Address address)
         {
             try
             {
@@ -26,6 +28,7 @@ namespace ShareCar.Logic.Address_Logic
             {
                 return false;
             }
+                
         }
 
         public int GetAddressId(Address address)
