@@ -111,7 +111,7 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }   
 
-        public async Task<bool> AddRide(RideDto ride)
+        public bool AddRide(RideDto ride)
         {
 
             ride.Passengers = new List<PassengerDto>();
@@ -139,9 +139,12 @@ namespace ShareCar.Logic.Ride_Logic
                     Number = ride.ToNumber
                 };
                 //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
-                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
 
+                ride.FromId = _addressLogic.GetAddressId(fromAddress);
+                ride.ToId = _addressLogic.GetAddressId(toAddress);
+                
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 return true;
             }

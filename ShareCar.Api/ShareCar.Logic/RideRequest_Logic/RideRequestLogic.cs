@@ -28,13 +28,13 @@ namespace ShareCar.Logic.RideRequest_Logic
             _userManager = userManager;
         }
 
-        public async Task<bool> AddRequest(RideRequestDto requestDto)
+        public bool AddRequest(RideRequestDto requestDto)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
             string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
             requestDto.DriverEmail = driverEmail;    
-            int addressId = await _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber});
+            int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber});
 
             requestDto.AddressId = addressId;
             return  _rideRequestRepository.AddRequest(MapToEntity(requestDto));           
