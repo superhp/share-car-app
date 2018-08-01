@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ShareCar.Db;
-using ShareCar.Db.Entities;
+﻿using ShareCar.Db.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.Address_Logic
+namespace ShareCar.Db.Repositories
 {
     public class AddressRepository : IAddressRepository
     {

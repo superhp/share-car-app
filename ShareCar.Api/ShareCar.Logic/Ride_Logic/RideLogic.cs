@@ -6,16 +6,18 @@ using ShareCar.Logic.Address_Logic;
 using AutoMapper;
 using System.Linq;
 using ShareCar.Db.Repositories;
+using System.Threading.Tasks;
 
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IMapper _mapper;
 
-        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic)
+        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
@@ -137,9 +139,9 @@ namespace ShareCar.Logic.Ride_Logic
                     Number = ride.ToNumber
                 };
                 //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-                bool x = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(fromAddress));
-                bool y = await _addressRepository.AddNewAddress(_addressMapper.MapToEntity(toAddress));
-                _rideRepository.AddRide(_rideMapper.MapToEntity(ride));
+                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                await _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 return true;
             }

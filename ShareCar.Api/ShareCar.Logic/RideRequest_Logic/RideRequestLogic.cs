@@ -28,7 +28,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _userManager = userManager;
         }
 
-        public async Task<bool> AddRequest(RequestDto requestDto)
+        public async Task<bool> AddRequest(RideRequestDto requestDto)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
