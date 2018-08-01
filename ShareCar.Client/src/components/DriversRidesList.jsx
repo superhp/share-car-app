@@ -20,6 +20,7 @@ export class DriversRidesList extends React.Component<{}>{
                                 <td>{req.toNumber} </td>
                                 <td>{req.passengers} </td>
                                 <td>{req.rideDateTime} </td>
+
                             </tr>
                         )
                     }
