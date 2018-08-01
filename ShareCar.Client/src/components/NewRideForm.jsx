@@ -19,7 +19,7 @@ export class NewRideForm extends React.Component {
             RideDateTime: e.target.rideDateTime.value
         };
         console.log(ride);
-        api.post(`http://localhost:5963/api/Ride`, ride).then(res => {
+        api.post(`http://localhost:44360/api/Ride`, ride).then(res => {
             console.log(res);
 
         });
@@ -61,7 +61,7 @@ export class NewRideForm extends React.Component {
                     <span>To Street:</span>
                     <input
                         type="text"
-                        name="fromStreet"
+                        name="toStreet"
                         defaultValue={""}
                     />
                     <br />
@@ -69,7 +69,7 @@ export class NewRideForm extends React.Component {
                     <span>To Number :</span>
                     <input
                         type="text"
-                        name="fromNumber"
+                        name="toNumber"
                         defaultValue={""}
                     />
                     <br />
@@ -77,14 +77,14 @@ export class NewRideForm extends React.Component {
                     <span>To City:</span>
                     <input
                         type="text"
-                        name="fromCity"
+                        name="toCity"
                         defaultValue={""}
                     />
                     <br />
                     <span>To Country:</span>
                     <input
                         type="text"
-                        name="fromCountry"
+                        name="toCountry"
                         defaultValue={""}
                     />
                     <br />

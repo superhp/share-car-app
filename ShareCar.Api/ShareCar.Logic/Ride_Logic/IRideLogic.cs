@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ShareCar.Dto;
 
 namespace ShareCar.Logic.Ride_Logic
@@ -15,7 +16,7 @@ namespace ShareCar.Logic.Ride_Logic
         bool DoesUserBelongsToRide(string email, int rideId);
        // Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(RideDto ride);
-        bool AddRide(RideDto ride);
+        Task<bool> AddRide(RideDto ride);
 
     }
 }
