@@ -136,9 +136,11 @@ namespace ShareCar.Api.Controllers
         {
             if (ride.Any())
             {
-                return NotFound();
+                return Ok(ride);
+
             }
-            return Ok(ride);
+            return NotFound();
+
         }
     }
 
