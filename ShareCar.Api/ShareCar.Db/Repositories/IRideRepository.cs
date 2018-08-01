@@ -10,12 +10,11 @@ namespace ShareCar.Db.Repositories
     {
         Ride FindRideById(int id);
         IEnumerable<Ride> FindRidesByDriver(string email);
-        Task<IEnumerable<Ride>> FindRidesByDate(DateTime date);
-        Task<IEnumerable<Ride>> FindRidesByDestination(int addressToId);
-        Task<IEnumerable<Passenger>> FindPassengersByRideId(int id, ClaimsPrincipal User);
-        Task<IEnumerable<Ride>> FindRidesByStartPoint(int addressFromId, ClaimsPrincipal User);
-
- //       Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User);
+        IEnumerable<Ride> FindRidesByDate(DateTime date);
+        IEnumerable<Ride> FindRidesByDestination(int addressToId);
+        IEnumerable<Ride> FindRidesByStartPoint(int addressFromId);
+        IEnumerable<Passenger> FindPassengersByRideId(int rideId);
+        //       Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(Ride ride);
         void AddRide(Ride ride);
     }

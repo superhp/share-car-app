@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
 using AutoMapper;
+using System.Linq;
 using ShareCar.Db.Repositories;
 
 namespace ShareCar.Logic.Ride_Logic
@@ -121,6 +122,16 @@ namespace ShareCar.Logic.Ride_Logic
             if (addNewRide)
             {
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+                return true;
+            }
+            return false;
+        }
+
+        public bool DoesUserBelongsToRide(string email, int rideId)
+        {
+            Ride ride = _rideRepository.FindRideById(rideId);
+            if (ride.DriverEmail == email || ride.Passengers.Any(x => x.Email == email))
+            {
                 return true;
             }
             return false;
