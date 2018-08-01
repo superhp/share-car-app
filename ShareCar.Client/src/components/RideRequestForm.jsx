@@ -11,30 +11,31 @@ export class RideRequestForm extends React.Component {
       RideId: e.target.rideId.value,
       City: e.target.city.value,
       Street: e.target.street.value,
-      HouseNumber: e.target.houseNumber.value    };
-      console.log(request);
-
-/*    const address = {
-        City: e.target.city.value,
-        Street: e.target.street.value,
-        Number: e.target.number.value
+      HouseNumber: e.target.houseNumber.value
     };
+    console.log(request);
 
-    console.log(address);
+    /*    const address = {
+            City: e.target.city.value,
+            Street: e.target.street.value,
+            Number: e.target.number.value
+        };
+    
+        console.log(address);
+    
+        api.post(`http://localhost:5963/api/Location`, address).then(res => {
+          console.log(res);
+          console.log("============");
+          if(res.status == 200)
+    {
+    request.AddressId = res.data;*/
 
-    api.post(`http://localhost:5963/api/Location`, address).then(res => {
+    api.post(`http://localhost:5963/api/RideRequest`, request).then(res => {
       console.log(res);
-      console.log("============");
-      if(res.status == 200)
-{
-request.AddressId = res.data;*/
 
-      api.post(`http://localhost:5963/api/RideRequest`, request).then(res => {
-        console.log(res);
-        
-      });
+    });
 
-}
+  }
 
   render() {
     return (
@@ -50,7 +51,7 @@ request.AddressId = res.data;*/
           />
           <br />
 
-  <span className="ride-requests-text">Street :</span>
+          <span className="ride-requests-text">Street :</span>
           <input
             className="ride-requests"
             type="text"
@@ -59,7 +60,7 @@ request.AddressId = res.data;*/
           />
           <br />
 
-  <span className="ride-requests-text">House number:</span>
+          <span className="ride-requests-text">House number:</span>
           <input
             className="ride-requests"
             type="text"

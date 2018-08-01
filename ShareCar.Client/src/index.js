@@ -12,7 +12,7 @@ import Passenger from "./components/Passenger";
 import UserProfile from "./components/UserProfile";
 import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
-import NewRide from "./components/NewRide";
+import NewRideForm from "./components/NewRideForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
@@ -27,7 +27,7 @@ ReactDOM.render(
         <Route path="/map" component={MapComponent} />
         <Route path="/profile" component={UserProfile} />
         <Route path="/rides" component={Rides} />
-        <Route path="/newRide" component={NewRide} />
+        <Route path="/newRideForm" component={NewRideForm} />
       </Layout>
     </Switch>
   </Router>,

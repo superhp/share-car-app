@@ -32,7 +32,7 @@ export class Rides extends React.Component {
         return (
             <div>
                 <div>
-                    <Link to="/newRide">
+                    <Link to="/newRideForm">
                         {" "}
                         <button>Add new ride</button>
                     </Link>
