@@ -11,17 +11,26 @@ export class NewRideForm extends React.Component {
     super(props);
     this.state = {
       startDate: moment(),
-      addNewForm: false
+      addNewForm: false,
+      addedStatus: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.drive == null
-      ? this.setState({ addNewForm: false })
-      : this.setState({ addNewForm: true });
+      ? this.setState({ addNewForm: true })
+      : this.setState({ addNewForm: false });
   }
+
+  componentDidMount() {
+    if (!this.state.addNewForm) {
+      var d = new Date(this.props.drive.rideDateTime);
+      this.setState({ startDate: moment(d) });
+    }
+  }
+
   handleChange(date) {
     this.setState({
       startDate: date
@@ -41,12 +50,22 @@ export class NewRideForm extends React.Component {
       ToNumber: e.target.toNumber.value,
       RideDateTime: this.state.startDate.format("YYYY-MM-DD")
     };
-    api.post(`https://localhost:44360/api/Ride`, ride).then(res => {});
+    api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
+      this.setState({ addedStatus: true });
+    });
   }
   render() {
     return (
       <div className="container">
-        <form className="newRideForm" onSubmit={this.handleSubmit.bind(this)}>
+        {this.state.addedStatus ? (
+          <div className="alert alert-success added-label">Ride Added!</div>
+        ) : (
+          ""
+        )}
+        <form
+          className="newRideForm"
+          onSubmit={this.state.addNewForm ? this.handleSubmit.bind(this) : ""}
+        >
           <div className="form-group">
             <label>From Street:</label>
             <input
@@ -64,7 +83,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="fromNumber"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.fromNumber
+              }
             />
           </div>
 
@@ -74,7 +95,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="fromCity"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.fromCity
+              }
             />
           </div>
           <div className="form-group">
@@ -83,7 +106,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="fromCountry"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.fromCountry
+              }
             />
           </div>
           <div className="form-group">
@@ -92,7 +117,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="toStreet"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.toStreet
+              }
             />
           </div>
           <div className="form-group">
@@ -101,7 +128,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="toNumber"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.toNumber
+              }
             />
           </div>
           <div className="form-group">
@@ -110,7 +139,9 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="toCity"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.toCity
+              }
             />
           </div>
           <div className="form-group">
@@ -119,13 +150,16 @@ export class NewRideForm extends React.Component {
               type="text"
               className="form-control"
               name="toCountry"
-              defaultValue={""}
+              defaultValue={
+                this.state.addNewForm ? "" : this.props.drive.toCountry
+              }
             />
           </div>
           <div className="form-group">
             <label>Date and Time:</label>
             <DatePicker
-              className="form-control"
+              className="form-control datepicker-element"
+              popperClassName="addNewRidePopper"
               selected={this.state.startDate}
               onChange={this.handleChange}
               showTimeSelect
