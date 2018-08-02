@@ -39,6 +39,7 @@ export class DriversRidesList extends React.Component<{}> {
               </tr>
             </thead>
             <tbody>
+
               {!this.state.clicked
                 ? this.props.driversRides.map((req, index) => (
                     <tr
@@ -78,6 +79,7 @@ export class DriversRidesList extends React.Component<{}> {
                         <td>{req.rideDateTime} </td>
                       </tr>
                     ))}
+>>>>>>> 94d184e96898d1e69ac79d0885a93866ae643d07
             </tbody>
           </table>
         </div>

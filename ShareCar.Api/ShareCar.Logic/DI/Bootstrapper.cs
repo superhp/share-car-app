@@ -6,6 +6,7 @@ using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Address_Logic;
+using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Logic.DI
 {
@@ -27,7 +28,9 @@ namespace ShareCar.Logic.DI
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddScoped<IIdentity, FacebookIdentity>();
             services.AddSingleton<IRideRepository, RideRepository>();
+            services.AddSingleton<IRouteRepository, RouteRepository>();
             services.AddSingleton<IRideLogic, RideLogic>();
+            services.AddSingleton<IRouteLogic, RouteLogic>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IRideRequestLogic, RideRequestLogic>();
             services.AddSingleton<IRideRequestRepository, RideRequestRepository>();
