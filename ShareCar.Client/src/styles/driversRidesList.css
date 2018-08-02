@@ -11,6 +11,10 @@ h1 {
   flex: 0 0 100%;
   display: block;
 }
+div.table-responsive {
+  display: flex;
+  justify-content: center;
+}
 div.container a {
   margin: 2em 0;
   flex: 0 0 100%;
