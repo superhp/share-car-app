@@ -15,3 +15,34 @@ div.container a {
 table tr:hover {
   background-color: blue;
 }
+div.container table {
+  font-size: 0.6em;
+}
+.detailedInfoContainer h2 {
+  margin: 1em 0;
+  font-size: 1em;
+  flex: 0 0 100%;
+  text-align: center;
+}
+.detailedInfoContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.detailedInfoContainer form {
+  flex: 0 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.detailedInfoContainer form button {
+  flex: 0 0 100%;
+}
+.detailedInfoContainer form label {
+  text-align: center;
+}
+.list-group {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 0 100%;
+}
+.list-group-item {
+}
