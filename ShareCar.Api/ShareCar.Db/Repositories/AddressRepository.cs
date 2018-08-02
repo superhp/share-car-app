@@ -27,16 +27,40 @@ namespace ShareCar.Db.Repositories
                 
         }
 
+        // Address consists of street, house number and city or geo coordinates
         public int GetAddressId(Address address)
         {
-            try
+            if (address.City != null && address.Street != null && address.Number != null)
             {
-              return  _databaseContext.Addresses.Single(x => x.City == address.City && x.Street == address.Street && x.Number == address.Number).AddressId;
+                try
+                {
+                    return _databaseContext.Addresses.Single(x => x.City == address.City && x.Street == address.Street && x.Number == address.Number).AddressId;
+                }
+                catch
+                {
+                    return -1;
+                }
             }
-            catch
-            {
-                return -1; // Address doesnt exist
+
+
+              else  if (address.Longtitude != 0 && address.Latitude != 0)
+                {
+                    try
+                    {
+
+                        return _databaseContext.Addresses.Single(x => x.Longtitude == address.Longtitude && x.Latitude == address.Latitude).AddressId;
+
+                    }
+                    catch
+                    {
+                        return -1; // Address doesnt exist
+
+                    }
+                
+
             }
+            return - 1;
+            
         }
 
         public Address FindAddressById(int id)

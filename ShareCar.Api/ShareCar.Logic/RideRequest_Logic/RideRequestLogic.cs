@@ -7,6 +7,7 @@ using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories;
+using AutoMapper;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -17,67 +18,37 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IRideLogic _rideLogic;
         private readonly IUserLogic _personLogic;
         private readonly IAddressLogic _addressLogic;
+        private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager)
+        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper)
         {
             _rideRequestRepository = defaultRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
-        public bool AddRequest(RideRequestDto requestDto)
+        public async Task<bool> AddRequest(RideRequestDto requestDto)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
             string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
             requestDto.DriverEmail = driverEmail;    
-            int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber});
+            int addressId = await _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            return  _rideRequestRepository.AddRequest(MapToEntity(requestDto));           
+            return  _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));           
         }
 
         public bool UpdateRequest(RideRequestDto request)
         {
             request.SeenByPassenger = false;            
 
-            return _rideRequestRepository.UpdateRequest(MapToEntity(request));
+            return _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
         }
-
-        private Request MapToEntity(RideRequestDto dtoRequest)
-        {
-            Request request = new Request();
-
-            request.Status = (Db.Entities.Status)dtoRequest.Status;
-            request.PassengerEmail = dtoRequest.PassengerEmail;
-            request.DriverEmail = dtoRequest.DriverEmail;
-            request.SeenByDriver = dtoRequest.SeenByDriver;
-            request.SeenByPassenger = dtoRequest.SeenByPassenger;
-            request.RideId = dtoRequest.RideId;
-            request.AddressId = dtoRequest.AddressId;
-            request.RequestId = dtoRequest.RequestId;
-
-            return request;
-        }
-
-        private RideRequestDto MapToDto(Request requestEntity)
-        {
-            RideRequestDto request = new RideRequestDto();
-
-            request.Status = (Dto.Status)requestEntity.Status;
-            request.PassengerEmail = requestEntity.PassengerEmail;
-            request.DriverEmail = requestEntity.DriverEmail;
-            request.SeenByDriver = requestEntity.SeenByDriver;
-            request.SeenByPassenger = requestEntity.SeenByPassenger;
-            request.RequestId = requestEntity.RequestId;
-            request.AddressId = requestEntity.AddressId;
-
-            return request;
-        }
-
 
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)
@@ -114,7 +85,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             int count = 0;
             foreach (var request in entityRequests)
             {
-                dtoRequests.Add(MapToDto(request));
+                dtoRequests.Add(_mapper.Map<Request,RideRequestDto>(request));
 
                 if (isDriver)
                 {
@@ -134,6 +105,8 @@ namespace ShareCar.Logic.RideRequest_Logic
                 dtoRequests[count].City = address.City;
                 dtoRequests[count].Street = address.Street;
                 dtoRequests[count].HouseNumber = address.Number;
+                dtoRequests[count].Longtitude = address.Longtitude;
+                dtoRequests[count].Latitude = address.Latitude;
 
                 dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                 count++;
