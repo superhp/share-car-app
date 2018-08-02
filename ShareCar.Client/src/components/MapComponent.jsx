@@ -24,7 +24,8 @@ export default class MapComponent extends React.Component<{}> {
     super(props);
 
     this.state = {
-      coordinates: []
+      coordinates: [],
+      map:""
     }
   
 }
@@ -34,10 +35,14 @@ export default class MapComponent extends React.Component<{}> {
   };
 
 
+  getAlert(val) {
+    this.CenterMap(val[0], val[1],this.state.map);
+
+  }
 
   componentDidMount() {
     var component = this;
-
+    console.log(this.props.pickUpPoint);
     var 
     vectorSource = new SourceVector(),
     vectorLayer = new LayerVector({
@@ -101,6 +106,7 @@ export default class MapComponent extends React.Component<{}> {
       })
   });
 
+this.setState({map:map});
 
   map.on('click', function(evt){
       var feature = new Feature(
@@ -111,6 +117,7 @@ export default class MapComponent extends React.Component<{}> {
       lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
      component.setState({coordinates : lonlat});
+
 
 
       vectorSource.clear();
@@ -124,15 +131,17 @@ export default class MapComponent extends React.Component<{}> {
         var lon = lonlat[0];
         var lat = lonlat[1];
     });*/
-  
-  CenterMap(25.279652, 54.687157);
-      function CenterMap(long, lat) {
+  this.props.show    
+  ?  this.CenterMap(this.props.pickUpPoint[0], this.props.pickUpPoint[1],map)
+  : this.CenterMap(25.279652, 54.687157, map);
+ // this.CenterMap(25.279652, 54.687157, map);
+
+  }
+
+       CenterMap(long, lat, map) {
       console.log("Long: " + long + " Lat: " + lat);
       map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
       map.getView().setZoom(13);
-  }
-
-
 
     }
   

@@ -1,8 +1,19 @@
 import * as React from "react";
 import api from '../helpers/axiosHelper';
 import "../styles/riderequests.css";
+import MapComponent from "./MapComponent";
 export class DriverRideRequestsList extends React.Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            coordinates: [],
+            show: false
+        }
+        this.child = React.createRef();
 
+      }
+    
     sendRequestResponse(response, requestId){
         let data = {
             RequestId:requestId,
@@ -15,7 +26,10 @@ export class DriverRideRequestsList extends React.Component {
               console.log(res.data);
             })    };
         
-        
+    componentDidMount(){
+    console.log(this.props.requests);
+    };
+//this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
 
     render(){
 
@@ -29,11 +43,14 @@ this.props.requests.map(req =>
 <td>Who: {req.passengerFirstName} {req.passengerLastName}  </td> 
 <td>When: {req.rideDate}  </td>  
 <td>Where: {req.address}  </td>  
+<button className = "ride-request-button" onClick={() => this.child.current.getAlert([req.longtitude,req.latitude])}>Show on map</button>
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
 </tr>
 )
 }
+
+<MapComponent ref={this.child} pickUpPoint = {this.state.coordinates}/>
 
 </tbody>
         );

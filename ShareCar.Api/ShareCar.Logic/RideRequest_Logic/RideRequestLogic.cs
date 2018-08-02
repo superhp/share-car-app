@@ -105,6 +105,8 @@ namespace ShareCar.Logic.RideRequest_Logic
                 dtoRequests[count].City = address.City;
                 dtoRequests[count].Street = address.Street;
                 dtoRequests[count].HouseNumber = address.Number;
+                dtoRequests[count].Longtitude = address.Longtitude;
+                dtoRequests[count].Latitude = address.Latitude;
 
                 dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                 count++;
