@@ -31,29 +31,26 @@ export default class MapComponent extends React.Component<{}> {
   
 }
 
+// passes coordinates up to parent
  updateCoordinates(){
     this.props.onUpdate(this.state.coordinates);
   };
 
+centerMapParent(val){
 
-  getAlert(val) {   
-     this.CenterMap(val[0], val[1],this.state.map);
+  this.CenterMap(val.lng,val.lat,this.state.map);
+}
+
+  setPassengersPickUpPoint(val) {   
+     this.CenterMap(val[0], val[1], this.state.map);
      var xy = [];
      xy = transform(val, 'EPSG:4326', 'EPSG:3857');
      console.log(xy);
     var vectorSource = this.state.Vector; 
-   // vectorSource = new SourceVector(),
-    //vectorLayer = new LayerVector({
-     // source: vectorSource
-    //});
+
     var feature = new Feature(
       new Point(xy)
   );
-  console.log(vectorSource);
-
- //component.setState({coordinates : lonlat});
-
-
 
   vectorSource.clear();
   vectorSource.addFeature(feature);
@@ -71,7 +68,7 @@ export default class MapComponent extends React.Component<{}> {
     map = new Map({
       view: new View({
         center: [0, 0],
-        zoom: 8
+        zoom: 19
       }),
       layers: [
         new TileLayer({
@@ -104,6 +101,7 @@ export default class MapComponent extends React.Component<{}> {
 
 this.setState({map:map});
 this.setState({Vector: vectorSource})
+if(!this.props.driver){
   map.on('click', function(evt){
       var feature = new Feature(
           new Point(evt.coordinate)
@@ -114,35 +112,31 @@ this.setState({Vector: vectorSource})
 
      component.setState({coordinates : lonlat});
 
-console.log(evt.coordinate);
-console.log(lonlat);
-
       vectorSource.clear();
       vectorSource.addFeature(feature);
   });
 
-/*
-      map.on("singleclick", function(evt) {
-        var lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-        console.log(lonlat);
-        var lon = lonlat[0];
-        var lat = lonlat[1];
-    });*/
-  this.props.show    
-  ?  this.CenterMap(this.props.pickUpPoint[0], this.props.pickUpPoint[1],map)
-  : this.CenterMap(25.279652, 54.687157, map);
- // this.CenterMap(25.279652, 54.687157, map);
+   this.CenterMap(25.279652, 54.687157, map);
 
-  }
+  }}
 
-       CenterMap(long, lat, map) {
+       CenterMap(long, lat,map) {
       console.log("Long: " + long + " Lat: " + lat);
       map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-      map.getView().setZoom(13);
+      map.getView().setZoom(19);
 
     }
   
   render() {
-    return <div onClick={this.updateCoordinates.bind(this)} id="map" />;
+    return(
+    <div>
+      {
+        this.props.driver
+        ? <div id="map" />
+        :<div onClick={this.updateCoordinates.bind(this)} id="map" />
+        
+      }
+     </div>
+    ); 
   }
 }

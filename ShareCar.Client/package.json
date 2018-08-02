@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "algolia": "0.0.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
     "ol": "^5.1.3",
+    "places.js": "^1.7.3",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.1",

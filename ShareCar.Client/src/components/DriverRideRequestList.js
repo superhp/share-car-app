@@ -7,8 +7,7 @@ export class DriverRideRequestsList extends React.Component {
         super(props);
     
         this.state = {
-            coordinates: [],
-            show: false
+            coordinates: []
         }
         this.child = React.createRef();
 
@@ -28,8 +27,12 @@ export class DriverRideRequestsList extends React.Component {
         
     componentDidMount(){
     console.log(this.props.requests);
+
+  //  this.child.current.setPassengersPickUpPoint([1,1]);
     };
 //this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
+
+
 
     render(){
 
@@ -43,15 +46,15 @@ this.props.requests.map(req =>
 <td>Who: {req.passengerFirstName} {req.passengerLastName}  </td> 
 <td>When: {req.rideDate}  </td>  
 <td>Where: {req.address}  </td>  
-<button className = "ride-request-button" onClick={() => this.child.current.getAlert([req.longtitude,req.latitude])}>Show on map</button>
+<button className = "ride-request-button" onClick={() => this.child.current.setPassengersPickUpPoint([req.longtitude,req.latitude])    }>Show on map</button>
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
 </tr>
 )
 }
-
-<MapComponent ref={this.child} pickUpPoint = {this.state.coordinates}/>
-
+{
+<MapComponent ref={this.child} driver = {true}/>
+}
 </tbody>
         );
     }
