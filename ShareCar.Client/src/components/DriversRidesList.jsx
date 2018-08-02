@@ -22,7 +22,6 @@ export class DriversRidesList extends React.Component<{}> {
               <tr className="bg-primary">
                 <td>From:</td>
                 <td>To:</td>
-                <td>List of Passengers</td>
                 <td>Date Time</td>
               </tr>
             </thead>
@@ -42,7 +41,6 @@ export class DriversRidesList extends React.Component<{}> {
                     {req.toCountry}, {req.toCity}, {req.toStreet},{" "}
                     {req.toNumber}
                   </td>
-                  <td>{req.passengers} </td>
                   <td>{req.rideDateTime} </td>
                 </tr>
               ))}
