@@ -12,7 +12,7 @@ namespace ShareCar.Db.Repositories
         {
             _databaseContext = context;
         }
-        public async Task<bool> AddNewAddress(Address address)
+        public bool AddNewAddress(Address address)
         {
             try
             {

@@ -1,0 +1,53 @@
+div.container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+h1 {
+  text-align: center;
+  flex: 0 0 100%;
+  display: block;
+}
+div.table-responsive {
+  display: flex;
+  justify-content: center;
+}
+div.container a {
+  margin: 2em 0;
+  flex: 0 0 100%;
+}
+table tr:hover {
+  background-color: blue;
+}
+div.container table {
+  font-size: 0.6em;
+}
+.detailedInfoContainer h2 {
+  margin: 1em 0;
+  font-size: 1em;
+  flex: 0 0 100%;
+  text-align: center;
+}
+.detailedInfoContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.detailedInfoContainer form {
+  flex: 0 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.detailedInfoContainer form button {
+  flex: 0 0 100%;
+}
+.detailedInfoContainer form label {
+  text-align: center;
+}
+.list-group {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 0 100%;
+}

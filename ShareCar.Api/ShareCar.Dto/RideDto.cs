@@ -7,7 +7,7 @@ namespace ShareCar.Dto
     public class RideDto
     {
         public int RideId { get; set; }
-        public int FromId { get; set; }
+        public int RouteId { get; set; }
         public string FromCountry { get; set; }
         public string FromCity { get; set; }
         public string FromStreet { get; set; }
@@ -16,7 +16,6 @@ namespace ShareCar.Dto
         public string ToCity { get; set; }
         public string ToStreet { get; set; }
         public string ToNumber { get; set; }
-        public int ToId { get; set; }
         public string DriverEmail { get; set; }
         public List<PassengerDto> Passengers { get; set; }
         public DateTime RideDateTime { get; set; }

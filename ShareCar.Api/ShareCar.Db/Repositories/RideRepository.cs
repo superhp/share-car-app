@@ -39,7 +39,7 @@ namespace ShareCar.Db.Repositories
         public IEnumerable<Ride> FindRidesByDestination(int addressToId)
         {
             return _databaseContext.Rides
-                .Where(x => x.ToId == addressToId);
+                .Where(x => x.Route.ToId == addressToId);
         }
 
         public Ride FindRideById(int id)
@@ -57,7 +57,7 @@ namespace ShareCar.Db.Repositories
         public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId)
         {
             return _databaseContext.Rides
-                .Where(x => x.FromId == addressFromId);
+                .Where(x => x.Route.FromId == addressFromId);
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)
         {
@@ -74,8 +74,8 @@ namespace ShareCar.Db.Repositories
         {
             try
             {
-                Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
-                //   _rideMapper.MapEntityToEntity(toUpdate, ride);
+                //Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
+                _databaseContext.Rides.Update(ride);
                 _databaseContext.SaveChanges();
                 return true;
             }

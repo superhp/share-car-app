@@ -114,12 +114,13 @@ namespace ShareCar.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)
         {
+            var userDto = await _userRepository.GetLoggedInUser(User);
             if (ride == null)
             {
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = await _rideLogic.AddRide(ride);
+            bool result =  _rideLogic.AddRide(ride, userDto.Email);
 
             if (result)
             {

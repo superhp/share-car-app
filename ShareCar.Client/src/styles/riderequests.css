@@ -6,13 +6,6 @@
     border-radius: 5px;
     width: 300px;
 }
-.ride-requests-row {
-    display: flex;
-    flex-direction: row;
-    color: black;
-    margin: 10px;
-    border-radius: 5px;
-}
 
 .ride-requests-text {
     margin: auto;

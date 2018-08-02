@@ -1,0 +1,8 @@
+div.container form .form-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+div.container form .form-group .react-datetime-picker {
+  flex: 0 0 100%;
+}

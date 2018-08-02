@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180802070300_AddedRouteTableAndLinkedWithRidesTable")]
+    partial class AddedRouteTableAndLinkedWithRidesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,11 +228,7 @@ namespace ShareCar.Db.Migrations
 
                     b.HasKey("RouteId");
 
-                    b.HasIndex("FromId");
-
-                    b.HasIndex("ToId");
-
-                    b.ToTable("Routes");
+                    b.ToTable("Route");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.User", b =>
@@ -381,19 +378,6 @@ namespace ShareCar.Db.Migrations
                     b.HasOne("ShareCar.Db.Entities.Route", "Route")
                         .WithMany("Rides")
                         .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ShareCar.Db.Entities.Route", b =>
-                {
-                    b.HasOne("ShareCar.Db.Entities.Address", "AromAddress")
-                        .WithMany()
-                        .HasForeignKey("FromId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ShareCar.Db.Entities.Address", "ToAddress")
-                        .WithMany()
-                        .HasForeignKey("ToId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

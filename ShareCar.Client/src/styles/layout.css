@@ -24,7 +24,6 @@
 }
 
 .content {
-  margin: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -32,8 +31,12 @@
 }
 
 @keyframes app-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .logout-button {
@@ -42,8 +45,9 @@
   align-self: flex-end;
   overflow: hidden;
   position: fixed;
-  top: 20px;
-  padding: 5px 5px;
-  margin: 5px;
-  border-radius: 5px;
+  top: 1%;
+  right: 1%;
+  padding: 1% 1%;
+  margin: 1%;
+  border-radius: 15%;
 }

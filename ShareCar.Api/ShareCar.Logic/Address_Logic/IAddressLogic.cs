@@ -10,9 +10,9 @@ namespace ShareCar.Logic.Address_Logic
 {
    public interface IAddressLogic
     {
-        Task<bool> AddNewAddress(AddressDto address);
+        bool AddNewAddress(AddressDto address);
         AddressDto FindAddressById(int id);
-        Task<int> GetAddressId(AddressDto address);
+        int GetAddressId(AddressDto address);
 
     }
 }
