@@ -4,6 +4,7 @@ import api from "../helpers/axiosHelper";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import "../styles/newRideForm.css";
+import "../styles/genericStyles.css";
 import "react-datepicker/dist/react-datepicker.css";
 
 export class NewRideForm extends React.Component {
@@ -67,6 +68,7 @@ export class NewRideForm extends React.Component {
           onSubmit={this.state.addNewForm ? this.handleSubmit.bind(this) : ""}
         >
           <div className="form-group">
+            <h1 className="generic-every-header">Ride from:</h1>
             <label>From Street:</label>
             <input
               type="text"
@@ -110,6 +112,8 @@ export class NewRideForm extends React.Component {
                 this.state.addNewForm ? "" : this.props.drive.fromCountry
               }
             />
+            
+            <h1 className="generic-every-header">Ride to:</h1>
           </div>
           <div className="form-group">
             <label>To Street:</label>
