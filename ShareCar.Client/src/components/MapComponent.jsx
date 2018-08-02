@@ -25,7 +25,8 @@ export default class MapComponent extends React.Component<{}> {
 
     this.state = {
       coordinates: [],
-      map:""
+      map:"",
+      Vector:""
     }
   
 }
@@ -35,8 +36,27 @@ export default class MapComponent extends React.Component<{}> {
   };
 
 
-  getAlert(val) {
-    this.CenterMap(val[0], val[1],this.state.map);
+  getAlert(val) {   
+     this.CenterMap(val[0], val[1],this.state.map);
+     var xy = [];
+     xy = transform(val, 'EPSG:4326', 'EPSG:3857');
+     console.log(xy);
+    var vectorSource = this.state.Vector; 
+   // vectorSource = new SourceVector(),
+    //vectorLayer = new LayerVector({
+     // source: vectorSource
+    //});
+    var feature = new Feature(
+      new Point(xy)
+  );
+  console.log(vectorSource);
+
+ //component.setState({coordinates : lonlat});
+
+
+
+  vectorSource.clear();
+  vectorSource.addFeature(feature);
 
   }
 
@@ -61,32 +81,7 @@ export default class MapComponent extends React.Component<{}> {
       ],
       target: "map"
     });
-  /*
-*/
-    /*  var 
-      vectorSource = new SourceVector(),
-      vectorLayer = new LayerVector({
-        source: vectorSource
-      }),
-      olview = new View({
-          center: [0, 0],
-          zoom: 2,
-          minZoom: 2,
-          maxZoom: 20
-      }),
-      map = new Map({
-          
-        /*target: document.getElementById('map'),
-          view: olview,
-          layers: [
-              new Tile({
-                  style: 'Aerial',
-                  source: new ol.source.MapQuest({ layer: 'osm' })
-              }),
-              vectorLayer
-          ]
-      })
-  ;*/
+
   
   var iconStyle = new Style({
       image: new Icon({
@@ -106,8 +101,9 @@ export default class MapComponent extends React.Component<{}> {
       })
   });
 
-this.setState({map:map});
 
+this.setState({map:map});
+this.setState({Vector: vectorSource})
   map.on('click', function(evt){
       var feature = new Feature(
           new Point(evt.coordinate)
@@ -118,7 +114,8 @@ this.setState({map:map});
 
      component.setState({coordinates : lonlat});
 
-
+console.log(evt.coordinate);
+console.log(lonlat);
 
       vectorSource.clear();
       vectorSource.addFeature(feature);
