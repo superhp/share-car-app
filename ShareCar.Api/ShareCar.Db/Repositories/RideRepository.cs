@@ -74,8 +74,8 @@ namespace ShareCar.Db.Repositories
         {
             try
             {
-                Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
-                //   _rideMapper.MapEntityToEntity(toUpdate, ride);
+                //Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
+                _databaseContext.Rides.Update(ride);
                 _databaseContext.SaveChanges();
                 return true;
             }
