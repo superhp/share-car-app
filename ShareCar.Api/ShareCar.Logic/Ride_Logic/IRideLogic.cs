@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ShareCar.Dto;
+using ShareCar.Dto.Identity;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -17,6 +18,8 @@ namespace ShareCar.Logic.Ride_Logic
        // Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(RideDto ride);
         bool AddRide(RideDto ride, string email);
+        RouteDto FindRoute(int rideId);
+        IEnumerable<RideDto> FindSimilarRides(int rideId);
 
     }
 }

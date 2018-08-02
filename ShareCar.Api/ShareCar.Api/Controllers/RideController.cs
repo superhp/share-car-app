@@ -25,6 +25,13 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
         }
 
+        [HttpGet("simillarRides={rideId}")]
+        public IActionResult GetSimillarRides(int rideId)
+        {
+            IEnumerable<RideDto> rides = _rideLogic.FindSimilarRides(rideId);
+            return SendResponse(rides);
+        }
+
         // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()

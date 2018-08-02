@@ -38,6 +38,7 @@ export class DriverRideRequestsList extends React.Component {
 
 return(
 <tbody>
+    <button onClick={() => this.setState({show:false})}>Hide map</button>
 {
 this.props.requests.map(req =>
 <tr key={req.id}>
@@ -46,14 +47,17 @@ this.props.requests.map(req =>
 <td>Who: {req.passengerFirstName} {req.passengerLastName}  </td> 
 <td>When: {req.rideDate}  </td>  
 <td>Where: {req.address}  </td>  
-<button className = "ride-request-button" onClick={() => this.child.current.setPassengersPickUpPoint([req.longtitude,req.latitude])    }>Show on map</button>
+<button className = "ride-request-button" onClick={function(){this.child.current.setPassengersPickUpPoint([req.longtitude,req.latitude]); this.setState({show : true})  }  }>Show on map</button>
+
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
 <button className = "ride-request-button" onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
 </tr>
 )
 }
 {
-<MapComponent ref={this.child} driver = {true}/>
+    this.state.show
+?<MapComponent ref={this.child} driver = {true}/>
+: <div></div>
 }
 </tbody>
         );

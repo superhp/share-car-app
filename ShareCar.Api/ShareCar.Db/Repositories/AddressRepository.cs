@@ -14,16 +14,16 @@ namespace ShareCar.Db.Repositories
         }
         public bool AddNewAddress(Address address)
         {
-            try
-            {
+       //     try
+        //    {
                 _databaseContext.Addresses.Add(address);
                 _databaseContext.SaveChanges();
                 return true;
-            }
-            catch
-            {
-                return false;
-            }
+         //   }
+            //catch
+        //    {
+        //        return false;
+        //    }
                 
         }
 

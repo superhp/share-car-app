@@ -38,6 +38,8 @@ namespace ShareCar.Db.Repositories
         {
             return _databaseContext.Requests.Single(x => x.RequestId == id);
         }
+        
+
 
         public void SeenByDriver(int[] requests)
         { 
