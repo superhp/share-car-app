@@ -22,6 +22,16 @@ namespace ShareCar.Logic.Route_Logic
             int routeId = _routeRepository.GetRouteId(fromId, toId);
             return routeId;
         }
+        public RouteDto GetRouteById(int id)
+        {
+            Route route = _routeRepository.FindRouteById(id);
+            if (route == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<Route, RouteDto>(route);
+        }
         public bool AddRoute(RouteDto route)
         {
             Route entityRoute = new Route

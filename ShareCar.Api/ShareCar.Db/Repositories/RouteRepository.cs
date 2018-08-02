@@ -24,6 +24,17 @@ namespace ShareCar.Db.Repositories
                 return -1; // Address doesnt exist
             }
         }
+        public Route FindRouteById(int id)
+        {
+            try
+            {
+                return _databaseContext.Routes.Single(x => x.RouteId == id); // Throws exception if ride is not found
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public bool AddRoute(Route route)
         {
             try

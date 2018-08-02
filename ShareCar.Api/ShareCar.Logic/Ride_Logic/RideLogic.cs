@@ -55,15 +55,17 @@ namespace ShareCar.Logic.Ride_Logic
 
             List<RideDto> dtoRide = new List<RideDto>();
             int count = 0;
+            
             foreach (var ride in rides)
             {
+                RouteDto route = _routeLogic.GetRouteById(ride.RouteId); 
                 dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
-                AddressDto fromAddress = _addressLogic.FindAddressById(ride.Route.FromId);
+                AddressDto fromAddress = _addressLogic.FindAddressById(route.FromId);
                 dtoRide[count].FromCountry = fromAddress.Country;
                 dtoRide[count].FromCity = fromAddress.City;
                 dtoRide[count].FromStreet = fromAddress.Street;
                 dtoRide[count].FromNumber = fromAddress.Number;
-                AddressDto toAddress = _addressLogic.FindAddressById(ride.Route.ToId);
+                AddressDto toAddress = _addressLogic.FindAddressById(route.ToId);
                 dtoRide[count].ToCountry = toAddress.Country;
                 dtoRide[count].ToCity = toAddress.City;
                 dtoRide[count].ToStreet = toAddress.Street;
