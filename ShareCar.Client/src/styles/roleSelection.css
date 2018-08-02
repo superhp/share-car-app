@@ -1,19 +1,19 @@
 .role-container {
-    margin-top: 20px;
     display: flex;
+    height: 20%;
+    margin-top: 5%;
+    margin-bottom: 10%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 .role-image {
+    display: block;
     align-self:center;
     justify-content: center;
     align-items: center;
-    display: block;
-    height: 20vh;
-    margin: 20px;
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: 1%;
 
 }
 .role-image:hover {

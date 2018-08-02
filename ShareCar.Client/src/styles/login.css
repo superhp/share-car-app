@@ -4,14 +4,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 40%;
+    padding-top: 10%;
 }
 .login-image {
     align-self:center;
     justify-content: center;
     align-items: center;
     display: block;
-    height: 80%;
-    width: 80%;
-    margin-top: 20%;
+    height: 50%;
+    width: 50%;
 }
