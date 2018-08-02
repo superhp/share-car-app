@@ -13,6 +13,7 @@ export class NewRideForm extends React.Component {
       startDate: moment()
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(date) {
     this.setState({
@@ -31,10 +32,10 @@ export class NewRideForm extends React.Component {
       ToCity: e.target.toCity.value,
       ToStreet: e.target.toStreet.value,
       ToNumber: e.target.toNumber.value,
-      RideDateTime: e.target.rideDateTime.value
+      RideDateTime: this.state.startDate.format("YYYY-MM-DD")
     };
     console.log(ride);
-    api.post(`http://localhost:44360/api/Ride`, ride).then(res => {
+    api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
       console.log(res);
     });
   }
@@ -122,11 +123,10 @@ export class NewRideForm extends React.Component {
               className="form-control form-inline"
               selected={this.state.startDate}
               onChange={this.handleChange}
+              showTimeSelect
             />
           </div>
-          <button type="button" className="btn btn-primary btn-lg btn-block">
-            Save
-          </button>
+          <button className="btn btn-primary btn-lg btn-block">Save</button>
         </form>
       </div>
     );
