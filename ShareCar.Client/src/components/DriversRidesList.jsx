@@ -39,26 +39,7 @@ export class DriversRidesList extends React.Component<{}> {
               </tr>
             </thead>
             <tbody>
-<<<<<<< HEAD
-              {this.props.driversRides.map((req, index) => (
-                <tr
-                  onClick={() => {
-                    this.handleClick(req.rideId);
-                  }}
-                  key={index}
-                >
-                  <td>
-                    {req.fromCountry}, {req.fromCity}, {req.fromStreet},
-                    {req.fromNumber}
-                  </td>
-                  <td>
-                    {req.toCountry}, {req.toCity}, {req.toStreet},{" "}
-                    {req.toNumber}
-                  </td>
-                  <td>{req.rideDateTime} </td>
-                </tr>
-              ))}
-=======
+
               {!this.state.clicked
                 ? this.props.driversRides.map((req, index) => (
                     <tr
