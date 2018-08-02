@@ -27,6 +27,7 @@ namespace ShareCar.Db.Repositories
                 
         }
 
+        // Address consists of street, house number and city or geo coordinates
         public int GetAddressId(Address address)
         {
             try
@@ -35,7 +36,16 @@ namespace ShareCar.Db.Repositories
             }
             catch
             {
+                try
+                {
+                    return _databaseContext.Addresses.Single(x => x.Longtitude == address.Longtitude && x.Latitude == address.Latitude).AddressId;
+
+                }
+                catch
+                {
                 return -1; // Address doesnt exist
+
+                }
             }
         }
 

@@ -4,7 +4,7 @@ import {Status} from "./status";
 import "../styles/riderequests.css";
 export class PassengerRideRequestsList extends React.Component {
 
-  
+
 
     render(){
         return(

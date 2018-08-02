@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from "react";
+import * as React from "react";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import SourceVector from "ol/source/Vector";
@@ -18,8 +18,26 @@ import OSM from "ol/source/OSM";
 import Test from "ol/style/Text";
 import "../styles/mapComponent.css";
 
-export default class MapComponent extends Component<{}> {
+export default class MapComponent extends React.Component<{}> {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      coordinates: []
+    }
+  
+}
+
+ updateCoordinates(){
+    this.props.onUpdate(this.state.coordinates);
+  };
+
+
+
   componentDidMount() {
+    var component = this;
+
     var 
     vectorSource = new SourceVector(),
     vectorLayer = new LayerVector({
@@ -82,19 +100,22 @@ export default class MapComponent extends Component<{}> {
           text: 'Some text'
       })
   });
+
+
   map.on('click', function(evt){
       var feature = new Feature(
           new Point(evt.coordinate)
       );
       console.log(vectorSource);
-      var lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-      console.log(lonlat);
-      var lon = lonlat[0];
-      var lat = lonlat[1];
-      
+      var lonlat = [];
+      lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+
+     component.setState({coordinates : lonlat});
+
+
+      vectorSource.clear();
       vectorSource.addFeature(feature);
   });
-  
 
 /*
       map.on("singleclick", function(evt) {
@@ -104,17 +125,18 @@ export default class MapComponent extends Component<{}> {
         var lat = lonlat[1];
     });*/
   
-    CenterMap(25.279652, 54.687157);
-    function CenterMap(long, lat) {
+  CenterMap(25.279652, 54.687157);
+      function CenterMap(long, lat) {
       console.log("Long: " + long + " Lat: " + lat);
       map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
       map.getView().setZoom(13);
-    }
   }
 
 
+
+    }
   
   render() {
-    return <div id="map" />;
+    return <div onClick={this.updateCoordinates.bind(this)} id="map" />;
   }
 }

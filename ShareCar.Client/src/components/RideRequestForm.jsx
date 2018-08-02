@@ -4,15 +4,34 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import MapComponent from "./MapComponent";
 export class RideRequestForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      coordinates: []
+    }
+  }
+
+  updateCoordinates(value){
+    this.setState({
+      coordinates: value
+    });
+
+  };
+
 
   handleSubmit(e) {
     e.preventDefault();
     let request = {
       RideId: e.target.rideId.value,
-      City: e.target.city.value,
+      Longtitude : this.state.coordinates[0],
+      Latitude : this.state.coordinates[1]
+    /*  City: e.target.city.value,
       Street: e.target.street.value,
-      HouseNumber: e.target.houseNumber.value
+      HouseNumber: e.target.houseNumber.value*/
     };
+
+  console.log(request);
     console.log(request);
 
     /*    const address = {
@@ -80,7 +99,7 @@ export class RideRequestForm extends React.Component {
           <button className="ride-requests-button">Save</button>
         </form>
 
-<MapComponent/>
+<MapComponent temp="ggg" onUpdate={this.updateCoordinates.bind(this)}/>
 
       </div>
     );
