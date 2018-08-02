@@ -1,32 +1,8 @@
-div.form-group {
-  display: flex;
-  width: 100%;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-h2 {
-  padding: 0;
-}
-div.form-group label {
-  margin-right: 10px;
-  flex: 0 0 100%;
-}
-div.form-group input {
-  margin-right: 10px;
-  flex: 0 0 100%;
-}
-div.form-group {
-  margin-bottom: 1px;
-}
-form.newRideForm {
+div.container form .form-group {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 5em;
 }
-form.newRideForm .form-group .datepicker-element {
-  flex: 0 0 100%;
-}
-form.newRideForm .form-group .addNewRidePopper {
+
+div.container form .form-group .react-datetime-picker {
   flex: 0 0 100%;
 }

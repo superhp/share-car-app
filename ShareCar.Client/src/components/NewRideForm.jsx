@@ -1,24 +1,18 @@
 import * as React from "react";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
-import DatePicker from "react-datepicker";
+import DateTimePicker from "react-datetime-picker";
 import moment from "moment";
 import "../styles/newRideForm.css";
+import addressParser from "../helpers/addressParser";
 import "../styles/genericStyles.css";
-import "react-datepicker/dist/react-datepicker.css";
 
 export class NewRideForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      startDate: moment(),
-      addNewForm: false,
-      addedStatus: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
+  state = {
+    startDate: new Date("2018-07-04"),
+    addNewForm: false,
+    addedStatus: false
+  };
   componentWillMount() {
     this.props.drive == null
       ? this.setState({ addNewForm: true })
@@ -28,11 +22,19 @@ export class NewRideForm extends React.Component {
   componentDidMount() {
     if (!this.state.addNewForm) {
       var d = new Date(this.props.drive.rideDateTime);
-      this.setState({ startDate: moment(d) });
     }
+    var places = require("places.js");
+    var placesAutocompleteFrom = places({
+      container: document.querySelector("#address-input-from")
+    });
+    var placesAutocompleteTo = places({
+      container: document.querySelector("#address-input-to")
+    });
+    placesAutocompleteFrom.on("change", e => console.log(e.suggestion));
   }
 
   handleChange(date) {
+    console.log(moment(date).format("YYYY-MM-DD hh:mm:ss"));
     this.setState({
       startDate: date
     });
@@ -49,12 +51,13 @@ export class NewRideForm extends React.Component {
       ToCity: e.target.toCity.value,
       ToStreet: e.target.toStreet.value,
       ToNumber: e.target.toNumber.value,
-      RideDateTime: this.state.startDate.format("YYYY-MM-DD")
+      RideDateTime: ""
     };
     api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
       this.setState({ addedStatus: true });
     });
   }
+
   render() {
     return (
       <div className="container">
@@ -68,105 +71,30 @@ export class NewRideForm extends React.Component {
           onSubmit={this.state.addNewForm ? this.handleSubmit.bind(this) : ""}
         >
           <div className="form-group">
-            <h1 className="generic-every-header">Ride from:</h1>
-            <label>From Street:</label>
+            <label>From:</label>
             <input
-              type="text"
-              className="form-control"
-              name="fromStreet"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.fromStreet
-              }
+              type="search"
+              class="form-group"
+              id="address-input-from"
+              placeholder="Select From Location..."
             />
           </div>
           <div className="form-group">
-            <label>From Number:</label>
+            <label>To:</label>
             <input
-              type="text"
-              className="form-control"
-              name="fromNumber"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.fromNumber
-              }
-            />
-          </div>
-
-          <div className="form-group">
-            <label>From City:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="fromCity"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.fromCity
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>From Country:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="fromCountry"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.fromCountry
-              }
-            />
-            
-            <h1 className="generic-every-header">Ride to:</h1>
-          </div>
-          <div className="form-group">
-            <label>To Street:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="toStreet"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.toStreet
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>To Number:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="toNumber"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.toNumber
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>To City:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="toCity"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.toCity
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>To Country:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="toCountry"
-              defaultValue={
-                this.state.addNewForm ? "" : this.props.drive.toCountry
-              }
+              type="search"
+              class="form-group"
+              id="address-input-to"
+              placeholder="Select To Location..."
             />
           </div>
           <div className="form-group">
             <label>Date and Time:</label>
-            <DatePicker
-              className="form-control datepicker-element"
-              popperClassName="addNewRidePopper"
-              selected={this.state.startDate}
-              onChange={this.handleChange}
-              showTimeSelect
+            <DateTimePicker
+              calendarClassName="dateTimePicker"
+              onChange={date => this.handleChange(date)}
+              value={this.state.startDate}
+              className="form-group"
             />
           </div>
           <button className="btn btn-primary btn-lg btn-block save-new-ride">
