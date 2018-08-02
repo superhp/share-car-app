@@ -12,17 +12,19 @@ namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
+        private readonly IUserRepository _userRepository;
         private readonly IRideRepository _rideRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IMapper _mapper;
 
-        public RideLogic(IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        public RideLogic(IUserRepository userRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
             _mapper = mapper;
             _addressRepository = addressRepository;
+            _userRepository = userRepository;
         }
 
         public RideDto FindRideById(int id)
@@ -111,8 +113,13 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }   
 
-        public bool AddRide(RideDto ride)
+        public bool AddRide(RideDto ride, string email)
         {
+            
+            if (ride.DriverEmail == null)
+            {
+                ride.DriverEmail = email;
+            }
 
             ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
