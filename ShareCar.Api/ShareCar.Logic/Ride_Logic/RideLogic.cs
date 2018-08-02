@@ -183,6 +183,16 @@ namespace ShareCar.Logic.Ride_Logic
             return DtoPassengers;
         }
 
+        public IEnumerable<RideDto> FindSimilarRides(int rideId)
+        {
+            Ride ride = _rideRepository.FindRideById(rideId);
+            string driverEmail = ride.DriverEmail;
+            int routeId = ride.RouteId;
+            IEnumerable<Ride> rides = _rideRepository.FindSimmilarRides(driverEmail, routeId);
+            return MapToList(rides);
+
+        }
+
         private void ParseExtraRideDtoData(RideDto ride)
         {
             AddressDto fromAddress = new AddressDto

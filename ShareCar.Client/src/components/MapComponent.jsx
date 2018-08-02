@@ -7,15 +7,9 @@ import View from "ol/View";
 import Feature from "ol/Feature";
 import Icon from "ol/style/Icon";
 import LayerVector from "ol/layer/Vector";
-import Style from "ol/style/Style";
 import TileLayer from "ol/layer/Tile";
-import Tile from "ol/Tile";
-
-import Fill from "ol/style/Fill";
-import Stroke from "ol/style/Stroke";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
-import Test from "ol/style/Text";
 import "../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
@@ -78,25 +72,6 @@ centerMapParent(val){
       ],
       target: "map"
     });
-
-  
-  var iconStyle = new Style({
-      image: new Icon({
-          anchor: [0.5, 46],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'pixels',
-          opacity: 0.75,
-          src: '//openlayers.org/en/v3.8.2/examples/data/icon.png'
-      }),
-      text: new Text({
-          font: '12px Calibri,sans-serif',
-          fill: new Fill({ color: '#000' }),
-          stroke: new Stroke({
-              color: '#fff', width: 2
-          }),
-          text: 'Some text'
-      })
-  });
 
 
 this.setState({map:map});
