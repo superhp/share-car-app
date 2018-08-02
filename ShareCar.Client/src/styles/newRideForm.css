@@ -5,13 +5,19 @@ div.form-group {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
+h2 {
+  padding: 0;
+}
 div.form-group label {
   margin-right: 10px;
-  flex: 1;
+  flex: 0 0 100%;
 }
 div.form-group input {
   margin-right: 10px;
   flex: 3;
+}
+div.form-group {
+  margin-bottom: 1px;
 }
 form.newRideForm {
   display: flex;
