@@ -7,24 +7,25 @@ using AutoMapper;
 using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
+using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
-        private readonly IUserRepository _userRepository;
         private readonly IRideRepository _rideRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
 
-        public RideLogic(IUserRepository userRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
+            _routeLogic = routeLogic;
             _mapper = mapper;
             _addressRepository = addressRepository;
-            _userRepository = userRepository;
         }
 
         public RideDto FindRideById(int id)
@@ -57,12 +58,12 @@ namespace ShareCar.Logic.Ride_Logic
             foreach (var ride in rides)
             {
                 dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
-                AddressDto fromAddress = _addressLogic.FindAddressById(ride.FromId);
+                AddressDto fromAddress = _addressLogic.FindAddressById(ride.Route.FromId);
                 dtoRide[count].FromCountry = fromAddress.Country;
                 dtoRide[count].FromCity = fromAddress.City;
                 dtoRide[count].FromStreet = fromAddress.Street;
                 dtoRide[count].FromNumber = fromAddress.Number;
-                AddressDto toAddress = _addressLogic.FindAddressById(ride.ToId);
+                AddressDto toAddress = _addressLogic.FindAddressById(ride.Route.ToId);
                 dtoRide[count].ToCountry = toAddress.Country;
                 dtoRide[count].ToCity = toAddress.City;
                 dtoRide[count].ToStreet = toAddress.Street;
@@ -146,19 +147,28 @@ namespace ShareCar.Logic.Ride_Logic
                     Number = ride.ToNumber
                 };
                 //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-                ride.FromId = _addressLogic.GetAddressId(fromAddress);
-                ride.ToId = _addressLogic.GetAddressId(toAddress);
-                if(ride.FromId == -1)
+                RouteDto route = new RouteDto();
+                route.FromId = _addressLogic.GetAddressId(fromAddress);
+                route.ToId = _addressLogic.GetAddressId(toAddress);
+                if(route.FromId == -1)
                 {
                     _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
-                    ride.FromId = _addressLogic.GetAddressId(fromAddress);
+                    route.FromId = _addressLogic.GetAddressId(fromAddress);
                 }
-                if (ride.ToId == -1)
+                if (route.ToId == -1)
                 {
                     _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
-                    ride.ToId = _addressLogic.GetAddressId(toAddress);
+                    route.ToId = _addressLogic.GetAddressId(toAddress);
                 }
-
+                int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                if ( routeId == -1 )
+                {
+                    _routeLogic.AddRoute(route);
+                    ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                } else
+                {
+                    ride.RouteId = routeId;
+                }
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 return true;
             }
