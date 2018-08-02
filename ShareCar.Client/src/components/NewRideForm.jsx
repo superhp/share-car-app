@@ -2,16 +2,17 @@ import * as React from "react";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
 import DateTimePicker from "react-datetime-picker";
-import moment from "moment";
 import "../styles/newRideForm.css";
 import addressParser from "../helpers/addressParser";
 import "../styles/genericStyles.css";
-
+var moment = require("moment");
 export class NewRideForm extends React.Component {
   state = {
-    startDate: new Date("2018-07-04"),
+    startDate: null,
     addNewForm: false,
-    addedStatus: false
+    addedStatus: false,
+    fromAddress: null,
+    toAddress: null
   };
   componentWillMount() {
     this.props.drive == null
@@ -30,28 +31,46 @@ export class NewRideForm extends React.Component {
     var placesAutocompleteTo = places({
       container: document.querySelector("#address-input-to")
     });
-    placesAutocompleteFrom.on("change", e => console.log(e.suggestion));
+    placesAutocompleteFrom.on("change", e => {
+      this.setState({
+        fromAddress: {
+          number: addressParser(e.suggestion.name).number,
+          street: addressParser(e.suggestion.name).name,
+          city: e.suggestion.city,
+          country: e.suggestion.country
+        }
+      });
+    });
+    placesAutocompleteTo.on("change", e => {
+      this.setState({
+        toAddress: {
+          number: addressParser(e.suggestion.name).number,
+          street: addressParser(e.suggestion.name).name,
+          city: e.suggestion.city,
+          country: e.suggestion.country
+        }
+      });
+    });
   }
 
   handleChange(date) {
-    console.log(moment(date).format("YYYY-MM-DD hh:mm:ss"));
     this.setState({
-      startDate: date
+      startDate: moment(date, "YYYY-MM-DD").toDate()
     });
   }
 
   handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     let ride = {
-      FromCountry: e.target.fromCountry.value,
-      FromCity: e.target.fromCity.value,
-      FromStreet: e.target.fromStreet.value,
-      FromNumber: e.target.fromNumber.value,
-      ToCountry: e.target.toCountry.value,
-      ToCity: e.target.toCity.value,
-      ToStreet: e.target.toStreet.value,
-      ToNumber: e.target.toNumber.value,
-      RideDateTime: ""
+      FromCountry: this.state.fromAddress.country,
+      FromCity: this.state.fromAddress.city,
+      FromStreet: this.state.fromAddress.street,
+      FromNumber: this.state.fromAddress.number,
+      ToCountry: this.state.toAddress.country,
+      ToCity: this.state.toAddress.city,
+      ToStreet: this.state.toAddress.street,
+      ToNumber: this.state.toAddress.number,
+      RideDateTime: this.state.startDate
     };
     api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
       this.setState({ addedStatus: true });

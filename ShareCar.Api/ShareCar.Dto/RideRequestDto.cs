@@ -14,6 +14,8 @@ namespace ShareCar.Dto
         public string DriverLastName { get; set; }
         public string PassengerFirstName { get; set; }
         public string PassengerLastName { get; set; }
+        public double Longtitude { get; set; }
+        public double Latitude { get; set; }
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
         public int RideId { get; set; }
