@@ -5,6 +5,7 @@ import DateTimePicker from "react-datetime-picker";
 import moment from "moment";
 import "../styles/newRideForm.css";
 import addressParser from "../helpers/addressParser";
+import "../styles/genericStyles.css";
 
 export class NewRideForm extends React.Component {
   state = {

@@ -4,6 +4,7 @@ import api from "../helpers/axiosHelper";
 import "../styles/driversRidesList.css";
 import { Route, Link } from "react-router-dom";
 import NewRideForm from "./NewRideForm";
+import  "../styles/genericStyles.css";
 
 export class DriversRidesList extends React.Component<{}> {
   state = {
@@ -33,9 +34,9 @@ export class DriversRidesList extends React.Component<{}> {
           <table className="table table-bordered">
             <thead>
               <tr className="bg-primary">
-                <td>From:</td>
-                <td>To:</td>
-                <td>Date Time</td>
+                <td className="generic-text"> From:</td>
+                <td className="generic-text">To:</td>
+                <td className="generic-text">Date Time</td>
               </tr>
             </thead>
             <tbody>
@@ -79,7 +80,7 @@ export class DriversRidesList extends React.Component<{}> {
                         <td>{req.rideDateTime} </td>
                       </tr>
                     ))}
->>>>>>> 94d184e96898d1e69ac79d0885a93866ae643d07
+
             </tbody>
           </table>
         </div>
