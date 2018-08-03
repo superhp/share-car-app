@@ -1,5 +1,4 @@
 import * as React from "react";
-import {RideRequestForm} from "./RideRequestForm";
 import {Status} from "./status";
 import "../styles/riderequests.css";
 export class PassengerRideRequestsList extends React.Component {
@@ -23,7 +22,6 @@ this.props.requests.map(req =>
 )
 }
 
-       <RideRequestForm/>
 
 
 </tbody>
