@@ -7,9 +7,22 @@ export class DriverRideRequestsList extends React.Component {
     super(props);
 
     this.state = {
-      coordinates: []
+      coordinates: [],
+      show: true
     };
     this.child = React.createRef();
+  }
+
+  sendRequestResponse(response, requestId) {
+    let data = {
+      RequestId: requestId,
+      Status: response
+    };
+    console.log(data);
+
+    api.put(`http://localhost:5963/api/RideRequest`, data).then(res => {
+      console.log(res.data);
+    });
   }
 
   sendRequestResponse(response, requestId) {

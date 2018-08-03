@@ -90,9 +90,9 @@ namespace ShareCar.Db.Repositories
             }
         }
 
-        public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId)
+        public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
         {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId);
+            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId);
         }
 
         public IEnumerable<Ride> FindRidesByDriver(string email)
