@@ -1,10 +1,14 @@
 div.container {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.detailedInfoContainer {
+  margin: 2em;
 }
 h1 {
   text-align: center;
@@ -21,33 +25,23 @@ div.container a {
 }
 table tr:hover {
   background-color: blue;
+  cursor: pointer;
+  color: white;
 }
 div.container table {
   font-size: 0.6em;
 }
-.detailedInfoContainer h2 {
-  margin: 1em 0;
-  font-size: 1em;
-  flex: 0 0 100%;
-  text-align: center;
-}
-.detailedInfoContainer {
-  display: flex;
-  flex-wrap: wrap;
-}
-.detailedInfoContainer form {
-  flex: 0 0 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-.detailedInfoContainer form button {
-  flex: 0 0 100%;
-}
-.detailedInfoContainer form label {
-  text-align: center;
-}
+
 .list-group {
   display: flex;
   flex-wrap: wrap;
   flex: 0 0 100%;
+}
+button.add-new-button {
+  margin-bottom: 4em;
+  flex: 0 0 100%;
+}
+div.container a {
+  flex: 0 0 100%;
+  display: flex;
 }
