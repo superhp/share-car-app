@@ -62,7 +62,6 @@ export class NewRideForm extends React.Component {
                 }
             });
             this.child.current.centerMapParent(e.suggestion.latlng)
-
         });
         placesAutocompleteTo.on("change", e => {
             this.setState({

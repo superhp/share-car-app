@@ -10,7 +10,8 @@ namespace ShareCar.Db.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Rides_Route_RouteId",
-                table: "Rides");
+                table: "Rides"
+                );
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Route",
