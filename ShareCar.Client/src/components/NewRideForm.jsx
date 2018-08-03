@@ -9,7 +9,6 @@ import MapComponent from "./MapComponent";
 
 var moment = require("moment");
 export class NewRideForm extends React.Component {
-
   state = {
     startDate: moment("2018-07-25", "YYYY-MM-DD").toDate(),
     addNewForm: false,
@@ -22,7 +21,7 @@ export class NewRideForm extends React.Component {
       ? this.setState({ addNewForm: true })
       : this.setState({ addNewForm: false });
   }
-/*
+
   componentDidMount() {
     if (!this.state.addNewForm) {
       this.setState({
@@ -50,6 +49,7 @@ export class NewRideForm extends React.Component {
     var placesAutocompleteTo = places({
       container: document.querySelector("#address-input-to")
     });
+
     placesAutocompleteFrom.on("change", e => {
       this.setState({
         fromAddress: {
@@ -58,73 +58,26 @@ export class NewRideForm extends React.Component {
           city: e.suggestion.city,
           country: e.suggestion.country
         }
-
-      }
-
-
+      });
     });
-});
-    state = {
-        startDate: null,
-        addNewForm: false,
-        addedStatus: false,
-        fromAddress: null,
-        toAddress: null
-    };
-}*/
-    componentWillMount() {
-        this.props.drive == null
-            ? this.setState({ addNewForm: true })
-            : this.setState({ addNewForm: false });
-    }
-
-    componentDidMount() {
-        if (!this.state.addNewForm) {
-            var d = new Date(this.props.drive.rideDateTime);
+    placesAutocompleteTo.on("change", e => {
+      this.setState({
+        toAddress: {
+          number: addressParser(e.suggestion.name).number,
+          street: addressParser(e.suggestion.name).name,
+          city: e.suggestion.city,
+          country: e.suggestion.country
         }
-        var places = require("places.js");
-        var placesAutocompleteFrom = places({
-            container: document.querySelector("#address-input-from")
-        });
-        var placesAutocompleteTo = places({
-            container: document.querySelector("#address-input-to")
-        });
+      });
+    });
+  }
 
-        placesAutocompleteFrom.on("change", e => {
-            this.setState({
-                fromAddress: {
-                    number: addressParser(e.suggestion.name).number,
-                    street: addressParser(e.suggestion.name).name,
-                    city: e.suggestion.city,
-                    country: e.suggestion.country,
-                }
-            });
-            this.child.current.centerMapParent(e.suggestion.latlng)
-        });
-        placesAutocompleteTo.on("change", e => {
-            this.setState({
-                toAddress: {
-                    number: addressParser(e.suggestion.name).number,
-                    street: addressParser(e.suggestion.name).name,
-                    city: e.suggestion.city,
-                    country: e.suggestion.country
-                }
-            });
-            this.child.current.centerMapParent(e.suggestion.latlng)
-        });
+  handleChange(date) {
+    this.setState({
+      startDate: moment(date, "YYYY-MM-DD").toDate()
+    });
+  }
 
-    }
-
-    handleChange(date) {
-        this.setState({
-            startDate: moment(date, "YYYY-MM-DD").toDate()
-        });
-    }
-    updateCoordinates(value) {
-        this.setState({
-            coordinates: value
-        });
-    }
   handleSubmit(e) {
     e.preventDefault();
     let ride = {
