@@ -5,61 +5,55 @@ import MapComponent from "./MapComponent";
 export class DriverRideRequestsList extends React.Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
-            coordinates: []
+            coordinates: [],
+            show: true
         }
         this.child = React.createRef();
 
-      }
-    
-    sendRequestResponse(response, requestId){
+    }
+
+    sendRequestResponse(response, requestId) {
         let data = {
-            RequestId:requestId,
-            Status :response
+            RequestId: requestId,
+            Status: response
         };
-        console.log(data);   
-      
+        console.log(data);
+
         api.put(`http://localhost:5963/api/RideRequest`, data)
             .then(res => {
-              console.log(res.data);
-            })    };
-        
-    componentDidMount(){
-    console.log(this.props.requests);
-
-  //  this.child.current.setPassengersPickUpPoint([1,1]);
+                console.log(res.data);
+            })
     };
-//this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
 
 
 
-    render(){
+    render() {
 
-return(
-<tbody>
-    <button onClick={() => this.setState({show:false})}>Hide map</button>
-{
-this.props.requests.map(req =>
-<tr key={req.id}>
+        return (
+            <tbody>
+                {
+                    this.props.requests.map(req =>
+                        <tr key={req.id}>
 
-<td className = "ride-request-text">{req.seenByDriver ? "" : "NEW"}</td> 
-<td>Who: {req.passengerFirstName} {req.passengerLastName}  </td> 
-<td>When: {req.rideDate}  </td>  
-<td>Where: {req.address}  </td>  
-<button className = "ride-request-button" onClick={function(){this.child.current.setPassengersPickUpPoint([req.longtitude,req.latitude]); this.setState({show : true})  }  }>Show on map</button>
+                            <td className="ride-request-text">{req.seenByDriver ? "" : "NEW    "}</td>
+                            <td>Who: {req.passengerFirstName} {req.passengerLastName}  </td>
+                            <td>When: {req.rideDate}  </td>
+                            <td>Where: {req.address}  </td>
+                            <button className="ride-request-button" onClick={() =>
+                                this.child.current.setPassengersPickUpPoint([req.longtitude, req.latitude])
+                            }  >Show on map</button>
 
-<button className = "ride-request-button" onClick={() => this.sendRequestResponse(1,req.requestId)}>Accept</button>
-<button className = "ride-request-button" onClick={() => this.sendRequestResponse(2,req.requestId)}>Deny</button>
-</tr>
-)
-}
-{
-    this.state.show
-?<MapComponent ref={this.child} driver = {true}/>
-: <div></div>
-}
-</tbody>
+                            <button className="ride-request-button" onClick={() => this.sendRequestResponse(1, req.requestId)}>Accept</button>
+                            <button className="ride-request-button" onClick={() => this.sendRequestResponse(2, req.requestId)}>Deny</button>
+                        </tr>
+                    )
+                }
+
+                <MapComponent ref={this.child} driver={true} />
+
+            </tbody>
         );
     }
 }

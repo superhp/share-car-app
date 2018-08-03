@@ -188,7 +188,7 @@ namespace ShareCar.Logic.Ride_Logic
             Ride ride = _rideRepository.FindRideById(rideId);
             string driverEmail = ride.DriverEmail;
             int routeId = ride.RouteId;
-            IEnumerable<Ride> rides = _rideRepository.FindSimmilarRides(driverEmail, routeId);
+            IEnumerable<Ride> rides = _rideRepository.FindSimmilarRides(driverEmail, routeId, ride.RideId);
             return MapToList(rides);
 
         }

@@ -18,35 +18,7 @@ export class ViewRideRequests extends React.Component {
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
-  
-/*
-getNames(email){
-    api.get('Person/'+ email)
-    .then((response) => {
-        console.log("==========================");
-        console.log(response);
 
-let data = {
-    FirstName: response.data.firstName,
-    LastName: response.data.lastName
-};
-
-const namesArray = this.state.names;
-
-namesArray.push(data);
-this.setState({names : namesArray});
-console.log('stststst');
-console.log(this.state.names);
-
-    })
-    .catch(function (error) {
-        console.error(error);
-    });
-};
-
-getAddresses(){
-
-}*/
   showPassengerRequests() {
     api
       .get("RideRequest/false")

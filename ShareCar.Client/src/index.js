@@ -13,6 +13,7 @@ import UserProfile from "./components/UserProfile";
 import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
+import RideRequestForm from "./components/RideRequestForm";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -29,6 +30,8 @@ ReactDOM.render(
         <Route path="/profile" component={UserProfile} />
         <Route path="/rides" component={Rides} />
         <Route path="/newRideForm" component={NewRideForm} />
+        <Route path="/rideRequest" component={RideRequestForm} />
+
       </Layout>
     </Switch>
   </Router>,
