@@ -6,7 +6,7 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-export class RideRequests extends React.Component {
+export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],
     passengerRequests: []
@@ -110,18 +110,6 @@ if(unseenRequests.length != 0){
                 console.error(error);
               });
             }
-/*
-  handleSubmit(e) {
-    e.preventDefault();
-    let data = {
-      RideId: e.target.rideId.value,
-      AddressId: e.target.address.value
-    };
-    api.post(`http://localhost:5963/api/RideRequest`, data).then(res => {
-      console.log(res);
-      console.log(res.data);
-    });
-  }*/
 
   render() {
     return (

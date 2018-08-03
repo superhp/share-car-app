@@ -16,7 +16,7 @@ namespace ShareCar.Db.Entities
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
         [ForeignKey("RideId")]
-        public virtual Ride RequestedRide { get; set;}
+        public virtual Ride RequestedRide { get; set; }
         [ForeignKey("PassengerEmail")]
         public virtual User Passenger { get; set; }
         [ForeignKey("DriverEmail")]
@@ -31,5 +31,4 @@ namespace ShareCar.Db.Entities
         ACCEPTED,
         DENIED
     }
-
 }

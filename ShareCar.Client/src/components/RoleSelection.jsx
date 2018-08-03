@@ -8,6 +8,7 @@ import history from "../helpers/history";
 import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
 import "../styles/roleSelection.css";
+import "../styles/genericStyles.css";
 import Driver from "./Driver";
 
 class RoleSelection extends Component<{}, MyProfileState> {
@@ -40,18 +41,18 @@ class RoleSelection extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="role-container">
-         <h1 className="role-container">Choose a role:</h1> 
+         <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
           <img className="role-image" src={driverLogo} />
         </Link>
-        <h1>Driver</h1>
+        <h1 className="generic-every-header">Driver</h1>
           
         <Link to="/passenger">
           {" "}
           <img className="role-image" src={passengerLogo} />
         </Link>
-        <h1>Passenger</h1>
+        <h1 className="generic-every-header">Passenger</h1>
       </div>
     );
     return <div>{content}</div>;

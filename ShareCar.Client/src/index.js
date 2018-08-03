@@ -13,11 +13,12 @@ import UserProfile from "./components/UserProfile";
 import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
 ReactDOM.render(
-  <Router history={history}>
+  <Router history={history}> 
     <Switch>
       <Route path="/login" component={Login} />
       <Layout>

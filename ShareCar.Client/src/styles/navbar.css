@@ -37,7 +37,7 @@ a.navBar-button button {
   color: white;
   text-align: center;
   justify-content: center;
-  border: 1px solid white;
+  border: 20% solid white;
   border-radius: 0;
 }
 .NavBar button:hover {

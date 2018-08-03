@@ -5,7 +5,7 @@ import { Router, Switch } from "react-router";
 import UserService from "../services/userService";
 import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
-import { RideRequests } from "./RideRequests";
+import { ViewRideRequests } from "./ViewRideRequests";
 import { NavBar } from "./NavBar";
 
 export default class Driver extends Component<{}, MyProfileState> {
@@ -30,7 +30,7 @@ export default class Driver extends Component<{}, MyProfileState> {
     ) : (
       <div className="role-container">
         <h1 className="role-container">Driver Page</h1>
-        <RideRequests driver={true} />
+        <ViewRideRequests driver={true} />
       </div>
     );
     return <div>{content}</div>;

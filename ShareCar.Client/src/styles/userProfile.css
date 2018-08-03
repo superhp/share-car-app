@@ -5,9 +5,10 @@
   
 }
 .role-header {
-  margin-top: 30px;
+  margin-top: 10%;
   text-align: center;
   margin-bottom: 0px;
+  font-size: 350%;
 }
 
 input.edit-input {

@@ -74,8 +74,13 @@ namespace ShareCar.Db.Repositories
         {
             try
             {
-                //Ride toUpdate = _databaseContext.Rides.Single(x => x.RideId == ride.RideId);
-                _databaseContext.Rides.Update(ride);
+                var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
+                rideToUpdate.RouteId = ride.RouteId;
+                rideToUpdate.Route = ride.Route;
+                rideToUpdate.RideDateTime = ride.RideDateTime;
+                rideToUpdate.Passengers = ride.Passengers;
+
+                _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
                 return true;
             }
@@ -85,11 +90,15 @@ namespace ShareCar.Db.Repositories
             }
         }
 
+        public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId)
+        {
+            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId);
+        }
+
         public IEnumerable<Ride> FindRidesByDriver(string email)
         {
             return _databaseContext.Rides.Where(x => x.DriverEmail == email);
         }
-
 
 
     }
