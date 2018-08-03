@@ -34,7 +34,7 @@ namespace ShareCar.Db.Repositories
             {
                 try
                 {
-                    return _databaseContext.Addresses.Single(x => x.City == address.City && x.Street == address.Street && x.Number == address.Number).AddressId;
+                    return _databaseContext.Addresses.Single(x => (x.City == address.City && x.Street == address.Street && x.Number == address.Number)).AddressId;
                 }
                 catch
                 {
