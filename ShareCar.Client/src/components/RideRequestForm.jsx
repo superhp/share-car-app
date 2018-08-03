@@ -12,55 +12,50 @@ export class RideRequestForm extends React.Component {
 
     this.state = {
       coordinates: [], // used to seelct exact point on a map
-      toViewCoordinates:[25.279652, 54.687157]// used to center map on user choosen location
-    }
-
+      toViewCoordinates: [25.279652, 54.687157] // used to center map on user choosen location
+    };
   }
 
-  updateCoordinates(value){
+  updateCoordinates(value) {
     this.setState({
       coordinates: value
     });
+  }
 
-  };
-
-componentDidMount(){
-  var places = require("places.js");
-  var placesAutocomplete = places({
-      container: document.querySelector('#address')
+  componentDidMount() {
+    var places = require("places.js");
+    var placesAutocomplete = places({
+      container: document.querySelector("#address")
     });
-    placesAutocomplete.on('change', e => this.child.current.centerMapParent(e.suggestion.latlng));
-
-}
-
+    placesAutocomplete.on("change", e =>
+      this.child.current.centerMapParent(e.suggestion.latlng)
+    );
+  }
 
   handleSubmit(e) {
     e.preventDefault();
     let request = {
       RideId: e.target.rideId.value,
-      Longtitude : this.state.coordinates[0],
-      Latitude : this.state.coordinates[1]
+      Longtitude: this.state.coordinates[0],
+      Latitude: this.state.coordinates[1]
     };
 
-    api.post(`http://localhost:5963/api/RideRequest`, request).then(res => {
+    api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
       console.log(res);
-
     });
-
   }
 
   render() {
     return (
       <div>
         <form className="ride-requests" onSubmit={this.handleSubmit.bind(this)}>
-
           <span className="ride-requests-text">Address :</span>
           <input
-          id="address"
+            id="address"
             className="ride-requests"
             type="text"
             name="street"
-            onBlur ={this.getAddressInput}
+            onBlur={this.getAddressInput}
             defaultValue={""}
           />
           <br />
@@ -77,8 +72,11 @@ componentDidMount(){
           <button className="ride-requests-button">Save</button>
         </form>
 
-<MapComponent  ref={this.child}  driver={false} onUpdate={this.updateCoordinates.bind(this)}/>
-
+        <MapComponent
+          ref={this.child}
+          driver={false}
+          onUpdate={this.updateCoordinates.bind(this)}
+        />
       </div>
     );
   }
