@@ -19,7 +19,11 @@ namespace ShareCar.Db
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Passenger>().HasKey(x => new { x.Email, x.RideId });
+            modelBuilder.Entity<Passenger>()
+                .HasKey(x => new { x.Email, x.RideId });
+            modelBuilder.Entity<Route>()
+                .HasIndex(u => u.Geometry)
+                .IsUnique();
         }
     }
 }

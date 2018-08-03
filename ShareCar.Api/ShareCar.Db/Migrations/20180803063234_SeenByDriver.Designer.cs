@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180803063234_SeenByDriver")]
+    partial class SeenByDriver
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,8 +223,6 @@ namespace ShareCar.Db.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("FromId");
-
-                    b.Property<string>("Geometry");
 
                     b.Property<int>("ToId");
 

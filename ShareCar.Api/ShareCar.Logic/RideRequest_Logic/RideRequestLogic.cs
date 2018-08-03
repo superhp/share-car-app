@@ -37,7 +37,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.SeenByPassenger = true;
             string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
             requestDto.DriverEmail = driverEmail;    
-            int addressId =  _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
+            int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
             return  _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));           
