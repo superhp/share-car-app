@@ -74,11 +74,11 @@ namespace ShareCar.Logic.RideRequest_Logic
                 entityRequest = _rideRequestRepository.FindPassengerRequests(email);
             }
 
-               return  await ConvertRequestsToDtoAsync(entityRequest, driver);
-           // return SortRequests(converted);
+               IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
+            return SortRequests(converted);
             }
         
-        /*
+        
         public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
         {
             List<RideRequestDto> sorted = new List<RideRequestDto>();
@@ -106,12 +106,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             }
             return sorted;
 
-        }*/
+        }
 
         public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-            List<Request> r = (List<Request>)entityRequests;
             int count = 0;
             foreach (var request in entityRequests)
             {
