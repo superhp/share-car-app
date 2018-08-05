@@ -10,6 +10,8 @@ import LayerVector from "ol/layer/Vector";
 import TileLayer from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
+import Polyline from "ol/format/Polyline";
+//import styles from "ol/styles";
 import "../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
@@ -33,6 +35,22 @@ export default class MapComponent extends React.Component<{}> {
   centerMapParent(val) {
 
     this.CenterMap(val.lng, val.lat, this.state.map);
+  }
+
+  displayRoute() {
+    var vectorSource = this.state.Vector;
+
+    var route = new Polyline({
+      factor: 1e6
+  }).readGeometry('mfp_I__vpASBG?u@FuBRiCRMMC?AAKAe@FyBTC@E?IDKDA@K@]BUBUBA?C?EBMHUBK@mAL{CZQ@qBRUBmAFc@@}@FAYCsCCqBCgBKoJCgBcDuAwAo@KEUKWMECe@Uk@WSSSGOIKCU?{@c@IBKDOHgEtBiAl@i@ZIDWLIm@AIQuACOQwAE_@Ic@]uBw@aFgAuHAKKo@?KAQ?KIuDQcH@eACeB?OCq@Ag@Ag@OuF?OAi@?c@@c@Du@r@cH@UBQ@K?E~@kJRyBf@uE@KFi@VoBFc@Da@@ETaC@QJ{@Ny@Ha@RiAfBuJF]DOh@yAHSf@aADIR_@\\q@N[@EPa@Zw@`@oA^gABIFUH[^sAJ_@Nq@Ps@DQRq@Ng@Pq@La@BKJYb@kAm@w@SYCCi@u@_AkAgAuAu@_AW]aBwBo@{@s@eAgAcBEE[]Jk@JmA?c@?QAQG]LKDEDCHOTm@^uA@Gb@wA`A_DJ[pAgCJSlAwBJSf@{@b@w@nAcCZq@LMLKRIFAL?J@HBFBp@XPHTJRHTJNFTRNFd@N\\HF@J@J@@V?N@rA@dB', {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857'
+  });
+  console.log(route);
+  var feature = new Feature(route);
+  //feature.setStyle(styles.route);
+
+  vectorSource.addFeature();
   }
 
   setPassengersPickUpPoint(val) {
@@ -94,6 +112,9 @@ export default class MapComponent extends React.Component<{}> {
       this.CenterMap(25.279652, 54.687157, map);
 
     }
+
+     this.displayRoute();
+
   }
 
   CenterMap(long, lat, map) {

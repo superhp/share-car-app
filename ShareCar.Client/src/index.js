@@ -21,7 +21,8 @@ import "./index.css";
 ReactDOM.render(
   <Router history={history}> 
     <Switch>
-      <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} />
+
       <Layout>
         <Route exact path="/" component={RoleSelection} />
         <Route path="/driver" component={Driver} />
