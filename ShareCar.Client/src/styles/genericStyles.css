@@ -5,33 +5,6 @@
     margin: 10px;
     border-radius: 5px;
     width: 300px;
-} .generic-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: black;
-    margin: 10px;
-    border-radius: 5px;
-    width: 300px;
-    padding: 50px;
-}
-
-.generic-container-text {
-    margin: auto;
-    border-radius: 5px;
-    text-align: center;
-
-}
-.generic-container-input {
-    margin: auto;
-    border-radius: 5px;
-    text-align: center;
-
-}
-.generic-container-button {
-    margin: 5px;
-    border-radius: 5px;
-}
 .generic-text
 {
     color: white;
