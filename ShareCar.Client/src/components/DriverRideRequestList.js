@@ -84,7 +84,7 @@ export class DriverRideRequestsList extends React.Component {
                   {req.address}{" "}
                   <button
                     className="ride-request-button"
-                    onClick={function() {
+                    onClick={()=> {
                       this.child.current.setPassengersPickUpPoint([
                         req.longtitude,
                         req.latitude
