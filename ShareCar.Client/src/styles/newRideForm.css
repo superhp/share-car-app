@@ -4,6 +4,7 @@ div.container {
   flex: 0 0 100%;
   padding: 0;
   margin-bottom: 5em;
+  margin-top: 15%;
 }
 
 div.container form .form-group {
