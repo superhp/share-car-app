@@ -16,6 +16,7 @@ input.edit-input {
 }
 form.profile-form {
   margin: 1em;
+  margin-bottom: 15%;
 }
 div.form-group {
   display: flex;
