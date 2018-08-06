@@ -54,7 +54,7 @@ export class DriverRideRequestsList extends React.Component {
     return (
       <div className="table-responsive requestListTable">
         <table className="table table-bordered">
-          <thead>
+          <thead className="bg-primary">
             <tr>
               <td>Hide Map</td>
               <td>Status</td>
