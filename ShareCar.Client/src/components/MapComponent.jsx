@@ -3,10 +3,10 @@ import * as React from "react";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import SourceVector from "ol/source/Vector";
+import LayerVector from "ol/layer/Vector";
 import View from "ol/View";
 import Feature from "ol/Feature";
 import Icon from "ol/style/Icon";
-import LayerVector from "ol/layer/Vector";
 import TileLayer from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
@@ -39,7 +39,7 @@ export default class MapComponent extends React.Component<{}> {
 
     this.CenterMap(val.lng, val.lat, this.state.map);
   }
-
+/*
   displayRoute() {
     var vectorSource = this.state.Vector;
 
@@ -74,9 +74,9 @@ console.log(vectorSource);
 
   feature.setStyle(styles.route);
 
-  vectorSource.addFeature();*/
+  vectorSource.addFeature();
   }
-
+*/
   // Shows passenger pick up point for a driver
   setPassengersPickUpPoint(val) {
 
@@ -123,7 +123,7 @@ console.log(vectorSource);
     if (!this.props.driver) {
       map.on('click', function (evt) { // Allows passenger to set a dingle marker on a map
    
-    /*      var feature = new Feature(
+          var feature = new Feature(
           new Point(evt.coordinate)
         );
         console.log(vectorSource);
@@ -133,14 +133,18 @@ console.log(vectorSource);
         component.setState({ coordinates: lonlat });
 
         vectorSource.clear();
-        vectorSource.addFeature(feature);*/
+        vectorSource.addFeature(feature);/*
         var route = new Polyline({
           factor: 1e6
       }).readGeometry('mfp_I__vpASBG?u@FuBRiCRMMC?AAKAe@FyBTC@E?IDKDA@K@]BUBUBA?C?EBMHUBK@mAL{CZQ@qBRUBmAFc@@}@FAYCsCCqBCgBKoJCgBcDuAwAo@KEUKWMECe@Uk@WSSSGOIKCU?{@c@IBKDOHgEtBiAl@i@ZIDWLIm@AIQuACOQwAE_@Ic@]uBw@aFgAuHAKKo@?KAQ?KIuDQcH@eACeB?OCq@Ag@Ag@OuF?OAi@?c@@c@Du@r@cH@UBQ@K?E~@kJRyBf@uE@KFi@VoBFc@Da@@ETaC@QJ{@Ny@Ha@RiAfBuJF]DOh@yAHSf@aADIR_@\\q@N[@EPa@Zw@`@oA^gABIFUH[^sAJ_@Nq@Ps@DQRq@Ng@Pq@La@BKJYb@kAm@w@SYCCi@u@_AkAgAuAu@_AW]aBwBo@{@s@eAgAcBEE[]Jk@JmA?c@?QAQG]LKDEDCHOTm@^uA@Gb@wA`A_DJ[pAgCJSlAwBJSf@{@b@w@nAcCZq@LMLKRIFAL?J@HBFBp@XPHTJRHTJNFTRNFd@N\\HF@J@J@@V?N@rA@dB', {
           dataProjection: 'EPSG:4326',
           featureProjection: 'EPSG:3857'
       });
-      console.log(route);
+
+
+console.log(route);
+
+
       var feature = new Feature({
         type: 'route',
         geometry: route
@@ -154,17 +158,13 @@ feature.setStyle(style);
 
       vectorSource.addFeature(feature);
         console.log('+++' + vectorSource);
- 
-        
+
+*/
       });
-//52.52810   13.41222
-    //  this.CenterMap(25.279652, 54.687157, map);
-      this.CenterMap(13.41222,52.52810, map);
-
     }
+      this.CenterMap(25.279652, 54.687157, map);
 
- //    this.displayRoute();
-
+  
   }
 
   CenterMap(long, lat, map) {
