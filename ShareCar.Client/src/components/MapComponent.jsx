@@ -54,6 +54,7 @@ export default class MapComponent extends React.Component<{}> {
   }
 
   setPassengersPickUpPoint(val) {
+
     this.CenterMap(val[0], val[1], this.state.map);
     var xy = [];
     xy = transform(val, 'EPSG:4326', 'EPSG:3857');
@@ -113,7 +114,7 @@ export default class MapComponent extends React.Component<{}> {
 
     }
 
-     this.displayRoute();
+ //    this.displayRoute();
 
   }
 
