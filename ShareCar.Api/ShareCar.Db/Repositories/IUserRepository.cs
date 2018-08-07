@@ -10,6 +10,6 @@ namespace ShareCar.Db.Repositories
     {
         Task CreateFacebookUser(FacebookUserDataDto userDto);
         Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal);
-        Task UpdateUserAsync(User user);
+        Task UpdateUserAsync(User user, ClaimsPrincipal principal);
     }
 }

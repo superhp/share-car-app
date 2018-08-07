@@ -42,6 +42,7 @@ namespace ShareCar.Db.Repositories
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
+            
             var userDto = new UserDto
             {
                 Email = user.Email,
@@ -49,15 +50,21 @@ namespace ShareCar.Db.Repositories
                 LastName = user.LastName,
                 PictureUrl = user.PictureUrl,
                 Phone = user.Phone,
-                LicensePlate = user.LicensePlate               
+                LicensePlate = user.LicensePlate,
             };
 
             return userDto;
         }
 
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(User user, ClaimsPrincipal principal)
         {
-            await _userManager.UpdateAsync(user);
+            var _user = await _userManager.GetUserAsync(principal);
+            _user.FirstName = user.FirstName;
+            _user.LastName = user.LastName;
+            _user.Phone = user.Phone;
+            _user.LicensePlate = user.LicensePlate;
+
+            await _userManager.UpdateAsync(_user);
         }
     }
 }
