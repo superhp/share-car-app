@@ -14,14 +14,16 @@ namespace ShareCar.Logic.Ride_Logic
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
+        private readonly IRouteRepository _routeRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
 
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        public RideLogic(IRouteLogic routeLogic, IRouteRepository routeRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
         {
             _rideRepository = rideRepository;
+            _routeRepository = routeRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
@@ -132,7 +134,14 @@ namespace ShareCar.Logic.Ride_Logic
                 ParseExtraRideDtoData(ride);
 
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-                return true;
+                RouteDto routeDto = _routeLogic.GetRouteById(ride.RouteId);
+                if(routeDto.Rides == null)
+                {
+                    routeDto.Rides = new List<RideDto>();
+                }
+                routeDto.Rides.Add(ride);
+                return _routeLogic.UpdateRoute(routeDto);
+                
             }
             return false;
         }

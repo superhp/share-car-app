@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
 using ShareCar.Logic.Ride_Logic;
+using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
 {
@@ -16,15 +17,23 @@ namespace ShareCar.Api.Controllers
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IUserRepository _userRepository;
 
 
-        public RideController(IRideLogic rideLogic, IUserRepository userRepository)
+        public RideController(IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository)
         {
             _rideLogic = rideLogic;
+            _routeLogic = routeLogic;
             _userRepository = userRepository;
         }
+        [HttpGet("route={routeId}")]
+        public IActionResult GetRoute(int routeId)
+        {
+            RouteDto route = _routeLogic.GetRouteById(routeId);
+            return Ok(route);
 
+        }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
@@ -116,7 +125,26 @@ namespace ShareCar.Api.Controllers
             }
 
         }
+        //[HttpDelete]
+        //public async Task<IActionResult> Delete([FromBody] RideDto ride)
+        //{
+        //    var userDto = await _userRepository.GetLoggedInUser(User);
+        //    if (ride == null)
+        //    {
+        //        return BadRequest("Invalid parameter");
+                
+        //    }
+        //    //bool result = _rideLogic.DeleteRide(ride, userDto.Email);
+        //    /*if (result)
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Operation failed");
+        //    }*/
 
+        //}
         // Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)
