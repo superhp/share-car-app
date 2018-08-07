@@ -6,31 +6,15 @@ import "../styles/newRideForm.css";
 import addressParser from "../helpers/addressParser";
 import "../styles/genericStyles.css";
 import MapComponent from "./MapComponent";
+import { OfficeAddresses } from "./AddressData";
 
 var moment = require("moment");
 export class NewRideForm extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.child = React.createRef();
-
-        this.state = {
-            coordinates: [], // used to seelct exact point on a map
-            toViewCoordinates: [25.279652, 54.687157]// used to center map on user choosen location
-        }
-
-    }
-    updateCoordinates(value) {
-        this.setState({
-            coordinates: value
-        });
-
-    };
     state = {
-        startDate: null,
+        startDate: moment("2018-07-25", "YYYY-MM-DD").toDate(),
         addNewForm: false,
         addedStatus: false,
+        addedOfficeAddress: true,
         fromAddress: null,
         toAddress: null
     };
@@ -42,7 +26,23 @@ export class NewRideForm extends React.Component {
 
     componentDidMount() {
         if (!this.state.addNewForm) {
-            var d = new Date(this.props.drive.rideDateTime);
+            this.setState({
+                fromAddress: {
+                    number: this.props.drive.fromNumber,
+                    street: this.props.drive.fromStreet,
+                    city: this.props.drive.fromCity,
+                    country: this.props.drive.fromCountry
+                }
+            });
+            console.log("SDG");
+            this.setState({
+                toAddress: {
+                    number: this.props.drive.toNumber,
+                    street: this.props.drive.toStreet,
+                    city: this.props.drive.toCity,
+                    country: this.props.drive.toCountry
+                }
+            });
         }
         var places = require("places.js");
         var placesAutocompleteFrom = places({
@@ -58,11 +58,27 @@ export class NewRideForm extends React.Component {
                     number: addressParser(e.suggestion.name).number,
                     street: addressParser(e.suggestion.name).name,
                     city: e.suggestion.city,
-                    country: e.suggestion.country,
+                    country: e.suggestion.country
                 }
             });
-            this.child.current.centerMapParent(e.suggestion.latlng)
 
+            for (var i = 0; i < OfficeAddresses.length; i++) {
+                if (this.state.fromAddress.country === OfficeAddresses[i].country
+                    && this.state.fromAddress.city === OfficeAddresses[i].city
+                    && this.state.fromAddress.street === OfficeAddresses[i].street
+                    && this.state.fromAddress.number === OfficeAddresses[i].number
+                ) {
+                    this.setState({
+                        addedOfficeAddress: true
+                    })
+                    break;
+                }
+                else {
+                    this.setState({
+                        addedOfficeAddress: false
+                    })
+                }
+            }
         });
         placesAutocompleteTo.on("change", e => {
             this.setState({
@@ -73,9 +89,7 @@ export class NewRideForm extends React.Component {
                     country: e.suggestion.country
                 }
             });
-            this.child.current.centerMapParent(e.suggestion.latlng)
         });
-
     }
 
     handleChange(date) {
@@ -83,14 +97,10 @@ export class NewRideForm extends React.Component {
             startDate: moment(date, "YYYY-MM-DD").toDate()
         });
     }
-    updateCoordinates(value) {
-        this.setState({
-            coordinates: value
-        });
 
-    };
     handleSubmit(e) {
-        // e.preventDefault();
+        e.preventDefault();
+        console.log(this.state.fromAddress);
         let ride = {
             FromCountry: this.state.fromAddress.country,
             FromCity: this.state.fromAddress.city,
@@ -102,9 +112,20 @@ export class NewRideForm extends React.Component {
             ToNumber: this.state.toAddress.number,
             RideDateTime: this.state.startDate
         };
-        api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
-            this.setState({ addedStatus: true });
-        });
+
+        if (this.state.addNewForm) {
+            api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
+                console.log(ride);
+                this.setState({ addedStatus: true });
+            });
+        } else {
+            ride["RideId"] = this.props.drive.rideId;
+            ride["DriverEmail"] = this.props.drive.driverEmail;
+            console.log(ride);
+            api.put(`https://localhost:44360/api/Ride`, ride).then(res => {
+                this.setState({ addedStatus: true });
+            });
+        }
     }
 
     render() {
@@ -115,10 +136,7 @@ export class NewRideForm extends React.Component {
                 ) : (
                         ""
                     )}
-                <form
-                    className="newRideForm"
-                    onSubmit={this.state.addNewForm ? this.handleSubmit.bind(this) : ""}
-                >
+                <form className="newRideForm" onSubmit={this.handleSubmit.bind(this)}>
                     <div className="form-group">
                         <label>From:</label>
                         <input
@@ -126,31 +144,65 @@ export class NewRideForm extends React.Component {
                             class="form-group"
                             id="address-input-from"
                             placeholder="Select From Location..."
+                            defaultValue={
+                                !this.state.addNewForm
+                                    ? this.props.drive.fromNumber +
+                                    ", " +
+                                    this.props.drive.fromStreet +
+                                    ", " +
+                                    this.props.drive.fromCity +
+                                    ", " +
+                                    this.props.drive.fromCountry
+                                    : ""
+                            }
                         />
                     </div>
+
                     <div className="form-group">
                         <label>To:</label>
-                        <input
-                            type="search"
-                            class="form-group"
-                            id="address-input-to"
-                            placeholder="Select To Location..."
-                        />
+                        
+                                <div>
+                                    <input
+                                        type="search"
+                                        class="form-group"
+                                        id="address-input-to"
+                                        placeholder="Select To Location..."
+                                        defaultValue={
+                                            !this.state.addNewForm
+                                                ? this.props.drive.toNumber +
+                                                ", " +
+                                                this.props.drive.toStreet +
+                                                ", " +
+                                                this.props.drive.toCity +
+                                                ", " +
+                                                this.props.drive.toCountry
+                                                : ""
+                                        }
+
+                                    />
+                                <div/>
+
+                            }
+
+                        </div>
                     </div>
                     <div className="form-group">
                         <label>Date and Time:</label>
                         <DateTimePicker
+                            showLeadingZeros={true}
                             calendarClassName="dateTimePicker"
                             onChange={date => this.handleChange(date)}
                             value={this.state.startDate}
                             className="form-group"
                         />
                     </div>
-                    <button className="btn btn-primary btn-lg btn-block save-new-ride">
+                    <button
+                        type="submit"
+                        className="btn btn-primary btn-lg btn-block save-new-ride"
+                    >
                         Save
-                    </button>
+          </button>
                 </form>
-                <MapComponent ref={this.child} onUpdate={this.updateCoordinates.bind(this)} />
             </div>
         );
     }

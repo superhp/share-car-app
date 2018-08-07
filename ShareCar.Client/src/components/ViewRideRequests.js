@@ -12,41 +12,19 @@ export class ViewRideRequests extends React.Component {
     passengerRequests: []
   };
 
-
   componentWillMount() {
     this.props.driver
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
-  
-/*
+
+  /*
 getNames(email){
     api.get('Person/'+ email)
     .then((response) => {
         console.log("==========================");
         console.log(response);
-
-let data = {
-    FirstName: response.data.firstName,
-    LastName: response.data.lastName
-};
-
-const namesArray = this.state.names;
-
-namesArray.push(data);
-this.setState({names : namesArray});
-console.log('stststst');
-console.log(this.state.names);
-
-    })
-    .catch(function (error) {
-        console.error(error);
-    });
-};
-
-getAddresses(){
-
-}*/
+*/
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -55,24 +33,24 @@ getAddresses(){
         const d = response.data;
 
         this.setState({ passengerRequests: d });
-      }).then(() => {
+      })
+      .then(() => {
+        const unseenRequests = [];
 
-const unseenRequests = [];
+        console.log(this.state.passengerRequests.length);
 
-console.log(this.state.passengerRequests.length);
+        for (var i = 0; i < this.state.passengerRequests.length; i++) {
+          if (!this.state.passengerRequests[i].seenByPassenger) {
+            unseenRequests.push(this.state.passengerRequests[i].requestId);
+          }
+        }
 
-for(var i = 0; i < this.state.passengerRequests.length; i++){
-if(!this.state.passengerRequests[i].seenByPassenger){
-  unseenRequests.push(this.state.passengerRequests[i].requestId);
-}
-}
-
-console.log(unseenRequests);
-if(unseenRequests.length != 0){
-        api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
-          console.log(res);         
-        });
-      }
+        console.log(unseenRequests);
+        if (unseenRequests.length != 0) {
+          api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
+            console.log(res);
+          });
+        }
       })
       .catch(function(error) {
         console.error(error);
@@ -89,39 +67,40 @@ if(unseenRequests.length != 0){
         this.setState({ driverRequests: d });
 
         console.log(this.state.driverRequests);
-      }).then(() => {
-
+      })
+      .then(() => {
         const unseenRequests = [];
-        
-        for(var i = 0; i < this.state.driverRequests.length; i++){
-        if(!this.state.driverRequests[i].seenByDriver){
-          unseenRequests.push(this.state.driverRequests[i].requestId);
+
+        for (var i = 0; i < this.state.driverRequests.length; i++) {
+          if (!this.state.driverRequests[i].seenByDriver) {
+            unseenRequests.push(this.state.driverRequests[i].requestId);
+          }
         }
-        }
-        
+
         console.log(unseenRequests);
-        if(unseenRequests.length != 0){
-                api.post("RideRequest/seenDriver", unseenRequests).then(res => {
-                  console.log(res);         
-                });
-              }
-              })
-              .catch(function(error) {
-                console.error(error);
-              });
-            }
+        if (unseenRequests.length != 0) {
+          api.post("RideRequest/seenDriver", unseenRequests).then(res => {
+            console.log(res);
+          });
+        }
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  }
 
   render() {
     return (
       <div>
-        {this.props.driver ? 
-          <DriverRideRequestsList requests={this.state.driverRequests} />
-         : 
+        {this.props.driver ? (
+          <DriverRideRequestsList
+            selectedRide={this.props.selectedRide}
+            requests={this.state.driverRequests}
+          />
+        ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
-        }
-
-
+        )}
       </div>
     );
-  };
+  }
 }

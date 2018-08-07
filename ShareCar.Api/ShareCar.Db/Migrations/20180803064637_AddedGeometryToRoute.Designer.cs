@@ -3,15 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ShareCar.Db;
+using ShareCar.Db.Entities;
 using System;
 
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180803064637_AddedGeometryToRoute")]
+    partial class AddedGeometryToRoute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,8 +206,6 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("DriverEmail");
 
-                    b.Property<int>("NumberOfSeats");
-
                     b.Property<DateTime>("RideDateTime");
 
                     b.Property<int>("RouteId");
@@ -229,10 +231,6 @@ namespace ShareCar.Db.Migrations
                     b.HasKey("RouteId");
 
                     b.HasIndex("FromId");
-
-                    b.HasIndex("Geometry")
-                        .IsUnique()
-                        .HasFilter("[Geometry] IS NOT NULL");
 
                     b.HasIndex("ToId");
 

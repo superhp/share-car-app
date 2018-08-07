@@ -4,7 +4,9 @@ import api from "../helpers/axiosHelper";
 import "../styles/driversRidesList.css";
 import { Route, Link } from "react-router-dom";
 import NewRideForm from "./NewRideForm";
-import  "../styles/genericStyles.css";
+import PassengersList from "./PassengersList";
+import "../styles/genericStyles.css";
+import { ViewRideRequests } from "../components/ViewRideRequests";
 
 export class DriversRidesList extends React.Component<{}> {
   state = {
@@ -18,6 +20,11 @@ export class DriversRidesList extends React.Component<{}> {
     let detailedRideInfo = this.state.clicked ? (
       <div className="detailedInfoContainer">
         <h2 className="alert alert-info">Detailed information</h2>
+        <h2>Pending requests</h2>
+        <ViewRideRequests
+          driver={true}
+          selectedRide={this.state.selectedRideId}
+        />
         <NewRideForm
           drive={this.props.driversRides.find(
             x => x.rideId == this.state.selectedRideId
@@ -40,7 +47,6 @@ export class DriversRidesList extends React.Component<{}> {
               </tr>
             </thead>
             <tbody>
-
               {!this.state.clicked
                 ? this.props.driversRides.map((req, index) => (
                     <tr
@@ -80,13 +86,15 @@ export class DriversRidesList extends React.Component<{}> {
                         <td>{req.rideDateTime} </td>
                       </tr>
                     ))}
-
             </tbody>
           </table>
         </div>
         {!this.state.clicked ? (
           <Link to="/newRideForm">
-            <button type="button" className="btn btn-success btn-lg btn-block">
+            <button
+              type="button"
+              className="add-new-button btn btn-success btn-lg btn-block"
+            >
               Add new Ride
             </button>
           </Link>

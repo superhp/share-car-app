@@ -13,6 +13,8 @@ import UserProfile from "./components/UserProfile";
 import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
+import RideRequestForm from "./components/RideRequestForm";
+import test from "./components/TestMap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -20,15 +22,19 @@ import "./index.css";
 ReactDOM.render(
   <Router history={history}> 
     <Switch>
-      <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} />
+
       <Layout>
         <Route exact path="/" component={RoleSelection} />
         <Route path="/driver" component={Driver} />
+        <Route path="/test" component={test} />
         <Route path="/passenger" component={Passenger} />
         <Route path="/map" component={MapComponent} />
         <Route path="/profile" component={UserProfile} />
         <Route path="/rides" component={Rides} />
         <Route path="/newRideForm" component={NewRideForm} />
+        <Route path="/rideRequest" component={RideRequestForm} />
+
       </Layout>
     </Switch>
   </Router>,

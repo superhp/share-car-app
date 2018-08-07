@@ -27,7 +27,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
         {
-            _rideRequestRepository = defaultRepository;
+            _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -41,12 +41,22 @@ namespace ShareCar.Logic.RideRequest_Logic
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
-            string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
-            requestDto.DriverEmail = driverEmail;    
+            RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
+            requestDto.DriverEmail = rideDto.DriverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            return  _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));           
+            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
+            if (isCreated)
+            {
+                if (rideDto.Requests == null)
+                {
+                    rideDto.Requests = new List<RideRequestDto>();
+                }
+                rideDto.Requests.Add(requestDto);
+                return _rideLogic.UpdateRide(rideDto);
+            }
+            else return isCreated;
         }
 
         public bool UpdateRequest(RideRequestDto request)
@@ -84,14 +94,43 @@ namespace ShareCar.Logic.RideRequest_Logic
                 entityRequest = _rideRequestRepository.FindPassengerRequests(email);
             }
 
-                return await ConvertRequestsToDtoAsync(entityRequest, driver);
+               IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
+            return SortRequests(converted);
             }
         
+        
+        public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
+        {
+            List<RideRequestDto> sorted = new List<RideRequestDto>();
+
+            foreach(var request in requests)
+            {
+                if(!request.SeenByPassenger)
+                {
+                    sorted.Add(request);
+                }
+            }
+            foreach (var request in requests)
+            {
+                if (request.Status == Dto.Status.WAITING)
+                {
+                    sorted.Add(request);
+                }
+            }
+            foreach (var request in requests)
+            {
+                if (request.Status == Dto.Status.ACCEPTED && request.SeenByPassenger)
+                {
+                    sorted.Add(request);
+                }
+            }
+            return sorted;
+
+        }
 
         public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-
             int count = 0;
             foreach (var request in entityRequests)
             {

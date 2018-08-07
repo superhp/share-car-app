@@ -24,7 +24,9 @@ namespace ShareCar.Logic.Address_Logic
             {
                 City = address.City,
                 Street = address.Street,
-                Number = address.Number
+                Number = address.Number,
+                Longtitude = address.Longtitude,
+                Latitude = address.Latitude
             };
             
               return _addressRepository.AddNewAddress(entityAddress);

@@ -5,41 +5,15 @@
     margin: 10px;
     border-radius: 5px;
     width: 300px;
-} .generic-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: black;
-    margin: 10px;
-    border-radius: 5px;
-    width: 300px;
-    padding: 50px;
-}
-
-.generic-container-text {
-    margin: auto;
-    border-radius: 5px;
-    text-align: center;
-
-}
-.generic-container-input {
-    margin: auto;
-    border-radius: 5px;
-    text-align: center;
-
-}
-.generic-container-button {
-    margin: 5px;
-    border-radius: 5px;
 }
 .generic-text
 {
     color: white;
-    font-size: 14px; 
+    font-size: 150%; 
 }
 .generic-every-header {
-    margin-top: 30px;
+    margin-top: 10%;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 5%;
 }
   

@@ -1,8 +1,36 @@
+div.container {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 0 100%;
+  padding: none;
+  margin: none;
+  margin-top: 13%;
+  justify-content: space-around;
+}
+
 div.container form .form-group {
+  flex-wrap: wrap;
+  flex: 0 0 100%;
+}
+
+form {
+  background-color: rgb(118, 194, 238);
+  border-radius:  5%;
+  padding: 5%;
+  box-shadow: 0px 0px 10px blue;
+}
+div.react-datetime-picker__button {
+  display: relative;
+}
+div.react-datetime-picker {
   display: flex;
   flex-wrap: wrap;
 }
-
-div.container form .form-group .react-datetime-picker {
+div.react-datetime-picker .react-datetime-picker__button {
   flex: 0 0 100%;
+  background-color: antiquewhite;
+}
+div.react-datetime-picker input {
+  flex: 1;
+  color: black;
 }

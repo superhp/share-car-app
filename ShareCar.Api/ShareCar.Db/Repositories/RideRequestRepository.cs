@@ -31,7 +31,7 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status == Db.Entities.Status.WAITING));
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status != Status.DENIED));
         }
 
         public Request FindRequestById(int id)
