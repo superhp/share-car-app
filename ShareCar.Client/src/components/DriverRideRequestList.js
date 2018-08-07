@@ -2,6 +2,7 @@ import * as React from "react";
 import api from "../helpers/axiosHelper";
 import "../styles/riderequests.css";
 import MapComponent from "./MapComponent";
+import "../styles/genericStyles.css";
 export class DriverRideRequestsList extends React.Component {
   constructor(props) {
     super(props);
@@ -54,14 +55,14 @@ export class DriverRideRequestsList extends React.Component {
     return (
       <div className="table-responsive requestListTable">
         <table className="table table-bordered">
-          <thead>
+          <thead className="bg-primary">
             <tr>
-              <td>Hide Map</td>
-              <td>Status</td>
-              <td>Who</td>
-              <td>When</td>
-              <td>Where</td>
-              <td>Action</td>
+              <td className="generic-text">Hide Map</td>
+              <td className="generic-text">Status</td>
+              <td className="generic-text">Who</td>
+              <td className="generic-text">When</td>
+              <td className="generic-text">Where</td>
+              <td className="generic-text">Action</td>
             </tr>
           </thead>
           <tbody>
