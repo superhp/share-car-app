@@ -8,39 +8,37 @@ import history from "../helpers/history";
 import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
 import  RideCompletedNotification from "./RideCompletedNotification";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
 import "../styles/roleSelection.css";
 import "../styles/genericStyles.css";
+import api from "../helpers/axiosHelper";
 import Driver from "./Driver";
 
 class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
   authService = new AuthenticationService();
-// state: MyProfileState = { loading: true, user: null };
+
+  //state: MyProfileState = { loading: true, user: null };
   
-state = {
-    rideNotifications : ["gg","hh"],
+  state = {
+    rideNotifications : ["ff","Dd"],
     MyProfileState : { loading: true, user: null }
   }
 
 componentWillMount(){
-
-    //  api.get(`/Ride/checkFinished`).then(response => {
- //       console.log(response);
- //       this.setState({ rideNotifications: response.data });    
-   //   });
+  api.get(`/Ride/checkFinished`).then(response => {
+    console.log(response);
+    this.setState({ rideNotifications: response.data });    
+  
+  });
+console.log(this.state.rideNotifications);
 }
+
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
-
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
-      console.log("fffff");
-      console.log(user);
-    this.setState({MyProfileState :{ loading: false, user: user }});
-    console.log(this.state.MyProfileState);
+    this.setState({ loading: false, user: user });
   };
 
   logout = () => {
@@ -59,21 +57,22 @@ componentWillMount(){
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-        this.state.rideNotifications.length == 0 
-     
-     ?<div className="role-container">
-        <h1 className="role-text">Passenger</h1> 
-        <Link to="/passenger">
-          {" "}
-          <img className="role-image" src={passengerLogo} />
-        </Link>
-        <h1 className="role-text">Driver</h1>
+      this.state.rideNotifications.length == 0 
+     ?  <div className="role-container">
+         <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
           <img className="role-image" src={driverLogo} />
         </Link>
+        <h1 className="generic-every-header">Driver</h1>
+          
+        <Link to="/passenger">
+          {" "}
+          <img className="role-image" src={passengerLogo} />
+        </Link>
+        <h1 className="generic-every-header">Passenger</h1>
       </div>
-      : <RoleSelection rides = {this.state.rideNotifications}/>
+      :<RideCompletedNotification rides={this.state.rideNotifications}/>
     );
     return <div>{content}</div>;
   }
