@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShareCar.Db.Entities
@@ -9,6 +10,8 @@ namespace ShareCar.Db.Entities
         public int RideId { get; set; }
         public int RouteId { get; set; }
         public string DriverEmail { get; set; }
+        [DefaultValue(4)]
+        public int NumberOfSeats { get; set; }
         public List<Passenger> Passengers { get; set; }
         public DateTime RideDateTime { get; set; }
         [ForeignKey("RouteId")]
