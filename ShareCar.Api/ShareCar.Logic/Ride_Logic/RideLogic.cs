@@ -8,6 +8,8 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.RideRequest_Logic;
+using Microsoft.AspNetCore.Identity;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -16,16 +18,20 @@ namespace ShareCar.Logic.Ride_Logic
         private readonly IRideRepository _rideRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
+        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic, UserManager<User> userManager)
         {
+            _rideRequestLogic = rideRequestLogic;
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
             _addressRepository = addressRepository;
+            _userManager = userManager;
         }
 
         public RideDto FindRideById(int id)
@@ -233,6 +239,28 @@ namespace ShareCar.Logic.Ride_Logic
             {
                 ride.RouteId = routeId;
             }
+        }
+
+        public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
+        {
+            IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
+            List<RideDto> rides = new List<RideDto>();
+            DateTime hourAfterRide = new DateTime();
+            hourAfterRide.AddHours(1);
+            foreach (RideRequestDto request in requests)
+            {
+                Ride ride = _rideRepository.FindRideById(request.RideId);
+                if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
+                {
+
+                    var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+                    RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
+                    dtoRide.DriverFirstName = user.FirstName;
+                    dtoRide.DriverLastName = user.LastName;
+                    rides.Add(dtoRide);
+                }
+            }
+            return rides;
         }
     }
 }

@@ -32,6 +32,14 @@ namespace ShareCar.Api.Controllers
             return SendResponse(rides);
         }
 
+        [HttpGet("checkFinished")]
+        public async Task<IActionResult> CheckForFinishedRidesAsync()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
+            return Ok(rides);
+        }
+
         // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()

@@ -20,22 +20,27 @@ class RoleSelection extends Component<{}, MyProfileState> {
 // state: MyProfileState = { loading: true, user: null };
   
 state = {
-    rideNotifications : [],
+    rideNotifications : ["gg","hh"],
     MyProfileState : { loading: true, user: null }
   }
 
 componentWillMount(){
-  api.get(`/RideRequest/checkFinished`).then(response => {
-    console.log(response);
-    this.setState({ rideNotifications: response.data });    
-  });
+
+    //  api.get(`/Ride/checkFinished`).then(response => {
+ //       console.log(response);
+ //       this.setState({ rideNotifications: response.data });    
+   //   });
 }
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
+
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
-    this.setState({ loading: false, user: user });
+      console.log("fffff");
+      console.log(user);
+    this.setState({MyProfileState :{ loading: false, user: user }});
+    console.log(this.state.MyProfileState);
   };
 
   logout = () => {
