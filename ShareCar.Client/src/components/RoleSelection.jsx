@@ -20,21 +20,18 @@ class RoleSelection extends Component<{}, MyProfileState> {
   //state: MyProfileState = { loading: true, user: null };
   
   state = {
-    rideNotifications : ["ff","Dd"],
+    rideNotifications : [],
     MyProfileState : { loading: true, user: null }
   }
 
-componentWillMount(){
-  api.get(`/Ride/checkFinished`).then(response => {
-    console.log(response);
-    this.setState({ rideNotifications: response.data });    
-  
-  });
-console.log(this.state.rideNotifications);
-}
-
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
+    api.get(`/Ride/checkFinished`).then(response => {
+      console.log(response);
+      this.setState({ rideNotifications: response.data });    
+    
+    });
+  console.log(this.state.rideNotifications);
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
@@ -57,8 +54,13 @@ console.log(this.state.rideNotifications);
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
+      <div>
+{
       this.state.rideNotifications.length == 0 
-     ?  <div className="role-container">
+     ?<div></div>  
+     :<RideCompletedNotification rides={this.state.rideNotifications}/>
+}     
+     <div className="role-container">
          <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
@@ -72,7 +74,7 @@ console.log(this.state.rideNotifications);
         </Link>
         <h1 className="generic-every-header">Passenger</h1>
       </div>
-      :<RideCompletedNotification rides={this.state.rideNotifications}/>
+      </div>
     );
     return <div>{content}</div>;
   }

@@ -148,12 +148,7 @@ namespace ShareCar.Api.Controllers
 
         }
 
-        [HttpPost("rideCompleted")]
-        public IActionResult RideCompleted([FromBody] RideDto ride)
-        {
 
-            return Ok();
-        }
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
