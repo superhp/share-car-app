@@ -10,7 +10,10 @@
     "ol": "^5.1.3",
     "osm": "^1.0.0",
     "places.js": "^1.7.3",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
+    "react-alert": "^4.0.4",
+    "react-alert-template-basic": "^1.0.0",
     "react-bootstrap": "^0.32.1",
     "react-date-time-picker": "0.0.3",
     "react-datetime-picker": "^1.4.1",
@@ -20,6 +23,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-transition-group": "^2.4.0",
     "react-select-search": "^0.9.3"
   },
   "scripts": {
