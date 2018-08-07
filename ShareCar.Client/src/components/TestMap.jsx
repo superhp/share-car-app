@@ -27,8 +27,8 @@ export class test extends React.Component {
 var points = [];
     var msg_el = document.getElementById('msg'),
 
-    url_osrm_nearest = '//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/',
-    url_osrm_route = '//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/',
+    url_osrm_nearest = '//router.project-osrm.org/nearest/v1/driving/',
+    url_osrm_route = '//router.project-osrm.org/route/v1/driving/',
     icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
     vectorSource = new SourceVector(),
     vectorLayer = new LayerVector({
@@ -120,6 +120,7 @@ var utils = {
   },
   createRoute: function(polyline) {
     // route is ol.geom.LineString
+    console.log("create route - polyline " + polyline);
     var route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline, {

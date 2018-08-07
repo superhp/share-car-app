@@ -160,8 +160,7 @@ export class NewRideForm extends React.Component {
 
                     <div className="form-group">
                         <label>To:</label>
-                        <div>
-                            {this.state.addedOfficeAddress ?
+                        
                                 <div>
                                     <input
                                         type="search"
@@ -181,26 +180,7 @@ export class NewRideForm extends React.Component {
                                         }
 
                                     />
-
-                                </div> :
-                                <select type="search"
-                                    class="form-group"
-                                    id="address-input-to"
-                                    placeholder="Select To Location...">
-                                    defaultValue={
-                                        !this.state.addNewForm
-                                            ? this.props.drive.toNumber +
-                                            ", " +
-                                            this.props.drive.toStreet +
-                                            ", " +
-                                            this.props.drive.toCity +
-                                            ", " +
-                                            this.props.drive.toCountry
-                                            : ""}
-                                    <option
-
-                                    >{OfficeAddresses[0].number + ", " + OfficeAddresses[0].street + ", " + OfficeAddresses[0].city + ", " + OfficeAddresses[0].country}</option>
-                                </select>
+                                <div/>
 
                             }
 
