@@ -13,6 +13,7 @@ namespace ShareCar.Db.Entities
         [DefaultValue(4)]
         public int NumberOfSeats { get; set; }
         public List<Passenger> Passengers { get; set; }
+        public List<Request> Requests { get; set; }
         public DateTime RideDateTime { get; set; }
         [ForeignKey("RouteId")]
         public virtual Route Route { get; set; }

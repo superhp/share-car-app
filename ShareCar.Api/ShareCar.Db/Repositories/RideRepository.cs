@@ -79,6 +79,7 @@ namespace ShareCar.Db.Repositories
                 rideToUpdate.Route = ride.Route;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
                 rideToUpdate.Passengers = ride.Passengers;
+                rideToUpdate.Requests = ride.Requests;
 
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();

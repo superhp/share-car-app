@@ -21,9 +21,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper)
         {
-            _rideRequestRepository = defaultRepository;
+            _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -35,12 +35,22 @@ namespace ShareCar.Logic.RideRequest_Logic
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
-            string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
-            requestDto.DriverEmail = driverEmail;    
+            RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
+            requestDto.DriverEmail = rideDto.DriverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            return  _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));           
+            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
+            if (isCreated)
+            {
+                if (rideDto.Requests == null)
+                {
+                    rideDto.Requests = new List<RideRequestDto>();
+                }
+                rideDto.Requests.Add(requestDto);
+                return _rideLogic.UpdateRide(rideDto);
+            }
+            else return isCreated;
         }
 
         public bool UpdateRequest(RideRequestDto request)
