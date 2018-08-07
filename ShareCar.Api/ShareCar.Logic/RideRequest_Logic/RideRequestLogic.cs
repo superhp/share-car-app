@@ -25,7 +25,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
