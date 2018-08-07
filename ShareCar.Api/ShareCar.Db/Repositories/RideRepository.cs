@@ -74,14 +74,7 @@ namespace ShareCar.Db.Repositories
         {
             try
             {
-                var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
-                rideToUpdate.RouteId = ride.RouteId;
-                //rideToUpdate.Route = ride.Route;
-                rideToUpdate.RideDateTime = ride.RideDateTime;
-                rideToUpdate.Passengers = ride.Passengers;
-                rideToUpdate.Requests = ride.Requests;
-
-                _databaseContext.Rides.Update(rideToUpdate);
+                _databaseContext.Rides.Update(ride);
                 _databaseContext.SaveChanges();
                 return true;
             }

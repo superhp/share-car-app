@@ -17,7 +17,7 @@ namespace ShareCar.Logic.User_Logic
         private readonly IPassengerRepository _passengerRepository;
         private readonly IMapper _mapper;
 
-        public UserLogic(IUserRepository userRepository, IPassengerRepository passengerRepository IMapper mapper)
+        public UserLogic(IUserRepository userRepository, IPassengerRepository passengerRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _passengerRepository = passengerRepository;
