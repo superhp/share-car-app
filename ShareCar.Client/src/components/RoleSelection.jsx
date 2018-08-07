@@ -7,14 +7,30 @@ import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
 import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
+import  RideCompletedNotification from "./RideCompletedNotification";
 import "../styles/roleSelection.css";
 import "../styles/genericStyles.css";
+import axios from "axios";
+import api from "../helpers/axiosHelper";
 import Driver from "./Driver";
 
 class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
   authService = new AuthenticationService();
-  state: MyProfileState = { loading: true, user: null };
+
+ // state: MyProfileState = { loading: true, user: null };
+  
+  state = {
+    rideNotifications : [],
+    MyProfileState : { loading: true, user: null }
+  }
+
+componentWillMount(){
+  api.get(`/RideRequest/checkFinished`).then(response => {
+    console.log(response);
+    this.setState({ rideNotifications: response.data });    
+  });
+}
 
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
@@ -40,7 +56,8 @@ class RoleSelection extends Component<{}, MyProfileState> {
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-      <div className="role-container">
+      this.state.rideNotifications.length == 0 
+      ? <div className="role-container">
          <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
@@ -54,6 +71,8 @@ class RoleSelection extends Component<{}, MyProfileState> {
         </Link>
         <h1 className="generic-every-header">Passenger</h1>
       </div>
+      : <RideCompletedNotification rides = {this.state.rideNotifications}/>
+      
     );
     return <div>{content}</div>;
   }
