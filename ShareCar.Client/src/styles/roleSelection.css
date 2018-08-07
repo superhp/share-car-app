@@ -1,21 +1,29 @@
 .role-container {
     display: flex;
-    height: 120%;
-    margin-top: 5%;
-    margin-bottom: 20%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 10%;
+    margin-top: 10%;
 }
 .role-image {
     display: block;
     align-self:center;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
-    border-radius: 1%;
+    width: 50%;
+    height: auto;
+    margin: none;
+    margin-right: 25%;
+    margin-left: 25%;
+    margin-top: none;
+    margin-bottom: none;
 
 }
 .role-image:hover {
-    background-color:rgb(0, 68, 255);
+    background-color: rgb(118, 194, 238);
+}
+.role-text{
+    margin-top: 5%;
+    text-align: center;
 }

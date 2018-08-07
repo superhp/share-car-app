@@ -14,6 +14,7 @@ import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
 import RideRequestForm from "./components/RideRequestForm";
+import test from "./components/TestMap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -26,6 +27,7 @@ ReactDOM.render(
       <Layout>
         <Route exact path="/" component={RoleSelection} />
         <Route path="/driver" component={Driver} />
+        <Route path="/test" component={test} />
         <Route path="/passenger" component={Passenger} />
         <Route path="/map" component={MapComponent} />
         <Route path="/profile" component={UserProfile} />

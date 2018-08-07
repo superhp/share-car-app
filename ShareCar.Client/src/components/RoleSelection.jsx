@@ -41,18 +41,16 @@ class RoleSelection extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="role-container">
-         <h1 className="generic-every-header">Choose a role:</h1> 
-        <Link to="/driver">
-          {" "}
-          <img className="role-image" src={driverLogo} />
-        </Link>
-        <h1 className="generic-every-header">Driver</h1>
-          
+        <h1 className="role-text">Passenger</h1> 
         <Link to="/passenger">
           {" "}
           <img className="role-image" src={passengerLogo} />
         </Link>
-        <h1 className="generic-every-header">Passenger</h1>
+        <h1 className="role-text">Driver</h1>
+        <Link to="/driver">
+          {" "}
+          <img className="role-image" src={driverLogo} />
+        </Link>
       </div>
     );
     return <div>{content}</div>;

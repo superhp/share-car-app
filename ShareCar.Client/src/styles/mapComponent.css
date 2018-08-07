@@ -2,7 +2,7 @@ body {
   height: 100vh;
 }
 #map .ol-viewport {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   border: 2px solid black;
   margin-bottom: 100px;

@@ -8,6 +8,7 @@
     "bootstrap": "^4.1.3",
     "moment": "^2.22.2",
     "ol": "^5.1.3",
+    "osm": "^1.0.0",
     "places.js": "^1.7.3",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
