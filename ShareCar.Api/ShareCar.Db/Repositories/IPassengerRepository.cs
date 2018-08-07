@@ -7,5 +7,7 @@ namespace ShareCar.Db.Repositories
     public interface IPassengerRepository
     {
         int GetUsersPoints(string email);
+        bool AddNewPassenger(Passenger passenger);
+
     }
 }

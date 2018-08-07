@@ -7,6 +7,7 @@ using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories;
 using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.Passenger_Logic;
 
 namespace ShareCar.Logic.DI
 {
@@ -38,6 +39,8 @@ namespace ShareCar.Logic.DI
             services.AddSingleton<IUserLogic, UserLogic>();
             services.AddSingleton<IAddressRepository, AddressRepository>();
             services.AddSingleton<IAddressLogic, AddressLogic>();
+            services.AddSingleton<IPassengerLogic, PassengerLogic>();
+            services.AddSingleton<IPassengerRepository, PassengerRepository>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

@@ -102,7 +102,14 @@ namespace ShareCar.Logic.Ride_Logic
         }*/
         public bool UpdateRide(RideDto ride)
         {
-            bool addNewRide = true; 
+            //ride.Passengers = new List<PassengerDto>();
+            ride.Requests = new List<RideRequestDto>();
+
+            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
+            //  bool addNewRide = ValidateNewRide(); 
+
+            bool addNewRide = true; // Will be deleted once validation appears
+
             if (addNewRide)
             {
                 ParseExtraRideDtoData(ride);
