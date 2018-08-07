@@ -107,10 +107,20 @@ export class test extends React.Component {
             this.state.vectorSource.removeFeature(this.state.features.toFeature);
           }
           component.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
+        
+          this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
+            this.setInputFrom(e.display_name);
+          });
           utils.createFeature(coord_street, false);
+        
         }
         else {
           component.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
+         
+          this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
+            this.setInputTo(e.display_name);
+          });
+         
           utils.createFeature(coord_street, true);
 
         }
