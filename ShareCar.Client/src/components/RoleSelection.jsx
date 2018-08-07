@@ -25,15 +25,12 @@ class RoleSelection extends Component<{}, MyProfileState> {
     MyProfileState : { loading: true, user: null }
   }
 
-componentWillMount(){
-  api.get(`/RideRequest/checkFinished`).then(response => {
-    console.log(response);
-    this.setState({ rideNotifications: response.data });    
-  });
-}
-
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
+    api.get(`/Ride/checkFinished`).then(response => {
+      console.log(response);
+      this.setState({ rideNotifications: response.data });    
+    });
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
@@ -56,8 +53,13 @@ componentWillMount(){
     ) : this.state.user == null ? (
       <p>Failed</p>
     ) : (
+      <div>
+      {
       this.state.rideNotifications.length == 0 
-      ? <div className="role-container">
+      ?<div></div> 
+      : <RideCompletedNotification rides = {this.state.rideNotifications}/>
+      }
+      <div className="role-container">
          <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}
@@ -71,8 +73,7 @@ componentWillMount(){
         </Link>
         <h1 className="generic-every-header">Passenger</h1>
       </div>
-      : <RideCompletedNotification rides = {this.state.rideNotifications}/>
-      
+      </div>
     );
     return <div>{content}</div>;
   }

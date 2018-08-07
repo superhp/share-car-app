@@ -22,13 +22,108 @@ import {fromLonLat} from "ol/proj";
 
 export class test extends React.Component {
 
+state = {
+  points :[],
+  coordiantes : [],
+  route : "",
+  utils:"",
+  map :"",
+  accessToken : "ad45b0b60450a4",
+
+}
+
+coordinatesToLocation(latitude, longtitude){
+//https://eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=54.687195281637855&lon=25.27815111311289&format=json
+return new Promise(function(resolve, reject) {
+  //make sure the coord is on street
+  fetch('//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat='+latitude+'&lon='+longtitude+'&format=json'
+   ).then(function(response) { 
+    return response.json();
+  }).then(function(json) {
+  if (true/*json.code === 'Ok'*/) 
+    {
+      console.log('===================in promise');
+      console.log(json);
+    resolve(json);
+  }
+    else reject();
+
+  });
+});
+}
+
+  addressInputSuggestion(component, utils){
+var places = require("places.js");
+var placesAutocompleteFrom = places({
+  container: document.querySelector("#address-input-from")
+});
+var placesAutocompleteTo = places({
+  container: document.querySelector("#address-input-to")
+});
+placesAutocompleteFrom.on("change", (e) =>{
+  this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
+  this.add(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], component, '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/');
+});
+
+}
+CenterMap(long, lat, map) {
+
+  map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
+  map.getView().setZoom(19);
+}
+add(utils, evt, component, url_osrm_route){
+  
+console.log(evt);
+
+  utils.getNearest(evt/*.coordinate*/).then(function(coord_street){
+    var last_point = component.state.points[component.state.points.length - 1];
+    var points_length = component.state.points.push(coord_street);
+    utils.createFeature(coord_street);
+
+    if (points_length < 2) {
+   //   msg_el.innerHTML = 'Click to add another point';
+      return;
+    }
+
+    //get the route
+    var point1 = last_point.join();
+    var point2 = coord_street.join();
+    
+
+    fetch(url_osrm_route + point1 + ';' + point2).then(function(r) { 
+
+      return r.json();
+    }).then(function(json) {
+      if(json.code !== 'Ok') {
+     //   msg_el.innerHTML = 'No route found.';
+        return;
+      }
+    //  msg_el.innerHTML = 'Route added';
+      //points.length = 0;
+
+component.setState({coordiantes : [point1, point2], route : json.routes[0].geometry});
+
+
+
+      utils.createRoute(json.routes[0].geometry);
+    });
+  });
+}
+
+
+
     componentDidMount(){
-        
-var points = [];
+
+this.coordinatesToLocation(54.687195281637855,25.27815111311289).then(function(e){
+  console.log('===================out of promise');
+  console.log(e);
+});
+
+//var points = [];
     var msg_el = document.getElementById('msg'),
 
-    url_osrm_nearest = '//router.project-osrm.org/nearest/v1/driving/',
-    url_osrm_route = '//router.project-osrm.org/route/v1/driving/',
+    url_osrm_nearest = '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
+    url_osrm_route = '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
     icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
     vectorSource = new SourceVector(),
     vectorLayer = new LayerVector({
@@ -64,10 +159,22 @@ var map = new Map({
   })
 });
 
-map.on('click', function(evt){
-  utils.getNearest(evt.coordinate).then(function(coord_street){
-    var last_point = points[points.length - 1];
-    var points_length = points.push(coord_street);
+this.setState({map});
+
+this.CenterMap(25.279652, 54.687157, map);
+
+  var component = this;
+
+map.on('click', (evt) =>
+{
+   var coord4 = transform([
+    parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])
+  ], 'EPSG:3857', 'EPSG:4326');
+this.add(utils, coord4, component, url_osrm_route);
+} 
+/* utils.getNearest(evt.coordinate).then(function(coord_street){
+    var last_point = component.state.points[component.state.points.length - 1];
+    var points_length = component.state.points.push(coord_street);
 
     utils.createFeature(coord_street);
 
@@ -80,6 +187,7 @@ map.on('click', function(evt){
     var point1 = last_point.join();
     var point2 = coord_street.join();
     
+
     fetch(url_osrm_route + point1 + ';' + point2).then(function(r) { 
       return r.json();
     }).then(function(json) {
@@ -89,23 +197,31 @@ map.on('click', function(evt){
       }
       msg_el.innerHTML = 'Route added';
       //points.length = 0;
+
+component.setState({coordiantes : [point1, point2], route : json.routes[0].geometry});
+
+
+
       utils.createRoute(json.routes[0].geometry);
     });
-  });
-});
+  });*/
+);
 
 var utils = {
   getNearest: function(coord){
 
-    var coord4326 = utils.to4326(coord);    
-    console.log(coord4326);
+   // var coord4326 = utils.to4326(coord);    
+  var coord4326 = coord;
+   console.log(coord4326);
     return new Promise(function(resolve, reject) {
       //make sure the coord is on street
       fetch(url_osrm_nearest + coord4326.join()).then(function(response) { 
-        // Convert to JSON
         return response.json();
       }).then(function(json) {
-        if (json.code === 'Ok') resolve(json.waypoints[0].location);
+        if (json.code === 'Ok') 
+        {
+        resolve(json.waypoints[0].location);
+        }
         else reject();
       });
     });
@@ -140,12 +256,35 @@ var utils = {
     ], 'EPSG:3857', 'EPSG:4326');
   }
 };
+this.addressInputSuggestion(this, utils);
 }
 
 
 render() {
     return (
         <div>
+
+          <div className="form-group">
+            <label>From:</label>
+            <input
+              type="search"
+              class="form-group"
+              id="address-input-from"
+              placeholder="Select From Location..."
+                
+            />
+          </div>
+          <div className="form-group">
+            <label>To:</label>
+            <input
+              type="search"
+              class="form-group"
+              id="address-input-to"
+              placeholder="Select To Location..."
+            
+            />
+          </div>
+          <button>Save</button>
 
 <div id="map"></div>
 <div id="msg">Click to add a point.</div>
