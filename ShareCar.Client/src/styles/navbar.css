@@ -39,6 +39,7 @@ a.navBar-button button {
   justify-content: center;
   border: 1px solid white;
   border-radius: 0;
+  font-size: 1em;
 }
 .NavBar button:hover {
   background-color: white;

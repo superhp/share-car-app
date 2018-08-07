@@ -4,7 +4,6 @@
   color: black;
   margin: 10px;
   border-radius: 5px;
-  width: 300px;
 }
 
 .ride-requests-text {
@@ -25,4 +24,13 @@
 }
 div.requestListTable {
   display: flex;
+}
+div.requestListTable table {
+  display: flex;
+  flex-direction: column;
+}
+div.requestListTable table tbody tr td {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }

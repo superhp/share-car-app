@@ -8,31 +8,20 @@ export class DriverRideRequestsList extends React.Component {
 
     this.state = {
       coordinates: [],
-      show: true
+      show: false
     };
     this.child = React.createRef();
   }
 
-  sendRequestResponse(response, requestId) {
+  sendRequestResponse(response, requestId, rideId, driverEmail) {
+    console.log(rideId);
     let data = {
       RequestId: requestId,
-      Status: response
+      Status: response,
+      RideId: rideId,
+      DriverEmail: driverEmail
     };
-    console.log(data);
-
-    api.put(`http://localhost:5963/api/RideRequest`, data).then(res => {
-      console.log(res.data);
-    });
-  }
-
-  sendRequestResponse(response, requestId) {
-    let data = {
-      RequestId: requestId,
-      Status: response
-    };
-    console.log(data);
-
-    api.put(`http://localhost:5963/api/RideRequest`, data).then(res => {
+    api.put("https://localhost:44360/api/RideRequest", data).then(res => {
       console.log(res.data);
     });
   }
@@ -52,72 +41,76 @@ export class DriverRideRequestsList extends React.Component {
       );
     }
     return (
-      <div className="table-responsive requestListTable">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <td>Hide Map</td>
-              <td>Status</td>
-              <td>Who</td>
-              <td>When</td>
-              <td>Where</td>
-              <td>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {displayRequests.map(req => (
-              <tr key={req.id}>
-                <td>
-                  <button onClick={() => this.setState({ show: false })}>
-                    Hide map
-                  </button>
-                </td>
-                <td className="ride-request-text">
-                  {req.seenByDriver ? "" : "NEW"}
-                </td>
-                <td>
-                  {req.passengerFirstName} {req.passengerLastName}{" "}
-                </td>
-                <td>{req.rideDate} </td>
-                <td>
-                  {req.address}{" "}
-                  <button
-                    className="ride-request-button"
-                    onClick={function() {
-                      this.child.current.setPassengersPickUpPoint([
-                        req.longtitude,
-                        req.latitude
-                      ]);
-                      this.setState({ show: true });
-                    }}
-                  >
-                    Show on map
-                  </button>
-                </td>
-                <td>
-                  {" "}
-                  <button
-                    className="ride-request-button btn btn-success btn-sm"
-                    onClick={() => this.sendRequestResponse(1, req.requestId)}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="ride-request-button btn btn-danger btn-sm"
-                    onClick={() => this.sendRequestResponse(2, req.requestId)}
-                  >
-                    Deny
-                  </button>
-                </td>
+      <div>
+        {this.state.show ? (
+          <MapComponent
+            id="map"
+            coords={this.state.coordinates}
+            ref={this.child}
+            driver={true}
+          />
+        ) : (
+          ""
+        )}
+        <div className="table-responsive requestListTable">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <td>Pending Requests</td>
               </tr>
-            ))}
-            {this.state.show ? (
-              <MapComponent ref={this.child} driver={true} />
-            ) : (
-              <div />
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayRequests.map((req, index) => (
+                <tr key={req.id}>
+                  <td>
+                    <span className="badge-numbers badge badge-warning">
+                      #{index + 1} {req.passengerFirstName}{" "}
+                      {req.passengerLastName}
+                    </span>
+                  </td>
+                  <td>
+                    {req.address}{" "}
+                    <button
+                      className="ride-request-button btn btn-primary"
+                      onClick={() => {
+                        this.setState({ show: true });
+                        this.setState({
+                          coordinates: [req.longtitude, req.latitude]
+                        });
+
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      Show on map
+                    </button>{" "}
+                    <button
+                      className="ride-request-button btn btn-success btn-sm"
+                      onClick={() => {
+                        this.sendRequestResponse(
+                          1,
+                          req.requestId,
+                          req.rideId,
+                          req.driverEmail
+                        );
+                      }}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="ride-request-button btn btn-danger btn-sm"
+                      onClick={() => {
+                        this.sendRequestResponse(2, req.requestId, req.rideId);
+                        window.location.reload();
+                      }}
+                    >
+                      Deny
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

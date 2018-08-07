@@ -6,7 +6,9 @@ import { Route, Link } from "react-router-dom";
 import NewRideForm from "./NewRideForm";
 import PassengersList from "./PassengersList";
 import "../styles/genericStyles.css";
+import "../styles/driversRidesList.css";
 import { ViewRideRequests } from "../components/ViewRideRequests";
+var moment = require("moment");
 
 export class DriversRidesList extends React.Component<{}> {
   state = {
@@ -19,31 +21,21 @@ export class DriversRidesList extends React.Component<{}> {
   render() {
     let detailedRideInfo = this.state.clicked ? (
       <div className="detailedInfoContainer">
-        <h2 className="alert alert-info">Detailed information</h2>
-        <h2>Pending requests</h2>
         <ViewRideRequests
           driver={true}
           selectedRide={this.state.selectedRideId}
-        />
-        <NewRideForm
-          drive={this.props.driversRides.find(
-            x => x.rideId == this.state.selectedRideId
-          )}
         />
       </div>
     ) : (
       ""
     );
     return (
-      <div className="container">
-        {!this.state.clicked ? <h1>List of Rides</h1> : ""}
+      <div className="container-fluid">
         <div className="table-responsive">
           <table className="table table-bordered">
             <thead>
               <tr className="bg-primary">
-                <td className="generic-text"> From:</td>
-                <td className="generic-text">To:</td>
-                <td className="generic-text">Date Time</td>
+                <td className="generic-text"> My Rides:</td>
               </tr>
             </thead>
             <tbody>
@@ -56,14 +48,14 @@ export class DriversRidesList extends React.Component<{}> {
                       key={index}
                     >
                       <td>
-                        {req.fromCountry}, {req.fromCity}, {req.fromStreet},
-                        {req.fromNumber}
+                        {req.fromStreet} {req.fromNumber}, {req.fromCity}
                       </td>
                       <td>
-                        {req.toCountry}, {req.toCity}, {req.toStreet},{" "}
-                        {req.toNumber}
+                        {req.toStreet} {req.toNumber}, {req.toCity}
                       </td>
-                      <td>{req.rideDateTime} </td>
+                      <td>
+                        {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}{" "}
+                      </td>
                     </tr>
                   ))
                 : this.props.driversRides
@@ -76,14 +68,14 @@ export class DriversRidesList extends React.Component<{}> {
                         key={index}
                       >
                         <td>
-                          {req.fromCountry}, {req.fromCity}, {req.fromStreet},
-                          {req.fromNumber}
+                          {req.fromStreet} {req.fromNumber}, {req.fromCity}
                         </td>
                         <td>
-                          {req.toCountry}, {req.toCity}, {req.toStreet},{" "}
-                          {req.toNumber}
+                          {req.toStreet} {req.toNumber}, {req.toCity}
                         </td>
-                        <td>{req.rideDateTime} </td>
+                        <td>
+                          {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
+                        </td>
                       </tr>
                     ))}
             </tbody>
