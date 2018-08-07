@@ -30,6 +30,11 @@ export default class Driver extends Component<{}, MyProfileState> {
       <div className="role-container">
         <h1 className="role-container">Passenger Page</h1>
         <ViewRideRequests driver={false} />
+        <Link to="/rideRequest">
+          <button class="btn btn-large btn-primary btn-block">
+            New Request
+          </button>
+        </Link>
       </div>
     );
     return <div>{content}</div>;

@@ -1,15 +1,11 @@
-
 .container {
-
   margin-top: none;
-  
 }
 .container.profile-container {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 13%;
-  margin-top: none;
-  
+  justify-content: center;
+  margin-bottom: 50px;
+  margin-top: 10px;
 }
 .role-header {
   margin-top: 10%;
@@ -21,15 +17,16 @@
 input.edit-input {
   background-color: rgba(0, 255, 179, 0.89);
 }
-form.profile-form {
-  margin: 1em;
-  margin-bottom: 15%;
-}
-div.form-group {
+s div.form-group {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
-
+}
+div.form-group label {
+  font-weight: bold;
+}
+div.form-group input {
+  font-style: italic;
 }
 .profile-form button {
   width: 100%;

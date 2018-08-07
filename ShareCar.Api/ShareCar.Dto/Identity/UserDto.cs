@@ -9,5 +9,7 @@
         public string Email { get; set; }
         public string LicensePlate { get; set; }
         public string Phone { get; set; }
+        public string ConcurrencyStamp { get; set; }
+        public string SecurityStamp { get; set; }
     }
 }
