@@ -1,3 +1,6 @@
+.container {
+  margin-top: none;
+}
 .container.profile-container {
   display: flex;
   justify-content: center;
@@ -6,8 +9,8 @@
 }
 .role-header {
   margin-top: 10%;
-  text-align: center;
-  margin-bottom: 0px;
+  text-align: space-between;
+  margin-bottom: none;
   font-size: 350%;
 }
 

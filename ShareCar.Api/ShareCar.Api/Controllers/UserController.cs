@@ -11,12 +11,10 @@ namespace ShareCar.Api.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly Db.Repositories.IUserRepository _userRepository;
         private readonly IUserLogic _userLogic;
 
-        public UserController(Db.Repositories.IUserRepository userRepository, IUserLogic userLogic)
+        public UserController(IUserLogic userLogic)
         {
-            _userRepository = userRepository;
             _userLogic = userLogic;
         }
 
@@ -24,7 +22,12 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var userDto = await _userLogic.GetUserAsync(User);
-            return Ok(userDto);
+            int points = _userLogic.CountPoints(userDto.Email);
+            return Ok(new
+            {
+                user = userDto,
+                pointCount = points
+            });
         }
 
         [HttpPost]

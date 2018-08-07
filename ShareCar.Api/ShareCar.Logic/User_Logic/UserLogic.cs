@@ -12,10 +12,12 @@ namespace ShareCar.Logic.User_Logic
     public class UserLogic : IUserLogic
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPassengerRepository _passengerRepository;
 
-        public UserLogic(IUserRepository userRepository)
+        public UserLogic(IUserRepository userRepository, IPassengerRepository passengerRepository)
         {
             _userRepository = userRepository;
+            _passengerRepository = passengerRepository;
         }
 
         public async Task<UserDto> GetUserAsync(ClaimsPrincipal principal)
@@ -44,6 +46,12 @@ namespace ShareCar.Logic.User_Logic
                 await Task.Run(() => _userRepository.UpdateUserAsync(_user));
             }
 
+        }
+
+        public int CountPoints(string email)
+        {
+            int points = _passengerRepository.GetUsersPoints(email);
+            return points;
         }
     }
 }

@@ -21,9 +21,6 @@ export class PassengerRideRequestsList extends React.Component {
 
                     )
                 }
-
-
-
             </tbody>
         );
     }

@@ -8,5 +8,6 @@ namespace ShareCar.Logic.User_Logic
     {
         Task<UserDto> GetUserAsync(ClaimsPrincipal principal);
         void UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User);
+        int CountPoints(string email);
     }
 }

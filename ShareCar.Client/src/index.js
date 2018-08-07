@@ -16,6 +16,7 @@ import NewRideForm from "./components/NewRideForm";
 import RideRequestForm from "./components/RideRequestForm";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+import test from "./components/TestMap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";

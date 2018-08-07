@@ -2,6 +2,7 @@ import * as React from "react";
 import api from "../helpers/axiosHelper";
 import "../styles/riderequests.css";
 import MapComponent from "./MapComponent";
+import "../styles/genericStyles.css";
 export class DriverRideRequestsList extends React.Component {
   constructor(props) {
     super(props);

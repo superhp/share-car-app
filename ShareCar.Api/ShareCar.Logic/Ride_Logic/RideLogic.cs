@@ -102,14 +102,7 @@ namespace ShareCar.Logic.Ride_Logic
         }*/
         public bool UpdateRide(RideDto ride)
         {
-            ride.Passengers = new List<PassengerDto>();
-            ride.Requests = new List<RideRequestDto>();
-
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
-
-            bool addNewRide = true; // Will be deleted once validation appears
-
+            bool addNewRide = true; 
             if (addNewRide)
             {
                 ParseExtraRideDtoData(ride);
@@ -210,29 +203,38 @@ namespace ShareCar.Logic.Ride_Logic
                 Number = ride.ToNumber
             };
             //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-            RouteDto route = new RouteDto();
-            route.FromId = _addressLogic.GetAddressId(fromAddress);
-            route.ToId = _addressLogic.GetAddressId(toAddress);
-            if (route.FromId == -1)
+           
+            if(fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                RouteDto route = new RouteDto();
                 route.FromId = _addressLogic.GetAddressId(fromAddress);
-            }
-            if (route.ToId == -1)
-            {
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
                 route.ToId = _addressLogic.GetAddressId(toAddress);
+                if (route.FromId == -1)
+                {
+                    if(fromAddress.Street!=null && fromAddress.Number!=null)
+                    {
+                        _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                    }
+                
+                    route.FromId = _addressLogic.GetAddressId(fromAddress);
+                }
+                if (route.ToId == -1)
+                {
+                    _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+                    route.ToId = _addressLogic.GetAddressId(toAddress);
+                }
+                int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                if (routeId == -1)
+                {
+                    _routeLogic.AddRoute(route);
+                    ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                }
+                else
+                {
+                    ride.RouteId = routeId;
+                }
             }
-            int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
-            if (routeId == -1)
-            {
-                _routeLogic.AddRoute(route);
-                ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
-            }
-            else
-            {
-                ride.RouteId = routeId;
-            }
+            
         }
     }
 }
