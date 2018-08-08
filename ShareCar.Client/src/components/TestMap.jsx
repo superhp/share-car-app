@@ -28,6 +28,7 @@ export class test extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
+    pickUpPoint:[],
     route: "",
     utils: "",
     map: "",
@@ -47,7 +48,8 @@ export class test extends React.Component {
     passengerRoutes: [],
     style: "",
     url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
-    url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
+    url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
+    driver : true // will be passed by props
   }
 
 showRoutes(){
@@ -89,7 +91,8 @@ showRoutes(){
   createFeature(coord, fromFeature) { // fromFeature param indicates which feature is added - start point or destination
     var feature = new Feature({
       type: 'place',
-      geometry: new Point(fromLonLat(coord))
+      geometry: new Point(fromLonLat(coord)),
+      onClick:console.log('clicked')
     });
     feature.setStyle(this.state.styles.icon);
 
@@ -100,6 +103,23 @@ showRoutes(){
     else
       this.setState({ features: { startPointFeature: this.state.features.startPointFeature, destinationFeature: feature } });
     console.log(this.state.features);
+
+  }
+
+  setPassengersPickUpPoint(val) {
+
+    this.CenterMap(val[0], val[1], this.state.map);
+    var xy = [];
+    xy = transform(val, 'EPSG:4326', 'EPSG:3857');
+    console.log(xy);
+    var vectorSource = this.state.Vector;
+
+    var feature = new Feature(
+      new Point(xy)
+    );
+
+    vectorSource.clear();
+    vectorSource.addFeature(feature);
 
   }
 
@@ -142,21 +162,51 @@ showRoutes(){
   }
 
   setInputFrom(value) {
-    var inputField = document.querySelector("#address-input-from");
+    var inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
     this.state.route.fromAddress = value;
 
   }
 
   setInputTo(value) {
-    var inputField = document.querySelector("#address-input-to");
+    var inputField = document.querySelector("#driver-address-input-to");
     inputField.value = value;
     this.state.route.toAddress = value;
   }
 
-  addressInputSuggestion() {
+  driverAddressInputSuggestion() {
     var places = require("places.js");
 
+
+    var placesAutocompleteFrom = places({
+      container: document.querySelector("#driver-address-input-from")
+    });
+
+    var placesAutocompleteTo = places({
+      container: document.querySelector("#driver-address-input-to")
+    });
+
+
+
+    placesAutocompleteFrom.on("change", (e) => {
+      this.setState({ startPointInput: true });
+      this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
+      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+    });
+
+    placesAutocompleteTo.on("change", (e) => {
+      this.setState({ startPointInput: false });
+      this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
+      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+    });
+
+
+  }
+
+  passengerAddressInputSuggestion() {
+ /*   var places = require("places.js");
+
+    
     var placesAutocompleteFrom = places({
       container: document.querySelector("#address-input-from")
     });
@@ -179,7 +229,7 @@ showRoutes(){
       this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
-
+*/
   }
 
   CenterMap(long, lat, map) {
@@ -259,10 +309,9 @@ showRoutes(){
         return;
       }
 
-      //get the route
 
-      var point1 = this.state.coordinates.firstPoint;//last_point.join();
-      var point2 = this.state.coordinates.lastPoint;//coord_street.join();
+      var point1 = this.state.coordinates.firstPoint;
+      var point2 = this.state.coordinates.lastPoint;
 
       console.log(this.state.vectorSource.getFeatures());
       console.log(this.state.features);
@@ -321,46 +370,86 @@ showRoutes(){
     this.CenterMap(25.279652, 54.687157, map);
 
     map.on('click', (evt) => {
+      if(this.state.driver){
       var coord4326 = transform([
         parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])
       ], 'EPSG:3857', 'EPSG:4326');
       this.addRoutePoint(coord4326, true);
     }
+  
+  else{
+    var feature = new Feature(
+      new Point(evt.coordinate)
     );
+    var lonlat = [];
+    lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
+    this.setState({ pickUpPoint: lonlat });
 
-    this.addressInputSuggestion();
+    this.state.vectorSource.clear();
+    this.state.vectorSource.addFeature(feature);
   }
+    });
+if(this.state.driver){
+this.driverAddressInputSuggestion();
+}
+else{
+  this.passengerAddressInputSuggestion();
+}  
+}
 
 
   render() {
     return (
       <div>
+{
+  this.state.driver
 
-        <div className="form-group">
+ ?<div>  
+ <div className="form-group">
+        
           <label>From:</label>
+        
           <input
             type="search"
             class="form-group"
-            id="address-input-from"
+            id="_driver-address-input-from"
             placeholder="Select From Location..."
           />
         </div>
+
         <div className="form-group">
           <label>To:</label>
           <input
             type="search"
             class="form-group"
-            id="address-input-to"
+            id="driver-address-input-to"
             placeholder="Select To Location..."
 
           />
         </div>
+        
         <button onClick={() => { this.saveRide() }}>Save</button>
-        <button onClick={() => { this.showRoutes() }}>show</button>
+        </div>     
+        : <div>
+     
+     <div className="form-group">
+          <label>Destination:</label>
+          <input
+            type="search"
+            class="form-group"
+            id="passenger-address-input-to"
+            placeholder="Select destination..."
 
+          />
+        </div>
+
+          <button onClick={() => { this.showRoutes() }}>Show routes</button>
+     
+          </div>
+}
         <div id="map"></div>
-        <div id="msg">Click to add a point.</div>
+
 
 
       </div>
