@@ -17,6 +17,7 @@ namespace ShareCar.Logic.Ride_Logic
         bool DoesUserBelongsToRide(string email, int rideId);
        // Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(RideDto ride);
+        bool DeleteRide(RideDto ride);
         bool AddRide(RideDto ride, string email);
         IEnumerable<RideDto> FindSimilarRides(int rideId);
 

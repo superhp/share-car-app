@@ -47,17 +47,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             requestDto.AddressId = addressId;
             var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
-            if (rideDto.Requests == null)
-            {
-                rideDto.Requests = new List<RideRequestDto>();
-            }
-            rideDto.Requests.Add(requestDto);
-           
-            if (isCreated)
-            {
-                return _rideLogic.UpdateRide(rideDto);
-            }
-            else return isCreated;
+            return isCreated;
         }
 
         public bool UpdateRequest(RideRequestDto request)
