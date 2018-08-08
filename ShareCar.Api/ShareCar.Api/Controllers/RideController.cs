@@ -25,6 +25,13 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
         }
 
+        [HttpGet("routes")]
+        public IActionResult GetRoutes()
+        {
+            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes();
+            return Ok(routes);
+        }
+
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
@@ -137,7 +144,6 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest("Operation failed");
             }
-
         }
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)

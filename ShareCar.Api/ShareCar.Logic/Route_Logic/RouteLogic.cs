@@ -43,5 +43,16 @@ namespace ShareCar.Logic.Route_Logic
             _routeRepository.AddRoute(entityRoute);
             return true;
         }
+
+        public IEnumerable<RouteDto> GetAllRoutes()
+        {
+            IEnumerable<Route> entityRoutes = _routeRepository.GetAllRoutes();
+            List<RouteDto> dtoRoutes = new List<RouteDto>();
+            foreach(var route in entityRoutes)
+            {
+                dtoRoutes.Add(_mapper.Map<Route, RouteDto>(route));
+            }
+            return dtoRoutes;
+        }
     }
 }

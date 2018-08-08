@@ -39,11 +39,30 @@ export class test extends React.Component {
       destinationFeature: ""
     },
     routeFeature:"",
+    route:{
+     fromAddress: "",
+     toAddress:"",
+     routeGeometry:""
+    },
+    passengerRoutes:[],
     url_osrm_nearest : '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
     url_osrm_route : '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
   }
 
 saveRide(){
+  var newRoute = {
+    FromAddress: this.state.route.fromAddress,
+    ToAddress:this.state.route.toAddress,
+    RouteGeometry:this.state.route.routeGeometry
+  }
+console.log(newRoute);
+  api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
+
+this.setState({passengerRoutes : res.data});
+
+console.log(this.state.passengerRoutes[0].geometry);
+
+});
 
 }
 
@@ -61,11 +80,14 @@ saveRide(){
   setInputFrom(value) {
     var inputField = document.querySelector("#address-input-from");
     inputField.value = value;
+    this.state.route.fromAddress = value;
+
   }
 
   setInputTo(value) {
     var inputField = document.querySelector("#address-input-to");
     inputField.value = value;
+    this.state.route.toAddress = value;
   }
 
   addressInputSuggestion(utils) {
@@ -84,7 +106,8 @@ saveRide(){
     placesAutocompleteFrom.on("change", (e) => {
       this.setState({startPointInput : true});
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+     console.log(placesAutocompleteFrom.value); 
+     this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
     placesAutocompleteTo.on("change", (e) => {
@@ -264,6 +287,7 @@ console.log(this.state.features);
 
       },
       createRoute: (polyline)=> {
+        this.state.route.routeGeometry = polyline;
         var route = new Polyline({
           factor: 1e5
         }).readGeometry(polyline, {
@@ -287,6 +311,7 @@ this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old ro
         ], 'EPSG:3857', 'EPSG:4326');
       }
     };
+    
     this.addressInputSuggestion(utils);
   }
 
@@ -314,7 +339,7 @@ this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old ro
 
           />
         </div>
-        <button onClick={this.saveRide()}>Save</button>
+        <button onClick={() =>{this.saveRide()}}>Save</button>
 
         <div id="map"></div>
         <div id="msg">Click to add a point.</div>

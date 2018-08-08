@@ -48,5 +48,10 @@ namespace ShareCar.Db.Repositories
                 return false;
             }
         }
+
+        public IEnumerable<Route> GetAllRoutes()
+        {
+            return _databaseContext.Routes;
+        }
     }
 }
