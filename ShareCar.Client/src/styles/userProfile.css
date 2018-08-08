@@ -24,7 +24,8 @@ div.form-group label {
   font-weight: bold;
 }
 .form-header{
-  font-size: 130%;
+  font-size: 15px;
+  color: grey;
 }
 div.form-group input {
   font-style: italic;
