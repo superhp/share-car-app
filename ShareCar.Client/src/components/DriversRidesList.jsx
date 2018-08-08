@@ -35,7 +35,7 @@ export class DriversRidesList extends React.Component<{}> {
           <table className="table table-bordered">
             <thead>
               <tr className="bg-primary">
-                <td className="generic-text"> My Rides:</td>
+                <td className="generic-text"> My Rides</td>
               </tr>
             </thead>
             <tbody>
