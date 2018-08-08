@@ -69,18 +69,27 @@ export class test extends React.Component {
 
   addressInputSuggestion(component, utils) {
     var places = require("places.js");
+  
     var placesAutocompleteFrom = places({
       container: document.querySelector("#address-input-from")
     });
+
     var placesAutocompleteTo = places({
       container: document.querySelector("#address-input-to")
     });
+
+
+
     placesAutocompleteFrom.on("change", (e) => {
+      this.setState({fromInput : true});
+      console.log("state----  " + this.state.fromInput)
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
       this.setState({ fromInput: true });
       this.add(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], component, '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/', false);
     });
-    placesAutocompleteFrom.on("change", (e) => {
+
+    placesAutocompleteTo.on("change", (e) => {
+      this.setState({fromInput : false});
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
       this.setState({ fromInput: false });
       this.add(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], component, '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/', false);
@@ -95,7 +104,7 @@ export class test extends React.Component {
   }
   add(utils, evt, component, url_osrm_route, clickedOnMap) {
 
-    console.log(evt);
+    console.log("clicked ===  " + clickedOnMap);
 
     utils.getNearest(evt/*.coordinate*/).then((coord_street) => {
       var last_point = component.state.points[component.state.points.length - 1];
@@ -109,16 +118,17 @@ export class test extends React.Component {
           component.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
         
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-            this.setInputFrom(e.display_name);
+            this.setInputTo(e.display_name);
           });
           utils.createFeature(coord_street, false);
         
         }
         else {
+          
           component.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
          
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-            this.setInputTo(e.display_name);
+            this.setInputFrom(e.display_name);
           });
          
           utils.createFeature(coord_street, true);
@@ -127,61 +137,37 @@ export class test extends React.Component {
 
       }
       else if (this.state.fromInput) {
+        console.log("from input   " + this.state.fromInput);
         if (this.state.features.fromFeature) {
           this.state.vectorSource.removeFeature(this.state.features.fromFeature)
         }
-
         component.setState({ coordinates: { firstPoint: coord_street, lastPoint: this.state.coordinates.lastPoint } });
 
 
         utils.createFeature(coord_street, true);
+console.log("from feature   " + this.state.features);
 
       }
       else {
+        console.log("to input   " + this.state.fromInput);
         if (this.state.features.toFeature) {
 
           this.state.vectorSource.removeFeature(this.state.features.toFeature)
         }
+
         component.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
 
         utils.createFeature(coord_street, false);
+        console.log("to feature   " + this.state.toFeature);
+
 
       }
 
 
-      /*
-      if(this.state.coordinates.firstPoint.length == 0 && this.state.coordinates.lastPoint.length == 0)
-      {
-        if(clickedOnMap){
-        component.setState({coordinates : {firstPoint: coord_street,lastPoint:[]}});
-        this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-          this.setInputFrom(e.display_name);
-        });
-      
-      }
-      else if(this.state.fromInput){
-        component.setState({coordinates : {firstPoint: coord_street,lastPoint:[]}});
-      }
-      else{
-        component.setState({coordinates : {firstPoint: this.state.coordinates.firstPoint,lastPoint:coord_street}});
-      }
-      return;
-      }*/
 
       if (points_length < 2) {
         return;
       }
-
-      /*
-     component.setState({coordinates : {firstPoint: this.state.firstPoint,lastPoint:coord_street}});
-     this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-       this.setInputTo(e.display_name);
-     });
-     
-     if(clickedOnMap){
-     
-     }*/
-
 
       //get the route
 
@@ -267,44 +253,9 @@ export class test extends React.Component {
 
       var location;
 
-
-
-
       this.add(utils, coord4, component, url_osrm_route, true);
     }
-      /* utils.getNearest(evt.coordinate).then(function(coord_street){
-          var last_point = component.state.points[component.state.points.length - 1];
-          var points_length = component.state.points.push(coord_street);
-      
-          utils.createFeature(coord_street);
-      
-          if (points_length < 2) {
-            msg_el.innerHTML = 'Click to add another point';
-            return;
-          }
-      
-          //get the route
-          var point1 = last_point.join();
-          var point2 = coord_street.join();
-          
-      
-          fetch(url_osrm_route + point1 + ';' + point2).then(function(r) { 
-            return r.json();
-          }).then(function(json) {
-            if(json.code !== 'Ok') {
-              msg_el.innerHTML = 'No route found.';
-              return;
-            }
-            msg_el.innerHTML = 'Route added';
-            //points.length = 0;
-      
-      component.setState({coordiantes : [point1, point2], route : json.routes[0].geometry});
-      
-      
-      
-            utils.createRoute(json.routes[0].geometry);
-          });
-        });*/
+
     );
 
     var utils = {
@@ -334,6 +285,8 @@ export class test extends React.Component {
         feature.setStyle(styles.icon);
 
         vectorSource.addFeature(feature);
+
+console.log("In vector from feature   " + fromFeature);
 
         if (fromFeature)
           this.setState({ features: { fromFeature: feature, toFeature: this.state.features.toFeature } });
@@ -382,7 +335,6 @@ this.state.vectorSource.removeFeature(this.state.routeFeature)
             class="form-group"
             id="address-input-from"
             placeholder="Select From Location..."
-
           />
         </div>
         <div className="form-group">
