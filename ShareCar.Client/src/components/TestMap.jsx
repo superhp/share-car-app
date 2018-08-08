@@ -50,21 +50,26 @@ export class test extends React.Component {
     url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
   }
 
+showRoutes(){
+    api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
+
+      this.setState({ passengerRoutes: res.data });
+      this.state.passengerRoutes.forEach((element)=> {
+        console.log(element.geometry);
+      });
+            console.log(this.state.passengerRoutes[0].geometry);
+      this.createRoute(this.state.passengerRoutes[0].geometry);
+    });
+
+}
+
   saveRide() {
     var newRoute = {
       FromAddress: this.state.route.fromAddress,
       ToAddress: this.state.route.toAddress,
       RouteGeometry: this.state.route.routeGeometry
     }
-    console.log(newRoute);
-    api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
-
-      this.setState({ passengerRoutes: res.data });
-
-      console.log(this.state.passengerRoutes[0].geometry);
-      this.createRoute(this.state.passengerRoutes[0].geometry);
-    });
-
+   // other stuff not implemented
   }
 
   getNearest(coord) {
@@ -352,6 +357,7 @@ export class test extends React.Component {
           />
         </div>
         <button onClick={() => { this.saveRide() }}>Save</button>
+        <button onClick={() => { this.showRoutes() }}>show</button>
 
         <div id="map"></div>
         <div id="msg">Click to add a point.</div>
