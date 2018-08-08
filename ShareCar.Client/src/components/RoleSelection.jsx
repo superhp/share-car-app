@@ -13,6 +13,7 @@ import api from "../helpers/axiosHelper";
 import "../styles/roleSelection.css";
 import "../styles/genericStyles.css";
 import Driver from "./Driver";
+import RoleContext from "../helpers/roles";
 
 class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -22,13 +23,14 @@ class RoleSelection extends Component<{}, MyProfileState> {
 state = {
     rideNotifications : [],
     MyProfileState : { loading: true, user: null }
-  }
+  } // arba kintamasis arba turi buti perkeltas
 
 componentWillMount(){
   api.get(`/RideRequest/checkFinished`).then(response => {
     console.log(response);
     this.setState({ rideNotifications: response.data });    
-  });
+  }
+  );
 }
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
@@ -51,25 +53,27 @@ componentWillMount(){
       <p>
         <em>Loading..</em>
       </p>
-    ) : this.state.user == null ? (
-      <p>Failed</p>
-    ) : (
+    ) 
+    : this.state.user == null ? (
+        <p>
+        Failed
+        </p>
+    ) 
+    : (
         this.state.rideNotifications.length == 0 
      
-     ?<div className="role-container">
-        <h1 className="role-text">Passenger</h1> 
-        <Link to="/passenger">
-          {" "}
-          <img className="role-image" src={passengerLogo} />
-        </Link>
-        <h1 className="role-text">Driver</h1>
-        <Link to="/driver">
-          {" "}
-          <img className="role-image" src={driverLogo} />
-        </Link>
-      </div>
+          ?<div className="role-container">
+            <h2 className="role-text">Passenger</h2> 
+            <Link to="/passenger">
+              <img className="role-image" src={passengerLogo} />
+            </Link>
+            <h2 className="role-text">Driver</h2>
+            <Link to="/driver">
+              <img className="role-image" src={driverLogo} />
+            </Link>
+          </div>
       : <RoleSelection rides = {this.state.rideNotifications}/>
-    );
+      );
     return <div>{content}</div>;
   }
 }
