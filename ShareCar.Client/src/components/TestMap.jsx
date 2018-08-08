@@ -23,7 +23,7 @@ import { fromLonLat } from "ol/proj";
 export class test extends React.Component {
 
   state = {
-    points: [],
+    points: 0,
     coordinates: {
       firstPoint: [],
       lastPoint: []
@@ -35,36 +35,94 @@ export class test extends React.Component {
     vectorSource: "",
     startPointInput: false,// If marker on a map was added by writing an address, it should be known if it was From or To input field
     features: { // markers on a map
-      startPointFeature: "", 
+      startPointFeature: "",
       destinationFeature: ""
     },
-    routeFeature:"",
-    route:{
-     fromAddress: "",
-     toAddress:"",
-     routeGeometry:""
+    routeFeature: "",
+    route: {
+      fromAddress: "",
+      toAddress: "",
+      routeGeometry: ""
     },
-    passengerRoutes:[],
-    url_osrm_nearest : '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
-    url_osrm_route : '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
+    passengerRoutes: [],
+    style: "",
+    url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
+    url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
   }
 
-saveRide(){
-  var newRoute = {
-    FromAddress: this.state.route.fromAddress,
-    ToAddress:this.state.route.toAddress,
-    RouteGeometry:this.state.route.routeGeometry
+  saveRide() {
+    var newRoute = {
+      FromAddress: this.state.route.fromAddress,
+      ToAddress: this.state.route.toAddress,
+      RouteGeometry: this.state.route.routeGeometry
+    }
+    console.log(newRoute);
+    api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
+
+      this.setState({ passengerRoutes: res.data });
+
+      console.log(this.state.passengerRoutes[0].geometry);
+      this.createRoute(this.state.passengerRoutes[0].geometry);
+    });
+
   }
-console.log(newRoute);
-  api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
 
-this.setState({passengerRoutes : res.data});
+  getNearest(coord) {
+    return new Promise((resolve, reject) => {
+      //make sure the coord is on street
+      fetch(this.state.url_osrm_nearest + coord.join()).then((response) => {
+        return response.json();
+      }).then(function (json) {
+        if (json.code === 'Ok') {
+          resolve(json.waypoints[0].location);
+        }
+        else reject();
+      });
+    });
+  }
 
-console.log(this.state.passengerRoutes[0].geometry);
+  createFeature(coord, fromFeature) { // fromFeature param indicates which feature is added - start point or destination
+    var feature = new Feature({
+      type: 'place',
+      geometry: new Point(fromLonLat(coord))
+    });
+    feature.setStyle(this.state.styles.icon);
 
-});
+    this.state.vectorSource.addFeature(feature);
+    console.log(fromFeature);
+    if (fromFeature)
+      this.setState({ features: { startPointFeature: feature, destinationFeature: this.state.features.destinationFeature } });
+    else
+      this.setState({ features: { startPointFeature: this.state.features.startPointFeature, destinationFeature: feature } });
+    console.log(this.state.features);
 
-}
+  }
+
+  createRoute(polyline) {
+    this.state.route.routeGeometry = polyline;
+    var route = new Polyline({
+      factor: 1e5
+    }).readGeometry(polyline, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857'
+    });
+    var feature = new Feature({
+      type: 'route',
+      geometry: route
+    });
+    if (this.state.routeFeature) {
+      this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
+    }
+    feature.setStyle(this.state.styles.route);
+    this.state.vectorSource.addFeature(feature);
+    this.setState({ routeFeature: feature });
+  }
+
+  to4326(coord) {
+    return transform([
+      parseFloat(coord[0]), parseFloat(coord[1])
+    ], 'EPSG:3857', 'EPSG:4326');
+  }
 
   coordinatesToLocation(latitude, longtitude) {
     return new Promise(function (resolve, reject) {
@@ -72,11 +130,12 @@ console.log(this.state.passengerRoutes[0].geometry);
       ).then(function (response) {
         return response.json();
       }).then(function (json) {
- 
+
         resolve(json);
       });
     });
   }
+
   setInputFrom(value) {
     var inputField = document.querySelector("#address-input-from");
     inputField.value = value;
@@ -90,9 +149,9 @@ console.log(this.state.passengerRoutes[0].geometry);
     this.state.route.toAddress = value;
   }
 
-  addressInputSuggestion(utils) {
+  addressInputSuggestion() {
     var places = require("places.js");
-  
+
     var placesAutocompleteFrom = places({
       container: document.querySelector("#address-input-from")
     });
@@ -104,83 +163,94 @@ console.log(this.state.passengerRoutes[0].geometry);
 
 
     placesAutocompleteFrom.on("change", (e) => {
-      this.setState({startPointInput : true});
+      this.setState({ startPointInput: true });
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-     console.log(placesAutocompleteFrom.value); 
-     this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
     placesAutocompleteTo.on("change", (e) => {
-      this.setState({startPointInput : false});
+      this.setState({ startPointInput: false });
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
 
   }
+
   CenterMap(long, lat, map) {
 
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(19);
   }
 
-  addRoutePoint(utils, evt, clickedOnMap) {
-
-    utils.getNearest(evt).then((coord_street) => {
-      var points_length = this.state.points.push(coord_street);
-
-      if (clickedOnMap) {
-        if (points_length > 1) {
-          if (this.state.features.destinationFeature) {
-            this.state.vectorSource.removeFeature(this.state.features.destinationFeature);
-          }
-          
-          this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
-        
-          this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-            console.log(e);
-            this.setInputTo((e.address.house_number? e.address.house_number + ", " : "" ) + e.address.road + ", " + e.address.city);
-          });
-          utils.createFeature(coord_street, false);
-        
-        }
-        else {
-          
-          this.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
-         
-          this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-            this.setInputFrom((e.address.house_number? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
-          });
-         
-          utils.createFeature(coord_street, true);
-
-        }
-
+  handleMapClick(markersOnMap, coordinates) {
+    if (markersOnMap > 1) {
+      if (this.state.features.destinationFeature) {
+        this.state.vectorSource.removeFeature(this.state.features.destinationFeature);
       }
-      else if (this.state.startPointInput) {
-        if (this.state.features.startPointFeature) {
-          this.state.vectorSource.removeFeature(this.state.features.startPointFeature)
-        }
-        this.setState({ coordinates: { firstPoint: coord_street, lastPoint: this.state.coordinates.lastPoint } });
+
+      this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coordinates } });
+
+      this.coordinatesToLocation(coordinates[1], coordinates[0]).then((e) => {
+        this.setInputTo((e.address.house_number ? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
+      });
+      this.createFeature(coordinates, false);
+
+    }
+    else {
+
+      this.setState({ coordinates: { firstPoint: coordinates, lastPoint: [] } });
+
+      this.coordinatesToLocation(coordinates[1], coordinates[0]).then((e) => {
+        this.setInputFrom((e.address.house_number ? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
+      });
+
+      this.createFeature(coordinates, true);
+
+    }
+
+  }
+
+  handleAddressInput(coordinates) {
+    if (this.state.startPointInput) {
+      if (this.state.features.startPointFeature) {
+        this.state.vectorSource.removeFeature(this.state.features.startPointFeature)
+      }
+      this.setState({ coordinates: { firstPoint: coordinates, lastPoint: this.state.coordinates.lastPoint } });
 
 
-        utils.createFeature(coord_street, true);
+      this.createFeature(coordinates, true);
+    }
+    else {
+      if (this.state.features.destinationFeature) {
+
+        this.state.vectorSource.removeFeature(this.state.features.destinationFeature)
+      }
+
+      this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coordinates } });
+
+      this.createFeature(coordinates, false);
+
+    }
+  }
+
+  addRoutePoint(evt, clickedOnMap) {
+
+    this.getNearest(evt).then((coordinates) => {
+      var markersOnMap = this.state.points;
+      markersOnMap++;
+      this.setState({ points: markersOnMap });
+
+      if (clickedOnMap) { // Separates route point adding by clicking and by writing an address
+
+        this.handleMapClick(markersOnMap,coordinates);
       }
       else {
-        if (this.state.features.destinationFeature) {
-
-          this.state.vectorSource.removeFeature(this.state.features.destinationFeature)
-        }
-
-        this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
-
-        utils.createFeature(coord_street, false);
+        this.handleAddressInput(coordinates)
 
       }
 
-
-
-      if (points_length < 2) { // only one point on a map, impossible to display route
+      if (markersOnMap < 2) { // only one point on a map, impossible to display route
         return;
       }
 
@@ -192,23 +262,22 @@ console.log(this.state.passengerRoutes[0].geometry);
       console.log(this.state.vectorSource.getFeatures());
       console.log(this.state.features);
 
-      fetch(this.state.url_osrm_route + point1 + ';' + point2).then(function (r) {
+      fetch(this.state.url_osrm_route + point1 + ';' + point2).then((r) => {
 
         return r.json();
-      }).then(function (json) {
+      }).then((json) => {
         if (json.code !== 'Ok') {
           return;
         }
-
-        utils.createRoute(json.routes[0].geometry);
+        this.createRoute(json.routes[0].geometry);
       });
     });
   }
 
   componentDidMount() {
 
-    var  icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-   
+    var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
+
       vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -242,7 +311,7 @@ console.log(this.state.passengerRoutes[0].geometry);
       })
     });
 
-    this.setState({ map, vectorSource });
+    this.setState({ map, vectorSource, styles });
 
     this.CenterMap(25.279652, 54.687157, map);
 
@@ -250,69 +319,12 @@ console.log(this.state.passengerRoutes[0].geometry);
       var coord4326 = transform([
         parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])
       ], 'EPSG:3857', 'EPSG:4326');
-
-      this.addRoutePoint(utils, coord4326, true);
+      this.addRoutePoint(coord4326, true);
     }
     );
 
-    var utils = {
-      getNearest:  (coord)=> {
 
-        return new Promise( (resolve, reject)=> {
-          //make sure the coord is on street
-          fetch(this.state.url_osrm_nearest + coord.join()).then( (response)=> {
-            return response.json();
-          }).then(function (json) {
-            if (json.code === 'Ok') {
-              resolve(json.waypoints[0].location);
-            }
-            else reject();
-          });
-        });
-      },
-      createFeature: (coord, fromFeature) => { // fromFeature param indicates which feature is added - start point or destination
-        var feature = new Feature({
-          type: 'place',
-          geometry: new Point(fromLonLat(coord))
-        });
-        feature.setStyle(styles.icon);
-
-        vectorSource.addFeature(feature);
-console.log(fromFeature);
-        if (fromFeature)
-          this.setState({ features: { startPointFeature: feature, destinationFeature: this.state.features.destinationFeature } });
-        else
-          this.setState({ features: { startPointFeature: this.state.features.startPointFeature, destinationFeature: feature } });
-console.log(this.state.features);
-
-      },
-      createRoute: (polyline)=> {
-        this.state.route.routeGeometry = polyline;
-        var route = new Polyline({
-          factor: 1e5
-        }).readGeometry(polyline, {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857'
-        });
-        var feature = new Feature({
-          type: 'route',
-          geometry: route
-        });
-if(this.state.routeFeature){
-this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
-}
-        feature.setStyle(styles.route);
-        vectorSource.addFeature(feature);
-        this.setState({routeFeature : feature});
-      },
-      to4326: function (coord) {
-        return transform([
-          parseFloat(coord[0]), parseFloat(coord[1])
-        ], 'EPSG:3857', 'EPSG:4326');
-      }
-    };
-    
-    this.addressInputSuggestion(utils);
+    this.addressInputSuggestion();
   }
 
 
@@ -339,7 +351,7 @@ this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old ro
 
           />
         </div>
-        <button onClick={() =>{this.saveRide()}}>Save</button>
+        <button onClick={() => { this.saveRide() }}>Save</button>
 
         <div id="map"></div>
         <div id="msg">Click to add a point.</div>
