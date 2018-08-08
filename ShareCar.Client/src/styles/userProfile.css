@@ -1,27 +1,33 @@
+.container {
+  margin-top: none;
+}
 .container.profile-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 50px;
-  
+  margin-bottom: 18%;
+  margin-top: 16%;
 }
+
 .role-header {
   margin-top: 10%;
-  text-align: center;
-  margin-bottom: 0px;
+  text-align: space-between;
+  margin-bottom: none;
   font-size: 350%;
 }
 
-input.edit-input {
-  background-color: rgba(0, 255, 179, 0.89);
-}
-form.profile-form {
-  margin: 1em;
-}
-div.form-group {
+s div.form-group {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
-
+}
+div.form-group label {
+  font-weight: bold;
+}
+.form-header{
+  font-size: 130%;
+}
+div.form-group input {
+  font-style: italic;
 }
 .profile-form button {
   width: 100%;

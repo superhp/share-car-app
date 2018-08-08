@@ -48,6 +48,22 @@ namespace ShareCar.Db.Repositories
                 return false;
             }
         }
+        public bool UpdateRoute(Route route)
+        {
+            Route routeToUpdate = FindRouteById(route.RouteId);
+            if(routeToUpdate.Rides == null)
+            {
+                routeToUpdate.Rides = new List<Ride>();
+            }
+            foreach(var ride in route.Rides)
+            {
+                routeToUpdate.Rides.Add(ride);
+            }
+           
+            _databaseContext.Routes.Update(routeToUpdate);
+            _databaseContext.SaveChanges();
+            return true;
+        }
 
         public IEnumerable<Route> GetAllRoutes()
         {

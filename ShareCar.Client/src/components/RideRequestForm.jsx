@@ -3,6 +3,7 @@ import axios from "axios";
 import api from "../helpers/axiosHelper";
 import MapComponent from "./MapComponent";
 import SuggestedRides from "./SuggestedRides";
+import "../styles/rideRequestForm.css";
 
 export class RideRequestForm extends React.Component {
   constructor(props) {
@@ -62,32 +63,35 @@ export class RideRequestForm extends React.Component {
     return (
       <div>
         {this.state.showForm ? (
-          <div>
+          <div className="container">
             <form
               className="ride-requests"
               onSubmit={this.handleSubmit.bind(this)}
             >
-              <span className="ride-requests-text">Address :</span>
-              <input
-                id="address"
-                className="ride-requests"
-                type="text"
-                name="street"
-                defaultValue={""}
-              />
-              <br />
+              <div class="form-group">
+                <label className="ride-requests-text">Address :</label>
+                <input
+                  id="address"
+                  className="ride-requests form-control"
+                  type="text"
+                  name="street"
+                  defaultValue={""}
+                />
+              </div>
+              <div class="form-group">
+                <label className="ride-requests-text">Ride Id:</label>
+                <input
+                  className="ride-requests form-control"
+                  id="rideId"
+                  type="text"
+                  name="rideId"
+                  defaultValue={""}
+                />
+              </div>
 
-              <span className="ride-requests-text">Ride Id:</span>
-              <input
-                className="ride-requests"
-                id="rideId"
-                type="text"
-                name="rideId"
-                defaultValue={""}
-              />
-              <br />
-
-              <button className="ride-requests-button">Save</button>
+              <button className="btn btn-primary ride-requests-button">
+                Save
+              </button>
             </form>
             <MapComponent
               ref={this.child}

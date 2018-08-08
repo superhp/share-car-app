@@ -9,5 +9,6 @@ namespace ShareCar.Logic.Route_Logic
         RouteDto GetRouteById(int id);
         bool AddRoute(RouteDto route);
         IEnumerable<RouteDto> GetAllRoutes();
+        bool UpdateRoute(RouteDto routeDto);
     }
 }

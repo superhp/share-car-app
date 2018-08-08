@@ -8,6 +8,8 @@ using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories;
 using AutoMapper;
+using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.Passenger_Logic;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -16,38 +18,47 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         private readonly IRideRequestRepository _rideRequestRepository;
         private readonly IRideLogic _rideLogic;
+        private readonly IPassengerLogic _passengerLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IUserLogic _personLogic;
         private readonly IAddressLogic _addressLogic;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
         {
-            _rideRequestRepository = defaultRepository;
+            _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
+            _routeLogic = routeLogic;
             _userManager = userManager;
             _mapper = mapper;
+            _passengerLogic = passengerLogic;
         }
 
         public bool AddRequest(RideRequestDto requestDto)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
-            string driverEmail = _rideLogic.FindRideById(requestDto.RideId).DriverEmail;
-            requestDto.DriverEmail = driverEmail;    
+            RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
+            requestDto.DriverEmail = rideDto.DriverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            return  _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));           
+            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
+            return isCreated;
         }
 
         public bool UpdateRequest(RideRequestDto request)
         {
-            request.SeenByPassenger = false;            
-
-            return _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
+            request.SeenByPassenger = false;
+            var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
+            if (isUpdated && request.Status == Dto.Status.ACCEPTED)
+            {
+                _passengerLogic.AddPassenger(new PassengerDto { Email = request.DriverEmail, RideId = request.RideId, Completed = false });
+            }
+            return isUpdated;
         }
 
 

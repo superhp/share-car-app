@@ -16,6 +16,7 @@ namespace ShareCar.Db.Repositories
         IEnumerable<Passenger> FindPassengersByRideId(int rideId);
         //       Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User);
         bool UpdateRide(Ride ride);
+        bool DeleteRide(Ride ride);
         void AddRide(Ride ride);
         IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId);
 

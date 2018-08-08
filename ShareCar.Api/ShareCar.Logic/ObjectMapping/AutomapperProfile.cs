@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ShareCar.Dto;
 using ShareCar.Db.Entities;
+using ShareCar.Dto.Identity;
 
 namespace ShareCar.Logic.ObjectMapping
 {
@@ -16,7 +17,7 @@ namespace ShareCar.Logic.ObjectMapping
             CreateMap<PassengerDto, Passenger>();
             CreateMap<Address, AddressDto>();
             CreateMap<AddressDto, Address>();
-
+            CreateMap<UserDto, User>();
             //.ForMember(src => src.Title, dest => dest.MapFrom(x => x.VeryDifferentTitle));
             /*      CreateMap<Status, TodoItemStatus>()
                      .ProjectUsing(src => (TodoItemStatus)src);

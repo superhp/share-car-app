@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180807055459_NumberOfSeatsAddedToRidesEntity")]
+    partial class NumberOfSeatsAddedToRidesEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,8 +212,6 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<int>("RouteId");
 
-                    b.Property<bool>("isActive");
-
                     b.HasKey("RideId");
 
                     b.HasIndex("RouteId");
@@ -381,7 +380,7 @@ namespace ShareCar.Db.Migrations
                         .HasForeignKey("PassengerEmail");
 
                     b.HasOne("ShareCar.Db.Entities.Ride", "RequestedRide")
-                        .WithMany("Requests")
+                        .WithMany()
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
