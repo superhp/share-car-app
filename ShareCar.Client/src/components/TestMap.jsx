@@ -33,27 +33,24 @@ export class test extends React.Component {
     map: "",
     accessToken: "ad45b0b60450a4",
     vectorSource: "",
-    fromInput: false,// If marker on a map was added by writing an address, it should be known if it was From or To input field
-    features: {
-      fromFeature: "",
-      toFeature: ""
+    startPointInput: false,// If marker on a map was added by writing an address, it should be known if it was From or To input field
+    features: { // markers on a map
+      startPointFeature: "", 
+      destinationFeature: ""
     },
-    routeFeature:""
+    routeFeature:"",
+    url_osrm_nearest : '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
+    url_osrm_route : '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
   }
 
   coordinatesToLocation(latitude, longtitude) {
     return new Promise(function (resolve, reject) {
-      //make sure the coord is on street
       fetch('//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=' + latitude + '&lon=' + longtitude + '&format=json'
       ).then(function (response) {
         return response.json();
       }).then(function (json) {
-        //if (true/*json.code === 'Ok'*/) 
-        // {
+ 
         resolve(json);
-        // }
-        // else reject();
-
       });
     });
   }
@@ -67,7 +64,7 @@ export class test extends React.Component {
     inputField.value = value;
   }
 
-  addressInputSuggestion(component, utils) {
+  addressInputSuggestion(utils) {
     var places = require("places.js");
   
     var placesAutocompleteFrom = places({
@@ -81,18 +78,15 @@ export class test extends React.Component {
 
 
     placesAutocompleteFrom.on("change", (e) => {
-      this.setState({fromInput : true});
-      console.log("state----  " + this.state.fromInput)
+      this.setState({startPointInput : true});
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.setState({ fromInput: true });
-      this.add(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], component, '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/', false);
+      this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
     placesAutocompleteTo.on("change", (e) => {
-      this.setState({fromInput : false});
+      this.setState({startPointInput : false});
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.setState({ fromInput: false });
-      this.add(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], component, '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/', false);
+      this.addRoutePoint(utils, [e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
 
@@ -102,22 +96,22 @@ export class test extends React.Component {
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(19);
   }
-  add(utils, evt, component, url_osrm_route, clickedOnMap) {
 
-    console.log("clicked ===  " + clickedOnMap);
+  addRoutePoint(utils, evt, clickedOnMap) {
 
-    utils.getNearest(evt/*.coordinate*/).then((coord_street) => {
-      var last_point = component.state.points[component.state.points.length - 1];
-      var points_length = component.state.points.push(coord_street);
+    utils.getNearest(evt).then((coord_street) => {
+      var points_length = this.state.points.push(coord_street);
 
       if (clickedOnMap) {
         if (points_length > 1) {
-          if (this.state.features.toFeature) {
-            this.state.vectorSource.removeFeature(this.state.features.toFeature);
+          if (this.state.features.destinationFeature) {
+            this.state.vectorSource.removeFeature(this.state.features.destinationFeature);
           }
-          component.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
+          
+          this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
         
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
+            console.log(e);
             this.setInputTo(e.display_name);
           });
           utils.createFeature(coord_street, false);
@@ -125,7 +119,7 @@ export class test extends React.Component {
         }
         else {
           
-          component.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
+          this.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
          
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
             this.setInputFrom(e.display_name);
@@ -136,36 +130,30 @@ export class test extends React.Component {
         }
 
       }
-      else if (this.state.fromInput) {
-        console.log("from input   " + this.state.fromInput);
-        if (this.state.features.fromFeature) {
-          this.state.vectorSource.removeFeature(this.state.features.fromFeature)
+      else if (this.state.startPointInput) {
+        if (this.state.features.startPointFeature) {
+          this.state.vectorSource.removeFeature(this.state.features.startPointFeature)
         }
-        component.setState({ coordinates: { firstPoint: coord_street, lastPoint: this.state.coordinates.lastPoint } });
+        this.setState({ coordinates: { firstPoint: coord_street, lastPoint: this.state.coordinates.lastPoint } });
 
 
         utils.createFeature(coord_street, true);
-console.log("from feature   " + this.state.features);
-
       }
       else {
-        console.log("to input   " + this.state.fromInput);
-        if (this.state.features.toFeature) {
+        if (this.state.features.destinationFeature) {
 
-          this.state.vectorSource.removeFeature(this.state.features.toFeature)
+          this.state.vectorSource.removeFeature(this.state.features.destinationFeature)
         }
 
-        component.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
+        this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coord_street } });
 
         utils.createFeature(coord_street, false);
-        console.log("to feature   " + this.state.toFeature);
-
 
       }
 
 
 
-      if (points_length < 2) {
+      if (points_length < 2) { // only one point on a map, impossible to display route
         return;
       }
 
@@ -177,18 +165,16 @@ console.log("from feature   " + this.state.features);
       console.log(this.state.vectorSource.getFeatures());
       console.log(this.state.features);
 
-      fetch(url_osrm_route + point1 + ';' + point2).then(function (r) {
+      fetch(this.state.url_osrm_route + point1 + ';' + point2).then(function (r) {
 
         return r.json();
       }).then(function (json) {
         if (json.code !== 'Ok') {
-          //   msg_el.innerHTML = 'No route found.';
           return;
         }
-        //  msg_el.innerHTML = 'Route added';
-        //points.length = 0;
 
-        component.setState({ coordiantes: [point1, point2], route: json.routes[0].geometry });
+
+     //   this.setState({ coordinates: [point1, point2], route: json.routes[0].geometry });
 
 
 
@@ -199,14 +185,8 @@ console.log("from feature   " + this.state.features);
 
   componentDidMount() {
 
-
-
-    //var points = [];
-    var msg_el = document.getElementById('msg'),
-
-      url_osrm_nearest = '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
-      url_osrm_route = '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
-      icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
+    var  icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
+   
       vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -247,26 +227,20 @@ console.log("from feature   " + this.state.features);
     var component = this;
 
     map.on('click', (evt) => {
-      var coord4 = transform([
+      var coord4326 = transform([
         parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])
       ], 'EPSG:3857', 'EPSG:4326');
 
-      var location;
-
-      this.add(utils, coord4, component, url_osrm_route, true);
+      this.addRoutePoint(utils, coord4326, true);
     }
-
     );
 
     var utils = {
-      getNearest: function (coord) {
+      getNearest:  (coord)=> {
 
-        // var coord4326 = utils.to4326(coord);    
-        var coord4326 = coord;
-        console.log(coord4326);
-        return new Promise(function (resolve, reject) {
+        return new Promise( (resolve, reject)=> {
           //make sure the coord is on street
-          fetch(url_osrm_nearest + coord4326.join()).then(function (response) {
+          fetch(this.state.url_osrm_nearest + coord.join()).then( (response)=> {
             return response.json();
           }).then(function (json) {
             if (json.code === 'Ok') {
@@ -276,8 +250,7 @@ console.log("from feature   " + this.state.features);
           });
         });
       },
-      createFeature: (coord, fromFeature) => {
-        console.log(coord + "    " + fromFeature)
+      createFeature: (coord, fromFeature) => { // fromFeature param indicates which feature is added - start point or destination
         var feature = new Feature({
           type: 'place',
           geometry: new Point(fromLonLat(coord))
@@ -285,18 +258,15 @@ console.log("from feature   " + this.state.features);
         feature.setStyle(styles.icon);
 
         vectorSource.addFeature(feature);
-
-console.log("In vector from feature   " + fromFeature);
-
+console.log(fromFeature);
         if (fromFeature)
-          this.setState({ features: { fromFeature: feature, toFeature: this.state.features.toFeature } });
+          this.setState({ features: { startPointFeature: feature, destinationFeature: this.state.features.destinationFeature } });
         else
-          this.setState({ features: { fromFeature: this.state.features.fromFeature, toFeature: feature } });
+          this.setState({ features: { startPointFeature: this.state.features.startPointFeature, destinationFeature: feature } });
+console.log(this.state.features);
 
       },
       createRoute: (polyline)=> {
-        // route is ol.geom.LineString
-        console.log("create route - polyline " + polyline);
         var route = new Polyline({
           factor: 1e5
         }).readGeometry(polyline, {
@@ -308,7 +278,7 @@ console.log("In vector from feature   " + fromFeature);
           geometry: route
         });
 if(this.state.routeFeature){
-this.state.vectorSource.removeFeature(this.state.routeFeature)
+this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
 }
         feature.setStyle(styles.route);
         vectorSource.addFeature(feature);
@@ -320,7 +290,7 @@ this.state.vectorSource.removeFeature(this.state.routeFeature)
         ], 'EPSG:3857', 'EPSG:4326');
       }
     };
-    this.addressInputSuggestion(this, utils);
+    this.addressInputSuggestion(utils);
   }
 
 
