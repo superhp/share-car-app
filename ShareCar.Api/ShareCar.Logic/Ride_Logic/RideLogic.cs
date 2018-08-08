@@ -251,5 +251,10 @@ namespace ShareCar.Logic.Ride_Logic
             }
             
         }
+
+        public IEnumerable<RouteDto> GetRoutes()
+        {
+            return _routeLogic.GetAllRoutes();
+        }
     }
 }
