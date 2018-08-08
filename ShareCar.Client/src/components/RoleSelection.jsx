@@ -18,7 +18,7 @@ import RoleContext from "../helpers/roles";
 class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
   authService = new AuthenticationService();
-// state: MyProfileState = { loading: true, user: null };
+  state: MyProfileState = { loading: true, user: null };
   
 state = {
     rideNotifications : [],
