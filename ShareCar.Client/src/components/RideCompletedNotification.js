@@ -1,14 +1,14 @@
 import * as React from "react";
 
- class RideCompletedNotification extends React.Component {
+class RideCompletedNotification extends React.Component {
 
-  render() {
-      console.log(this.props.rides);
-    return (
-    <div>
-<h1>Have you participated in these Rides ? </h1>
+    render() {
+        console.log(this.props.rides);
+        return (
+            <div>
+                <h1>Have you participated in these Rides ? </h1>
 
-  <tbody>
+                <table>
                 {
                     this.props.rides.map(req =>
                         <tr key={req.id}>
@@ -19,9 +19,10 @@ import * as React from "react";
 
                     )
                 }
-            </tbody>
+                </table>
 
-    </div>
-    );
-  }
-}export default RideCompletedNotification;
+            </div>
+        );
+    }
+}
+export default RideCompletedNotification;
