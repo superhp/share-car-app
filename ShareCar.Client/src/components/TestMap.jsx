@@ -43,6 +43,10 @@ export class test extends React.Component {
     url_osrm_route : '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/'
   }
 
+saveRide(){
+
+}
+
   coordinatesToLocation(latitude, longtitude) {
     return new Promise(function (resolve, reject) {
       fetch('//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=' + latitude + '&lon=' + longtitude + '&format=json'
@@ -112,7 +116,7 @@ export class test extends React.Component {
         
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
             console.log(e);
-            this.setInputTo(e.display_name);
+            this.setInputTo((e.address.house_number? e.address.house_number + ", " : "" ) + e.address.road + ", " + e.address.city);
           });
           utils.createFeature(coord_street, false);
         
@@ -122,7 +126,7 @@ export class test extends React.Component {
           this.setState({ coordinates: { firstPoint: coord_street, lastPoint: [] } });
          
           this.coordinatesToLocation(coord_street[1],coord_street[0]).then((e)=>{
-            this.setInputFrom(e.display_name);
+            this.setInputFrom((e.address.house_number? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
           });
          
           utils.createFeature(coord_street, true);
@@ -173,11 +177,6 @@ export class test extends React.Component {
           return;
         }
 
-
-     //   this.setState({ coordinates: [point1, point2], route: json.routes[0].geometry });
-
-
-
         utils.createRoute(json.routes[0].geometry);
       });
     });
@@ -223,8 +222,6 @@ export class test extends React.Component {
     this.setState({ map, vectorSource });
 
     this.CenterMap(25.279652, 54.687157, map);
-
-    var component = this;
 
     map.on('click', (evt) => {
       var coord4326 = transform([
@@ -317,7 +314,7 @@ this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old ro
 
           />
         </div>
-        <button>Save</button>
+        <button onClick={this.saveRide()}>Save</button>
 
         <div id="map"></div>
         <div id="msg">Click to add a point.</div>
