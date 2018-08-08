@@ -4,9 +4,10 @@
 .container.profile-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 50px;
+  margin-bottom: 18%;
   margin-top: 16%;
 }
+
 .role-header {
   margin-top: 10%;
   text-align: space-between;
@@ -14,9 +15,6 @@
   font-size: 350%;
 }
 
-input.edit-input {
-  background-color: rgba(0, 255, 179, 0.89);
-}
 s div.form-group {
   display: flex;
   align-items: flex-start;
@@ -24,6 +22,9 @@ s div.form-group {
 }
 div.form-group label {
   font-weight: bold;
+}
+.form-header{
+  font-size: 130%;
 }
 div.form-group input {
   font-style: italic;
