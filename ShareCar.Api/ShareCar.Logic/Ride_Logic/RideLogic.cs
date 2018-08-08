@@ -142,17 +142,16 @@ namespace ShareCar.Logic.Ride_Logic
 
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 RouteDto routeDto = _routeLogic.GetRouteById(ride.RouteId);
-                if(routeDto.Rides == null)
-                {
-                    routeDto.Rides = new List<RideDto>();
-                }
-                routeDto.Rides.Add(ride);
-                return _routeLogic.UpdateRoute(routeDto);
+                
+                return true;
                 
             }
             return false;
         }
-
+        public bool DeleteRide(RideDto rideDto)
+        {
+           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
+        }
         public bool DoesUserBelongsToRide(string email, int rideId)
         {
             Ride ride = _rideRepository.FindRideById(rideId);

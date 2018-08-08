@@ -23,8 +23,7 @@ namespace ShareCar.Db.Migrations
                 table: "Requests",
                 column: "RideId",
                 principalTable: "Rides",
-                principalColumn: "RideId",
-                onDelete: ReferentialAction.Restrict);
+                principalColumn: "RideId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
