@@ -3,8 +3,9 @@ div.container {
   flex-wrap: wrap;
   flex: 0 0 100%;
   padding: none;
-  margin: none;
-  margin-top: 13%;
+  margin: none, none;
+  margin-top: 16%;
+  margin-bottom: none;
   justify-content: space-around;
 }
 
