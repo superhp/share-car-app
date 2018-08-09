@@ -138,7 +138,7 @@ export class NewRideForm extends React.Component {
                     )}
                 <form className="newRideForm" onSubmit={this.handleSubmit.bind(this)}>
                     <div className="form-group">
-                        <label>From:</label>
+                        <label>From</label>
                         <input
                             type="search"
                             class="form-group"
@@ -159,7 +159,7 @@ export class NewRideForm extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label>To:</label>
+                        <label>To</label>
                         
                                 <div>
                                     <input
@@ -181,9 +181,6 @@ export class NewRideForm extends React.Component {
 
                                     />
                                 <div/>
-
-                            }
-
                         </div>
                     </div>
                     <div className="form-group">

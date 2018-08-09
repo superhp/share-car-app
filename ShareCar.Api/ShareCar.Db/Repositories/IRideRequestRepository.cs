@@ -16,5 +16,7 @@ namespace ShareCar.Db.Repositories
         bool UpdateRequest(Request request);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
+        void DeletedRide(IEnumerable<Request> requests);
+        IEnumerable<Request> FindRequestsByRideId(int rideId);
     }
 }

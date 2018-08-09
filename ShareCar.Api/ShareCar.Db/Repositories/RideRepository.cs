@@ -6,6 +6,7 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShareCar.Db.Repositories
 {
@@ -76,22 +77,27 @@ namespace ShareCar.Db.Repositories
             {
                 var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
                 rideToUpdate.RouteId = ride.RouteId;
-                //rideToUpdate.Route = ride.Route;
+                rideToUpdate.Route = ride.Route;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
-                rideToUpdate.Passengers = ride.Passengers;
-                rideToUpdate.Requests = ride.Requests;
-
+                
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
                 return true;
             }
             catch (Exception e)
             {
-                Console.Write(e.StackTrace);
+
                 return false;
             }
         }
-
+        public bool DeleteRide(Ride ride)
+        {
+            var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
+            rideToDelete.isActive = false;
+            _databaseContext.SaveChanges();
+            return true;
+            
+        }
         public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
         {
             return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId);
@@ -99,7 +105,10 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Ride> FindRidesByDriver(string email)
         {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == email);
+            return _databaseContext.Rides
+                .Include(x=>x.Requests)
+                .Include(x=>x.Passengers)
+                .Where(x => x.DriverEmail == email);
         }
 
 

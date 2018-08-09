@@ -8,6 +8,7 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Logic.Passenger_Logic
 {
@@ -17,12 +18,14 @@ namespace ShareCar.Logic.Passenger_Logic
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IRouteLogic _routeLogic;
+        private readonly IRideLogic _rideLogic;
         private readonly IPassengerRepository _passengerRepository;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository)
+        public PassengerLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository, IRideLogic rideLogic)
         {
             _rideRepository = rideRepository;
+            _rideLogic = rideLogic;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
@@ -41,8 +44,7 @@ namespace ShareCar.Logic.Passenger_Logic
 
             if (addNewPassenger)
             {
-                _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
-                return true;
+                return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
             }
             return false;
         }

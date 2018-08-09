@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180808101242_AddedRideActiveState")]
+    partial class AddedRideActiveState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,17 +206,13 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("DriverEmail");
 
-                    b.Property<int>("NumberOfSeats")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(4);
+                    b.Property<int>("NumberOfSeats");
 
                     b.Property<DateTime>("RideDateTime");
 
                     b.Property<int>("RouteId");
 
-                    b.Property<bool>("isActive")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("isActive");
 
                     b.HasKey("RideId");
 

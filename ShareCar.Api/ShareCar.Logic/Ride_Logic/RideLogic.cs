@@ -8,24 +8,28 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
+        private readonly IRouteRepository _routeRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
-
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        private readonly IRideRequestLogic _rideRequestLogic;
+        public RideLogic(IRouteLogic routeLogic, IRouteRepository routeRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic)
         {
             _rideRepository = rideRepository;
+            _routeRepository = routeRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
             _addressRepository = addressRepository;
+            _rideRequestLogic = rideRequestLogic;
         }
 
         public RideDto FindRideById(int id)
@@ -103,7 +107,7 @@ namespace ShareCar.Logic.Ride_Logic
         public bool UpdateRide(RideDto ride)
         {
             //ride.Passengers = new List<PassengerDto>();
-            ride.Requests = new List<RideRequestDto>();
+            //ride.Requests = new List<RideRequestDto>();
 
             //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
             //  bool addNewRide = ValidateNewRide(); 
@@ -113,7 +117,8 @@ namespace ShareCar.Logic.Ride_Logic
             if (addNewRide)
             {
                 ParseExtraRideDtoData(ride);
-                return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+                //return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+                return true;
             }
             return false;
         }
@@ -139,9 +144,19 @@ namespace ShareCar.Logic.Ride_Logic
                 ParseExtraRideDtoData(ride);
 
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+                RouteDto routeDto = _routeLogic.GetRouteById(ride.RouteId);
+                
                 return true;
+                
             }
             return false;
+        }
+
+        public bool DeleteRide(RideDto rideDto)
+        {
+            
+            _rideRequestLogic.DeletedRide(rideDto.RideId);
+           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
@@ -172,6 +187,7 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return DtoRides;
         }
+
         private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> passengers)
         {
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();

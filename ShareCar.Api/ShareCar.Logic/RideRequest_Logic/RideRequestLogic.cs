@@ -25,7 +25,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository defaultRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
@@ -47,16 +47,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             requestDto.AddressId = addressId;
             var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
-            if (isCreated)
-            {
-                if (rideDto.Requests == null)
-                {
-                    rideDto.Requests = new List<RideRequestDto>();
-                }
-                rideDto.Requests.Add(requestDto);
-                return _rideLogic.UpdateRide(rideDto);
-            }
-            else return isCreated;
+            return isCreated;
         }
 
         public bool UpdateRequest(RideRequestDto request)
@@ -96,8 +87,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
             return SortRequests(converted);
-            }
-        
+            }       
         
         public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
         {
@@ -164,6 +154,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             return dtoRequests;
         }
 
-
+        //Changes request status to deleted
+        public void DeletedRide(int rideId)
+        {
+            IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
+            _rideRequestRepository.DeletedRide(entityRequests);
+        }
     }
 }
