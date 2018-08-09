@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +53,37 @@ namespace ShareCar.Logic.User_Logic
         {
             int points = _passengerRepository.GetUsersPoints(email);
             return points;
+        }
+        public Dictionary<UserDto, int> GetWinnerBoard()
+        {
+            Dictionary<UserDto, int> userWithPoints = new Dictionary<UserDto, int>();
+            var users = _userRepository.GetAllUsers();
+            int i = 0;
+            foreach(var user in users)
+            {
+                int userPoints = CountPoints(user.Email);
+                if(i<5)
+                {
+                    userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
+                }
+                else
+                {
+                    var lowestPoints = userWithPoints.Values.Min();
+                    int count = userWithPoints.Where(x => x.Value == lowestPoints).Count();
+                    if (lowestPoints < userPoints)
+                    {
+                        userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
+                        userWithPoints.Remove(userWithPoints.FirstOrDefault(x => x.Value == lowestPoints).Key);
+                    }
+                    else if (userWithPoints.Values.Min() == userPoints)
+                    {
+                        userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
+                    }
+                }
+                i++;
+            }
+            userWithPoints = userWithPoints.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            return userWithPoints;
         }
     }
 }

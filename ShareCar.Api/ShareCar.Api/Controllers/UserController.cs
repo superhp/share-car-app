@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto;
@@ -18,7 +19,6 @@ namespace ShareCar.Api.Controllers
             _userLogic = userLogic;
         }
 
-
         public async Task<IActionResult> Get()
         {
             var userDto = await _userLogic.GetUserAsync(User);
@@ -29,7 +29,12 @@ namespace ShareCar.Api.Controllers
                 pointCount = points
             });
         }
-
+        [HttpGet("WinnerBoard")]
+        public IActionResult GetWinnerBoard()
+        {
+            Dictionary<UserDto, int> users = _userLogic.GetWinnerBoard();
+            return Ok(users);
+        }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto user)
         {
@@ -43,7 +48,7 @@ namespace ShareCar.Api.Controllers
         }
 
 
-
+        
 
     }
 }

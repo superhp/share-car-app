@@ -20,7 +20,7 @@ namespace ShareCar.Db
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Passenger>()
-                .HasKey(x => new { x.Email, x.RideId });
+                .HasKey(x => x.PassengerId);
             modelBuilder.Entity<Route>()
                 .HasIndex(u => u.Geometry)
                 .IsUnique();

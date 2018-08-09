@@ -45,13 +45,7 @@ namespace ShareCar.Logic.Passenger_Logic
             if (addNewPassenger)
             {
                 _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
-                var _rideToAddPassenger = _rideLogic.FindRideById(passenger.RideId);
-                if (_rideToAddPassenger.Passengers == null)
-                {
-                    _rideToAddPassenger.Passengers = new List<PassengerDto>();
-                }
-                _rideToAddPassenger.Passengers.Add(passenger);
-                _rideLogic.UpdateRide(_rideToAddPassenger);
+                
                 return true;
             }
             return false;
