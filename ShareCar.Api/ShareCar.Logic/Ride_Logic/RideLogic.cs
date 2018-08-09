@@ -24,7 +24,7 @@ namespace ShareCar.Logic.Ride_Logic
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic, UserManager<User> userManager)
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic, UserManager<User> userManager, RouteRepository routeRepository)
         {
             _rideRequestLogic = rideRequestLogic;
             _rideRepository = rideRepository;
@@ -34,6 +34,7 @@ namespace ShareCar.Logic.Ride_Logic
             _mapper = mapper;
             _addressRepository = addressRepository;
             _rideRequestLogic = rideRequestLogic;
+            _userManager = userManager;
         }
 
         public RideDto FindRideById(int id)
@@ -230,19 +231,19 @@ namespace ShareCar.Logic.Ride_Logic
                 Number = ride.ToNumber
             };
             //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
-           
-            if(fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
+
+            if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
                 RouteDto route = new RouteDto();
                 route.FromId = _addressLogic.GetAddressId(fromAddress);
                 route.ToId = _addressLogic.GetAddressId(toAddress);
                 if (route.FromId == -1)
                 {
-                    if(fromAddress.Street!=null && fromAddress.Number!=null)
+                    if (fromAddress.Street != null && fromAddress.Number != null)
                     {
                         _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
                     }
-                
+
                     route.FromId = _addressLogic.GetAddressId(fromAddress);
                 }
                 if (route.ToId == -1)
@@ -261,32 +262,8 @@ namespace ShareCar.Logic.Ride_Logic
                     ride.RouteId = routeId;
                 }
             }
-            
-            RouteDto route = new RouteDto();
-            route.FromId = _addressLogic.GetAddressId(fromAddress);
-            route.ToId = _addressLogic.GetAddressId(toAddress);
-            if (route.FromId == -1)
-            {
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
-                route.FromId = _addressLogic.GetAddressId(fromAddress);
-            }
-            if (route.ToId == -1)
-            {
-                _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
-                route.ToId = _addressLogic.GetAddressId(toAddress);
-            }
-            int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
-            if (routeId == -1)
-            {
-                _routeLogic.AddRoute(route);
-                ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
-            }
-            else
-            {
-                ride.RouteId = routeId;
-            }
-        }
 
+        }
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
         {
             IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
