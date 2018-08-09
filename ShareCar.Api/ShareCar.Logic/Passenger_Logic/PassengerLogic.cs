@@ -14,18 +14,14 @@ namespace ShareCar.Logic.Passenger_Logic
 {
     public class PassengerLogic : IPassengerLogic
     { 
-        private readonly IRideRepository _rideRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
         private readonly IRouteLogic _routeLogic;
-        private readonly IRideLogic _rideLogic;
         private readonly IPassengerRepository _passengerRepository;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository, IRideLogic rideLogic)
+        public PassengerLogic(IRouteLogic routeLogic, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository)
         {
-            _rideRepository = rideRepository;
-            _rideLogic = rideLogic;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;

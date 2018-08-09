@@ -72,6 +72,7 @@ namespace ShareCar.Api
           //  }
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();

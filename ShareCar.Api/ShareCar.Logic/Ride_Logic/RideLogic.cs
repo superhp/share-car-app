@@ -16,24 +16,16 @@ namespace ShareCar.Logic.Ride_Logic
     public class RideLogic : IRideLogic
     {
         private readonly IRideRepository _rideRepository;
-        private readonly IRouteRepository _routeRepository;
-        private readonly IAddressRepository _addressRepository;
         private readonly IAddressLogic _addressLogic;
-        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic, UserManager<User> userManager, RouteRepository routeRepository)
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, UserManager<User> userManager/* IAddressRepository addressRepository, RouteRepository routeRepository*/ )
         {
-            _rideRequestLogic = rideRequestLogic;
             _rideRepository = rideRepository;
-            _routeRepository = routeRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
-            _addressRepository = addressRepository;
-            _rideRequestLogic = rideRequestLogic;
             _userManager = userManager;
         }
 
@@ -159,8 +151,6 @@ namespace ShareCar.Logic.Ride_Logic
 
         public bool DeleteRide(RideDto rideDto)
         {
-            
-            _rideRequestLogic.DeletedRide(rideDto.RideId);
            return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
@@ -241,14 +231,16 @@ namespace ShareCar.Logic.Ride_Logic
                 {
                     if (fromAddress.Street != null && fromAddress.Number != null)
                     {
-                        _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
+                        _addressLogic.AddNewAddress(fromAddress);
+                  //      _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
                     }
 
                     route.FromId = _addressLogic.GetAddressId(fromAddress);
                 }
                 if (route.ToId == -1)
                 {
-                    _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
+                    _addressLogic.AddNewAddress(toAddress);
+                  //  _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
                     route.ToId = _addressLogic.GetAddressId(toAddress);
                 }
                 int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
@@ -266,24 +258,24 @@ namespace ShareCar.Logic.Ride_Logic
         }
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
         {
-            IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
-            List<RideDto> rides = new List<RideDto>();
-            DateTime hourAfterRide = new DateTime();
-            hourAfterRide.AddHours(1);
-            foreach (RideRequestDto request in requests)
-            {
-                Ride ride = _rideRepository.FindRideById(request.RideId);
-                if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
-                {
+            //      IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
+            /*   List<RideDto> rides = new List<RideDto>();
+               DateTime hourAfterRide = new DateTime();
+               hourAfterRide.AddHours(1);
+               foreach (RideRequestDto request in requests)
+               {
+                   Ride ride = _rideRepository.FindRideById(request.RideId);
+                   if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
+                   {
 
-                    var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-                    RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
-                    dtoRide.DriverFirstName = user.FirstName;
-                    dtoRide.DriverLastName = user.LastName;
-                    rides.Add(dtoRide);
-                }
-            }
-            return rides;
+                       var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+                       RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
+                       dtoRide.DriverFirstName = user.FirstName;
+                       dtoRide.DriverLastName = user.LastName;*/
+            /* rides.Add(dtoRide);
+         }
+     }*/
+            return null;//rides;
         }
     }
 }
