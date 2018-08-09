@@ -49,17 +49,11 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest("Invalid parameter");
             }
-
             var userDto = await _userRepository.GetLoggedInUser(User);
-
             request.PassengerEmail = userDto.Email;
-
-            RideDto ride = _rideLogic.FindRideById(request.RideId);
+            string email = _rideLogic.FindRideById(request.RideId).DriverEmail;
+            bool result = _requestLogic.AddRequest(request, email);
             
-            bool result = _requestLogic.AddRequest(request, ride.DriverEmail);
-
-
-
             if (result)
             {
                 return Ok();

@@ -14,14 +14,10 @@ namespace ShareCar.Db.Repositories
     {
 
         private readonly ApplicationDbContext _databaseContext;
-        private readonly IUserRepository _userRepository;
-
-
-
+        
         public RideRepository(ApplicationDbContext context, IUserRepository userRepository)
         {
             _databaseContext = context;
-            _userRepository = userRepository;
         }
 
 
@@ -64,12 +60,11 @@ namespace ShareCar.Db.Repositories
         {
             return _databaseContext.Passengers.Where(x => x.RideId == id);
         }
-        /*
-        public async Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User)
+        
+        public IEnumerable<Ride> FindRidesByPassenger(Passenger passenger)
         {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            return _databaseContext.Passengers.Where(x => x.Email == userDto.Email);
-        }*/
+            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger));
+        }
 
         public bool UpdateRide(Ride ride)
         {
@@ -90,13 +85,13 @@ namespace ShareCar.Db.Repositories
                 return false;
             }
         }
-        public bool DeleteRide(Ride ride)
+        public bool SetRideAsInactive(Ride ride)
         {
             var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
             rideToDelete.isActive = false;
             _databaseContext.SaveChanges();
             return true;
-            
+
         }
         public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
         {

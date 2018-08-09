@@ -221,7 +221,6 @@ namespace ShareCar.Db.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Passengers", x => new { x.Email, x.RideId });
                     table.ForeignKey(
                         name: "FK_Passengers_Rides_RideId",
                         column: x => x.RideId,
