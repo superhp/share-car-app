@@ -12,15 +12,12 @@ export class ViewRideRequests extends React.Component {
     passengerRequests: []
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.driver
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
 
-  componentDidMount() {
-    console.log(this.state.driverRequests);
-  }
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -58,6 +55,7 @@ export class ViewRideRequests extends React.Component {
       .get("RideRequest/true")
       .then(response => {
         this.setState({ driverRequests: response.data });
+        console.log(this.state.driverRequests);
       })
       .then(() => {
         const unseenRequests = [];

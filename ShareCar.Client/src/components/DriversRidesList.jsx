@@ -17,25 +17,15 @@ import Grid from "@material-ui/core/Grid";
 
 var moment = require("moment");
 
-export class DriversRidesList extends React.Component<{}> {
-  componentDidMount() {
-    console.log(this.props.driversRides);
-    this.setState({ driversRides: this.props.driversRides });
-  }
+export class DriversRidesList extends React.Component {
   render() {
-    let detailedRideInfo = !this.props.rideClicked ? (
-      <div className="detailedInfoContainer">
-        <ViewRideRequests
-          driver={true}
-          selectedRide={this.props.selectedRideId}
-        />
-      </div>
+    let detailedRideInfo = this.props.rideClicked ? (
+      <ViewRideRequests driver={true} selectedRide={this.props.selectedRide} />
     ) : null;
     return (
-<<<<<<< HEAD
       <Grid container>
         {this.props.driversRides.map((req, index) => (
-          <Grid item xs={12}>
+          <Grid key={index} item xs={12}>
             <Card className="rides-card">
               <CardActions>
                 <CardContent>
@@ -78,68 +68,6 @@ export class DriversRidesList extends React.Component<{}> {
               </Button>
             </Link>
           </Grid>
-=======
-      <div className="container-fluid">
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr className="bg-primary">
-                <td className="generic-text"> My Rides</td>
-              </tr>
-            </thead>
-            <tbody>
-              {!this.state.clicked
-                ? this.props.driversRides.map((req, index) => (
-                    <tr
-                      onClick={() => {
-                        this.handleClick(req.rideId);
-                      }}
-                      key={index}
-                    >
-                      <td>
-                        {req.fromStreet} {req.fromNumber}, {req.fromCity}
-                      </td>
-                      <td>
-                        {req.toStreet} {req.toNumber}, {req.toCity}
-                      </td>
-                      <td>
-                        {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}{" "}
-                      </td>
-                    </tr>
-                  ))
-                : this.props.driversRides
-                    .filter(x => x.rideId == this.state.selectedRideId)
-                    .map((req, index) => (
-                      <tr
-                        onClick={() => {
-                          this.handleClick(req.rideId);
-                        }}
-                        key={index}
-                      >
-                        <td>
-                          {req.fromStreet} {req.fromNumber}, {req.fromCity}
-                        </td>
-                        <td>
-                          {req.toStreet} {req.toNumber}, {req.toCity}
-                        </td>
-                        <td>
-                          {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
-                        </td>
-                      </tr>
-                    ))}
-            </tbody>
-          </table>
-        </div>
-        {!this.state.clicked ? (
-          <Link to="/newRideForm">
-            <button
-              type="button"
-              className="add-new-button btn btn-success btn-lg btn-block"
-            >
-              Add new Ride
-            </button>
-          </Link>
->>>>>>> d29da0cb1443c78761169623b355d280ac443153
         ) : (
           <button
             onClick={() => {

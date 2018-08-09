@@ -3,6 +3,13 @@ import api from "../helpers/axiosHelper";
 import "../styles/riderequests.css";
 import MapComponent from "./MapComponent";
 import "../styles/genericStyles.css";
+import Card from "@material-ui/core/Card";
+import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+
 export class DriverRideRequestsList extends React.Component {
   // constructor(props) {
   //   super(props);
@@ -25,44 +32,33 @@ export class DriverRideRequestsList extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.rideRequests);
     //  this.child.current.setPassengersPickUpPoint([1,1]);
   }
   //this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
 
   render() {
     return (
-      <div>
-        {this.state.show ? (
-          <MapComponent
-            id="map"
-            coords={this.state.coordinates}
-            ref={this.child}
-            driver={true}
-          />
-        ) : (
-          ""
-        )}
-        <div className="table-responsive requestListTable">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <td>Pending Requests</td>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.rideRequests.map((req, index) => (
-                <tr key={req.id}>
-                  <td>
-                    <span className="badge-numbers badge badge-warning">
-                      #{index + 1} {req.passengerFirstName}{" "}
-                      {req.passengerLastName}
-                    </span>
-                  </td>
-                  <td>
-                    {req.address}{" "}
-                    <button
-                      className="ride-request-button btn btn-primary"
+      <Grid container justify="center">
+        {this.props.rideRequests != null
+          ? this.props.rideRequests.map((req, index) => (
+              <Grid item xs={12}>
+                <Card className="rides-card">
+                  <Grid justify="center" container>
+                    <CardContent>
+                      <Grid item xs={12}>
+                        <Typography component="p">
+                          #{index + 1} {req.passengerFirstName}{" "}
+                          {req.passengerLastName}
+                        </Typography>
+                      </Grid>
+                      <Typography color="textSecondary">
+                        {req.address}{" "}
+                      </Typography>
+                    </CardContent>
+                  </Grid>
+                  <CardActions>
+                    <Button
+                      color="primary"
                       onClick={() => {
                         this.setState({ show: true });
                         this.setState({
@@ -73,9 +69,9 @@ export class DriverRideRequestsList extends React.Component {
                       }}
                     >
                       Show on map
-                    </button>{" "}
-                    <button
-                      className="ride-request-button btn btn-success btn-sm"
+                    </Button>
+                    <Button
+                      color="primary"
                       onClick={() => {
                         this.sendRequestResponse(
                           1,
@@ -86,23 +82,22 @@ export class DriverRideRequestsList extends React.Component {
                       }}
                     >
                       Accept
-                    </button>
-                    <button
-                      className="ride-request-button btn btn-danger btn-sm"
+                    </Button>
+                    <Button
+                      color="secondary"
                       onClick={() => {
                         this.sendRequestResponse(2, req.requestId, req.rideId);
                         window.location.reload();
                       }}
                     >
                       Deny
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))
+          : null}
+      </Grid>
     );
   }
 }

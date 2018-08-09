@@ -12,29 +12,25 @@ export class Rides extends React.Component {
     clicked: false,
     selectedRideId: null
   };
-  componentWillMount() {
+  componentDidMount() {
     this.showDriversRides();
   }
 
   handleClick(id) {
     this.setState({
       clicked: !this.state.clicked,
-      selectedRideId: id,
-      driversRides: this.state.driversRides.filter(x => x.rideId == id)
+      selectedRideId: id
     });
-
-    if (!this.state.clicked) {
-      this.showDriversRides();
-    }
   }
 
   showDriversRides() {
     api
       .get("Ride")
       .then(response => {
-        const d = response.data;
-        console.log(response.data);
-        this.setState({ driversRides: d });
+        if (response.status == 200) {
+          const d = response.data;
+          this.setState({ driversRides: d });
+        }
       })
       .catch(function(error) {
         console.error(error);
@@ -42,14 +38,18 @@ export class Rides extends React.Component {
   }
   render() {
     return (
-      <div>
-        <DriversRidesList
-          selectedRide={this.state.selectedRideId}
-          rideClicked={this.state.clicked}
-          onRideClick={this.handleClick.bind(this)}
-          driversRides={this.state.driversRides}
-        />
-      </div>
+      <DriversRidesList
+        selectedRide={this.state.selectedRideId}
+        rideClicked={this.state.clicked}
+        onRideClick={this.handleClick.bind(this)}
+        driversRides={
+          this.state.clicked && this.state.selectedRideId != null
+            ? this.state.driversRides.filter(
+                x => x.rideId == this.state.selectedRideId
+              )
+            : this.state.driversRides
+        }
+      />
     );
   }
 }
