@@ -33,7 +33,11 @@ namespace ShareCar.Api.Controllers
         public IActionResult GetWinnerBoard()
         {
             Dictionary<UserDto, int> users = _userLogic.GetWinnerBoard();
-            return Ok(users);
+            return Ok(new
+            {
+                users = users.Keys,
+                points = users.Values
+            });
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto user)

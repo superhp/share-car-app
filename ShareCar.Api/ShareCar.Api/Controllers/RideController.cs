@@ -34,13 +34,13 @@ namespace ShareCar.Api.Controllers
             return SendResponse(rides);
         }
 
-        [HttpGet("checkFinished")]
-        public async Task<IActionResult> CheckForFinishedRidesAsync()
-        {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
-            return Ok(rides);
-        }
+        //[HttpGet("checkFinished")]
+        //public async Task<IActionResult> CheckForFinishedRidesAsync()
+        //{
+        //    var userDto = await _userRepository.GetLoggedInUser(User);
+        //    List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
+        //    return Ok(rides);
+        //}
 
         // Should pass users role
         [HttpGet]
@@ -126,26 +126,26 @@ namespace ShareCar.Api.Controllers
             }
 
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] RideDto rideDto)
-        {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            if (rideDto == null)
-            {
-                return BadRequest("invalid parameter");
+        //[HttpDelete("delete")]
+        //public async Task<IActionResult> Delete([FromBody] RideDto rideDto)
+        //{
+        //    var userDto = await _userRepository.GetLoggedInUser(User);
+        //    if (rideDto == null)
+        //    {
+        //        return BadRequest("invalid parameter");
 
-            }
-            bool result = _rideLogic.DeleteRide(rideDto);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("operation failed");
-            }
+        //    }
+        //    bool result = _rideLogic.DeleteRide(rideDto);
+        //    if (result)
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("operation failed");
+        //    }
 
-        }
+        //}
         // Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)

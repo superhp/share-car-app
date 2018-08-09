@@ -9,19 +9,20 @@ using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.ObjectMapping;
+using ShareCar.Logic.Passenger_Logic;
 
 namespace ShareCar.Logic.User_Logic
 {
     public class UserLogic : IUserLogic
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPassengerRepository _passengerRepository;
+        private readonly IPassengerLogic _passengerLogic;
         private readonly IMapper _mapper;
 
-        public UserLogic(IUserRepository userRepository, IPassengerRepository passengerRepository, IMapper mapper)
+        public UserLogic(IUserRepository userRepository, IPassengerLogic passengerLogic, IMapper mapper)
         {
             _userRepository = userRepository;
-            _passengerRepository = passengerRepository;
+            _passengerLogic = passengerLogic;
             _mapper = mapper;
 
         }
@@ -51,7 +52,7 @@ namespace ShareCar.Logic.User_Logic
 
         public int CountPoints(string email)
         {
-            int points = _passengerRepository.GetUsersPoints(email);
+            int points = _passengerLogic.GetUsersPoints(email);
             return points;
         }
         public Dictionary<UserDto, int> GetWinnerBoard()
@@ -82,7 +83,7 @@ namespace ShareCar.Logic.User_Logic
                 }
                 i++;
             }
-            userWithPoints = userWithPoints.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            userWithPoints = userWithPoints.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             return userWithPoints;
         }
     }

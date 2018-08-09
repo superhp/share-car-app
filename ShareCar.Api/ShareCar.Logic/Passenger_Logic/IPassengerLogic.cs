@@ -8,5 +8,6 @@ namespace ShareCar.Logic.Passenger_Logic
     public interface IPassengerLogic
     {
         bool AddPassenger(PassengerDto passenger);
+        int GetUsersPoints(string email);
     }
 }

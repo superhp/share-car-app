@@ -32,7 +32,6 @@ export class DriversRidesList extends React.Component<{}> {
       </div>
     ) : null;
     return (
-<<<<<<< HEAD
       <Grid container>
         {this.props.driversRides.map((req, index) => (
           <Grid item xs={12}>
