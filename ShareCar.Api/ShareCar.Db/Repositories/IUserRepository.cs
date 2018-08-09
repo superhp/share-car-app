@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
@@ -11,5 +12,6 @@ namespace ShareCar.Db.Repositories
         Task CreateFacebookUser(FacebookUserDataDto userDto);
         Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal);
         Task UpdateUserAsync(User user, ClaimsPrincipal principal);
+        IEnumerable<User> GetAllUsers();
     }
 }

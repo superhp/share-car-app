@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ShareCar.Db.Entities;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShareCar.Db.Repositories
 {
@@ -26,7 +27,10 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> FindDriverRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING);
+
+                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).AsNoTracking();
+
+
         }
 
         public IEnumerable<Request> FindRequestsByRideId(int rideId)

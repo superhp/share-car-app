@@ -13,41 +13,43 @@ using ShareCar.Logic.Ride_Logic;
 namespace ShareCar.Logic.Passenger_Logic
 {
     public class PassengerLogic : IPassengerLogic
-    { 
-        private readonly IRideRepository _rideRepository;
-        private readonly IAddressRepository _addressRepository;
-        private readonly IAddressLogic _addressLogic;
-        private readonly IRouteLogic _routeLogic;
-        private readonly IRideLogic _rideLogic;
+    {
+
         private readonly IPassengerRepository _passengerRepository;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository, IRideLogic rideLogic)
+        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository)
         {
-            _rideRepository = rideRepository;
-            _rideLogic = rideLogic;
-            _addressLogic = addressLogic;
-            _routeLogic = routeLogic;
             _mapper = mapper;
-            _addressRepository = addressRepository;
             _passengerRepository = passengerRepository;
         }
 
         public bool AddPassenger(PassengerDto passenger)
         {
 
+            return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
 
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
-
-            bool addNewPassenger = true; // Will be deleted once validation appears
-
-            if (addNewPassenger)
-            {
-                return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
-            }
-            return false;
         }
 
+        public List<PassengerDto> GetPassengersByEmail(string email)
+        {
+            IEnumerable<Passenger> passengers = _passengerRepository.GetUnrepondedPassengersByEmail(email);
+            List<PassengerDto> dtoPassengers = new List<PassengerDto>();
+            foreach (Passenger passenger in passengers)
+            {
+                dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
+            }
+            return dtoPassengers;
+        }
+
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
+        {
+            _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
+        }
+        public int GetUsersPoints(string email)
+        {
+            int points = _passengerRepository.GetUsersPoints(email);
+            return points;
+        }
     }
 }
