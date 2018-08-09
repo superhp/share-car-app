@@ -10,7 +10,5 @@ namespace ShareCar.Dto
         public int FromId { get; set; }
         public int ToId { get; set; }
         public List<RideDto> Rides { get; set; }
-        public string Geometry { get; set; }
-
     }
 }

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
+using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{
+{   [DisableCors]
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
@@ -19,32 +21,36 @@ namespace ShareCar.Api.Controllers
         private readonly IRideLogic _rideLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IUserRepository _userRepository;
+        private readonly IPassengerLogic _passengerLogic;
 
-
-        public RideController(IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository)
+        public RideController(IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
         {
             _rideLogic = rideLogic;
             _routeLogic = routeLogic;
             _userRepository = userRepository;
+            _passengerLogic = passengerLogic;
         }
-        [HttpGet("route={routeId}")]
-        public IActionResult GetRoute(int routeId)
-        {
-            RouteDto route = _routeLogic.GetRouteById(routeId);
-            return Ok(route);
-        }
-        [HttpGet("routes")]
-        public IActionResult GetRoutes()
-        {
-            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes();
-            return Ok(routes);
-        }
-
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
             IEnumerable<RideDto> rides = _rideLogic.FindSimilarRides(rideId);
             return SendResponse(rides);
+        }
+
+        [HttpPost("passengerResponse")]
+        public async Task PassengerResponseAsync(bool response, int rideId)
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+            _passengerLogic.RespondToRide(response, rideId, userDto.Email);
+        }
+
+        [HttpGet("checkFinished")]
+        public async Task<IActionResult> CheckForFinishedRidesAsync()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
+            return Ok(rides);
         }
 
         // Should pass users role
@@ -119,20 +125,13 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = _rideLogic.UpdateRide(ride);
-
-            if(result)
-            {
+            
                 return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            
 
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] RideDto rideDto)
+        [HttpPut("disactivate")]
+        public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (rideDto == null)
@@ -140,7 +139,7 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("invalid parameter");
 
             }
-            bool result = _rideLogic.DeleteRide(rideDto);
+            bool result = _rideLogic.SetRideAsInactive(rideDto);
             if (result)
             {
                 return Ok();
@@ -151,7 +150,6 @@ namespace ShareCar.Api.Controllers
             }
 
         }
-        // Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)
         {
@@ -171,7 +169,10 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest("Operation failed");
             }
+
         }
+
+
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
@@ -187,5 +188,3 @@ namespace ShareCar.Api.Controllers
 
 
 }
-
-

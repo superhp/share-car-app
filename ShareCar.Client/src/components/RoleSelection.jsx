@@ -1,4 +1,4 @@
-// @flow
+//@flow
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import { Router, Switch } from "react-router";
@@ -18,7 +18,6 @@ class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
   authService = new AuthenticationService();
 
- // state: MyProfileState = { loading: true, user: null };
   
   state = {
     rideNotifications : [],

@@ -22,10 +22,7 @@ namespace ShareCar.Logic.Route_Logic
             int routeId = _routeRepository.GetRouteId(fromId, toId);
             return routeId;
         }
-        public bool UpdateRoute( RouteDto routeDto)
-        {
-            return _routeRepository.UpdateRoute(_mapper.Map<RouteDto, Route>(routeDto));
-        }
+        
         public RouteDto GetRouteById(int id)
         {
             Route route = _routeRepository.FindRouteById(id);
@@ -46,17 +43,6 @@ namespace ShareCar.Logic.Route_Logic
             //Route routes = _mapper.Map<RouteDto, Route>(route);
             _routeRepository.AddRoute(entityRoute);
             return true;
-        }
-
-        public IEnumerable<RouteDto> GetAllRoutes()
-        {
-            IEnumerable<Route> entityRoutes = _routeRepository.GetAllRoutes();
-            List<RouteDto> dtoRoutes = new List<RouteDto>();
-            foreach(var route in entityRoutes)
-            {
-                dtoRoutes.Add(_mapper.Map<Route, RouteDto>(route));
-            }
-            return dtoRoutes;
         }
     }
 }

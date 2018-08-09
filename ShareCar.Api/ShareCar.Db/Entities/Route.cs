@@ -14,7 +14,7 @@ namespace ShareCar.Db.Entities
         public int ToId { get; set; }
         public List<Ride> Rides { get; set; }
         [ForeignKey("FromId")]
-        public virtual Address FromAddress { get; set; }
+        public virtual Address AromAddress { get; set; }
         [ForeignKey("ToId")]
         public virtual Address ToAddress { get; set; }
     }

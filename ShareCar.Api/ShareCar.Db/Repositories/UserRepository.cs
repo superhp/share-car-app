@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +39,10 @@ namespace ShareCar.Db.Repositories
                 throw new ArgumentException("Failed to create local user account.");
          
         }
-
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _databaseContext.Users;
+        }
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);

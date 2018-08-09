@@ -8,6 +8,7 @@ namespace ShareCar.Logic.Ride_Logic
 {
     public interface IRideLogic
     {
+        //Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail);
         IEnumerable<RideDto> FindRidesByDriver(string email);
         RideDto FindRideById(int id);
         IEnumerable<RideDto> FindRidesByDate(DateTime date);
@@ -15,11 +16,10 @@ namespace ShareCar.Logic.Ride_Logic
         IEnumerable<RideDto> FindRidesByStartPoint(int adressFromId);
         IEnumerable<PassengerDto> FindPassengersByRideId(int rideId);
         bool DoesUserBelongsToRide(string email, int rideId);
-       // Task<IEnumerable<PassengerDto>> FindRidesByPassenger(ClaimsPrincipal User);
-        bool UpdateRide(RideDto ride);
-        bool DeleteRide(RideDto ride);
+        Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail);
+        bool SetRideAsInactive(RideDto ride);
         bool AddRide(RideDto ride, string email);
         IEnumerable<RideDto> FindSimilarRides(int rideId);
-        IEnumerable<RouteDto> GetRoutes();
+
     }
 }

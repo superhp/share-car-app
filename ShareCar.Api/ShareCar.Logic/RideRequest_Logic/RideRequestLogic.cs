@@ -19,30 +19,25 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IRideRequestRepository _rideRequestRepository;
         private readonly IRideLogic _rideLogic;
         private readonly IPassengerLogic _passengerLogic;
-        private readonly IRouteLogic _routeLogic;
-        private readonly IUserLogic _personLogic;
         private readonly IAddressLogic _addressLogic;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IAddressLogic addressLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic)
         {
             _rideRequestRepository = rideRequestRepository;
-            _personLogic = personLogic;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
-            _routeLogic = routeLogic;
             _userManager = userManager;
             _mapper = mapper;
             _passengerLogic = passengerLogic;
         }
 
-        public bool AddRequest(RideRequestDto requestDto)
+        public bool AddRequest(RideRequestDto requestDto, string driverEmail)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
-            RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
-            requestDto.DriverEmail = rideDto.DriverEmail;
+            requestDto.DriverEmail = driverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
@@ -87,8 +82,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
             return SortRequests(converted);
-            }
-        
+            }       
         
         public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
         {
@@ -155,6 +149,22 @@ namespace ShareCar.Logic.RideRequest_Logic
             return dtoRequests;
         }
 
+        //Changes request status to deleted
+        public void DeletedRide(int rideId)
+        {
+            IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
+            _rideRequestRepository.DeletedRide(entityRequests);
+        }
 
+        public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
+        {
+            IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
+            List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
+            foreach(Request request in entityRequests)
+            {
+                dtoRequests.Add(_mapper.Map<Request, RideRequestDto>(request));
+            }
+            return dtoRequests;
+        }
     }
 }

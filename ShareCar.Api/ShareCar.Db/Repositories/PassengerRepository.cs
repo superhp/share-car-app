@@ -36,5 +36,33 @@ namespace ShareCar.Db.Repositories
             //    }
 
         }
+
+        public void RemovePassenger(Passenger passenger)
+        {
+            _databaseContext.Passengers.Remove(passenger);
+            _databaseContext.SaveChanges();
+
+        }
+
+        public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
+        {
+                return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
+
+            }
+
+        public void RespondeToRide(bool response, int rideId, string passengerEmail)
+        {
+            try
+            {
+                Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
+                passenger.PassengerResponded = true;
+                passenger.Completed = response;
+                _databaseContext.SaveChanges();
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

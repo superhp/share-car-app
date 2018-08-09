@@ -36,7 +36,7 @@ export class RideRequestForm extends React.Component {
       container: document.querySelector("#address")
     });
     placesAutocomplete.on("change", e =>
-    this.child.current.centerMapParent(e.suggestion.latlng)
+      this.child.current.centerMapParent(e.suggestion.latlng)
     );
   }
 

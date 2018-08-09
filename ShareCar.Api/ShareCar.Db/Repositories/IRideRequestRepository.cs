@@ -8,7 +8,7 @@ namespace ShareCar.Db.Repositories
 {
     public interface IRideRequestRepository
     {
-
+        IEnumerable<Request> GetAcceptedRequests(string passengerEmail);
         bool AddRequest(Request request);
         Request FindRequestById(int id);
         IEnumerable<Request> FindPassengerRequests(string email);
@@ -16,5 +16,7 @@ namespace ShareCar.Db.Repositories
         bool UpdateRequest(Request request);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
+        void DeletedRide(IEnumerable<Request> requests);
+        IEnumerable<Request> FindRequestsByRideId(int rideId);
     }
 }

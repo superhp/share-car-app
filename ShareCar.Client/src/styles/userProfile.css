@@ -4,16 +4,10 @@
 .container.profile-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 18%;
+  margin-bottom: 10%;
   margin-top: 16%;
 }
 
-.role-header {
-  margin-top: 10%;
-  text-align: space-between;
-  margin-bottom: none;
-  font-size: 350%;
-}
 
 s div.form-group {
   display: flex;
@@ -24,7 +18,8 @@ div.form-group label {
   font-weight: bold;
 }
 .form-header{
-  font-size: 130%;
+  font-size: 15px;
+  color: grey;
 }
 div.form-group input {
   font-style: italic;
@@ -38,4 +33,21 @@ img.thumbnail {
   margin: 0 auto;
   text-align: center;
   display: block;
+}
+.logout-button {
+  flex: 1 100%;
+  background:  #007bff;
+  border: none;
+  align-self: flex-end;
+  overflow: hidden;
+  position: fixed;
+  height: 8%;
+  width: 25%;
+  top: 1px;
+  right: 1px;
+  border-radius: 10%;
+}
+.logout-text {
+  color: white;
+  font-size: 150%;
 }
