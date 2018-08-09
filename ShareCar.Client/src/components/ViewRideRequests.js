@@ -18,13 +18,9 @@ export class ViewRideRequests extends React.Component {
       : this.showPassengerRequests();
   }
 
-  /*
-getNames(email){
-    api.get('Person/'+ email)
-    .then((response) => {
-        console.log("==========================");
-        console.log(response);
-*/
+  componentDidMount() {
+    console.log(this.state.driverRequests);
+  }
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -61,12 +57,7 @@ getNames(email){
     api
       .get("RideRequest/true")
       .then(response => {
-        console.log((response.data: User));
-        const d = response.data;
-
-        this.setState({ driverRequests: d });
-
-        console.log(this.state.driverRequests);
+        this.setState({ driverRequests: response.data });
       })
       .then(() => {
         const unseenRequests = [];
@@ -95,7 +86,9 @@ getNames(email){
         {this.props.driver ? (
           <DriverRideRequestsList
             selectedRide={this.props.selectedRide}
-            requests={this.state.driverRequests}
+            rideRequests={this.state.driverRequests.filter(
+              x => x.rideId == this.props.selectedRide
+            )}
           />
         ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
