@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto.Identity;
+using ShareCar.Logic.ObjectMapping;
 
 namespace ShareCar.Logic.User_Logic
 {
     public class UserLogic : IUserLogic
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPassengerRepository _passengerRepository;
+        private readonly IMapper _mapper;
 
-        public UserLogic(IUserRepository userRepository)
+        public UserLogic(IUserRepository userRepository, IPassengerRepository passengerRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _passengerRepository = passengerRepository;
+            _mapper = mapper;
+
         }
 
         public async Task<UserDto> GetUserAsync(ClaimsPrincipal principal)
@@ -26,24 +33,25 @@ namespace ShareCar.Logic.User_Logic
 
         public async void UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User)
         {
-            var userToUpdate = await _userRepository.GetLoggedInUser(User);
+            var _userToUpdate = await _userRepository.GetLoggedInUser(User);
              
-            if (userToUpdate != null)
+            if (_userToUpdate != null)
             {
-                var _user = new User
-                {
-                    FirstName = updatedUser.FirstName,
-                    UserName = updatedUser.LastName,
-                    Email = updatedUser.Email,
-                    Phone = updatedUser.Phone,
-                    PictureUrl = updatedUser.PictureUrl,
-                    LicensePlate = updatedUser.LicensePlate,
-                    
-                };
+                _userToUpdate.FirstName = updatedUser.FirstName;
+                _userToUpdate.LastName = updatedUser.LastName;
+                _userToUpdate.Phone = updatedUser.Phone;
+                _userToUpdate.LicensePlate = updatedUser.LicensePlate;
 
-                await Task.Run(() => _userRepository.UpdateUserAsync(_user));
+                var _user = _mapper.Map<UserDto, User>(_userToUpdate);
+                await Task.Run(() => _userRepository.UpdateUserAsync(_user, User));
             }
 
+        }
+
+        public int CountPoints(string email)
+        {
+            int points = _passengerRepository.GetUsersPoints(email);
+            return points;
         }
     }
 }

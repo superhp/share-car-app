@@ -7,5 +7,6 @@ namespace ShareCar.Db.Repositories
         int GetRouteId(int fromId, int toId);
         Route FindRouteById(int id);
         bool AddRoute(Route route);
+        bool UpdateRoute(Route route);
     }
 }

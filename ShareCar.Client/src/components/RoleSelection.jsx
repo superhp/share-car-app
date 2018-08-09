@@ -1,4 +1,4 @@
-// @flow
+//@flow
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import { Router, Switch } from "react-router";
@@ -10,6 +10,7 @@ import passengerLogo from "../images/passenger.png";
 import  RideCompletedNotification from "./RideCompletedNotification";
 import "../styles/roleSelection.css";
 import "../styles/genericStyles.css";
+import axios from "axios";
 import api from "../helpers/axiosHelper";
 import Driver from "./Driver";
 
@@ -17,21 +18,19 @@ class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
   authService = new AuthenticationService();
 
-  //state: MyProfileState = { loading: true, user: null };
   
   state = {
     rideNotifications : [],
-    MyProfileState : { loading: true, user: null }
+     loading: true,
+      user: null 
   }
 
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
-    api.get(`/Ride/checkFinished`).then(response => {
-      console.log(response);
-      this.setState({ rideNotifications: response.data });    
-    
-    });
-  console.log(this.state.rideNotifications);
+   // api.get(`/Ride/checkFinished`).then(response => {
+  //    console.log(response);
+  //    this.setState({ rideNotifications: response.data });    
+   // });
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
@@ -55,12 +54,12 @@ class RoleSelection extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div>
-{
+      {
       this.state.rideNotifications.length == 0 
-     ?<div></div>  
-     :<RideCompletedNotification rides={this.state.rideNotifications}/>
-}     
-     <div className="role-container">
+      ?<div></div> 
+      : <RideCompletedNotification rides = {this.state.rideNotifications}/>
+      }
+      <div className="role-container">
          <h1 className="generic-every-header">Choose a role:</h1> 
         <Link to="/driver">
           {" "}

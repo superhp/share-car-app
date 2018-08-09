@@ -273,8 +273,7 @@ namespace ShareCar.Db.Migrations
                         name: "FK_Requests_Rides_RideId",
                         column: x => x.RideId,
                         principalTable: "Rides",
-                        principalColumn: "RideId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "RideId");
                 });
 
             migrationBuilder.CreateIndex(

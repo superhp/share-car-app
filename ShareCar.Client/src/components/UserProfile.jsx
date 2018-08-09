@@ -4,6 +4,7 @@ import UserService from "../services/userService";
 import history from "../helpers/history";
 import "../styles/userProfile.css";
 import api from "../helpers/axiosHelper";
+import { withAlert } from "react-alert";
 
 type UserProfileState = {
   loading: boolean,
@@ -22,17 +23,17 @@ class UserProfile extends Component<{}, UserProfileState> {
   };
 
   handleSubmit(e) {
+    e.preventDefault();
     let data = {
-      firstName: e.target.firstname.value,
-      lastName: e.target.lastname.value,
-      profilePicture: this.state.user.profilePicture,
-      email: e.target.email.value,
-      licensePlate: e.target.licenseplate.value,
-      phone: e.target.phone.value
+      firstName: e.target.parentNode.firstname.value,
+      lastName: e.target.parentNode.lastname.value,
+      profilePicture: this.state.user.pictureUrl,
+      email: e.target.parentNode.email.value,
+      licensePlate: e.target.parentNode.licenseplate.value,
+      phone: e.target.parentNode.phone.value
     };
-    api.post(`http://localhost:5963/api/user`, data).then(res => {
-      console.log(res);
-      console.log(res.data);
+    api.post(`https://localhost:44360/api/user`, data).then(res => {
+      if (res.status == 200) this.props.alert.show("Profile updated");
     });
   }
 
@@ -44,73 +45,73 @@ class UserProfile extends Component<{}, UserProfileState> {
     ) : this.state.user === null ? (
       <p>The user failed to load</p>
     ) : (
-      <div>
-        <img
-          className="thumbnail"
-          src={this.state.user.profilePicture}
-        />
+      <div className="container-fluid">
         <div className="container profile-container">
-          <form
-            className="profile-form col-sm-6"
-            onSubmit={this.handleSubmit.bind(this)}
-          >
+          <form className="profile-form col-sm-6">
+            <img className="thumbnail" src={this.state.user.pictureUrl} />
+
             <div className="form-group">
-              <label for="exampleInputEmail1">Your Email</label>
+              <label for="exampleInputEmail1" className="form-header">Your Email</label>
               <input
                 type="email"
                 name="email"
                 disabled
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 value={this.state.user.email}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">First Name</label>
+              <label for="exampleInputEmail1" className="form-header">First Name</label>
               <input
                 type="text"
                 name="firstname"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.firstName}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">Last Name</label>
+              <label for="exampleInputEmail1" className="form-header">Last Name</label>
               <input
                 type="text"
                 name="lastname"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.lastName}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">Phone Number</label>
+              <label for="exampleInputEmail1" className="form-header">Phone Number</label>
               <input
                 type="text"
                 name="phone"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.phone}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">License Plate Number</label>
+              <label for="exampleInputEmail1" className="form-header">License Plate Number</label>
               <input
                 type="text"
                 name="licenseplate"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.licensePlate}
               />
             </div>
-            <button type="submit" className="btn btn-primary">
+            <button
+              onClick={e => {
+                this.handleSubmit(e);
+              }}
+              className="btn btn-primary"
+            >
               Save
             </button>
           </form>
@@ -118,13 +119,8 @@ class UserProfile extends Component<{}, UserProfileState> {
       </div>
     );
 
-    return (
-      <div>
-        <h1 className = "role-header">User Profile</h1>
-        {content}
-      </div>
-    );
+    return <div>{content}</div>;
   }
 }
 
-export default UserProfile;
+export default withAlert(UserProfile);

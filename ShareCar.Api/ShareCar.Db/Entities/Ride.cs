@@ -10,9 +10,11 @@ namespace ShareCar.Db.Entities
         public int RideId { get; set; }
         public int RouteId { get; set; }
         public string DriverEmail { get; set; }
-        [DefaultValue(4)]
+        [DefaultValue (4)]
         public int NumberOfSeats { get; set; }
+        public bool isActive { get; set; }
         public List<Passenger> Passengers { get; set; }
+        public List<Request> Requests { get; set; }
         public DateTime RideDateTime { get; set; }
         [ForeignKey("RouteId")]
         public virtual Route Route { get; set; }

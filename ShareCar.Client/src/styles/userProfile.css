@@ -1,16 +1,13 @@
-
 .container {
-
   margin-top: none;
-  
 }
 .container.profile-container {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 13%;
-  margin-top: none;
-  
+  justify-content: center;
+  margin-bottom: 18%;
+  margin-top: 16%;
 }
+
 .role-header {
   margin-top: 10%;
   text-align: space-between;
@@ -18,18 +15,20 @@
   font-size: 350%;
 }
 
-input.edit-input {
-  background-color: rgba(0, 255, 179, 0.89);
-}
-form.profile-form {
-  margin: 1em;
-  margin-bottom: 15%;
-}
-div.form-group {
+s div.form-group {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
-
+}
+div.form-group label {
+  font-weight: bold;
+}
+.form-header{
+  font-size: 15px;
+  color: grey;
+}
+div.form-group input {
+  font-style: italic;
 }
 .profile-form button {
   width: 100%;
