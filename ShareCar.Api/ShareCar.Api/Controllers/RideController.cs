@@ -11,7 +11,7 @@ using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{   [DisableCors]
+{   
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]

@@ -126,30 +126,31 @@ namespace ShareCar.Logic.RideRequest_Logic
             {
                 dtoRequests.Add(_mapper.Map<Request,RideRequestDto>(request));
 
-                if (isDriver)
-                {
-                    var user = await _userManager.FindByEmailAsync(request.PassengerEmail);
-                    dtoRequests[count].PassengerFirstName = user.FirstName;
-                    dtoRequests[count].PassengerLastName = user.LastName;
-                }
-                else
-                {
-                    var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-                    dtoRequests[count].PassengerFirstName = user.FirstName;
-                    dtoRequests[count].PassengerLastName = user.LastName;
-                }
+             
+                    if (isDriver)
+                    {
+                        var user = await _userManager.FindByEmailAsync(request.PassengerEmail);
+                        dtoRequests[count].PassengerFirstName = user.FirstName;
+                        dtoRequests[count].PassengerLastName = user.LastName;
+                    }
+                    else
+                    {
+                        var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+                        dtoRequests[count].PassengerFirstName = user.FirstName;
+                        dtoRequests[count].PassengerLastName = user.LastName;
+                    }
 
-                AddressDto address = _addressLogic.FindAddressById(request.AddressId);
 
-                dtoRequests[count].City = address.City;
-                dtoRequests[count].Street = address.Street;
-                dtoRequests[count].HouseNumber = address.Number;
-                dtoRequests[count].Longtitude = address.Longtitude;
-                dtoRequests[count].Latitude = address.Latitude;
+                    AddressDto address = _addressLogic.FindAddressById(request.AddressId);
 
-                dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
-                count++;
+                    dtoRequests[count].City = address.City;
+                    dtoRequests[count].Street = address.Street;
+                    dtoRequests[count].HouseNumber = address.Number;
+                    dtoRequests[count].Longtitude = address.Longtitude;
+                    dtoRequests[count].Latitude = address.Latitude;
 
+                    //dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    count++;
             }
             return dtoRequests;
         }
