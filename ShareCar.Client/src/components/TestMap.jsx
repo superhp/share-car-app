@@ -71,11 +71,13 @@ this.state.passengerRouteFeatures[counter-1].setStyle(this.state.driverStyles.ro
 
 this.state.passengerRouteFeatures[counter].setStyle(this.state.passengerStyles.route);
 counter++;
-console.log(counter);
 if(counter >= this.state.passengerRouteFeatures.length){
   counter = 0;
 }
-this.setState({passengerRouteFeaturesCoutner:counter});
+console.log(counter);
+this.setState({passengerRouteFeaturesCounter:counter});
+console.log(this.state.passengerRouteFeaturesCounter);
+
 }
 
 showRoutes(){
