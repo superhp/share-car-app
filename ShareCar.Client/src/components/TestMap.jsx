@@ -28,6 +28,8 @@ export class test extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
+    passengerStyles:[],
+    passengerStylesCouter : 0,
     pickUpPoint:[],
     route: "",
     utils: "",
@@ -46,10 +48,10 @@ export class test extends React.Component {
       routeGeometry: ""
     },
     passengerRoutes: [],
-    style: "",
+    driverStyles: "",
     url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
     url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
-    driver : true // will be passed by props
+    driver : false // will be passed by props
   }
 
 showRoutes(){
@@ -59,10 +61,33 @@ showRoutes(){
       this.state.passengerRoutes.forEach((element)=> {
         console.log(element.geometry);
       });
-            console.log(this.state.passengerRoutes[0].geometry);
-      this.createRoute(this.state.passengerRoutes[0].geometry);
+this.state.passengerRoutes.forEach((element)=>{            
+      this.createPassengerRoute(element.geometry);
+});
     });
 
+}
+
+createPassengerStyles(){
+  var passengerStyles = [];
+  for(var r = 0; r < 256; r +=40)
+  {
+    for(var g = 0; r < 256; r +=40)
+    {
+      for(var b = 0; r < 256; r +=40)
+      {
+        var style = {
+          route: new Style({
+            stroke: new Stroke({
+              width: 6, color: [r, g, b, 0.8]
+            })
+          })
+      };
+      passengerStyles.push(style);
+    }
+  }
+}
+this.setState({passengerStyles});
 }
 
   saveRide() {
@@ -71,6 +96,7 @@ showRoutes(){
       ToAddress: this.state.route.toAddress,
       RouteGeometry: this.state.route.routeGeometry
     }
+    console.log(newRoute);
    // other stuff not implemented
   }
 
@@ -94,7 +120,7 @@ showRoutes(){
       geometry: new Point(fromLonLat(coord)),
       onClick:console.log('clicked')
     });
-    feature.setStyle(this.state.styles.icon);
+    feature.setStyle(this.state.driverStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
     console.log(fromFeature);
@@ -123,7 +149,7 @@ showRoutes(){
 
   }
 
-  createRoute(polyline) {
+  createDriverRoute(polyline) {
     this.state.route.routeGeometry = polyline;
     var route = new Polyline({
       factor: 1e5
@@ -138,9 +164,29 @@ showRoutes(){
     if (this.state.routeFeature) {
       this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
     }
-    feature.setStyle(this.state.styles.route);
+    feature.setStyle(this.state.driverStyles.route);
     this.state.vectorSource.addFeature(feature);
     this.setState({ routeFeature: feature });
+  }
+
+  createPassengerRoute(polyline) {
+    this.state.route.routeGeometry = polyline;
+    var route = new Polyline({
+      factor: 1e5
+    }).readGeometry(polyline, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857'
+    });
+    var feature = new Feature({
+      type: 'route',
+      geometry: route
+    });
+
+    feature.setStyle(this.state.passengerStyles[this.state.passengerStylesCouter].route);
+    var counter = this.state.passengerStylesCouter;
+    counter++;
+    this.setState({passengerStylesCouter : counter});
+    this.state.vectorSource.addFeature(feature);
   }
 
   to4326(coord) {
@@ -323,7 +369,7 @@ showRoutes(){
         if (json.code !== 'Ok') {
           return;
         }
-        this.createRoute(json.routes[0].geometry);
+        this.createDriverRoute(json.routes[0].geometry);
       });
     });
   }
@@ -336,7 +382,7 @@ showRoutes(){
       vectorLayer = new LayerVector({
         source: vectorSource
       }),
-      styles = {
+      driverStyles = {
         route: new Style({
           stroke: new Stroke({
             width: 6, color: [40, 40, 40, 0.8]
@@ -364,8 +410,8 @@ showRoutes(){
         zoom: 11
       })
     });
-
-    this.setState({ map, vectorSource, styles });
+this.createPassengerStyles();
+    this.setState({ map, vectorSource, driverStyles });
 
     this.CenterMap(25.279652, 54.687157, map);
 
@@ -413,7 +459,7 @@ else{
           <input
             type="search"
             class="form-group"
-            id="_driver-address-input-from"
+            id="driver-address-input-from"
             placeholder="Select From Location..."
           />
         </div>

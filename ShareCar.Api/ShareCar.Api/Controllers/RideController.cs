@@ -32,7 +32,7 @@ namespace ShareCar.Api.Controllers
         {
             RouteDto route = _routeLogic.GetRouteById(routeId);
             return Ok(route);
-
+        }
         [HttpGet("routes")]
         public IActionResult GetRoutes()
         {
