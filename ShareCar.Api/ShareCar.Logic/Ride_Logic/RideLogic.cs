@@ -26,7 +26,7 @@ namespace ShareCar.Logic.Ride_Logic
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
-            
+            _userManager = userManager;
         }
 
         public RideDto FindRideById(int id)
@@ -129,12 +129,10 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }
 
-        //public bool DeleteRide(RideDto rideDto)
-        //{
-
-        //    _rideRequestLogic.DeletedRide(rideDto.RideId);
-        //    return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
-        //}
+        public bool DeleteRide(RideDto rideDto)
+        {
+           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
+        }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
         {
@@ -236,26 +234,26 @@ namespace ShareCar.Logic.Ride_Logic
             }
 
         }
-        //public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
-        //{
-        //    IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
-        //    List<RideDto> rides = new List<RideDto>();
-        //    DateTime hourAfterRide = new DateTime();
-        //    hourAfterRide.AddHours(1);
-        //    foreach (RideRequestDto request in requests)
-        //    {
-        //        Ride ride = _rideRepository.FindRideById(request.RideId);
-        //        if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
-        //        {
+        public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
+        {
+            //      IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
+            /*   List<RideDto> rides = new List<RideDto>();
+               DateTime hourAfterRide = new DateTime();
+               hourAfterRide.AddHours(1);
+               foreach (RideRequestDto request in requests)
+               {
+                   Ride ride = _rideRepository.FindRideById(request.RideId);
+                   if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
+                   {
 
-        //            var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-        //            RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
-        //            dtoRide.DriverFirstName = user.FirstName;
-        //            dtoRide.DriverLastName = user.LastName;
-        //            rides.Add(dtoRide);
-        //        }
-        //    }
-        //    return rides;
-        //}
+                       var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+                       RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
+                       dtoRide.DriverFirstName = user.FirstName;
+                       dtoRide.DriverLastName = user.LastName;*/
+            /* rides.Add(dtoRide);
+         }
+     }*/
+            return null;//rides;
+        }
     }
 }

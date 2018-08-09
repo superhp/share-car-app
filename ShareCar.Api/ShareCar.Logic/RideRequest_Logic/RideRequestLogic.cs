@@ -25,7 +25,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, IRideLogic rideLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IRouteLogic routeLogic, IAddressLogic addressLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _personLogic = personLogic;
@@ -37,12 +37,12 @@ namespace ShareCar.Logic.RideRequest_Logic
             _passengerLogic = passengerLogic;
         }
 
-        public bool AddRequest(RideRequestDto requestDto)
+        public bool AddRequest(RideRequestDto requestDto, string driverEmail)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
-            RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
-            requestDto.DriverEmail = rideDto.DriverEmail;
+            //       RideDto rideDto = _rideLogic.FindRideById(requestDto.RideId);
+            requestDto.DriverEmail = driverEmail;//rideDto.DriverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
@@ -160,6 +160,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
             _rideRequestRepository.DeletedRide(entityRequests);
         }
+
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
             IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);

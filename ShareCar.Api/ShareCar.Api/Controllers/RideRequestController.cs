@@ -8,6 +8,7 @@ using ShareCar.Db.Repositories;
 using ShareCar.Dto;
 using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
+using ShareCar.Logic.Ride_Logic;
 
 namespace ShareCar.Api.Controllers
 {
@@ -18,11 +19,13 @@ namespace ShareCar.Api.Controllers
     {
         private readonly IRideRequestLogic _requestLogic;
         private readonly IUserRepository _userRepository;
+        private readonly IRideLogic _rideLogic;
 
-        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository)
+        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository, IRideLogic rideLogic)
         {
             _requestLogic = requestLogic;
             _userRepository = userRepository;
+            _rideLogic = rideLogic;
         }
 
         [HttpGet("{driver}")]
