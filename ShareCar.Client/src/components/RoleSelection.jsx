@@ -36,6 +36,7 @@ class RoleSelection extends Component<{}, MyProfileState> {
 
   updateLoggedInUser = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
+    console.log(user);
   };
 
   logout = () => {

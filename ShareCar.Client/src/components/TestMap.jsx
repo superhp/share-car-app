@@ -28,7 +28,13 @@ export class test extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
-    passengerStyles:[],
+    passengerStyles: {
+      route: new Style({
+        stroke: new Stroke({
+          width: 6, color: [0, 200, 0, 0.8]
+        })
+      })
+  },
     passengerStylesCouter : 0,
     pickUpPoint:[],
     route: "",
@@ -48,11 +54,29 @@ export class test extends React.Component {
       routeGeometry: ""
     },
     passengerRoutes: [],
+    passengerRouteFeatures:[],
+    passengerRouteFeaturesCounter:0,
     driverStyles: "",
     url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
     url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
     driver : false // will be passed by props
   }
+
+selectRoute(){
+  var counter = this.state.passengerRouteFeaturesCounter;
+  if(counter == 0)
+  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].setStyle(this.state.driverStyles.route);
+else
+this.state.passengerRouteFeatures[counter-1].setStyle(this.state.driverStyles.route);
+
+this.state.passengerRouteFeatures[counter].setStyle(this.state.passengerStyles.route);
+counter++;
+console.log(counter);
+if(counter >= this.state.passengerRouteFeatures.length){
+  counter = 0;
+}
+this.setState({passengerRouteFeaturesCoutner:counter});
+}
 
 showRoutes(){
     api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
@@ -68,13 +92,13 @@ this.state.passengerRoutes.forEach((element)=>{
 
 }
 
-createPassengerStyles(){
+createPassengerStyles(){/*
   var passengerStyles = [];
-  for(var r = 0; r < 256; r +=40)
+  for(var r = 0; r < 256; r +=64)
   {
-    for(var g = 0; r < 256; r +=40)
+    for(var g = 0; g < 256; g +=64)
     {
-      for(var b = 0; r < 256; r +=40)
+      for(var b = 0; b < 256; b +=64)
       {
         var style = {
           route: new Style({
@@ -87,7 +111,7 @@ createPassengerStyles(){
     }
   }
 }
-this.setState({passengerStyles});
+this.setState({passengerStyles});*/
 }
 
   saveRide() {
@@ -182,10 +206,10 @@ this.setState({passengerStyles});
       geometry: route
     });
 
-    feature.setStyle(this.state.passengerStyles[this.state.passengerStylesCouter].route);
-    var counter = this.state.passengerStylesCouter;
-    counter++;
-    this.setState({passengerStylesCouter : counter});
+    feature.setStyle(this.state.driverStyles.route);
+
+    this.state.passengerRouteFeatures.push(feature);
+
     this.state.vectorSource.addFeature(feature);
   }
 
@@ -444,7 +468,6 @@ else{
 }  
 }
 
-
   render() {
     return (
       <div>
@@ -491,7 +514,8 @@ else{
         </div>
 
           <button onClick={() => { this.showRoutes() }}>Show routes</button>
-     
+          <button onClick={() => { this.selectRoute() }}>Next</button>
+
           </div>
 }
         <div id="map"></div>
