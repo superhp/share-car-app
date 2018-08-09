@@ -8,11 +8,26 @@ import { DriversRidesList } from "./DriversRidesList";
 
 export class Rides extends React.Component {
   state = {
-    driversRides: []
+    driversRides: [],
+    clicked: false,
+    selectedRideId: null
   };
-  componentDidMount() {
+  componentWillMount() {
     this.showDriversRides();
   }
+
+  handleClick(id) {
+    this.setState({
+      clicked: !this.state.clicked,
+      selectedRideId: id,
+      driversRides: this.state.driversRides.filter(x => x.rideId == id)
+    });
+
+    if (!this.state.clicked) {
+      this.showDriversRides();
+    }
+  }
+
   showDriversRides() {
     api
       .get("Ride")
@@ -28,9 +43,12 @@ export class Rides extends React.Component {
   render() {
     return (
       <div>
-        <div>
-          <DriversRidesList driversRides={this.state.driversRides} />
-        </div>
+        <DriversRidesList
+          selectedRide={this.state.selectedRideId}
+          rideClicked={this.state.clicked}
+          onRideClick={this.handleClick.bind(this)}
+          driversRides={this.state.driversRides}
+        />
       </div>
     );
   }
