@@ -10,7 +10,7 @@ export class SuggestedRides extends React.Component {
   };
 
   componentWillMount(){
-  api.get(`http://localhost:5963/api/Ride/simillarRides=` + this.props.rideId).then(response => {
+  api.get(`http://localhost:44360/api/Ride/simillarRides=` + this.props.rideId).then(response => {
       console.log((response.data: User));
       const d = response.data;
 
@@ -25,7 +25,7 @@ requestNow(rideId, coordinates){
     Latitude: coordinates[1]
   };
 console.log("======" + request);
-  api.post(`http://localhost:5963/api/RideRequest`, request).then(res => {
+  api.post(`http://localhost:44360/api/RideRequest`, request).then(res => {
     console.log(res);
 
   });

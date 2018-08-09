@@ -8,6 +8,7 @@ namespace ShareCar.Logic.Ride_Logic
 {
     public interface IRideLogic
     {
+        Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail);
         IEnumerable<RideDto> FindRidesByDriver(string email);
         RideDto FindRideById(int id);
         IEnumerable<RideDto> FindRidesByDate(DateTime date);

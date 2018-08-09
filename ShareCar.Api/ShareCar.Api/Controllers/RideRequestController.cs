@@ -24,11 +24,6 @@ namespace ShareCar.Api.Controllers
             _requestLogic = requestLogic;
             _userRepository = userRepository;
         }
-        [HttpGet("checkFinished")]
-        public IActionResult CheckForFinishedRides()
-        {
-            return Ok();
-        }
 
         [HttpGet("{driver}")]
         public async Task<IActionResult> GetUserRequestsAsync(string driver)
