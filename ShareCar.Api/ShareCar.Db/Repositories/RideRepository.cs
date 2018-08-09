@@ -86,14 +86,14 @@ namespace ShareCar.Db.Repositories
                 return false;
             }
         }
-        //public bool DeleteRide(Ride ride)
-        //{
-        //    var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
-        //    rideToDelete.isActive = false;
-        //    _databaseContext.SaveChanges();
-        //    return true;
+        public bool SetRideAsInactive(Ride ride)
+        {
+            var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
+            rideToDelete.isActive = false;
+            _databaseContext.SaveChanges();
+            return true;
 
-        //}
+        }
         public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
         {
             return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId);

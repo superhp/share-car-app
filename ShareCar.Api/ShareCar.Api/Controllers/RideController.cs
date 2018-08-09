@@ -120,27 +120,27 @@ namespace ShareCar.Api.Controllers
             
 
         }
-        //[HttpDelete("delete")]
-        //public async Task<IActionResult> Delete([FromBody] RideDto rideDto)
-        //{
-        //    var userDto = await _userRepository.GetLoggedInUser(User);
-        //    if (rideDto == null)
-        //    {
-        //        return BadRequest("invalid parameter");
+        [HttpPut("disactivate")]
+        public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            if (rideDto == null)
+            {
+                return BadRequest("invalid parameter");
 
-        //    }
-        //    bool result = _rideLogic.DeleteRide(rideDto);
-        //    if (result)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("operation failed");
-        //    }
+            }
+            bool result = _rideLogic.SetRideAsInactive(rideDto);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("operation failed");
+            }
 
-        //}
-        // Any object update, if user doesn't change properti, it should be delivered unchanged
+        }
+        //Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)
         {

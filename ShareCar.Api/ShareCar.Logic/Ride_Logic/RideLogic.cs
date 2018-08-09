@@ -26,7 +26,6 @@ namespace ShareCar.Logic.Ride_Logic
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         public RideDto FindRideById(int id)
@@ -129,9 +128,9 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }
 
-        public bool DeleteRide(RideDto rideDto)
+        public bool SetRideAsInactive(RideDto rideDto)
         {
-           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
+            return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
