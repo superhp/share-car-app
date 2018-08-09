@@ -9,10 +9,10 @@ import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
 import  RideCompletedNotification from "./RideCompletedNotification";
 import "../styles/roleSelection.css";
-import "../styles/genericStyles.css";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
 import Driver from "./Driver";
+import { RoleContext } from '../helpers/roles';
 
 class RoleSelection extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -60,20 +60,25 @@ class RoleSelection extends Component<{}, MyProfileState> {
       ?<div></div> 
       : <RideCompletedNotification rides = {this.state.rideNotifications}/>
       }
-      <div className="role-container">
-         <h1 className="generic-every-header">Choose a role:</h1> 
-        <Link to="/driver">
-          {" "}
-          <img className="role-image" src={driverLogo} />
-        </Link>
-        <h1 className="generic-every-header">Driver</h1>
-          
-        <Link to="/passenger">
-          {" "}
-          <img className="role-image" src={passengerLogo} />
-        </Link>
-        <h1 className="generic-every-header">Passenger</h1>
+      
+        
+        <RoleContext.Consumer>
+          {({ role, changeRole }) => (
+            <div className="role-container">
+            <h2 className="role-selection">Choose a role:</h2> 
+            <Link to="/driver" onClick={changeRole("driver")}>
+              <img className="role-image" src={driverLogo} />
+            </Link>
+            <h2 className="role-selection">Driver</h2>
+              
+            <Link to="/passenger" onClick={changeRole("passenger")}>
+              <img className="role-image" src={passengerLogo} />
+            </Link>
+            <h2 className="role-selection">Passenger</h2>
       </div>
+          )}
+        </RoleContext.Consumer>
+        
       </div>
     );
     return <div>{content}</div>;
