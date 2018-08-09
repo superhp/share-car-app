@@ -87,8 +87,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
             return SortRequests(converted);
-            }
-        
+            }       
         
         public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
         {
@@ -155,6 +154,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             return dtoRequests;
         }
 
-
+        //Changes request status to deleted
+        public void DeletedRide(int rideId)
+        {
+            IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
+            _rideRequestRepository.DeletedRide(entityRequests);
+        }
     }
 }
