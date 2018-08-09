@@ -77,68 +77,6 @@ export class DriversRidesList extends React.Component<{}> {
               </Button>
             </Link>
           </Grid>
-=======
-      <div className="container-fluid">
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr className="bg-primary">
-                <td className="generic-text"> My Rides</td>
-              </tr>
-            </thead>
-            <tbody>
-              {!this.state.clicked
-                ? this.props.driversRides.map((req, index) => (
-                    <tr
-                      onClick={() => {
-                        this.handleClick(req.rideId);
-                      }}
-                      key={index}
-                    >
-                      <td>
-                        {req.fromStreet} {req.fromNumber}, {req.fromCity}
-                      </td>
-                      <td>
-                        {req.toStreet} {req.toNumber}, {req.toCity}
-                      </td>
-                      <td>
-                        {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}{" "}
-                      </td>
-                    </tr>
-                  ))
-                : this.props.driversRides
-                    .filter(x => x.rideId == this.state.selectedRideId)
-                    .map((req, index) => (
-                      <tr
-                        onClick={() => {
-                          this.handleClick(req.rideId);
-                        }}
-                        key={index}
-                      >
-                        <td>
-                          {req.fromStreet} {req.fromNumber}, {req.fromCity}
-                        </td>
-                        <td>
-                          {req.toStreet} {req.toNumber}, {req.toCity}
-                        </td>
-                        <td>
-                          {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
-                        </td>
-                      </tr>
-                    ))}
-            </tbody>
-          </table>
-        </div>
-        {!this.state.clicked ? (
-          <Link to="/newRideForm">
-            <button
-              type="button"
-              className="add-new-button btn btn-success btn-lg btn-block"
-            >
-              Add new Ride
-            </button>
-          </Link>
->>>>>>> d29da0cb1443c78761169623b355d280ac443153
         ) : (
           <button
             onClick={() => {

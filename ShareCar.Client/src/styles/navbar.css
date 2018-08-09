@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 10%;
+  height: 36px;
   display: flex;
   justify-content: center;
   align-content: stretch;
@@ -16,7 +16,7 @@
   height: 100%;
   text-align: center;
   text-decoration: none;
-  font-family: "Lato", sans-serif;
+  font-family: "typeface-roboto", sans-serif;
   align-self: center;
   justify-content: center;
   align-items: center;
