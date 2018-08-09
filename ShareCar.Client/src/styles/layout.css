@@ -39,20 +39,3 @@
   }
 }
 
-.logout-button {
-  flex: 1 100%;
-  background:  #007bff;
-  border: none;
-  align-self: flex-end;
-  overflow: hidden;
-  position: fixed;
-  height: 8%;
-  width: 25%;
-  top: 1px;
-  right: 1px;
-  border-radius: 10%;
-}
-.logout-text {
-  color: white;
-  font-size: 150%;
-}
