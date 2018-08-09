@@ -38,12 +38,12 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
           {this.props.children}
           <NavBar />
           <button
-            className="logout-button"
+            className="logout-button logout-text"
             onClick={() => {
               this.logout();
             }}
-          >
-            Logout
+          > 
+          Logout
           </button>
         </div>
       </div>

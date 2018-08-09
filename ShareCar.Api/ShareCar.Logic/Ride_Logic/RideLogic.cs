@@ -8,6 +8,7 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -19,8 +20,8 @@ namespace ShareCar.Logic.Ride_Logic
         private readonly IAddressLogic _addressLogic;
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
-
-        public RideLogic(IRouteLogic routeLogic, IRouteRepository routeRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository)
+        private readonly IRideRequestLogic _rideRequestLogic;
+        public RideLogic(IRouteLogic routeLogic, IRouteRepository routeRepository, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IRideRequestLogic rideRequestLogic)
         {
             _rideRepository = rideRepository;
             _routeRepository = routeRepository;
@@ -28,6 +29,7 @@ namespace ShareCar.Logic.Ride_Logic
             _routeLogic = routeLogic;
             _mapper = mapper;
             _addressRepository = addressRepository;
+            _rideRequestLogic = rideRequestLogic;
         }
 
         public RideDto FindRideById(int id)
@@ -143,15 +145,18 @@ namespace ShareCar.Logic.Ride_Logic
 
                 _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
                 RouteDto routeDto = _routeLogic.GetRouteById(ride.RouteId);
-                if(routeDto.Rides == null)
-                {
-                    routeDto.Rides = new List<RideDto>();
-                }
-                routeDto.Rides.Add(ride);
-                return _routeLogic.UpdateRoute(routeDto);
+                
+                return true;
                 
             }
             return false;
+        }
+
+        public bool DeleteRide(RideDto rideDto)
+        {
+            
+            _rideRequestLogic.DeletedRide(rideDto.RideId);
+           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
@@ -182,6 +187,7 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return DtoRides;
         }
+
         private IEnumerable<PassengerDto> MapToList(IEnumerable<Passenger> passengers)
         {
             List<PassengerDto> DtoPassengers = new List<PassengerDto>();

@@ -26,12 +26,28 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> FindDriverRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Db.Entities.Status.WAITING);
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING);
+        }
+
+        public IEnumerable<Request> FindRequestsByRideId(int rideId)
+        {
+            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED);
+        }
+
+        public void DeletedRide(IEnumerable<Request> requests)
+        {
+            foreach (Request request in requests)
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                toUpdate.SeenByPassenger = false;
+                toUpdate.Status = Status.DELETED;
+            }
+            _databaseContext.SaveChanges();
         }
 
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status != Status.DENIED));
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED)));
         }
 
         public Request FindRequestById(int id)

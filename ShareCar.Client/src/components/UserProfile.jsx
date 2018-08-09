@@ -51,56 +51,56 @@ class UserProfile extends Component<{}, UserProfileState> {
             <img className="thumbnail" src={this.state.user.pictureUrl} />
 
             <div className="form-group">
-              <label for="exampleInputEmail1">Your Email</label>
+              <label for="exampleInputEmail1" className="form-header">Your Email</label>
               <input
                 type="email"
                 name="email"
                 disabled
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 value={this.state.user.email}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">First Name</label>
+              <label for="exampleInputEmail1" className="form-header">First Name</label>
               <input
                 type="text"
                 name="firstname"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.firstName}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">Last Name</label>
+              <label for="exampleInputEmail1" className="form-header">Last Name</label>
               <input
                 type="text"
                 name="lastname"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.lastName}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">Phone Number</label>
+              <label for="exampleInputEmail1" className="form-header">Phone Number</label>
               <input
                 type="text"
                 name="phone"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.phone}
               />
             </div>
             <div className="form-group">
-              <label for="exampleInputEmail1">License Plate Number</label>
+              <label for="exampleInputEmail1" className="form-header">License Plate Number</label>
               <input
                 type="text"
                 name="licenseplate"
-                className="form-control edit-input"
+                className="form-control form-header"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.licensePlate}
