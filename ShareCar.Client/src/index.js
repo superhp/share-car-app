@@ -42,6 +42,7 @@ ReactDOM.render(
           <Route path="/map" component={MapComponent} />
           <Route path="/profile" component={UserProfile} />
           <Route path="/rides" component={Rides} />
+          <Route path="/test" component={test} />
           <Route path="/newRideForm" component={NewRideForm} />
           <Route path="/rideRequest" component={RideRequestForm} />
         </AlertProvider>

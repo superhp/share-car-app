@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ShareCar.Db;
-using ShareCar.Db.Entities;
 using System;
 
 namespace ShareCar.Db.Migrations
@@ -161,7 +158,11 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<bool>("PassengerResponded");
 
+                    b.Property<int>("PassengerId");
+
                     b.HasKey("Email", "RideId");
+
+                    b.HasAlternateKey("PassengerId");
 
                     b.HasIndex("RideId");
 

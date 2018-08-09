@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import UserService from "../services/userService";
+import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
 import "../styles/userProfile.css";
 import api from "../helpers/axiosHelper";
@@ -10,9 +11,10 @@ type UserProfileState = {
   loading: boolean,
   user: UserProfileData | null
 };
-class UserProfile extends Component<{}, UserProfileState> {
+class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfileState> {
+  state: MyProfileState = { loading: true, user: null };
   userService = new UserService();
-  state: UserProfileState = { loading: true, user: null };
+  authService = new AuthenticationService();
 
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateUserProfile);
@@ -20,6 +22,13 @@ class UserProfile extends Component<{}, UserProfileState> {
 
   updateUserProfile = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
+  };
+  logout = () => {
+    this.authService.logout(this.userLoggedOut);
+  };
+
+  userLoggedOut = () => {
+    history.push("/login");
   };
 
   handleSubmit(e) {
@@ -38,6 +47,7 @@ class UserProfile extends Component<{}, UserProfileState> {
   }
 
   render() {
+    
     const content = this.state.loading ? (
       <p>
         <em>Loading.......</em>
@@ -45,8 +55,17 @@ class UserProfile extends Component<{}, UserProfileState> {
     ) : this.state.user === null ? (
       <p>The user failed to load</p>
     ) : (
+      
       <div className="container-fluid">
         <div className="container profile-container">
+        <button
+            className="logout-button logout-text"
+            onClick={() => {
+              this.logout();
+            }}
+          > 
+          Logout
+          </button>
           <form className="profile-form col-sm-6">
             <img className="thumbnail" src={this.state.user.pictureUrl} />
 

@@ -23,13 +23,7 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
     this.setState({ user: user });
   };
 
-  logout = () => {
-    this.authService.logout(this.userLoggedOut);
-  };
-
-  userLoggedOut = () => {
-    history.push("/login");
-  };
+ 
 
   render() {
     return (
@@ -37,14 +31,7 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
         <div className="content">
           {this.props.children}
           <NavBar />
-          <button
-            className="logout-button logout-text"
-            onClick={() => {
-              this.logout();
-            }}
-          > 
-          Logout
-          </button>
+          
         </div>
       </div>
     );
