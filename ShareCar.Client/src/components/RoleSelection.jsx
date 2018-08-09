@@ -27,14 +27,15 @@ class RoleSelection extends Component<{}, MyProfileState> {
 
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
-    api.get(`/Ride/checkFinished`).then(response => {
-      console.log(response);
-      this.setState({ rideNotifications: response.data });    
-    });
+  //  api.get(`/Ride/checkFinished`).then(response => {
+   //   console.log(response);
+    //  this.setState({ rideNotifications: response.data });    
+  //  });
   }
 
   updateLoggedInUser = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
+    console.log(user);
   };
 
   logout = () => {
