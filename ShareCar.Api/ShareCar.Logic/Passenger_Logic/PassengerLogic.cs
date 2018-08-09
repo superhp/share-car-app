@@ -27,8 +27,6 @@ namespace ShareCar.Logic.Passenger_Logic
         public bool AddPassenger(PassengerDto passenger)
         {
 
-
-
             return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
 
         }
@@ -47,6 +45,11 @@ namespace ShareCar.Logic.Passenger_Logic
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
             _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
+        }
+        public int GetUsersPoints(string email)
+        {
+            int points = _passengerRepository.GetUsersPoints(email);
+            return points;
         }
     }
 }

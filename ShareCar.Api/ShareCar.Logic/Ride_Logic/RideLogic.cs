@@ -106,24 +106,7 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(rides);
         }*/
-        public bool UpdateRide(RideDto ride)
-        {
-            //ride.Passengers = new List<PassengerDto>();
-            //ride.Requests = new List<RideRequestDto>();
-
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
-
-            bool addNewRide = true; // Will be deleted once validation appears
-
-            if (addNewRide)
-            {
-                ParseExtraRideDtoData(ride);
-                //return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
-                return true;
-            }
-            return false;
-        }
+        
 
         public bool AddRide(RideDto ride, string email)
         {
@@ -135,11 +118,8 @@ namespace ShareCar.Logic.Ride_Logic
 
             ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
-
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
-
-            bool addNewRide = true; // Will be deleted once validation appears
+            
+            bool addNewRide = true; 
 
             if (addNewRide)
             {
@@ -154,9 +134,9 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }
 
-        public bool DeleteRide(RideDto rideDto)
+        public bool SetRideAsInactive(RideDto rideDto)
         {
-           return _rideRepository.DeleteRide(_mapper.Map<RideDto, Ride>(rideDto));
+            return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
@@ -231,7 +211,6 @@ namespace ShareCar.Logic.Ride_Logic
                     if (fromAddress.Street != null && fromAddress.Number != null)
                     {
                         _addressLogic.AddNewAddress(fromAddress);
-                  //      _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(fromAddress));
                     }
 
                     route.FromId = _addressLogic.GetAddressId(fromAddress);
@@ -239,7 +218,6 @@ namespace ShareCar.Logic.Ride_Logic
                 if (route.ToId == -1)
                 {
                     _addressLogic.AddNewAddress(toAddress);
-                  //  _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(toAddress));
                     route.ToId = _addressLogic.GetAddressId(toAddress);
                 }
                 int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);

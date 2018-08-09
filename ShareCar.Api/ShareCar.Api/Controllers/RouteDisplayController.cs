@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ShareCar.Api.Controllers
 {
-
-
-
     [Produces("application/json")]
     [Route("api/RouteDisplay")]
     public class RouteDisplayController : Controller
