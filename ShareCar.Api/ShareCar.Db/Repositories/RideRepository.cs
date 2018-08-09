@@ -64,12 +64,11 @@ namespace ShareCar.Db.Repositories
         {
             return _databaseContext.Passengers.Where(x => x.RideId == id);
         }
-        /*
-        public async Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User)
+        
+        public IEnumerable<Ride> FindRidesByPassenger(Passenger passenger)
         {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-            return _databaseContext.Passengers.Where(x => x.Email == userDto.Email);
-        }*/
+            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger));
+        }
 
         public bool UpdateRide(Ride ride)
         {

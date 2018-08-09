@@ -19,6 +19,7 @@ namespace ShareCar.Db.Repositories
         bool DeleteRide(Ride ride);
         void AddRide(Ride ride);
         IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId);
+        IEnumerable<Ride> FindRidesByPassenger(Passenger passenger);
 
     }
 }

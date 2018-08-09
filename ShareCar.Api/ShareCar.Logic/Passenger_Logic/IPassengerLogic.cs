@@ -8,5 +8,7 @@ namespace ShareCar.Logic.Passenger_Logic
     public interface IPassengerLogic
     {
         bool AddPassenger(PassengerDto passenger);
+        List<PassengerDto> GetPassengersByEmail(string email);
+        void RespondToRide(bool response, int rideId, string passengerEmail);
     }
 }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Identity;
+using ShareCar.Logic.Passenger_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -20,13 +21,16 @@ namespace ShareCar.Logic.Ride_Logic
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, UserManager<User> userManager/* IAddressRepository addressRepository, RouteRepository routeRepository*/ )
+        private readonly IPassengerLogic _passengerLogic;
+
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, UserManager<User> userManager, IPassengerLogic passengerLogic)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
             _userManager = userManager;
+            _passengerLogic = passengerLogic;
         }
 
         public RideDto FindRideById(int id)
@@ -94,10 +98,11 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(passengers);
         }
-        /*
-        public async Task<IEnumerable<PassengerDto>> FindRidesByPassenger( User)
+      /*  
+        public IEnumerable<RideDto> FindRidesByPassenger(PassengerDto passenger)
         {
-            IEnumerable<Passenger> rides = await _rideRepository.FindRidesByPassenger(User);
+
+            IEnumerable<Ride> rides =  _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passenger));
 
             return MapToList(rides);
         }*/
@@ -164,12 +169,6 @@ namespace ShareCar.Logic.Ride_Logic
             return false;
         }
 
-        // Method checks if updated/added ride won't have same time as other ride of same driver
-        private bool ValidateNewRide()
-        {
-            // Ride Entity should have arival time
-            throw new NotImplementedException();
-        }
 
         // Returns a list of mapped objects
         private IEnumerable<RideDto> MapToList(IEnumerable<Ride> rides)
@@ -258,24 +257,27 @@ namespace ShareCar.Logic.Ride_Logic
         }
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
         {
-            //      IEnumerable<RideRequestDto> requests = _rideRequestLogic.GetAcceptedRequests(passengerEmail);
-            /*   List<RideDto> rides = new List<RideDto>();
-               DateTime hourAfterRide = new DateTime();
+            List<PassengerDto> passengers = _passengerLogic.GetPassengersByEmail(passengerEmail);
+
+        //    IEnumerable<Ride> entityRides = _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passengers));
+            List<RideDto> dtoRides = new List<RideDto>();
+            DateTime hourAfterRide = new DateTime();
+            hourAfterRide = DateTime.Now;
                hourAfterRide.AddHours(1);
-               foreach (RideRequestDto request in requests)
+               foreach (PassengerDto passenger in passengers)
                {
-                   Ride ride = _rideRepository.FindRideById(request.RideId);
+                   Ride ride = _rideRepository.FindRideById(passenger.RideId);
                    if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
                    {
 
-                       var user = await _userManager.FindByEmailAsync(request.DriverEmail);
+                       var user = await _userManager.FindByEmailAsync(ride.DriverEmail);
                        RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
                        dtoRide.DriverFirstName = user.FirstName;
-                       dtoRide.DriverLastName = user.LastName;*/
-            /* rides.Add(dtoRide);
+                       dtoRide.DriverLastName = user.LastName;
+                    dtoRides.Add(dtoRide);
          }
-     }*/
-            return null;//rides;
+     }
+            return dtoRides;
         }
     }
 }

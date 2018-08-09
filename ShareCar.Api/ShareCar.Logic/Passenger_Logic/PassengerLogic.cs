@@ -13,19 +13,14 @@ using ShareCar.Logic.Ride_Logic;
 namespace ShareCar.Logic.Passenger_Logic
 {
     public class PassengerLogic : IPassengerLogic
-    { 
-        private readonly IAddressRepository _addressRepository;
-        private readonly IAddressLogic _addressLogic;
-        private readonly IRouteLogic _routeLogic;
+    {
+
         private readonly IPassengerRepository _passengerRepository;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IRouteLogic routeLogic, IAddressLogic addressLogic, IMapper mapper, IAddressRepository addressRepository, IPassengerRepository passengerRepository)
+        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository)
         {
-            _addressLogic = addressLogic;
-            _routeLogic = routeLogic;
             _mapper = mapper;
-            _addressRepository = addressRepository;
             _passengerRepository = passengerRepository;
         }
 
@@ -33,17 +28,25 @@ namespace ShareCar.Logic.Passenger_Logic
         {
 
 
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
 
-            bool addNewPassenger = true; // Will be deleted once validation appears
+            return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
 
-            if (addNewPassenger)
-            {
-                return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
-            }
-            return false;
         }
 
+        public List<PassengerDto> GetPassengersByEmail(string email)
+        {
+            IEnumerable<Passenger> passengers = _passengerRepository.GetUnrepondedPassengersByEmail(email);
+            List<PassengerDto> dtoPassengers = new List<PassengerDto>();
+            foreach (Passenger passenger in passengers)
+            {
+                dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
+            }
+            return dtoPassengers;
+        }
+
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
+        {
+            _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
+        }
     }
 }
