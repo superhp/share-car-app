@@ -83,6 +83,13 @@ namespace ShareCar.Api.Controllers
             return SendResponse(rides);
         }
 
+        [HttpGet("routes")]
+        public IActionResult GetRoutes()
+        {
+            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes();
+            return Ok(routes);
+        }
+
         [HttpGet("rideId={rideId}")]
         public async Task<IActionResult> GetPassengersByRideAsync(int rideId)
         {

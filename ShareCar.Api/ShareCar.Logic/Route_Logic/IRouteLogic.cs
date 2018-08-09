@@ -1,4 +1,5 @@
-﻿using ShareCar.Dto;
+﻿using System.Collections.Generic;
+using ShareCar.Dto;
 
 namespace ShareCar.Logic.Route_Logic
 {
@@ -7,5 +8,6 @@ namespace ShareCar.Logic.Route_Logic
         int GetRouteId(int fromId, int toId);
         RouteDto GetRouteById(int id);
         bool AddRoute(RouteDto route);
+        IEnumerable<RouteDto> GetAllRoutes();
     }
 }

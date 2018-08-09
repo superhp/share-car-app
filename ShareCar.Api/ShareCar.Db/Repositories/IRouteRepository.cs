@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using System.Collections.Generic;
+using ShareCar.Db.Entities;
 
 namespace ShareCar.Db.Repositories
 {
@@ -8,5 +9,6 @@ namespace ShareCar.Db.Repositories
         Route FindRouteById(int id);
         bool AddRoute(Route route);
         bool UpdateRoute(Route route);
+        IEnumerable<Route> GetAllRoutes();
     }
 }

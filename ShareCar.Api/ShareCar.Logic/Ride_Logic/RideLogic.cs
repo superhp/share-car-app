@@ -233,6 +233,12 @@ namespace ShareCar.Logic.Ride_Logic
             }
 
         }
+
+        public IEnumerable<RouteDto> GetRoutes()
+        {
+            return _routeLogic.GetAllRoutes();
+        }
+
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
         {
             List<PassengerDto> passengers = _passengerLogic.GetPassengersByEmail(passengerEmail);
