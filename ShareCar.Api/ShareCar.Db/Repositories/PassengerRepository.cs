@@ -36,5 +36,12 @@ namespace ShareCar.Db.Repositories
             //    }
 
         }
+
+        public void RemovePassenger(Passenger passenger)
+        {
+            _databaseContext.Passengers.Remove(passenger);
+            _databaseContext.SaveChanges();
+
+        }
     }
 }

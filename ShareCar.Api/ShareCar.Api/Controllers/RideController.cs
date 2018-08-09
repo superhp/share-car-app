@@ -27,13 +27,6 @@ namespace ShareCar.Api.Controllers
             _routeLogic = routeLogic;
             _userRepository = userRepository;
         }
-        [HttpGet("route={routeId}")]
-        public IActionResult GetRoute(int routeId)
-        {
-            RouteDto route = _routeLogic.GetRouteById(routeId);
-            return Ok(route);
-
-        }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {

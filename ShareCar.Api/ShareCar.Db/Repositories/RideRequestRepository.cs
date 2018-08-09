@@ -55,10 +55,11 @@ namespace ShareCar.Db.Repositories
 
         public void SeenByPassenger(int[] requests)
         {
-            foreach (int id in requests)
+            IEnumerable<Request> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
+
+            foreach (var request in toUpdate)
             {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
-                toUpdate.SeenByPassenger = true;
+                request.SeenByPassenger = true;
             }
             _databaseContext.SaveChanges();
         }
@@ -70,6 +71,7 @@ namespace ShareCar.Db.Repositories
                 Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 toUpdate.Status = request.Status;
                 toUpdate.SeenByPassenger = false;
+                _databaseContext.Requests.Update(toUpdate);
                 _databaseContext.SaveChanges();
                 return true;
             }

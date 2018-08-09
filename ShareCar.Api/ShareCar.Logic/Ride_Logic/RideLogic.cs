@@ -115,7 +115,8 @@ namespace ShareCar.Logic.Ride_Logic
             if (addNewRide)
             {
                 ParseExtraRideDtoData(ride);
-                return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+                //return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+                return true;
             }
             return false;
         }

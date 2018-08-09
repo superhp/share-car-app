@@ -6,6 +6,7 @@ using System.Linq;
 using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShareCar.Db.Repositories
 {
@@ -83,10 +84,6 @@ namespace ShareCar.Db.Repositories
                 {
                     rideToUpdate.Requests = new List<Request>();
                 }
-                foreach (var request in ride.Requests)
-                {
-                    rideToUpdate.Requests.Add(request);
-                }
 
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
@@ -106,7 +103,10 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Ride> FindRidesByDriver(string email)
         {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == email);
+            return _databaseContext.Rides
+                .Include(x=>x.Requests)
+                .Include(x=>x.Passengers)
+                .Where(x => x.DriverEmail == email);
         }
 
 
