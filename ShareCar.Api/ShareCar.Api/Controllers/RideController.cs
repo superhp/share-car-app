@@ -140,7 +140,6 @@ namespace ShareCar.Api.Controllers
             }
 
         }
-        //Any object update, if user doesn't change properti, it should be delivered unchanged
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RideDto ride)
         {
