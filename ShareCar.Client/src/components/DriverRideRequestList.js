@@ -4,43 +4,33 @@ import "../styles/riderequests.css";
 import MapComponent from "./MapComponent";
 import "../styles/genericStyles.css";
 export class DriverRideRequestsList extends React.Component {
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      coordinates: [],
-      show: false
-    };
-    this.child = React.createRef();
-  }
+  state = {
+    coordinates: [],
+    show: false
+  };
+  // this.child = React.createRef();
+  // }
 
   sendRequestResponse(response, requestId, rideId, driverEmail) {
-    console.log(rideId);
     let data = {
       RequestId: requestId,
       Status: response,
       RideId: rideId,
       DriverEmail: driverEmail
     };
-    api.put("https://localhost:44360/api/RideRequest", data).then(res => {
-      console.log(res.data);
-    });
+    api.put("https://localhost:44360/api/RideRequest", data).then(res => {});
   }
 
   componentDidMount() {
-    console.log(this.props.requests);
-
+    console.log(this.props.rideRequests);
     //  this.child.current.setPassengersPickUpPoint([1,1]);
   }
   //this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
 
   render() {
-    var displayRequests = this.props.requests;
-    if (this.props.selectedRide != null) {
-      displayRequests = this.props.requests.filter(
-        x => x.rideId == this.props.selectedRide && x.status == 0
-      );
-    }
     return (
       <div>
         {this.state.show ? (
@@ -61,7 +51,7 @@ export class DriverRideRequestsList extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {displayRequests.map((req, index) => (
+              {this.props.rideRequests.map((req, index) => (
                 <tr key={req.id}>
                   <td>
                     <span className="badge-numbers badge badge-warning">

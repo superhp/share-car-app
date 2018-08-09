@@ -105,7 +105,10 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Ride> FindRidesByDriver(string email)
         {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == email);
+            return _databaseContext.Rides
+                .Include(x=>x.Requests)
+                .Include(x=>x.Passengers)
+                .Where(x => x.DriverEmail == email);
         }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
@@ -10,7 +11,7 @@ using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{
+{   [DisableCors]
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
@@ -27,18 +28,19 @@ namespace ShareCar.Api.Controllers
             _routeLogic = routeLogic;
             _userRepository = userRepository;
         }
-        [HttpGet("route={routeId}")]
-        public IActionResult GetRoute(int routeId)
-        {
-            RouteDto route = _routeLogic.GetRouteById(routeId);
-            return Ok(route);
-
-        }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
             IEnumerable<RideDto> rides = _rideLogic.FindSimilarRides(rideId);
             return SendResponse(rides);
+        }
+
+        [HttpGet("checkFinished")]
+        public async Task<IActionResult> CheckForFinishedRidesAsync()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
+            return Ok(rides);
         }
 
         // Should pass users role
@@ -167,6 +169,8 @@ namespace ShareCar.Api.Controllers
             }
 
         }
+
+
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {

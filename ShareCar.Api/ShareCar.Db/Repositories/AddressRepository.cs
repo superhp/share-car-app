@@ -1,4 +1,6 @@
 ﻿using ShareCar.Db.Entities;
+using System;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,17 +16,18 @@ namespace ShareCar.Db.Repositories
         }
         public bool AddNewAddress(Address address)
         {
-       //     try
-        //    {
+            try
+            {
                 _databaseContext.Addresses.Add(address);
                 _databaseContext.SaveChanges();
                 return true;
-         //   }
-            //catch
-        //    {
-        //        return false;
-        //    }
-                
+            }
+            catch(Exception e)
+            {
+                Console.Write(e);
+                return true;
+            }
+
         }
 
         // Address consists of street, house number and city or geo coordinates

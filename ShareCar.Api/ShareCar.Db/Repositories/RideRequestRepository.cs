@@ -26,20 +26,39 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> FindDriverRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Db.Entities.Status.WAITING);
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING);
+        }
+
+        public IEnumerable<Request> FindRequestsByRideId(int rideId)
+        {
+            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED);
+        }
+
+        public void DeletedRide(IEnumerable<Request> requests)
+        {
+            foreach (Request request in requests)
+            {
+                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                toUpdate.SeenByPassenger = false;
+                toUpdate.Status = Status.DELETED;
+            }
+            _databaseContext.SaveChanges();
         }
 
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status != Status.DENIED));
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED)));
         }
 
         public Request FindRequestById(int id)
         {
             return _databaseContext.Requests.Single(x => x.RequestId == id);
         }
-        
 
+        public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)
+        {
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED);
+        }
 
         public void SeenByDriver(int[] requests)
         { 
@@ -55,10 +74,11 @@ namespace ShareCar.Db.Repositories
 
         public void SeenByPassenger(int[] requests)
         {
-            foreach (int id in requests)
+            IEnumerable<Request> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
+
+            foreach (var request in toUpdate)
             {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
-                toUpdate.SeenByPassenger = true;
+                request.SeenByPassenger = true;
             }
             _databaseContext.SaveChanges();
         }
@@ -70,6 +90,7 @@ namespace ShareCar.Db.Repositories
                 Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 toUpdate.Status = request.Status;
                 toUpdate.SeenByPassenger = false;
+                _databaseContext.Requests.Update(toUpdate);
                 _databaseContext.SaveChanges();
                 return true;
             }

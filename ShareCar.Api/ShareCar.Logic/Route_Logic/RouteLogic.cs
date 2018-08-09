@@ -24,7 +24,8 @@ namespace ShareCar.Logic.Route_Logic
         }
         public bool UpdateRoute( RouteDto routeDto)
         {
-            return _routeRepository.UpdateRoute(_mapper.Map<RouteDto, Route>(routeDto));
+            //return _routeRepository.UpdateRoute(_mapper.Map<RouteDto, Route>(routeDto));
+            return true;
         }
         public RouteDto GetRouteById(int id)
         {

@@ -14,7 +14,7 @@ namespace ShareCar.Db.Entities
         public int NumberOfSeats { get; set; }
         public bool isActive { get; set; }
         public List<Passenger> Passengers { get; set; }
-        public virtual List<Request> Requests { get; set; }
+        public List<Request> Requests { get; set; }
         public DateTime RideDateTime { get; set; }
         [ForeignKey("RouteId")]
         public virtual Route Route { get; set; }

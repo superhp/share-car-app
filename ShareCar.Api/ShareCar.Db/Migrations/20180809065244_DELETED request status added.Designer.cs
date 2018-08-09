@@ -12,9 +12,10 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180809065244_DELETED request status added")]
+    partial class DELETEDrequeststatusadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,8 +159,6 @@ namespace ShareCar.Db.Migrations
                     b.Property<int>("RideId");
 
                     b.Property<bool>("Completed");
-
-                    b.Property<bool>("PassengerResponded");
 
                     b.HasKey("Email", "RideId");
 
