@@ -83,6 +83,13 @@ namespace ShareCar.Api.Controllers
             return SendResponse(rides);
         }
 
+        [HttpGet("ridesByRoute={routeGeometry}")]
+        public IActionResult GetRidesRoute(string routeGeometry)
+        {
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
+            return Ok(rides);
+        }
+
         [HttpGet("routes")]
         public IActionResult GetRoutes()
         {
