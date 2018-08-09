@@ -13,5 +13,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
         void DeletedRide(int rideId);
+        List<RideRequestDto> GetAcceptedRequests(string passengerEmail);
+
     }
 }

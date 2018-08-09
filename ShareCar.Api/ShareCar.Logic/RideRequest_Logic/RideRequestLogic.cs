@@ -160,5 +160,15 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
             _rideRequestRepository.DeletedRide(entityRequests);
         }
+        public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
+        {
+            IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
+            List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
+            foreach(Request request in entityRequests)
+            {
+                dtoRequests.Add(_mapper.Map<Request, RideRequestDto>(request));
+            }
+            return dtoRequests;
+        }
     }
 }

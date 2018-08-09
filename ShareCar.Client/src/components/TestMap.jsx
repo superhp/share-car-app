@@ -27,8 +27,8 @@ export class test extends React.Component {
 var points = [];
     var msg_el = document.getElementById('msg'),
 
-    url_osrm_nearest = '//router.project-osrm.org/nearest/v1/driving/',
-    url_osrm_route = '//router.project-osrm.org/route/v1/driving/',
+    url_osrm_nearest = '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
+    url_osrm_route = '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
     icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
     vectorSource = new SourceVector(),
     vectorLayer = new LayerVector({
@@ -37,7 +37,7 @@ var points = [];
     styles = {
       route: new Style({
         stroke: new Stroke({
-          width: 6, color: [40, 40, 40, 0.8]
+          width: 20, color: [40, 40, 40, 0.8]
         })
       }),
       icon: new Style({
@@ -79,7 +79,9 @@ map.on('click', function(evt){
     //get the route
     var point1 = last_point.join();
     var point2 = coord_street.join();
-    
+    console.log(point1);
+    console.log(point2);
+
     fetch(url_osrm_route + point1 + ';' + point2).then(function(r) { 
       return r.json();
     }).then(function(json) {
@@ -88,6 +90,7 @@ map.on('click', function(evt){
         return;
       }
       msg_el.innerHTML = 'Route added';
+      console.log('route added' + json.routes[0].geometry);
       //points.length = 0;
       utils.createRoute(json.routes[0].geometry);
     });
@@ -120,7 +123,6 @@ var utils = {
   },
   createRoute: function(polyline) {
     // route is ol.geom.LineString
-    console.log("create route - polyline " + polyline);
     var route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline, {
@@ -131,6 +133,7 @@ var utils = {
       type: 'route',
       geometry: route
     });
+    console.log(feature);
     feature.setStyle(styles.route);
     vectorSource.addFeature(feature);
   },

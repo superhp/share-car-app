@@ -54,8 +54,11 @@ namespace ShareCar.Db.Repositories
         {
             return _databaseContext.Requests.Single(x => x.RequestId == id);
         }
-        
 
+        public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)
+        {
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED);
+        }
 
         public void SeenByDriver(int[] requests)
         { 
