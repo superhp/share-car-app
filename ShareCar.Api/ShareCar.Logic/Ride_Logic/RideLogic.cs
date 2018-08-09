@@ -113,11 +113,8 @@ namespace ShareCar.Logic.Ride_Logic
 
             ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
-
-            //----WILL BE UNCOMMENTED ONCE VALIDATION APPEARS
-            //  bool addNewRide = ValidateNewRide(); 
-
-            bool addNewRide = true; // Will be deleted once validation appears
+            
+            bool addNewRide = true; 
 
             if (addNewRide)
             {

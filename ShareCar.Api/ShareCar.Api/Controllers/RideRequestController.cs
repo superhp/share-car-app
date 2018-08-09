@@ -46,15 +46,10 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest("Invalid parameter");
             }
-
             var userDto = await _userRepository.GetLoggedInUser(User);
-
             request.PassengerEmail = userDto.Email;
-
             bool result = _requestLogic.AddRequest(request);
-
-
-
+            
             if (result)
             {
                 return Ok();

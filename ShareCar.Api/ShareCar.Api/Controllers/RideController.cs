@@ -115,16 +115,9 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = _rideLogic.UpdateRide(ride);
-
-            if(result)
-            {
+            
                 return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            
 
         }
         //[HttpDelete("delete")]
