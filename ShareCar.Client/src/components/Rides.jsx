@@ -14,6 +14,7 @@ import Grid from "@material-ui/core/Grid";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import 'typeface-roboto';
+import "../styles/genericStyles.css";
 
 export class Rides extends React.Component {
   state = {
@@ -52,7 +53,7 @@ export class Rides extends React.Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-          <AppBar position="static" color="primary">
+          <AppBar position="static" color="primary" className="generic-container-color">
         <Toolbar>
           <Typography variant="title" color="inherit">
             Your rides (Driver)
