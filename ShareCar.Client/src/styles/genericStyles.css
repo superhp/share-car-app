@@ -38,3 +38,7 @@ td {
         font-size: 16px;
         margin: 3px;
         }
+
+.winner-container{
+    margin-top: 10px !important;
+}
