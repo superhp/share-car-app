@@ -33,7 +33,11 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
         <div className="content">
           <Grid container justify="center">
             <Grid item xs={12}>
-              <AppBar position="static" color="primary">
+              <AppBar
+                className="generic-container-color"
+                position="static"
+                color="primary"
+              >
                 <Toolbar>
                   <Typography variant="title" color="inherit">
                     {this.props.location.pathname == "/"
