@@ -14,6 +14,7 @@ import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
 import RideRequestForm from "./components/RideRequestForm";
+import WinnerBoard from "./components/WinnerBoard";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import test from "./components/TestMap";
@@ -43,6 +44,7 @@ ReactDOM.render(
           <Route path="/profile" component={UserProfile} />
           <Route path="/rides" component={Rides} />
           <Route path="/test" component={test} />
+          <Route path="/winnerBoard" component={WinnerBoard} />
           <Route path="/newRideForm" component={NewRideForm} />
           <Route path="/rideRequest" component={RideRequestForm} />
         </AlertProvider>
