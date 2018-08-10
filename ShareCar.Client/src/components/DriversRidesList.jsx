@@ -14,7 +14,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import 'typeface-roboto'
+import "typeface-roboto";
 
 var moment = require("moment");
 
@@ -31,7 +31,7 @@ export class DriversRidesList extends React.Component {
     return (
       <Grid container>
         {this.props.driversRides.map((req, index) => (
-          <Grid item xs={12}>
+          <Grid key={index} item xs={12}>
             <Card className="rides-card">
               <CardActions>
                 <CardContent>

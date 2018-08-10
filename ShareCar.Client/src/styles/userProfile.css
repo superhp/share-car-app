@@ -4,10 +4,9 @@
 .container.profile-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 10%;
+  margin-bottom: 20%;
   margin-top: 16%;
 }
-
 
 s div.form-group {
   display: flex;
@@ -17,7 +16,7 @@ s div.form-group {
 div.form-group label {
   font-weight: bold;
 }
-.form-header{
+.form-header {
   font-size: 15px;
   color: grey;
 }
@@ -36,7 +35,7 @@ img.thumbnail {
 }
 .logout-button {
   flex: 1 100%;
-  background:  #007bff;
+  background: #007bff;
   border: none;
   align-self: flex-end;
   overflow: hidden;
