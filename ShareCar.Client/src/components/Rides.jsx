@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import 'typeface-roboto'
+import 'typeface-roboto';
 
 export class Rides extends React.Component {
   state = {
