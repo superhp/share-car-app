@@ -53,6 +53,7 @@ export class DriversRidesList extends React.Component {
                     variant="contained"
                     color="primary"
                     size="small"
+                    className="generic-container-color"
                   >
                     {!this.props.rideClicked ? "View" : "Hide"}
                   </Button>
