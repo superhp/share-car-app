@@ -18,7 +18,8 @@ import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
-//import * as ol from "ol";
+import {OfficeAddresses} from "./AddressData";
+import RidesOfDriver from "./RidesOfDriver";
 
 export class test extends React.Component {
 
@@ -28,20 +29,34 @@ export class test extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
-    passengerStyles: {
+    selectedRouteStyle: {
       route: new Style({
         stroke: new Stroke({
           width: 6, color: [0, 200, 0, 0.8]
         })
       })
   },
+  passengersSelectedOffice:"",
+  passengerPickUpPointFeature:null,
   selectedRoute:"",
+  filteredRoute:{
+   toOffice:false,
+   office:OfficeAddresses[0],
+   dateTimeFrom:"",
+   dateTimeTo:""
+  },// route object containing filttering information acocrding to which passenger will get route suggestions
+  driversOfRoute:[],
+  driversInfo:{
+    firstName:"",
+    lastName:"",
+    rides:[]
+  },
     passengerStylesCouter : 0,
     pickUpPoint:[],
     route: "",
     utils: "",
     map: "",
-    accessToken: "ad45b0b60450a4",
+    accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
     startPointInput: false,// If marker on a map was added by writing an address, it should be known if it was From or To input field
     features: { // markers on a map
@@ -54,25 +69,50 @@ export class test extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
+    showDrivers:false,
+    showRides:false,
+    ridesOfRoute:[],
     passengerRoutes: [],
     passengerRouteFeatures:[],
     passengerRouteFeaturesCounter:0,
-    driverStyles: "",
+    routeStyles: {
+      route: new Style({
+        stroke: new Stroke({
+          width: 6, color: [40, 40, 40, 0.8]
+        })
+      }),
+      icon: new Style({
+        image: new Icon({
+          anchor: [0.5, 1],
+          src: '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png'
+        })
+      })
+    },
+driverEmail:"",
     url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
     url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
     driver : false // will be passed by props
   }
 
-selectRoute(){
-  var counter = this.state.passengerRouteFeaturesCounter;
-  if(counter == 0)
-  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].feature.setStyle(this.state.driverStyles.route);
-else
-this.state.passengerRouteFeatures[counter-1].feature.setStyle(this.state.driverStyles.route);
 
-this.state.passengerRouteFeatures[counter].feature.setStyle(this.state.passengerStyles.route);
+
+selectRoute(){
+
+  this.state.showDrivers = true;
+  this.state.showRoutes = false;
+  this.state.showRides = false;
+  var counter = this.state.passengerRouteFeaturesCounter;
+  if(counter == 0){
+  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].feature.setStyle(this.state.routeStyles.route);
+  }
+else{
+this.state.passengerRouteFeatures[counter-1].feature.setStyle(this.state.routeStyles.route);
+}
+
+this.state.passengerRouteFeatures[counter].feature.setStyle(this.state.selectedRouteStyle.route);
 this.setState({selectedRoute :this.state.passengerRouteFeatures[counter].geometry}); 
 counter++;
+
 if(counter >= this.state.passengerRouteFeatures.length){
   counter = 0;
 }
@@ -84,21 +124,66 @@ this.getRidesByRoute(this.state.selectedRoute);
 }
 
 getRidesByRoute(routeGeometry){
+
 var route = {
   Geometry : routeGeometry
 };
-console.log(routeGeometry);
- api.get(`/Ride/ridesByRoute=`//, {
-  //params: {
-  //  ID: 12345
-  //}
-//}
-+routeGeometry).then(response => {
-    console.log(response);
+ api.get(`/Ride/ridesByRoute=`+routeGeometry).then(response => {
+ 
+this.setState({ridesOfRoute:response.data, driversOfRoute:[]});
+
+var drivers = [];
+
+
+
+this.state.ridesOfRoute.forEach((ride)=>{
+if(!drivers.includes(ride.driverFirstName + ride.driverLastName)){
+  drivers.push(ride.driverFirstName + ride.driverLastName);
+
+this.state.driversOfRoute.push({firstName:ride.driverFirstName, lastName : ride.driverLastName, email:ride.driverEmail});
+}
+});
+
+if(drivers.length != 0){
+  this.setState({showDriver : true});
+}
+else{
+  this.setState({showDriver : false});
+
+}
+
+console.log(this.state.driversOfRoute);
+
+
   });
+
+}
+
+
+handleOfficeSelection(e){
+var index = e.target.value;
+
+   this.state.filteredRoute.office = OfficeAddresses[index];
+  console.log(this.state.filteredRoute.office);
+
+  this.showRoutes();
+}
+
+handleToOfficeSelection(){
+  if(!this.state.filteredRoute.toOffice){
+    if(this.state.passengerPickUpPointFeature){
+      
+       this.state.vectorSource.removeFeature(this.state.passengerPickUpPointFeature)
+     this.state.passengerPickUpPointFeature = null;
+     
+    }
+  }
 }
 
 showRoutes(){
+  this.state.showDrivers = true;
+  this.state.showRoutes = false;
+  console.log(this.state.filteredRoute);
     api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
 
     console.log(res);
@@ -106,11 +191,12 @@ showRoutes(){
       this.state.passengerRoutes.forEach((element)=> {
         console.log(element.geometry);
       });
+this.state.passengerRouteFeatures = []; // deletes old routes
+
 this.state.passengerRoutes.forEach((element)=>{            
       this.createPassengerRoute(element.geometry);
 });
     });
-
 }
 
 createPassengerStyles(){/*
@@ -165,7 +251,7 @@ this.setState({passengerStyles});*/
       geometry: new Point(fromLonLat(coord)),
       onClick:console.log('clicked')
     });
-    feature.setStyle(this.state.driverStyles.icon);
+    feature.setStyle(this.state.routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
     console.log(fromFeature);
@@ -178,7 +264,6 @@ this.setState({passengerStyles});*/
   }
 
   setPassengersPickUpPoint(val) {
-
     this.CenterMap(val[0], val[1], this.state.map);
     var xy = [];
     xy = transform(val, 'EPSG:4326', 'EPSG:3857');
@@ -209,7 +294,7 @@ this.setState({passengerStyles});*/
     if (this.state.routeFeature) {
       this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
     }
-    feature.setStyle(this.state.driverStyles.route);
+    feature.setStyle(this.state.routeStyles.route);
     this.state.vectorSource.addFeature(feature);
     this.setState({ routeFeature: feature });
   }
@@ -227,7 +312,7 @@ this.setState({passengerStyles});*/
       geometry: route
     });
 
-    feature.setStyle(this.state.driverStyles.route);
+    feature.setStyle(this.state.routeStyles.route);
 
     this.state.passengerRouteFeatures.push({feature:feature, geometry:polyline});
 
@@ -329,7 +414,42 @@ this.setState({passengerStyles});*/
     map.getView().setZoom(19);
   }
 
-  handleMapClick(markersOnMap, coordinates) {
+showRidesOfDriver(driver){
+
+if(this.state.showRides){
+  if(driver == this.state.driver){
+    this.setState({showRides : false, driverEmail:""})
+  }
+  else{
+    this.setState({driverEmail:driver})
+  }  
+}else{
+  this.setState({showRides : true, driverEmail:driver});
+
+}
+
+
+}
+
+handlePassengerMapClick(evt){
+  var feature = new Feature(
+    new Point(evt.coordinate)
+  );
+  var lonlat = [];
+  lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+
+  this.setState({ pickUpPoint: lonlat });
+  if(this.state.passengerPickUpPointFeature){
+  this.state.vectorSource.removeFeature(this.state.passengerPickUpPointFeature);
+  }
+this.setState({passengerPickUpPointFeature:feature});
+  this.state.vectorSource.addFeature(feature);
+
+
+
+}
+
+  handleDriverMapClick(markersOnMap, coordinates) {
     if (markersOnMap > 1) {
       if (this.state.features.destinationFeature) {
         this.state.vectorSource.removeFeature(this.state.features.destinationFeature);
@@ -389,7 +509,7 @@ this.setState({passengerStyles});*/
 
       if (clickedOnMap) { // Separates route point adding by clicking and by writing an address
 
-        this.handleMapClick(markersOnMap,coordinates);
+        this.handleDriverMapClick(markersOnMap,coordinates);
       }
       else {
         this.handleAddressInput(coordinates)
@@ -421,25 +541,13 @@ this.setState({passengerStyles});*/
 
   componentDidMount() {
 
-    var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
+    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
 
-      vectorSource = new SourceVector(),
+      var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
-      }),
-      driverStyles = {
-        route: new Style({
-          stroke: new Stroke({
-            width: 6, color: [40, 40, 40, 0.8]
-          })
-        }),
-        icon: new Style({
-          image: new Icon({
-            anchor: [0.5, 1],
-            src: icon_url
-          })
-        })
-      };
+      });
+
     console.clear();
 
     var map = new Map({
@@ -455,8 +563,7 @@ this.setState({passengerStyles});*/
         zoom: 11
       })
     });
-this.createPassengerStyles();
-    this.setState({ map, vectorSource, driverStyles });
+    this.setState({ map, vectorSource });
 
     this.CenterMap(25.279652, 54.687157, map);
 
@@ -469,22 +576,19 @@ this.createPassengerStyles();
     }
   
   else{
-    var feature = new Feature(
-      new Point(evt.coordinate)
-    );
-    var lonlat = [];
-    lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-
-    this.setState({ pickUpPoint: lonlat });
-
-    this.state.vectorSource.clear();
-    this.state.vectorSource.addFeature(feature);
+if(this.state.filteredRoute.toOffice){
+    this.handlePassengerMapClick(evt)
+}
   }
-    });
+
+  });
+    
 if(this.state.driver){
 this.driverAddressInputSuggestion();
 }
 else{
+   
+  this.showRoutes();
   this.passengerAddressInputSuggestion();
 }  
 }
@@ -522,8 +626,39 @@ else{
         <button onClick={() => { this.saveRide() }}>Save</button>
         </div>     
         : <div>
-     
-     <div className="form-group">
+          <span>Show routes...</span>
+          <form>
+     <span>To office</span>
+     <td><input type="radio" name="site_name" 
+                                   value={"To office"}  
+                                   checked={this.state.filteredRoute.toOffice === true} 
+                                   onClick={()=>{this.state.filteredRoute.toOffice = true;
+
+                                  }}
+                                   onChange={()=>this.showRoutes()}
+                                />
+                                   </td>
+                                        <span>From office</span>
+                        <td><input type="radio" name="address" 
+                                   value={"From office"}  
+                                   checked={this.state.filteredRoute.toOffice === false} 
+                                   onClick={()=>{this.state.filteredRoute.toOffice = false;
+                                   this.handleToOfficeSelection();
+                                  }}
+
+                                   onChange={()=>this.showRoutes()}
+                            />
+                            </td>
+                            <span>Select office</span>
+                            <select onChange={(e)=>{this.handleOfficeSelection(e)}}>
+  <option value= {0} >{OfficeAddresses[0].street + OfficeAddresses[0].number}</option>
+  <option value= {1} >{OfficeAddresses[1].street + OfficeAddresses[1].number}</option>
+</select>
+                            </form>
+                            {
+                              this.state.filteredRoute.toOffice
+  
+  ?<div className="form-group">
           <label>Destination:</label>
           <input
             type="search"
@@ -533,12 +668,37 @@ else{
 
           />
         </div>
-
-          <button onClick={() => { this.showRoutes() }}>Show routes</button>
+                 :<div></div>     
+                       }
           <button onClick={() => { this.selectRoute() }}>Next</button>
+         {this.state.showDriver
+         ? <tbody>
+                {
+                    this.state.driversOfRoute.map(driver =>
+                        <tr key={driver.id}>
 
+                            <td><button onClick={()=>{this.showRidesOfDriver(driver.email)}}>{driver.firstName} </button> </td>
+
+                        </tr>
+
+                    )
+                }
+                {
+                  
+                  this.state.showRides
+              ?  <RidesOfDriver rides={this.state.ridesOfRoute} driver={this.state.driverEmail}/>
+            :<div></div>   
+            }
+            </tbody>
+
+            :<div></div>
+            
+         }
           </div>
+
 }
+
+
         <div id="map"></div>
 
 

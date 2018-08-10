@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,9 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Route> GetAllRoutes()
         {
-            return _databaseContext.Routes;
-        }
+                return _databaseContext.Routes;
+            
+
+            }
     }
 }
