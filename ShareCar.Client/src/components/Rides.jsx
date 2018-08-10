@@ -11,9 +11,10 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import "typeface-roboto";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import 'typeface-roboto';
+import "../styles/genericStyles.css";
 
 export class Rides extends React.Component {
   state = {
@@ -42,24 +43,31 @@ export class Rides extends React.Component {
           this.setState({ driversRides: d });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
   render() {
     return (
-      <DriversRidesList
-        selectedRide={this.state.selectedRideId}
-        rideClicked={this.state.clicked}
-        onRideClick={this.handleClick.bind(this)}
-        driversRides={
-          this.state.clicked
-            ? this.state.driversRides.filter(
-                x => x.rideId == this.state.selectedRideId
-              )
-            : this.state.driversRides
-        }
-      />
+      <div>
+        <Grid container>
+          <Grid item xs={12}>
+            <AppBar position="static" color="primary" className="generic-container-color">
+              <Toolbar>
+                <Typography variant="title" color="inherit">
+                  Your rides (Driver)
+          </Typography>
+              </Toolbar>
+            </AppBar>
+          </Grid>
+        </Grid>
+        <DriversRidesList
+          selectedRide={this.state.selectedRideId}
+          rideClicked={this.state.clicked}
+          onRideClick={this.handleClick.bind(this)}
+          driversRides={this.state.clicked ? this.state.driversRides.filter(x => x.rideId == this.state.selectedRideId) : this.state.driversRides}
+        />
+      </div>
     );
   }
 }
