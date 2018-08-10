@@ -84,9 +84,9 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("ridesByRoute={routeGeometry}")]
-        public IActionResult GetRidesRoute(string routeGeometry)
+        public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
         {
-            IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
+            IEnumerable<RideDto> rides = await _rideLogic.GetRidesByRouteAsync(routeGeometry);
             return Ok(rides);
         }
 
