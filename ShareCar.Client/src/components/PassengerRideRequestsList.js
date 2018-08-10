@@ -17,7 +17,7 @@ import { Typography } from "../../node_modules/@material-ui/core";
 export class PassengerRideRequestsList extends React.Component {
     render() {
         return (
-            <div className=" request-card-container"> 
+            <div className="request-card-container"> 
                 <Card className="request-card">
                     {this.props.requests.map(req =>
                         <tr  key={req.id}>
