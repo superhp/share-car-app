@@ -34,7 +34,7 @@ namespace ShareCar.Logic.Route_Logic
             return _mapper.Map<Route, RouteDto>(route);
         }
 
-        public IEnumerable<RouteDto> GetAllRoutes()
+        public IEnumerable<RouteDto> GetAllRoutes(RouteDto routeDto)
         {
             IEnumerable<Route> entityRoutes = _routeRepository.GetAllRoutes();
             List<RouteDto> dtoRoutes = new List<RouteDto>();
