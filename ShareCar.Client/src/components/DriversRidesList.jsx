@@ -14,20 +14,17 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import 'typeface-roboto'
 
 var moment = require("moment");
 
-export class DriversRidesList extends React.Component<{}> {
-  componentDidMount() {
-    console.log(this.props.driversRides);
-    this.setState({ driversRides: this.props.driversRides });
-  }
+export class DriversRidesList extends React.Component {
   render() {
-    let detailedRideInfo = !this.props.rideClicked ? (
+    let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
         <ViewRideRequests
           driver={true}
-          selectedRide={this.props.selectedRideId}
+          selectedRide={this.props.selectedRide}
         />
       </div>
     ) : null;
@@ -57,7 +54,7 @@ export class DriversRidesList extends React.Component<{}> {
                     color="primary"
                     size="small"
                   >
-                    View
+                    {!this.props.rideClicked ? "View" : "Hide"}
                   </Button>
                 </CardActions>
               </CardActions>

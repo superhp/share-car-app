@@ -20,6 +20,7 @@ namespace ShareCar.Logic.Ride_Logic
         bool SetRideAsInactive(RideDto ride);
         bool AddRide(RideDto ride, string email);
         IEnumerable<RideDto> FindSimilarRides(int rideId);
+        IEnumerable<RideDto> GetRidesByRoute(string routeGeometry);
         IEnumerable<RouteDto> GetRoutes(RouteDto routeDto);
     }
 }

@@ -35,6 +35,7 @@ export class test extends React.Component {
         })
       })
   },
+  selectedRoute:"",
     passengerStylesCouter : 0,
     pickUpPoint:[],
     route: "",
@@ -65,22 +66,42 @@ export class test extends React.Component {
 selectRoute(){
   var counter = this.state.passengerRouteFeaturesCounter;
   if(counter == 0)
-  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].setStyle(this.state.driverStyles.route);
+  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].feature.setStyle(this.state.driverStyles.route);
 else
-this.state.passengerRouteFeatures[counter-1].setStyle(this.state.driverStyles.route);
+this.state.passengerRouteFeatures[counter-1].feature.setStyle(this.state.driverStyles.route);
 
-this.state.passengerRouteFeatures[counter].setStyle(this.state.passengerStyles.route);
+this.state.passengerRouteFeatures[counter].feature.setStyle(this.state.passengerStyles.route);
+this.setState({selectedRoute :this.state.passengerRouteFeatures[counter].geometry}); 
 counter++;
-console.log(counter);
 if(counter >= this.state.passengerRouteFeatures.length){
   counter = 0;
 }
-this.setState({passengerRouteFeaturesCoutner:counter});
+console.log(counter);
+this.setState({passengerRouteFeaturesCounter:counter});
+
+this.getRidesByRoute(this.state.selectedRoute);
+
+}
+
+getRidesByRoute(routeGeometry){
+var route = {
+  Geometry : routeGeometry
+};
+console.log(routeGeometry);
+ api.get(`/Ride/ridesByRoute=`//, {
+  //params: {
+  //  ID: 12345
+  //}
+//}
++routeGeometry).then(response => {
+    console.log(response);
+  });
 }
 
 showRoutes(){
     api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
 
+    console.log(res);
       this.setState({ passengerRoutes: res.data });
       this.state.passengerRoutes.forEach((element)=> {
         console.log(element.geometry);
@@ -208,7 +229,7 @@ this.setState({passengerStyles});*/
 
     feature.setStyle(this.state.driverStyles.route);
 
-    this.state.passengerRouteFeatures.push(feature);
+    this.state.passengerRouteFeatures.push({feature:feature, geometry:polyline});
 
     this.state.vectorSource.addFeature(feature);
   }

@@ -20,6 +20,6 @@ namespace ShareCar.Db.Repositories
         void AddRide(Ride ride);
         IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId);
         IEnumerable<Ride> FindRidesByPassenger(Passenger passenger);
-
+        IEnumerable<Ride> GetRidesByRoute(string routeGeometry);
     }
 }

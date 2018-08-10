@@ -106,7 +106,10 @@ namespace ShareCar.Db.Repositories
                 .Where(x => x.DriverEmail == email);
         }
 
-
+        public IEnumerable<Ride> GetRidesByRoute(string routeGeometry)
+        {
+            return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry);
+        }
     }
 }
     

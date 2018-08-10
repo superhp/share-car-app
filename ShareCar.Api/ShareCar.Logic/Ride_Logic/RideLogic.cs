@@ -263,5 +263,11 @@ namespace ShareCar.Logic.Ride_Logic
      }
             return dtoRides;
         }
+
+        public IEnumerable<RideDto> GetRidesByRoute(string rideLogic)
+        {
+            IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(rideLogic);
+            return MapToList(entityRides);
+        }
     }
 }
