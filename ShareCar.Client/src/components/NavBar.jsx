@@ -40,7 +40,7 @@ export default class NavBar extends React.Component<{}> {
       </RoleContext.Consumer>
         <Link className="navBar-button" role="button" to="/">
           <Cached/>
-        <div>Choose role</div>   
+        <div>Change role</div>   
         </Link>
       </div>
     );
