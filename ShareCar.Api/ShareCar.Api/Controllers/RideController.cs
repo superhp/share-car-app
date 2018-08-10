@@ -12,7 +12,7 @@ using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{   [DisableCors]
+{   
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
@@ -81,6 +81,13 @@ namespace ShareCar.Api.Controllers
         {
             IEnumerable<RideDto> rides =  _rideLogic.FindRidesByDestination(addressToId);
             return SendResponse(rides);
+        }
+
+        [HttpGet("ridesByRoute={routeGeometry}")]
+        public IActionResult GetRidesRoute(string routeGeometry)
+        {
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
+            return Ok(rides);
         }
 
         [HttpGet("routes")]

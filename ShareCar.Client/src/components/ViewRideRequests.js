@@ -17,7 +17,15 @@ export class ViewRideRequests extends React.Component {
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
+<<<<<<< HEAD
 
+=======
+  handleRequestClick(button, requestId) {
+    if (button == "Accept") {
+      this.setState({driverRequests: this.state.driverRequests.filter(x=>x.requestId != requestId)})
+    }
+  }
+>>>>>>> a317a72a0600673a8275e0845eef9bf1bc4b93c3
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -54,6 +62,7 @@ export class ViewRideRequests extends React.Component {
     api
       .get("RideRequest/true")
       .then(response => {
+        if (response.status == 200)
         this.setState({ driverRequests: response.data });
         console.log(this.state.driverRequests);
       })
@@ -83,10 +92,11 @@ export class ViewRideRequests extends React.Component {
       <div>
         {this.props.driver ? (
           <DriverRideRequestsList
+            onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
-            rideRequests={this.state.driverRequests.filter(
+            rideRequests={this.props.selectedRide != null ? this.state.driverRequests.filter(
               x => x.rideId == this.props.selectedRide
-            )}
+            ): this.state.driverRequests}
           />
         ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />
