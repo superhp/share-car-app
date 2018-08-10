@@ -24,10 +24,10 @@ export class PassengerRideRequestsList extends React.Component {
                             <CardContent >
                                 <Typography variant="headline">
                                     {req.seenByPassenger ? "" : "NEW  "}
-                                    {req.driverFirstName} {req.driverLastName}
+                                    Name: {req.driverFirstName} {req.driverLastName}
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    <Moment date={req.rideDate} format="MM-DD HH:mm"/>
+                                    Date: <Moment date={req.rideDate} format="MM-DD HH:mm"/>
                                 </Typography>
                                 <Typography component="p">
                                     Status: {Status[parseInt(req.status)]}
