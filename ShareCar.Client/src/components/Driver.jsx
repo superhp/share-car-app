@@ -14,6 +14,8 @@ export default class Driver extends Component<{}, MyProfileState> {
 
   componentDidMount() {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
+    console.log(this.props.isDriver);
+    this.props.isDriver == null ? history.push("/") : null;
   }
 
   updateLoggedInUser = (user: UserProfileData) => {

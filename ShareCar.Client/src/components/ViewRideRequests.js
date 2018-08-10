@@ -12,20 +12,20 @@ export class ViewRideRequests extends React.Component {
     passengerRequests: []
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.driver
       ? this.showDriverRequests()
       : this.showPassengerRequests();
   }
-<<<<<<< HEAD
-
-=======
   handleRequestClick(button, requestId) {
     if (button == "Accept") {
-      this.setState({driverRequests: this.state.driverRequests.filter(x=>x.requestId != requestId)})
+      this.setState({
+        driverRequests: this.state.driverRequests.filter(
+          x => x.requestId != requestId
+        )
+      });
     }
   }
->>>>>>> a317a72a0600673a8275e0845eef9bf1bc4b93c3
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -63,8 +63,7 @@ export class ViewRideRequests extends React.Component {
       .get("RideRequest/true")
       .then(response => {
         if (response.status == 200)
-        this.setState({ driverRequests: response.data });
-        console.log(this.state.driverRequests);
+          this.setState({ driverRequests: response.data });
       })
       .then(() => {
         const unseenRequests = [];
@@ -94,9 +93,13 @@ export class ViewRideRequests extends React.Component {
           <DriverRideRequestsList
             onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
-            rideRequests={this.props.selectedRide != null ? this.state.driverRequests.filter(
-              x => x.rideId == this.props.selectedRide
-            ): this.state.driverRequests}
+            rideRequests={
+              this.props.selectedRide != null && this.state.driverRequests != []
+                ? this.state.driverRequests.filter(
+                    x => x.rideId == this.props.selectedRide
+                  )
+                : []
+            }
           />
         ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />

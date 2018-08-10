@@ -14,23 +14,19 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import 'typeface-roboto'
+import "typeface-roboto";
 
 var moment = require("moment");
 
 export class DriversRidesList extends React.Component {
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
-<<<<<<< HEAD
-      <ViewRideRequests driver={true} selectedRide={this.props.selectedRide} />
-=======
       <div className="detailedInfoContainer">
         <ViewRideRequests
           driver={true}
           selectedRide={this.props.selectedRide}
         />
       </div>
->>>>>>> a317a72a0600673a8275e0845eef9bf1bc4b93c3
     ) : null;
     return (
       <Grid container>
