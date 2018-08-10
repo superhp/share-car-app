@@ -19,8 +19,8 @@ export class PassengerRideRequestsList extends React.Component {
         return (
             
             this.props.requests.map(req =>
-                <Card className="request-card request-card-container">
-                    <CardContent>
+                <Card className="request-card">
+                    <CardContent className=" request-card-container">
                         {/*  */}
                         <Typography variant="headline">
                             {req.seenByPassenger ? "" : "NEW  "}

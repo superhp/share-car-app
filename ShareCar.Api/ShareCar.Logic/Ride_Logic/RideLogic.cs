@@ -234,9 +234,9 @@ namespace ShareCar.Logic.Ride_Logic
 
         }
 
-        public IEnumerable<RouteDto> GetRoutes(Route routeDto)
+        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
         {
-            return _routeLogic.GetAllRoutes(routeDto);
+            return _routeLogic.GetRoutes(routeDto);
         }
 
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
@@ -268,6 +268,13 @@ namespace ShareCar.Logic.Ride_Logic
         {
             IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(rideLogic);
             return MapToList(entityRides);
+        }
+
+        public bool UpdateRide(RideDto ride)
+        {
+            var rideUpdated = _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+
+            return rideUpdated ? true : false;
         }
     }
 }

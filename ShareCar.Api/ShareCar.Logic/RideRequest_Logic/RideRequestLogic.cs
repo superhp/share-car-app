@@ -51,7 +51,17 @@ namespace ShareCar.Logic.RideRequest_Logic
             var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
             if (isUpdated && request.Status == Dto.Status.ACCEPTED)
             {
-                _passengerLogic.AddPassenger(new PassengerDto { Email = request.DriverEmail, RideId = request.RideId, Completed = false });
+                var rideToUpdateSeats = _rideLogic.FindRideById(request.RideId);
+                if (rideToUpdateSeats.NumberOfSeats != 0)
+                {
+                    _passengerLogic.AddPassenger(new PassengerDto { Email = request.DriverEmail, RideId = request.RideId, Completed = false });
+                    rideToUpdateSeats.NumberOfSeats--;
+                    var updatedSeats = _rideLogic.UpdateRide(rideToUpdateSeats);
+                    return true;
+                } else
+                {
+                    return false;
+                }
             }
             return isUpdated;
         }
