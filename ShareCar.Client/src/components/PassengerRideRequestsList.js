@@ -17,59 +17,31 @@ import { Typography } from "../../node_modules/@material-ui/core";
 export class PassengerRideRequestsList extends React.Component {
     render() {
         return (
-            
-            this.props.requests.map(req =>
+            <div className=" request-card-container"> 
                 <Card className="request-card">
-                    <CardContent className=" request-card-container">
-                        {/*  */}
-                        <Typography variant="headline">
-                            {req.seenByPassenger ? "" : "NEW  "}
-                           {req.driverFirstName} {req.driverLastName}
-                        </Typography>
-                        <Typography color="textSecondary">
-                            <Moment date={req.rideDate} format="MM-DD HH:mm"/>
-                        </Typography>
-                        <Typography component="p">
-                            Status: {Status[parseInt(req.status)]}
-                        </Typography>
-                        <Typography component="p">
-                            Address: {req.address}
-                        </Typography>
-                    </CardContent>
-                </Card>     
-                // <tr key={req.id}>
-                //     <td ></td>
-                //     <td>  </td>
-                //     <td>  </td>
-                // </tr>
+                    {this.props.requests.map(req =>
+                        <tr  key={req.id}>
+                            <CardContent >
+                                <Typography variant="headline">
+                                    {req.seenByPassenger ? "" : "NEW  "}
+                                    {req.driverFirstName} {req.driverLastName}
+                                </Typography>
+                                <Typography color="textSecondary">
+                                    <Moment date={req.rideDate} format="MM-DD HH:mm"/>
+                                </Typography>
+                                <Typography component="p">
+                                    Status: {Status[parseInt(req.status)]}
+                                </Typography>
+                                <Typography component="p">
+                                    Address: {req.address}
+                                </Typography>
+                            </CardContent>
+                        </tr>
+                    )}
+                </Card> 
+            </div>
+                
 
-            )
-            
-        //     <Table className="generic-table">
-        //         <TableHead>
-        //             <TableRow>
-        //                 <th>Seen</th>
-        //                 <th>Who </th>
-        //                 <th>When </th>
-        //                 <th>Where </th>
-        //                 <th>Status </th>
-        //                 </TableRow>
-        // </TableHead>
-                    
-        //          <TableBody> 
-        //             {this.props.requests.map(req =>
-        //                 <tr key={req.id}>
-        //                     <td >{req.seenByPassenger ? "" : "NEW  "}</td>
-        //                     <td> {req.driverFirstName} {req.driverLastName}</td>
-        //                     <td> <Moment date={req.rideDate} format="MM-DD HH:mm"/> </td>
-        //                     <td> {req.address} </td>
-        //                     <td> {Status[parseInt(req.status)]} </td>
-        //                 </tr>
-
-        //             )}
-                    
-        //         </TableBody>
-        //     </Table>
-        );
+        )
     }
 }
