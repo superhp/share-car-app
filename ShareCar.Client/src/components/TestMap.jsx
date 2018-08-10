@@ -199,28 +199,6 @@ this.state.passengerRoutes.forEach((element)=>{
     });
 }
 
-createPassengerStyles(){/*
-  var passengerStyles = [];
-  for(var r = 0; r < 256; r +=64)
-  {
-    for(var g = 0; g < 256; g +=64)
-    {
-      for(var b = 0; b < 256; b +=64)
-      {
-        var style = {
-          route: new Style({
-            stroke: new Stroke({
-              width: 6, color: [r, g, b, 0.8]
-            })
-          })
-      };
-      passengerStyles.push(style);
-    }
-  }
-}
-this.setState({passengerStyles});*/
-}
-
   saveRide() {
     var newRoute = {
       FromAddress: this.state.route.fromAddress,
@@ -380,32 +358,17 @@ this.setState({passengerStyles});*/
   }
 
   passengerAddressInputSuggestion() {
- /*   var places = require("places.js");
+    var places = require("places.js");
 
     
-    var placesAutocompleteFrom = places({
-      container: document.querySelector("#address-input-from")
+    var placesAutocompletePassenger = places({
+      container: document.querySelector("#passenger-address")
     });
 
-    var placesAutocompleteTo = places({
-      container: document.querySelector("#address-input-to")
-    });
-
-
-
-    placesAutocompleteFrom.on("change", (e) => {
-      this.setState({ startPointInput: true });
+    placesAutocompletePassenger.on("change", (e) => {
       this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
     });
 
-    placesAutocompleteTo.on("change", (e) => {
-      this.setState({ startPointInput: false });
-      this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
-    });
-
-*/
   }
 
   CenterMap(long, lat, map) {
@@ -657,13 +620,13 @@ else{
                             </form>
                             {
                               this.state.filteredRoute.toOffice
-  
+                        
   ?<div className="form-group">
           <label>Destination:</label>
           <input
             type="search"
             class="form-group"
-            id="passenger-address-input-to"
+            id="passenger-address"
             placeholder="Select destination..."
 
           />
