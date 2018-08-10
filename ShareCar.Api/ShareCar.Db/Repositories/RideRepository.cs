@@ -72,9 +72,10 @@ namespace ShareCar.Db.Repositories
             {
                 var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
                 rideToUpdate.RouteId = ride.RouteId;
-                rideToUpdate.Route = ride.Route;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
                 rideToUpdate.isActive = ride.isActive;
+                rideToUpdate.NumberOfSeats = ride.NumberOfSeats;
+                
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
                 return true;

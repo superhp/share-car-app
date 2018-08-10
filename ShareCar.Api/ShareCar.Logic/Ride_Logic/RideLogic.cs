@@ -269,5 +269,12 @@ namespace ShareCar.Logic.Ride_Logic
             IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(rideLogic);
             return MapToList(entityRides);
         }
+
+        public bool UpdateRide(RideDto ride)
+        {
+            var rideUpdated = _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+
+            return rideUpdated ? true : false;
+        }
     }
 }
