@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,9 +66,23 @@ namespace ShareCar.Db.Repositories
             return true;
         }
 
-        public IEnumerable<Route> GetAllRoutes()
+        public IEnumerable<Route> GetRoutes(bool isFromOffice, Address address)
         {
-            return _databaseContext.Routes;
+            if (isFromOffice == true)
+            {
+                return _databaseContext.Routes.Include(x => x.Rides)
+                    .Include(x => x.FromAddress)
+                    .Include(x => x.ToAddress)
+                    .Where(x => x.FromAddress.Country == address.Country && x.FromAddress.City == address.City && x.FromAddress.Street == address.Street && x.FromAddress.Number == address.Number);
+            }
+            else
+            {
+                return _databaseContext.Routes.Include(x => x.Rides)
+                    .Include(x => x.FromAddress)
+                    .Include(x => x.ToAddress)
+                    .Where(x => x.ToAddress.Country == address.Country && x.ToAddress.City == address.City && x.ToAddress.Street == address.Street && x.ToAddress.Number == address.Number);
+            }
         }
+        
     }
 }

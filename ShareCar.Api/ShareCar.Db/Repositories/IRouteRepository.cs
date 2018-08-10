@@ -9,6 +9,6 @@ namespace ShareCar.Db.Repositories
         Route FindRouteById(int id);
         bool AddRoute(Route route);
         bool UpdateRoute(Route route);
-        IEnumerable<Route> GetAllRoutes();
+        IEnumerable<Route> GetRoutes(bool isOfficeAddress, Address address);
     }
 }

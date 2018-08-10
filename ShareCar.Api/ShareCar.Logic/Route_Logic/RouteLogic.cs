@@ -4,6 +4,7 @@ using ShareCar.Db.Repositories;
 using ShareCar.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ShareCar.Logic.Route_Logic
@@ -30,17 +31,74 @@ namespace ShareCar.Logic.Route_Logic
             {
                 return null;
             }
-
-            return _mapper.Map<Route, RouteDto>(route);
+            
+            RouteDto routeDto = new RouteDto
+            {
+                AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress),
+                AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress),
+                FromId = route.FromId,
+                ToId = route.ToId,
+                RouteId = route.RouteId,
+                Geometry = route.Geometry
+            };
+            return routeDto;
         }
 
-        public IEnumerable<RouteDto> GetAllRoutes(RouteDto routeDto)
+        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
         {
-            IEnumerable<Route> entityRoutes = _routeRepository.GetAllRoutes();
+            AddressDto address = routeDto.AddressTo;
+            bool isFromOffice = false;
+            if (routeDto.AddressFrom != null)
+            {
+                address = routeDto.AddressFrom;
+                isFromOffice = true;
+            }
+            IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, _mapper.Map<AddressDto, Address>(address));
+            
+            if (routeDto.FromTime != DateTime.MinValue)
+            {
+                foreach(var route in entityRoutes)
+                {
+                    foreach(var ride in route.Rides)
+                    {
+                        if((ride.RideDateTime<routeDto.FromTime)||(ride.isActive == false))
+                        {
+                            route.Rides.Remove(ride);
+                        }
+                    }
+                }
+            }
+            if (routeDto.UntillTime != DateTime.MinValue)
+            {
+                foreach (var route in entityRoutes)
+                {
+                    foreach (var ride in route.Rides)
+                    {
+                        if ((ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
+                        {
+                            route.Rides.Remove(ride);
+                        }
+                    }
+                }
+            }
             List<RouteDto> dtoRoutes = new List<RouteDto>();
             foreach (var route in entityRoutes)
             {
-                dtoRoutes.Add(_mapper.Map<Route, RouteDto>(route));
+                RouteDto mappedRoute = new RouteDto();
+                mappedRoute.Rides = new List<RideDto>();
+                if(route.Rides != null)
+                {
+                   
+                    mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
+                    mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
+                    mappedRoute.FromId = route.FromId;
+                    mappedRoute.Geometry = route.Geometry;
+                    foreach(var ride in route.Rides)
+                    {
+                        mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
+                    }
+                    dtoRoutes.Add(mappedRoute);
+                }
             }
             return dtoRoutes;
         }

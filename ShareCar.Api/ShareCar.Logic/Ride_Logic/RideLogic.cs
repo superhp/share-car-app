@@ -234,9 +234,9 @@ namespace ShareCar.Logic.Ride_Logic
 
         }
 
-        public IEnumerable<RouteDto> GetRoutes(Route routeDto)
+        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
         {
-            return _routeLogic.GetAllRoutes(routeDto);
+            return _routeLogic.GetRoutes(routeDto);
         }
 
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)
