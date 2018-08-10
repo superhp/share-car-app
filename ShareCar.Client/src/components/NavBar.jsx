@@ -18,29 +18,36 @@ export default class NavBar extends React.Component<{}> {
               < div className="button-container">Profile</div>  
           </div>  
         </Link> 
-      <Link className="navBar-button" role="button" to="/routes">
-        <Map/>
-          <div>Routes map</div>   
-      </Link>
-        <RoleContext.Consumer>
-      {
-        ({role}) => (
-      role === "driver"
-      ? <Link className="navBar-button" role="button" to="/riderequest">
-          <NoteAdd/>
-          
-        <div>Requests</div>   
+        <Link className="navBar-button" role="button" to="/routes">
+          <div className="button-container">
+            <Map/>
+            <div className="button-container">Routes map</div>   
+          </div>
         </Link>
-      : <Link className="navBar-button" role="button" to="/rides">
+          <RoleContext.Consumer>
+        {
+          ({role}) => (
+          role === "driver"
+            ? <Link className="navBar-button" role="button" to="/riderequest">
+              <div className="button-container">
+                <NoteAdd/>
+                <div className="button-container">Requests</div>  
+              </div> 
+              </Link>
+          : <Link className="navBar-button" role="button" to="/rides">
+            <div className="button-container">
           <PlaylistAdd/>
           
-        <div>Rides</div>   
+          <div className="button-container">Rides</div>   
+          </div>
         </Link>
       )}
       </RoleContext.Consumer>
         <Link className="navBar-button" role="button" to="/">
+        <div className="button-container">
           <Cached/>
-        <div>Change role</div>   
+          <div className="button-container">Change role</div>   
+        </div>
         </Link>
       </div>
     );
