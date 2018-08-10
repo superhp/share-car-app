@@ -20,12 +20,12 @@ export class WinnersList extends React.Component {
     render() {
         return (
             <Grid container>
-                <td>
+                <td className="rides-card name-container"> 
                     {this.props.winnersList.map((winner, index) => (
                         <Grid item xs={12}>
                             <Card className="rides-card">
                                 <CardActions>
-                                    <CardContent>
+                                    <CardContent >
                                         <Typography component="p">
                                             {winner.firstName} {winner.lastName}
                                         </Typography>
@@ -35,10 +35,10 @@ export class WinnersList extends React.Component {
                         </Grid>
                     ))}
                 </td>
-                <td>
+                <td className="point-container">
                     {this.props.pointsList.map((point, index) => (
                         <Grid item xs={12}>
-                            <Card className="rides-card">
+                            <Card className="rides-card ">
                                 <CardActions>
                                     <CardContent>
                                         <Typography component="p">

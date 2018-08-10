@@ -40,5 +40,11 @@ td {
         }
 
 .winner-container{
-    margin-top: 10px !important;
+    margin-top: 20px !important;
+}
+.point-container{
+    width: 25% !important;
+}
+.name-container{
+    width: 50% !important;
 }
