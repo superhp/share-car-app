@@ -42,6 +42,17 @@ namespace ShareCar.Logic.Passenger_Logic
             return dtoPassengers;
         }
 
+        public List<PassengerDto> GetPassengersByRideId(int rideId)
+        {
+            IEnumerable<Passenger> passengers = _passengerRepository.GetPassengersByRideId(rideId);
+            List<PassengerDto> dtoPassengers = new List<PassengerDto>();
+            foreach (Passenger passenger in passengers)
+            {
+                dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
+            }
+            return dtoPassengers;
+        }
+
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
             _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
