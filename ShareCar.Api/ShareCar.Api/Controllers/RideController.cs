@@ -84,9 +84,9 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("ridesByRoute={routeGeometry}")]
-        public IActionResult GetRidesRoute(string routeGeometry)
+        public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
         {
-            IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
+            IEnumerable<RideDto> rides = await _rideLogic.GetRidesByRouteAsync(routeGeometry);
             return Ok(rides);
         }
 
@@ -117,20 +117,7 @@ namespace ShareCar.Api.Controllers
                 return NotFound();
             }
         }
-        /*
-        [HttpGet]
-        [Route("passengerRides")]
-        public async Task<IActionResult> GetRidesByPassenger()
-        {
-            IEnumerable<PassengerDto> passengerRides = await _rideLogic.FindRidesByPassenger(User);
-            
-                return Ok(passengerRides);            
-
-        }
-        */
-
-
-        // Any object update. If user doesn't change property, it should be delivered unchanged
+        
         [HttpPut]
         public IActionResult Put([FromBody] RideDto ride)
         {
@@ -165,22 +152,30 @@ namespace ShareCar.Api.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RideDto ride)
+        public async Task<IActionResult> Post([FromBody] IEnumerable<RideDto> rides)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-            if (ride == null)
+            if (rides == null)
             {
                 return BadRequest("Invalid parameter");
             }
-
-            bool result =  _rideLogic.AddRide(ride, userDto.Email);
-
-            if (result)
+            int count = 0;
+            foreach (var ride in rides)
+            {
+                bool result =  _rideLogic.AddRide(ride, userDto.Email);
+                if (result)
+                {
+                    count++;
+                }
+                else break;
+            }
+            if (count == rides.Count())
             {
                 return Ok();
             }
             else
             {
+
                 return BadRequest("Operation failed");
             }
 
@@ -195,7 +190,7 @@ namespace ShareCar.Api.Controllers
                 return Ok(ride);
 
             }
-            return NotFound();
+            return Ok(ride);
 
         }
     }

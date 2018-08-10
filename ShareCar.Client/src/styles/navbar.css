@@ -3,11 +3,10 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 8%;
+  height: 9%;
   display: flex;
   background-color: white;
   align-items: center;
-  text-align: center;
 }
 
 
@@ -26,5 +25,10 @@ a.navBar-button {
   color: white
 }
 .button-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  height: 100%;
+  margin-top: 5px;
 }

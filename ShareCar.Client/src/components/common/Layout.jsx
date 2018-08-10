@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import "../../styles/layout.css";
+import "../../styles/genericStyles.css";
 import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import history from "../../helpers/history";
@@ -33,11 +34,16 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
         <div className="content">
           <Grid container justify="center">
             <Grid item xs={12}>
+<<<<<<< HEAD
               <AppBar
                 className="generic-container-color"
                 position="static"
                 color="primary"
               >
+=======
+              <AppBar position="static" color="primary" 
+                    className="generic-container-color">
+>>>>>>> 79aef0d2a1420b66bf6db7a3f188002b61f622bd
                 <Toolbar>
                   <Typography variant="title" color="inherit">
                     {this.props.location.pathname == "/"

@@ -48,6 +48,7 @@ export class Rides extends React.Component {
           const d = response.data;
           console.log(response.data);
           this.setState({ driversRides: d });
+
         }
       })
       .catch(function(error) {

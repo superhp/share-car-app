@@ -19,8 +19,10 @@ const NavBar = props => {
         </div>
       </Link>
       <Link className="navBar-button" role="button" to={status + "/routes"}>
+      <div className="button-container">
         <Map />
         <div>Routes map</div>
+        </div>
       </Link>
       {!props.isDriver ? (
         <Link
@@ -28,20 +30,26 @@ const NavBar = props => {
           role="button"
           to={status + "/riderequest"}
         >
+          <div className="button-container">
           <NoteAdd />
 
           <div>Requests</div>
+          </div>
         </Link>
       ) : (
         <Link className="navBar-button" role="button" to={status + "/rides"}>
+        <div className="button-container">
           <PlaylistAdd />
 
           <div>Rides</div>
+          </div>
         </Link>
       )}
       <Link className="navBar-button" role="button" to="/">
+      <div className="button-container">
         <Cached />
         <div>Change role</div>
+        </div>
       </Link>
     </div>
   );
