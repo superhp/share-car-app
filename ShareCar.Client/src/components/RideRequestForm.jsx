@@ -69,7 +69,7 @@ export class RideRequestForm extends React.Component {
               onSubmit={this.handleSubmit.bind(this)}
             >
               <div class="form-group">
-                <label className="ride-requests-text">Address :</label>
+                <label className="ride-requests-text">Address</label>
                 <input
                   id="address"
                   className="ride-requests form-control"
@@ -79,7 +79,7 @@ export class RideRequestForm extends React.Component {
                 />
               </div>
               <div class="form-group">
-                <label className="ride-requests-text">Ride Id:</label>
+                <label className="ride-requests-text">Ride Id</label>
                 <input
                   className="ride-requests form-control"
                   id="rideId"

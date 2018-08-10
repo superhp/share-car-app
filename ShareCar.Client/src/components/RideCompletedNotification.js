@@ -16,9 +16,9 @@ class RideCompletedNotification extends React.Component {
                     {
                         this.props.rides.map(ride =>
                             <tr key={ride.id}>
-                                <td>Who: {ride.driverFirstName} {ride.driverLastName}</td>
-                                <td>When: {ride.rideDate} </td>
-                                <td>Where: {ride.address} </td>
+                                <td>Who {ride.driverFirstName} {ride.driverLastName}</td>
+                                <td>When {ride.rideDate} </td>
+                                <td>Where {ride.address} </td>
 
                                 <td>
                                     <button

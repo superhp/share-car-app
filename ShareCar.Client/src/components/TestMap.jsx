@@ -21,7 +21,6 @@ import { fromLonLat } from "ol/proj";
 //import * as ol from "ol";
 
 export class test extends React.Component {
-
   state = {
     points: 0,
     coordinates: {
@@ -31,20 +30,22 @@ export class test extends React.Component {
     passengerStyles: {
       route: new Style({
         stroke: new Stroke({
-          width: 6, color: [0, 200, 0, 0.8]
+          width: 6,
+          color: [0, 200, 0, 0.8]
         })
       })
-  },
-  selectedRoute:"",
-    passengerStylesCouter : 0,
-    pickUpPoint:[],
+    },
+    selectedRoute: "",
+    passengerStylesCouter: 0,
+    pickUpPoint: [],
     route: "",
     utils: "",
     map: "",
     accessToken: "ad45b0b60450a4",
     vectorSource: "",
-    startPointInput: false,// If marker on a map was added by writing an address, it should be known if it was From or To input field
-    features: { // markers on a map
+    startPointInput: false, // If marker on a map was added by writing an address, it should be known if it was From or To input field
+    features: {
+      // markers on a map
       startPointFeature: "",
       destinationFeature: ""
     },
@@ -55,65 +56,77 @@ export class test extends React.Component {
       routeGeometry: ""
     },
     passengerRoutes: [],
-    passengerRouteFeatures:[],
-    passengerRouteFeaturesCounter:0,
+    passengerRouteFeatures: [],
+    passengerRouteFeaturesCounter: 0,
     driverStyles: "",
-    url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
-    url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
-    driver : false // will be passed by props
+    url_osrm_nearest:
+      "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
+    url_osrm_route:
+      "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/",
+    driver: false // will be passed by props
+  };
+
+  selectRoute() {
+    var counter = this.state.passengerRouteFeaturesCounter;
+    if (counter == 0)
+      this.state.passengerRouteFeatures[
+        this.state.passengerRouteFeatures.length - 1
+      ].feature.setStyle(this.state.driverStyles.route);
+    else
+      this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
+        this.state.driverStyles.route
+      );
+
+    this.state.passengerRouteFeatures[counter].feature.setStyle(
+      this.state.passengerStyles.route
+    );
+    this.setState({
+      selectedRoute: this.state.passengerRouteFeatures[counter].geometry
+    });
+    counter++;
+    if (counter >= this.state.passengerRouteFeatures.length) {
+      counter = 0;
+    }
+    console.log(counter);
+    this.setState({ passengerRouteFeaturesCounter: counter });
+
+    this.getRidesByRoute(this.state.selectedRoute);
   }
 
-selectRoute(){
-  var counter = this.state.passengerRouteFeaturesCounter;
-  if(counter == 0)
-  this.state.passengerRouteFeatures[this.state.passengerRouteFeatures.length-1].feature.setStyle(this.state.driverStyles.route);
-else
-this.state.passengerRouteFeatures[counter-1].feature.setStyle(this.state.driverStyles.route);
+  getRidesByRoute(routeGeometry) {
+    var route = {
+      Geometry: routeGeometry
+    };
+    console.log(routeGeometry);
+    api
+      .get(
+        `/Ride/ridesByRoute=` + //, {
+          //params: {
+          //  ID: 12345
+          //}
+          //}
+          routeGeometry
+      )
+      .then(response => {
+        console.log(response);
+      });
+  }
 
-this.state.passengerRouteFeatures[counter].feature.setStyle(this.state.passengerStyles.route);
-this.setState({selectedRoute :this.state.passengerRouteFeatures[counter].geometry}); 
-counter++;
-if(counter >= this.state.passengerRouteFeatures.length){
-  counter = 0;
-}
-console.log(counter);
-this.setState({passengerRouteFeaturesCounter:counter});
-
-this.getRidesByRoute(this.state.selectedRoute);
-
-}
-
-getRidesByRoute(routeGeometry){
-var route = {
-  Geometry : routeGeometry
-};
-console.log(routeGeometry);
- api.get(`/Ride/ridesByRoute=`//, {
-  //params: {
-  //  ID: 12345
-  //}
-//}
-+routeGeometry).then(response => {
-    console.log(response);
-  });
-}
-
-showRoutes(){
+  showRoutes() {
     api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
-
-    console.log(res);
+      console.log(res);
       this.setState({ passengerRoutes: res.data });
-      this.state.passengerRoutes.forEach((element)=> {
+      this.state.passengerRoutes.forEach(element => {
         console.log(element.geometry);
       });
-this.state.passengerRoutes.forEach((element)=>{            
-      this.createPassengerRoute(element.geometry);
-});
+      this.state.passengerRoutes.forEach(element => {
+        this.createPassengerRoute(element.geometry);
+      });
     });
+  }
 
-}
-
-createPassengerStyles(){/*
+  createPassengerStyles() {
+    /*
   var passengerStyles = [];
   for(var r = 0; r < 256; r +=64)
   {
@@ -133,65 +146,72 @@ createPassengerStyles(){/*
   }
 }
 this.setState({passengerStyles});*/
-}
+  }
 
   saveRide() {
     var newRoute = {
       FromAddress: this.state.route.fromAddress,
       ToAddress: this.state.route.toAddress,
       RouteGeometry: this.state.route.routeGeometry
-    }
+    };
     console.log(newRoute);
-   // other stuff not implemented
+    // other stuff not implemented
   }
 
   getNearest(coord) {
     return new Promise((resolve, reject) => {
       //make sure the coord is on street
-      fetch(this.state.url_osrm_nearest + coord.join()).then((response) => {
-        return response.json();
-      }).then(function (json) {
-        if (json.code === 'Ok') {
-          resolve(json.waypoints[0].location);
-        }
-        else reject();
-      });
+      fetch(this.state.url_osrm_nearest + coord.join())
+        .then(response => {
+          return response.json();
+        })
+        .then(function(json) {
+          if (json.code === "Ok") {
+            resolve(json.waypoints[0].location);
+          } else reject();
+        });
     });
   }
 
-  createFeature(coord, fromFeature) { // fromFeature param indicates which feature is added - start point or destination
+  createFeature(coord, fromFeature) {
+    // fromFeature param indicates which feature is added - start point or destination
     var feature = new Feature({
-      type: 'place',
+      type: "place",
       geometry: new Point(fromLonLat(coord)),
-      onClick:console.log('clicked')
+      onClick: console.log("clicked")
     });
     feature.setStyle(this.state.driverStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
     console.log(fromFeature);
     if (fromFeature)
-      this.setState({ features: { startPointFeature: feature, destinationFeature: this.state.features.destinationFeature } });
+      this.setState({
+        features: {
+          startPointFeature: feature,
+          destinationFeature: this.state.features.destinationFeature
+        }
+      });
     else
-      this.setState({ features: { startPointFeature: this.state.features.startPointFeature, destinationFeature: feature } });
+      this.setState({
+        features: {
+          startPointFeature: this.state.features.startPointFeature,
+          destinationFeature: feature
+        }
+      });
     console.log(this.state.features);
-
   }
 
   setPassengersPickUpPoint(val) {
-
     this.CenterMap(val[0], val[1], this.state.map);
     var xy = [];
-    xy = transform(val, 'EPSG:4326', 'EPSG:3857');
+    xy = transform(val, "EPSG:4326", "EPSG:3857");
     console.log(xy);
     var vectorSource = this.state.Vector;
 
-    var feature = new Feature(
-      new Point(xy)
-    );
+    var feature = new Feature(new Point(xy));
 
     vectorSource.clear();
     vectorSource.addFeature(feature);
-
   }
 
   createDriverRoute(polyline) {
@@ -199,15 +219,15 @@ this.setState({passengerStyles});*/
     var route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
+      dataProjection: "EPSG:4326",
+      featureProjection: "EPSG:3857"
     });
     var feature = new Feature({
-      type: 'route',
+      type: "route",
       geometry: route
     });
     if (this.state.routeFeature) {
-      this.state.vectorSource.removeFeature(this.state.routeFeature) // removes old route from map
+      this.state.vectorSource.removeFeature(this.state.routeFeature); // removes old route from map
     }
     feature.setStyle(this.state.driverStyles.route);
     this.state.vectorSource.addFeature(feature);
@@ -219,36 +239,47 @@ this.setState({passengerStyles});*/
     var route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
+      dataProjection: "EPSG:4326",
+      featureProjection: "EPSG:3857"
     });
     var feature = new Feature({
-      type: 'route',
+      type: "route",
       geometry: route
     });
 
     feature.setStyle(this.state.driverStyles.route);
 
-    this.state.passengerRouteFeatures.push({feature:feature, geometry:polyline});
+    this.state.passengerRouteFeatures.push({
+      feature: feature,
+      geometry: polyline
+    });
 
     this.state.vectorSource.addFeature(feature);
   }
 
   to4326(coord) {
-    return transform([
-      parseFloat(coord[0]), parseFloat(coord[1])
-    ], 'EPSG:3857', 'EPSG:4326');
+    return transform(
+      [parseFloat(coord[0]), parseFloat(coord[1])],
+      "EPSG:3857",
+      "EPSG:4326"
+    );
   }
 
   coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function (resolve, reject) {
-      fetch('//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=' + latitude + '&lon=' + longtitude + '&format=json'
-      ).then(function (response) {
-        return response.json();
-      }).then(function (json) {
-
-        resolve(json);
-      });
+    return new Promise(function(resolve, reject) {
+      fetch(
+        "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
+          latitude +
+          "&lon=" +
+          longtitude +
+          "&format=json"
+      )
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(json) {
+          resolve(json);
+        });
     });
   }
 
@@ -256,7 +287,6 @@ this.setState({passengerStyles});*/
     var inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
     this.state.route.fromAddress = value;
-
   }
 
   setInputTo(value) {
@@ -268,7 +298,6 @@ this.setState({passengerStyles});*/
   driverAddressInputSuggestion() {
     var places = require("places.js");
 
-
     var placesAutocompleteFrom = places({
       container: document.querySelector("#driver-address-input-from")
     });
@@ -277,25 +306,35 @@ this.setState({passengerStyles});*/
       container: document.querySelector("#driver-address-input-to")
     });
 
-
-
-    placesAutocompleteFrom.on("change", (e) => {
+    placesAutocompleteFrom.on("change", e => {
       this.setState({ startPointInput: true });
-      this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+      this.CenterMap(
+        e.suggestion.latlng.lng,
+        e.suggestion.latlng.lat,
+        this.state.map
+      );
+      this.addRoutePoint(
+        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
+        false
+      );
     });
 
-    placesAutocompleteTo.on("change", (e) => {
+    placesAutocompleteTo.on("change", e => {
       this.setState({ startPointInput: false });
-      this.CenterMap(e.suggestion.latlng.lng, e.suggestion.latlng.lat, this.state.map);
-      this.addRoutePoint([e.suggestion.latlng.lng, e.suggestion.latlng.lat], false);
+      this.CenterMap(
+        e.suggestion.latlng.lng,
+        e.suggestion.latlng.lat,
+        this.state.map
+      );
+      this.addRoutePoint(
+        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
+        false
+      );
     });
-
-
   }
 
   passengerAddressInputSuggestion() {
- /*   var places = require("places.js");
+    /*   var places = require("places.js");
 
     
     var placesAutocompleteFrom = places({
@@ -324,7 +363,6 @@ this.setState({passengerStyles});*/
   }
 
   CenterMap(long, lat, map) {
-
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(19);
   }
@@ -332,74 +370,96 @@ this.setState({passengerStyles});*/
   handleMapClick(markersOnMap, coordinates) {
     if (markersOnMap > 1) {
       if (this.state.features.destinationFeature) {
-        this.state.vectorSource.removeFeature(this.state.features.destinationFeature);
+        this.state.vectorSource.removeFeature(
+          this.state.features.destinationFeature
+        );
       }
 
-      this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coordinates } });
+      this.setState({
+        coordinates: {
+          firstPoint: this.state.coordinates.firstPoint,
+          lastPoint: coordinates
+        }
+      });
 
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then((e) => {
-        this.setInputTo((e.address.house_number ? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
+      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
+        this.setInputTo(
+          (e.address.house_number ? e.address.house_number + ", " : "") +
+            e.address.road +
+            ", " +
+            e.address.city
+        );
       });
       this.createFeature(coordinates, false);
+    } else {
+      this.setState({
+        coordinates: { firstPoint: coordinates, lastPoint: [] }
+      });
 
-    }
-    else {
-
-      this.setState({ coordinates: { firstPoint: coordinates, lastPoint: [] } });
-
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then((e) => {
-        this.setInputFrom((e.address.house_number ? e.address.house_number + ", " : "") + e.address.road + ", " + e.address.city);
+      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
+        this.setInputFrom(
+          (e.address.house_number ? e.address.house_number + ", " : "") +
+            e.address.road +
+            ", " +
+            e.address.city
+        );
       });
 
       this.createFeature(coordinates, true);
-
     }
-
   }
 
   handleAddressInput(coordinates) {
     if (this.state.startPointInput) {
       if (this.state.features.startPointFeature) {
-        this.state.vectorSource.removeFeature(this.state.features.startPointFeature)
+        this.state.vectorSource.removeFeature(
+          this.state.features.startPointFeature
+        );
       }
-      this.setState({ coordinates: { firstPoint: coordinates, lastPoint: this.state.coordinates.lastPoint } });
-
+      this.setState({
+        coordinates: {
+          firstPoint: coordinates,
+          lastPoint: this.state.coordinates.lastPoint
+        }
+      });
 
       this.createFeature(coordinates, true);
-    }
-    else {
+    } else {
       if (this.state.features.destinationFeature) {
-
-        this.state.vectorSource.removeFeature(this.state.features.destinationFeature)
+        this.state.vectorSource.removeFeature(
+          this.state.features.destinationFeature
+        );
       }
 
-      this.setState({ coordinates: { firstPoint: this.state.coordinates.firstPoint, lastPoint: coordinates } });
+      this.setState({
+        coordinates: {
+          firstPoint: this.state.coordinates.firstPoint,
+          lastPoint: coordinates
+        }
+      });
 
       this.createFeature(coordinates, false);
-
     }
   }
 
   addRoutePoint(evt, clickedOnMap) {
-
-    this.getNearest(evt).then((coordinates) => {
+    this.getNearest(evt).then(coordinates => {
       var markersOnMap = this.state.points;
       markersOnMap++;
       this.setState({ points: markersOnMap });
 
-      if (clickedOnMap) { // Separates route point adding by clicking and by writing an address
+      if (clickedOnMap) {
+        // Separates route point adding by clicking and by writing an address
 
-        this.handleMapClick(markersOnMap,coordinates);
+        this.handleMapClick(markersOnMap, coordinates);
+      } else {
+        this.handleAddressInput(coordinates);
       }
-      else {
-        this.handleAddressInput(coordinates)
 
-      }
-
-      if (markersOnMap < 2) { // only one point on a map, impossible to display route
+      if (markersOnMap < 2) {
+        // only one point on a map, impossible to display route
         return;
       }
-
 
       var point1 = this.state.coordinates.firstPoint;
       var point2 = this.state.coordinates.lastPoint;
@@ -407,22 +467,22 @@ this.setState({passengerStyles});*/
       console.log(this.state.vectorSource.getFeatures());
       console.log(this.state.features);
 
-      fetch(this.state.url_osrm_route + point1 + ';' + point2).then((r) => {
-
-        return r.json();
-      }).then((json) => {
-        if (json.code !== 'Ok') {
-          return;
-        }
-        this.createDriverRoute(json.routes[0].geometry);
-      });
+      fetch(this.state.url_osrm_route + point1 + ";" + point2)
+        .then(r => {
+          return r.json();
+        })
+        .then(json => {
+          if (json.code !== "Ok") {
+            return;
+          }
+          this.createDriverRoute(json.routes[0].geometry);
+        });
     });
   }
 
   componentDidMount() {
-
-    var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
+    var icon_url =
+        "//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png",
       vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -430,7 +490,8 @@ this.setState({passengerStyles});*/
       driverStyles = {
         route: new Style({
           stroke: new Stroke({
-            width: 6, color: [40, 40, 40, 0.8]
+            width: 6,
+            color: [40, 40, 40, 0.8]
           })
         }),
         icon: new Style({
@@ -443,7 +504,7 @@ this.setState({passengerStyles});*/
     console.clear();
 
     var map = new Map({
-      target: 'map',
+      target: "map",
       layers: [
         new Tile({
           source: new OSM()
@@ -455,100 +516,102 @@ this.setState({passengerStyles});*/
         zoom: 11
       })
     });
-this.createPassengerStyles();
+    this.createPassengerStyles();
     this.setState({ map, vectorSource, driverStyles });
 
     this.CenterMap(25.279652, 54.687157, map);
 
-    map.on('click', (evt) => {
-      if(this.state.driver){
-      var coord4326 = transform([
-        parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])
-      ], 'EPSG:3857', 'EPSG:4326');
-      this.addRoutePoint(coord4326, true);
-    }
-  
-  else{
-    var feature = new Feature(
-      new Point(evt.coordinate)
-    );
-    var lonlat = [];
-    lonlat = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+    map.on("click", evt => {
+      if (this.state.driver) {
+        var coord4326 = transform(
+          [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
+          "EPSG:3857",
+          "EPSG:4326"
+        );
+        this.addRoutePoint(coord4326, true);
+      } else {
+        var feature = new Feature(new Point(evt.coordinate));
+        var lonlat = [];
+        lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
-    this.setState({ pickUpPoint: lonlat });
+        this.setState({ pickUpPoint: lonlat });
 
-    this.state.vectorSource.clear();
-    this.state.vectorSource.addFeature(feature);
-  }
+        this.state.vectorSource.clear();
+        this.state.vectorSource.addFeature(feature);
+      }
     });
-if(this.state.driver){
-this.driverAddressInputSuggestion();
-}
-else{
-  this.passengerAddressInputSuggestion();
-}  
-}
+    if (this.state.driver) {
+      this.driverAddressInputSuggestion();
+    } else {
+      this.passengerAddressInputSuggestion();
+    }
+  }
 
   render() {
     return (
       <div>
-{
-  this.state.driver
+        {this.state.driver ? (
+          <div>
+            <div className="form-group">
+              <label>From:</label>
 
- ?<div>  
- <div className="form-group">
-        
-          <label>From:</label>
-        
-          <input
-            type="search"
-            class="form-group"
-            id="driver-address-input-from"
-            placeholder="Select From Location..."
-          />
-        </div>
+              <input
+                type="search"
+                class="form-group"
+                id="driver-address-input-from"
+                placeholder="Select From Location..."
+              />
+            </div>
 
-        <div className="form-group">
-          <label>To:</label>
-          <input
-            type="search"
-            class="form-group"
-            id="driver-address-input-to"
-            placeholder="Select To Location..."
+            <div className="form-group">
+              <label>To:</label>
+              <input
+                type="search"
+                class="form-group"
+                id="driver-address-input-to"
+                placeholder="Select To Location..."
+              />
+            </div>
 
-          />
-        </div>
-        
-        <button onClick={() => { this.saveRide() }}>Save</button>
-        </div>     
-        : <div>
-     
-     <div className="form-group">
-          <label>Destination:</label>
-          <input
-            type="search"
-            class="form-group"
-            id="passenger-address-input-to"
-            placeholder="Select destination..."
-
-          />
-        </div>
-
-          <button onClick={() => { this.showRoutes() }}>Show routes</button>
-          <button onClick={() => { this.selectRoute() }}>Next</button>
-
+            <button
+              onClick={() => {
+                this.saveRide();
+              }}
+            >
+              Save
+            </button>
           </div>
-}
-        <div id="map"></div>
+        ) : (
+          <div>
+            <div className="form-group">
+              <label>Destination:</label>
+              <input
+                type="search"
+                class="form-group"
+                id="passenger-address-input-to"
+                placeholder="Select destination..."
+              />
+            </div>
 
-
-
+            <button
+              onClick={() => {
+                this.showRoutes();
+              }}
+            >
+              Show routes
+            </button>
+            <button
+              onClick={() => {
+                this.selectRoute();
+              }}
+            >
+              Next
+            </button>
+          </div>
+        )}
+        <div id="map" />
       </div>
-
     );
-
   }
 }
 export default test;
-
-

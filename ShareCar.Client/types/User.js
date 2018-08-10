@@ -6,18 +6,21 @@ type User = {
   pictureUrl: string
 };
 
-type UserProfileData = {
+type UserProfileData = 
+user: {
   firstName: string,
   lastName: string,
   profilePicture: string,
   email: string,
   licensePlate: string,
   phone: string
-};
+},
+pointCount: number
 
 type MyProfileState = {
   loading: boolean,
-  user: UserProfileData | null
+  user: UserProfileData | null,
+  isDriver: ?boolean  
 };
 type RideData = {
   rideId: number,

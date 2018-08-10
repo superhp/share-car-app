@@ -21,7 +21,7 @@ namespace ShareCar.Logic.Ride_Logic
         bool AddRide(RideDto ride, string email);
         bool UpdateRide(RideDto ride);
         IEnumerable<RideDto> FindSimilarRides(int rideId);
-        IEnumerable<RouteDto> GetRoutes();
         IEnumerable<RideDto> GetRidesByRoute(string routeGeometry);
+        IEnumerable<RouteDto> GetRoutes(RouteDto routeDto);
     }
 }

@@ -30,20 +30,20 @@ namespace ShareCar.Db.Repositories
         public IEnumerable<Ride> FindRidesByDate(DateTime date)
         {
             return _databaseContext.Rides
-                    .Where(x => x.RideDateTime == date);
+                    .Where(x => x.RideDateTime == date && x.isActive == true);
         }
 
         public IEnumerable<Ride> FindRidesByDestination(int addressToId)
         {
             return _databaseContext.Rides
-                .Where(x => x.Route.ToId == addressToId);
+                .Where(x => x.Route.ToId == addressToId && x.isActive == true);
         }
 
         public Ride FindRideById(int id)
         {
             try
             {
-                return _databaseContext.Rides.Single(x => x.RideId == id); // Throws exception if ride is not found
+                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive == true); // Throws exception if ride is not found
             }
             catch
             {
@@ -54,7 +54,7 @@ namespace ShareCar.Db.Repositories
         public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId)
         {
             return _databaseContext.Rides
-                .Where(x => x.Route.FromId == addressFromId);
+                .Where(x => x.Route.FromId == addressFromId && x.isActive == true);
         }
         public IEnumerable<Passenger> FindPassengersByRideId(int id)
         {
@@ -63,7 +63,7 @@ namespace ShareCar.Db.Repositories
         
         public IEnumerable<Ride> FindRidesByPassenger(Passenger passenger)
         {
-            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger));
+            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger) && x.isActive == true);
         }
 
         public bool UpdateRide(Ride ride)
@@ -73,6 +73,7 @@ namespace ShareCar.Db.Repositories
                 var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
                 rideToUpdate.RouteId = ride.RouteId;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
+                rideToUpdate.isActive = ride.isActive;
                 rideToUpdate.NumberOfSeats = ride.NumberOfSeats;
                 
                 _databaseContext.Rides.Update(rideToUpdate);
@@ -95,7 +96,7 @@ namespace ShareCar.Db.Repositories
         }
         public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
         {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId);
+            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId && x.isActive == true);
         }
 
         public IEnumerable<Ride> FindRidesByDriver(string email)
@@ -103,12 +104,12 @@ namespace ShareCar.Db.Repositories
             return _databaseContext.Rides
                 .Include(x=>x.Requests)
                 .Include(x=>x.Passengers)
-                .Where(x => x.DriverEmail == email);
+                .Where(x => x.DriverEmail == email && x.isActive == true);
         }
 
         public IEnumerable<Ride> GetRidesByRoute(string routeGeometry)
         {
-            return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry);
+            return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
         }
     }
 }
