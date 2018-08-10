@@ -143,7 +143,7 @@ export class DriverRideRequestsList extends React.Component {
                       <CardActions>
                         <Button
                           onClick={() => {
-                            this.setState({ show: true });
+                            this.setState({ show: !this.state.show });
                             this.setState({
                               coordinates: [req.longtitude, req.latitude]
                             });
@@ -171,6 +171,7 @@ export class DriverRideRequestsList extends React.Component {
                           color="secondary"
                           onClick={() => {
                             this.sendRequestResponse(
+                              "Deny",
                               2,
                               req.requestId,
                               req.rideId
