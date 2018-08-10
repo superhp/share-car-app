@@ -19,7 +19,11 @@ export class ViewRideRequests extends React.Component {
   }
   handleRequestClick(button, requestId) {
     if (button == "Accept") {
-      this.setState({driverRequests: this.state.driverRequests.filter(x=>x.requestId != requestId)})
+      this.setState({
+        driverRequests: this.state.driverRequests.filter(
+          x => x.requestId != requestId
+        )
+      });
     }
   }
   showPassengerRequests() {
@@ -59,7 +63,7 @@ export class ViewRideRequests extends React.Component {
       .get("RideRequest/true")
       .then(response => {
         if (response.status == 200)
-        this.setState({ driverRequests: response.data });
+          this.setState({ driverRequests: response.data });
       })
       .then(() => {
         const unseenRequests = [];
@@ -89,9 +93,13 @@ export class ViewRideRequests extends React.Component {
           <DriverRideRequestsList
             onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
-            rideRequests={this.props.selectedRide != null ? this.state.driverRequests.filter(
-              x => x.rideId == this.props.selectedRide
-            ): this.state.driverRequests}
+            rideRequests={
+              this.props.selectedRide != null && this.state.driverRequests != []
+                ? this.state.driverRequests.filter(
+                    x => x.rideId == this.props.selectedRide
+                  )
+                : []
+            }
           />
         ) : (
           <PassengerRideRequestsList requests={this.state.passengerRequests} />

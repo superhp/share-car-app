@@ -91,9 +91,9 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("routes")]
-        public IActionResult GetRoutes()
+        public IActionResult GetRoutes(RouteDto routeDto)
         {
-            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes();
+            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto);
             return Ok(routes);
         }
 

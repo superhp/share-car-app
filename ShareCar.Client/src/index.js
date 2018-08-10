@@ -14,6 +14,7 @@ import MapComponent from "./components/MapComponent";
 import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
 import RideRequestForm from "./components/RideRequestForm";
+import WinnerBoard from "./components/WinnerBoard";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import test from "./components/TestMap";
@@ -33,18 +34,27 @@ ReactDOM.render(
   <Router history={history}>
     <Switch>
       <Route path="/login" component={Login} />
-
       <Layout>
+        <Route exact path="/" component={RoleSelection} />
         <AlertProvider template={AlertTemplate} {...options}>
-          <Route exact path="/" component={RoleSelection} />
-          <Route path="/driver" component={Driver} />
+          <Route path="/driveris" component={Driver} />
           <Route path="/passenger" component={Passenger} />
-          <Route path="/map" component={MapComponent} />
-          <Route path="/profile" component={UserProfile} />
-          <Route path="/rides" component={Rides} />
-          <Route path="/test" component={test} />
-          <Route path="/newRideForm" component={NewRideForm} />
-          <Route path="/rideRequest" component={RideRequestForm} />
+          <Route
+            path="/:role(driver|passenger)/profile"
+            component={UserProfile}
+          />
+          <Route path="/:role(driver|passenger)/test" component={test} />
+          <Route path="/:role(driver|passenger)/map" component={MapComponent} />
+          <Route path="/:role(driver|passenger)/rides" component={Rides} />
+          <Route
+            path="/:role(driver|passenger)/newRideForm"
+            component={NewRideForm}
+          />
+          <Route
+            path="/:role(driver|passenger)/rideRequest"
+            component={RideRequestForm}
+          />
+          <Route path="/winnerBoard" component={WinnerBoard} />
         </AlertProvider>
       </Layout>
     </Switch>

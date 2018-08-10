@@ -48,7 +48,12 @@ namespace ShareCar.Db.Repositories
         {
                 return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
 
-            }
+        }
+
+        public IEnumerable<Passenger> GetPassengersByRideId(int rideId)
+        {
+            return _databaseContext.Passengers.Where(x => x.RideId == rideId);
+        }
 
         public void RespondeToRide(bool response, int rideId, string passengerEmail)
         {

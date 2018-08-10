@@ -11,6 +11,8 @@
   border-radius: 5px;
   text-align: center;
   align-self: flex-start;
+  color: grey;
+  font-size: 15px;
 }
 .ride-requests-input {
   margin: auto;
