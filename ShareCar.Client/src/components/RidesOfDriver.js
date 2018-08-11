@@ -3,6 +3,9 @@ import { Status } from "./status";
 import "../styles/riderequests.css";
 export class RidesOfDriver extends React.Component {
 
+sendrequest(rideId, driverEmail){
+
+}
 
     render() {
         return (
@@ -12,7 +15,10 @@ export class RidesOfDriver extends React.Component {
                         <tr key={ride.id}>
                           {
                     ride.driverEmail === this.props.driver
-                   ?        <td>RideId: {ride.rideId} </td>
+                   ?    <div>
+                       <td>RideId: {ride.rideId} </td>
+                   <button>Request</button>
+                   </div>
                 : <td></td>    
                 }
                             </tr>

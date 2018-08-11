@@ -93,6 +93,10 @@ namespace ShareCar.Api.Controllers
         [HttpGet("routes")]
         public IActionResult GetRoutes(RouteDto routeDto)
         {
+
+            if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
+                return BadRequest();
+
             IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto);
             return Ok(routes);
         }
