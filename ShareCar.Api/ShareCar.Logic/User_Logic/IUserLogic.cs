@@ -11,5 +11,6 @@ namespace ShareCar.Logic.User_Logic
         void UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User);
         int CountPoints(string email);
         Dictionary<UserDto, int> GetWinnerBoard();
+        IEnumerable<UserDto> GetAllUsers();
     }
 }

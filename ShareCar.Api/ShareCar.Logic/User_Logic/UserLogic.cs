@@ -33,6 +33,12 @@ namespace ShareCar.Logic.User_Logic
             return user;
         }
 
+        public IEnumerable<UserDto> GetAllUsers()
+        {
+            var users = _userRepository.GetAllUsers();
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
+        }
+
         public async void UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User)
         {
             var _userToUpdate = await _userRepository.GetLoggedInUser(User);
