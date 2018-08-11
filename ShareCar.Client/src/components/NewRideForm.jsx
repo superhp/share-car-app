@@ -55,8 +55,8 @@ export class NewRideForm extends React.Component {
         placesAutocompleteFrom.on("change", e => {
             this.setState({
                 fromAddress: {
-                    number: addressParser(e.suggestion.name).number,
-                    street: addressParser(e.suggestion.name).name,
+                    number: addressParser.parseAlgolioAddress(e.suggestion.name).number,
+                    street: addressParser.parseAlgolioAddress(e.suggestion.name).name,
                     city: e.suggestion.city,
                     country: e.suggestion.country
                 }
@@ -114,7 +114,9 @@ export class NewRideForm extends React.Component {
         };
 
         if (this.state.addNewForm) {
-            api.post(`https://localhost:44360/api/Ride`, ride).then(res => {
+            var rides = [];
+            rides.push(ride);
+            api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
                 console.log(ride);
                 this.setState({ addedStatus: true });
             });
@@ -122,7 +124,9 @@ export class NewRideForm extends React.Component {
             ride["RideId"] = this.props.drive.rideId;
             ride["DriverEmail"] = this.props.drive.driverEmail;
             console.log(ride);
-            api.put(`https://localhost:44360/api/Ride`, ride).then(res => {
+            var rides = [];
+            rides.push(ride);
+            api.put(`https://localhost:44360/api/Ride`, rides).then(res => {
                 this.setState({ addedStatus: true });
             });
         }

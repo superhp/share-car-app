@@ -18,7 +18,7 @@ export class ViewRideRequests extends React.Component {
       : this.showPassengerRequests();
   }
   handleRequestClick(button, requestId) {
-    if (button == "Accept") {
+    if (button == "Accept" || button == "Deny") {
       this.setState({
         driverRequests: this.state.driverRequests.filter(
           x => x.requestId != requestId
@@ -32,7 +32,7 @@ export class ViewRideRequests extends React.Component {
       .then(response => {
         console.log((response.data: User));
         const d = response.data;
-
+console.log(d);
         this.setState({ passengerRequests: d });
       })
       .then(() => {

@@ -135,6 +135,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public bool SetRideAsInactive(RideDto rideDto)
         {
+            
             return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 

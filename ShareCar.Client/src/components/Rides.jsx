@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Paper from "@material-ui/core/Paper";
 import "typeface-roboto";
 import "../styles/genericStyles.css";
 
@@ -56,20 +57,23 @@ export class Rides extends React.Component {
       });
   }
   render() {
+
     return (
+      <Paper>
       <DriversRidesList
         onDelete={this.handleRideDelete.bind(this)}
         selectedRide={this.state.selectedRideId}
         rideClicked={this.state.clicked}
         onRideClick={this.handleClick.bind(this)}
-        driversRides={
+        driversRides={this.state.driversRides.length != 0 ?
           this.state.clicked
             ? this.state.driversRides.filter(
                 x => x.rideId == this.state.selectedRideId
               )
             : this.state.driversRides
-        }
+        : []}
       />
+      </Paper>
     );
   }
 }

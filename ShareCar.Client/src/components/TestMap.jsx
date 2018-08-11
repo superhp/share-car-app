@@ -20,7 +20,7 @@ import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "./AddressData";
 import RidesOfDriver from "./RidesOfDriver";
-
+import addressParser from "../helpers/addressParser"
 export class test extends React.Component {
 
   state = {
@@ -91,7 +91,7 @@ export class test extends React.Component {
     driverEmail: "",
     url_osrm_nearest: '//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/',
     url_osrm_route: '//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/',
-    driver: false // will be passed by props
+    driver: true // will be passed by props
   }
 
 
@@ -182,11 +182,33 @@ if(this.state.passengerRouteFeatures.length != 0){
   }
 
   showRoutes() {
+    this.CenterMap(this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude, this.state.map);
     this.state.showDrivers = true;
     this.state.showRoutes = false;
     console.log(this.state.filteredRoute);
-    api.get(`https://localhost:44360/api/Ride/routes`).then(res => {
-if(res.code == 200){
+  var routeDto;
+    this.state.filteredRoute.toOffice
+   ? routeDto = {
+      
+      AddressTo:{
+        City: this.state.filteredRoute.office.city,
+        Street: this.state.filteredRoute.office.street,
+        Number: this.state.filteredRoute.office.number
+       }
+    }
+    :routeDto = {
+      
+      AddressFrom:{
+        City: this.state.filteredRoute.office.city,
+        Street: this.state.filteredRoute.office.street,
+        Number: this.state.filteredRoute.office.number
+       }
+    }
+    console.log(routeDto);
+    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
+      console.log(res);
+      console.log(res.status);
+if(res.status == 200){
       console.log(res.data);
       this.setState({ passengerRoutes: res.data });
       this.state.passengerRoutes.forEach((element) => {
@@ -202,12 +224,23 @@ if(res.code == 200){
   }
 
   saveRide() {
-    var newRoute = {
-      FromAddress: this.state.route.fromAddress,
-      ToAddress: this.state.route.toAddress,
+    var addressFrom = addressParser.parseCustomAddress(this.state.route.fromAddress);
+    var addressTo = addressParser.parseCustomAddress(this.state.route.toAddress);
+
+    var ride = {
+      FromCity: addressFrom.city,
+      FromStreet: addressFrom.street,
+      FromNumber: addressFrom.number,
+      ToCity: addressTo.city,
+      ToStreet: addressTo.street,
+      ToNumber: addressTo.number,
       RouteGeometry: this.state.route.routeGeometry
     }
-    console.log(newRoute);
+   var rides = [];
+   rides.push(ride);
+    api.post("https://localhost:44360/api/Ride", rides).then(res => {
+      console.log(res);
+  });
     // other stuff not implemented
   }
 
@@ -374,8 +407,8 @@ if(res.code == 200){
   }
 
   CenterMap(long, lat, map) {
-
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
+console.log(long + "  "+lat + "   " + map);
+    map.getView().setCenter(transform([long, lat], "EPSG:4326","EPSG:3857"));
     map.getView().setZoom(19);
   }
 
@@ -529,8 +562,9 @@ if(res.code == 200){
       })
     });
     this.setState({ map, vectorSource });
+this.state.map = map;
 
-    this.CenterMap(25.279652, 54.687157, map);
+    this.CenterMap(25.279652, 54.687157, this.state.map);
 
     map.on('click', (evt) => {
       if (this.state.driver) {
