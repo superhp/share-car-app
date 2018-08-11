@@ -187,26 +187,28 @@ namespace ShareCar.Logic.Ride_Logic
         {
             AddressDto fromAddress = new AddressDto
             {
-                Country = ride.FromCountry,
                 City = ride.FromCity,
                 Street = ride.FromStreet,
                 Number = ride.FromNumber
             };
             AddressDto toAddress = new AddressDto
             {
-                Country = ride.ToCountry,
                 City = ride.ToCity,
                 Street = ride.ToStreet,
                 Number = ride.ToNumber
             };
-            //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
+
+
 
             if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
                 RouteDto route = new RouteDto();
                 route.FromId = _addressLogic.GetAddressId(fromAddress);
                 route.ToId = _addressLogic.GetAddressId(toAddress);
-                
+                route.Geometry = ride.RouteGeometry;
+                route.AddressFrom = fromAddress;
+                route.AddressTo = toAddress;
+
                 int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
                 if (routeId == -1)
                 {

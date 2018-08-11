@@ -37,6 +37,10 @@ ReactDOM.render(
       <Layout>
         <Route exact path="/" component={RoleSelection} />
         <AlertProvider template={AlertTemplate} {...options}>
+
+          <Route path="/test" component={test} />
+
+
           <Route path="/driveris" component={Driver} />
           <Route path="/passenger" component={Passenger} />
           <Route

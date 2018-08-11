@@ -13,7 +13,7 @@ var addressParser=
   };
 },
 parseCustomAddress:function (address){
-  var array = address.split(",");
+  var array = address.split(", ");
   if(array.length === 3){// some locations don't have house number (bridges for example)
     return {
     number:array[0],

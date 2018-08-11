@@ -73,14 +73,14 @@ namespace ShareCar.Db.Repositories
                 return _databaseContext.Routes.Include(x => x.Rides)
                     .Include(x => x.FromAddress)
                     .Include(x => x.ToAddress)
-                    .Where(x =>  x.FromAddress.City == address.City && x.FromAddress.Street == address.Street && x.FromAddress.Number == address.Number).AsNoTracking();
+                    .Where(x => x.FromAddress.City == address.City && x.FromAddress.Street == address.Street && x.FromAddress.Number == address.Number);
             }
             else
             {
                 return _databaseContext.Routes.Include(x => x.Rides)
                     .Include(x => x.FromAddress)
                     .Include(x => x.ToAddress)
-                    .Where(x =>  x.ToAddress.City == address.City && x.ToAddress.Street == address.Street && x.ToAddress.Number == address.Number).AsNoTracking();
+                    .Where(x => x.ToAddress.City == address.City && x.ToAddress.Street == address.Street && x.ToAddress.Number == address.Number);
             }
         }
         

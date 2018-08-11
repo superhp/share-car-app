@@ -99,7 +99,7 @@ export class test extends React.Component {
       "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
     url_osrm_route:
       "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/",
-    driver: this.props.match.params.role == "driver" ? true : false
+    driver: false//this.props.match.params.role == "driver" ? true : false
   };
 
   selectRoute() {
@@ -183,13 +183,19 @@ export class test extends React.Component {
       this.setState({ filteredRoute: getState });
       var address =
         this.state.filteredRoute.office.number +
-        " " +
+        ", " +
         this.state.filteredRoute.office.street +
-        " " +
+        ", " +
         this.state.filteredRoute.office.city;
+
+        var route = this.state.route;
+        
 
       if (button == "from") {
         this.setState({ startPointInput: true });
+
+route.addressFrom = address;
+this.setState({route:route});
 
         this.setInputFrom(address);
 
@@ -202,6 +208,9 @@ export class test extends React.Component {
         );
       } else {
         this.setState({ startPointInput: false });
+
+        route.addressTo = address;
+        this.setState({route:route});
 
         this.setInputTo(address);
         this.addRoutePoint(
@@ -229,6 +238,7 @@ export class test extends React.Component {
   }
 
   showRoutes() {
+    this.state.vectorSource.clear();
     this.CenterMap(this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude, this.state.map);
     this.state.showDrivers = true;
     this.state.showRoutes = false;
@@ -486,7 +496,7 @@ export class test extends React.Component {
 
   CenterMap(long, lat, map) {
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(19);
+    map.getView().setZoom(13);
   }
 
   showRidesOfDriver(driver) {
@@ -634,9 +644,9 @@ export class test extends React.Component {
   componentDidMount() {
     //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
 
-    var vectorSource = new SourceVector(),
+    var vectorSourceProperty = new SourceVector(),
       vectorLayer = new LayerVector({
-        source: vectorSource
+        source: vectorSourceProperty
       });
 
     console.clear();
@@ -655,10 +665,21 @@ export class test extends React.Component {
         zoom: 11
       })
     });
-    this.setState({ map, vectorSource });
-    this.state.map = map;
+    this.setState({ map, vectorSource: vectorSourceProperty },function(){
+      this.CenterMap(25.279652, 54.687157, this.state.map);
 
-    this.CenterMap(25.279652, 54.687157, this.state.map);
+      if (this.state.driver) {
+        this.driverAddressInputSuggestion();
+      } else {
+        this.showRoutes();
+        if (this.state.filteredRoute.toOffice) {
+          this.passengerAddressInputSuggestion();
+        }
+      }
+    });
+    //this.state.map = map; // setState doesn't
+   // this.state.vectorSource = vectorSource;
+
 
     map.on("click", evt => {
       if (this.state.driver) {
@@ -675,19 +696,47 @@ export class test extends React.Component {
       }
     });
 
-    if (this.state.driver) {
-      this.driverAddressInputSuggestion();
-    } else {
-      this.showRoutes();
-      if (this.state.filteredRoute.toOffice) {
-        this.passengerAddressInputSuggestion();
-      }
-    }
+
   }
 
   render() {
     return (
       <div>
+        <div id="map"></div>
+        <button
+                  onClick={() => {
+                    this.selectRoute();
+                  }}
+                >
+                  Next
+              </button>
+                {this.state.showDriver ? (
+                  <tbody>
+                    {this.state.driversOfRoute.map(driver => (
+                      <tr key={driver.id}>
+                        <td>
+                          <button
+                            onClick={() => {
+                              this.showRidesOfDriver(driver.email);
+                            }}
+                          >
+                            {driver.firstName}{" "}
+                          </button>{" "}
+                        </td>
+                      </tr>
+                    ))}
+                    {this.state.showRides ? (
+                      <RidesOfDriver
+                        rides={this.state.ridesOfRoute}
+                        driver={this.state.driverEmail}
+                      />
+                    ) : (
+                        <div />
+                      )}
+                  </tbody>
+                ) : (
+                    <div />
+                  )}
         <div className="displayRoutes">
           {this.state.driver ? (
             <div>
@@ -781,45 +830,16 @@ export class test extends React.Component {
                 ) : (
                     <div />
                   )}
-                <button
-                  onClick={() => {
-                    this.selectRoute();
-                  }}
-                >
-                  Next
-              </button>
-                {this.state.showDriver ? (
-                  <tbody>
-                    {this.state.driversOfRoute.map(driver => (
-                      <tr key={driver.id}>
-                        <td>
-                          <button
-                            onClick={() => {
-                              this.showRidesOfDriver(driver.email);
-                            }}
-                          >
-                            {driver.firstName}{" "}
-                          </button>{" "}
-                        </td>
-                      </tr>
-                    ))}
-                    {this.state.showRides ? (
-                      <RidesOfDriver
-                        rides={this.state.ridesOfRoute}
-                        driver={this.state.driverEmail}
-                      />
-                    ) : (
-                        <div />
-                      )}
-                  </tbody>
-                ) : (
-                    <div />
-                  )}
+
               </div>
             )}
         </div>
+       
+       {/* sits divas bus pasalintas*/}
+       <div/>
+{/*    
         <div id="map" />
-
+*/}   
         <Button
           className="continue-button"
           variant="contained"
