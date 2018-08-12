@@ -37,7 +37,8 @@ export class test extends React.Component {
         stroke: new Stroke({
           width: 6,
           color: [0, 200, 0, 0.8]
-        })
+        }),
+        zIndex : 10
       })
     },
     passengersSelectedOffice: "",
