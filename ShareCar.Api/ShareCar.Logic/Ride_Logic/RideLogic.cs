@@ -212,6 +212,7 @@ namespace ShareCar.Logic.Ride_Logic
                 int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
                 if (routeId == -1)
                 {
+                    route.Geometry = ride.RouteGeometry;
                     _routeLogic.AddRoute(route);
                     ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
                 }

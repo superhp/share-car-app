@@ -23,6 +23,7 @@ import addressParser from "../helpers/addressParser";
 import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
+import RidesScheduler from "./RidesScheduler";
 import "../styles/testmap.css";
 
 export class test extends React.Component {
@@ -56,6 +57,7 @@ export class test extends React.Component {
       lastName: "",
       rides: []
     },
+    isContinueClicked: false,
     passengerStylesCouter: 0,
     pickUpPoint: [],
     route: "",
@@ -695,7 +697,8 @@ console.log("fffffffffffffffffffff");
       ],
       view: new View({
         center: [-5685003, -3504484],
-        zoom: 11
+        zoom: 11,
+        minZoom: 9
       })
     });
 
@@ -740,65 +743,6 @@ console.log("fffffffffffffffffffff");
   render() {
     return (
       <div>
-          <div className="form-group">
-            <label>Find location:</label>
-            <input
-              type="search"
-              class="form-group"
-              id="passenger-address"
-              placeholder="Select destination..."
-            />
-          </div>
-
-        <select
-          onChange={e => {
-            this.handleOfficeSelection(e);
-          }}
-        >
-          <option value={0}>
-            {OfficeAddresses[0].street + OfficeAddresses[0].number}
-          </option>
-          <option value={1}>
-            {OfficeAddresses[1].street + OfficeAddresses[1].number}
-          </option>
-        </select>
-        <div id="map"></div>
-
-        <button
-          onClick={() => {
-            this.selectRoute();
-          }}
-        >
-          Next
-              </button>
-        {this.state.showDriver ? (
-          <tbody>
-            {this.state.driversOfRoute.map(driver => (
-              <tr key={driver.id}>
-                <td>
-                  <button
-                    onClick={() => {
-                      this.showRidesOfDriver(driver.email);
-                    }}
-                  >
-                    {driver.firstName}{" "}
-                  </button>{" "}
-                </td>
-              </tr>
-            ))}
-            {this.state.showRides ? (
-              <RidesOfDriver
-                rides={this.state.ridesOfRoute}
-                driver={this.state.driverEmail}
-                pickUpPoint={this.state.pickUpPoint}
-              />
-            ) : (
-                <div></div>
-              )}
-          </tbody>
-        ) : (
-            <div></div>
-          )}
         <div className="displayRoutes">
           {this.state.driver ? (
             <div>
@@ -835,55 +779,112 @@ console.log("fffffffffffffffffffff");
               </div>
             </div>
           ) : (
-              <div>
-                <span>Show routes...</span>
-                <form>
-                  <span>To office</span>
-                  <td>
-                    <input
-                      type="radio"
-                      name="site_name"
-                      value={"To office"}
-                      checked={this.state.filteredRoute.toOffice === true}
-                      onClick={() => {
-                        this.state.filteredRoute.toOffice = true;
-                      }}
-                      onChange={() => this.showRoutes()}
+            <div>
+              <span>Show routes...</span>
+              <form>
+                <span>To office</span>
+                <td>
+                  <input
+                    type="radio"
+                    name="site_name"
+                    value={"To office"}
+                    checked={this.state.filteredRoute.toOffice === true}
+                    onClick={() => {
+                      this.state.filteredRoute.toOffice = true;
+                    }}
+                    onChange={() => this.showRoutes()}
+                  />
+                </td>
+                <span>From office</span>
+                <td>
+                  <input
+                    type="radio"
+                    name="address"
+                    value={"From office"}
+                    checked={this.state.filteredRoute.toOffice === false}
+                    onClick={() => {
+                      this.state.filteredRoute.toOffice = false;
+                      this.handleToOfficeSelection();
+                    }}
+                    onChange={() => this.showRoutes()}
+                  />
+                </td>
+                <span>Select office</span>
+                <select
+                  onChange={e => {
+                    this.handleOfficeSelection(e);
+                  }}
+                >
+                  <option value={0}>
+                    {OfficeAddresses[0].street + OfficeAddresses[0].number}
+                  </option>
+                  <option value={1}>
+                    {OfficeAddresses[1].street + OfficeAddresses[1].number}
+                  </option>
+                </select>
+              </form>
+              {this.state.filteredRoute.toOffice ? (
+                <div className="form-group">
+                  <label>Destination:</label>
+                  <input
+                    type="search"
+                    class="form-group"
+                    id="passenger-address"
+                    placeholder="Select destination..."
+                  />
+                </div>
+              ) : (
+                <div />
+              )}
+              <button
+                onClick={() => {
+                  this.selectRoute();
+                }}
+              >
+                Next
+              </button>
+              {this.state.showDriver ? (
+                <tbody>
+                  {this.state.driversOfRoute.map(driver => (
+                    <tr key={driver.id}>
+                      <td>
+                        <button
+                          onClick={() => {
+                            this.showRidesOfDriver(driver.email);
+                          }}
+                        >
+                          {driver.firstName}{" "}
+                        </button>{" "}
+                      </td>
+                    </tr>
+                  ))}
+                  {this.state.showRides ? (
+                    <RidesOfDriver
+                      rides={this.state.ridesOfRoute}
+                      driver={this.state.driverEmail}
                     />
-                  </td>
-                  <span>From office</span>
-                  <td>
-                    <input
-                      type="radio"
-                      name="address"
-                      value={"From office"}
-                      checked={this.state.filteredRoute.toOffice === false}
-                      onClick={() => {
-                        this.state.filteredRoute.toOffice = false;
-                        this.handleFromOfficeSelection();
-                      }}
-                      onChange={() => this.showRoutes()}
-                    />
-                  </td>
-                  <span>Select office</span>
-
-                </form>
-
-              </div>
-            )}
+                  ) : (
+                    <div />
+                  )}
+                </tbody>
+              ) : (
+                <div />
+              )}
+            </div>
+          )}
         </div>
-
-        {/* sits divas bus pasalintas*/}
-        <div />
-        {/*    
         <div id="map" />
-*/}
+        {this.state.isContinueClicked ? (
+          <RidesScheduler routeInfo={this.state.route} />
+        ) : null}
         <Button
+          disabled={this.state.route.routeGeometry == "" ? true : false}
           className="continue-button"
           variant="contained"
           color="primary"
           onClick={() => {
-            this.saveRide();
+            this.setState({ isContinueClicked: !this.state.isContinueClicked });
+            // this.saveRide();
           }}
         >
           Continue
