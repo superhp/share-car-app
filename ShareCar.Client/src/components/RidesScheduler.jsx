@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
+import api from "../helpers/axiosHelper";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -24,6 +26,7 @@ import "react-infinite-calendar/styles.css"; // only needs to be imported once
 import "./common/TimePickers";
 import TimePickers from "./common/TimePickers";
 import Switch from "@material-ui/core/Switch";
+import addressParser from "../helpers/addressParser";
 var moment = require("moment");
 
 const styles = {
@@ -58,6 +61,10 @@ class RidesScheduler extends React.Component {
     this.setState({ open: true });
   };
 
+  componentDidMount() {
+    console.log(addressParser(this.props.routeInfo.fromAddress));
+  }
+
   handleSelect(e) {
     if (this.state.selectedDates.length > 0) {
       if (this.checkForDateDuplicate(e, this.state.selectedDates)) {
@@ -86,6 +93,41 @@ class RidesScheduler extends React.Component {
   }
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleCreate = () => {
+    var ridesToPost = [];
+    var fromAddressParsed = addressParser(this.props.routeInfo.fromAddress);
+    var toAddressParsed = addressParser(this.props.routeInfo.toAddress);
+    this.state.selectedDates.forEach(element => {
+      var month = element.getMonth() + 1;
+      ridesToPost.push({
+        fromNumber: fromAddressParsed[0],
+        fromStreet: fromAddressParsed[1],
+        fromCity: fromAddressParsed[2],
+        fromCountry: "Lithuania",
+        toNumber: toAddressParsed[0],
+        toStreet: toAddressParsed[1],
+        toCity: toAddressParsed[2],
+        toCountry: "Lithuania",
+        routeGeometry: this.props.routeInfo.routeGeometry,
+        rideDateTime: new Date(
+          element.getFullYear() +
+            "-" +
+            month +
+            "-" +
+            element.getDate() +
+            " " +
+            this.state.time
+        )
+      });
+    });
+    api.post("Ride", ridesToPost).then(res => {
+      if (res.status == 200) {
+        this.setState({ open: false });
+        console.log("Rides Saved!");
+      }
+    });
   };
 
   handleTime = value => {
@@ -134,16 +176,17 @@ class RidesScheduler extends React.Component {
                   <CloseIcon />
                 </IconButton>
                 <Typography
-                  variant="p"
+                  variant="subheading"
                   color="inherit"
                   className={classes.flex}
                 >
                   Schedule Your Rides
                 </Typography>
                 <Button
+                  disabled={this.state.selectedDates.length == 0 ? true : false}
                   variant="contained"
                   color="inherit"
-                  onClick={this.handleClose}
+                  onClick={this.handleCreate}
                 >
                   Create Rides
                 </Button>

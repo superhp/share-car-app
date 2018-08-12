@@ -108,7 +108,8 @@ namespace ShareCar.Logic.Route_Logic
             Route entityRoute = new Route
             {
                 FromId = route.FromId,
-                ToId = route.ToId
+                ToId = route.ToId,
+                Geometry = route.Geometry
             };
             //Route routes = _mapper.Map<RouteDto, Route>(route);
             _routeRepository.AddRoute(entityRoute);
