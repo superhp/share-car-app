@@ -601,7 +601,7 @@ if(this.state.filteredRoute.toOffice) {
                     checked={this.state.filteredRoute.toOffice === false}
                     onClick={() => {
                       this.state.filteredRoute.toOffice = false;
-                      this.handleToOfficeSelection();
+                      this.handleFromOfficeSelection();
                     }}
                     onChange={() => this.showRoutes()}
                   />
@@ -655,6 +655,7 @@ if(this.state.filteredRoute.toOffice) {
                     <RidesOfDriver
                       rides={this.state.ridesOfRoute}
                       driver={this.state.driverEmail}
+                      pickUpPoint = {this.state.pickUpPoint}
                     />
                   ) : (
                     <div />

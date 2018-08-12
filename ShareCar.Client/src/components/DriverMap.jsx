@@ -161,7 +161,6 @@ export class DriverMap extends React.Component {
     
   }
 
-
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
       //make sure the coord is on street
@@ -303,6 +302,13 @@ export class DriverMap extends React.Component {
 
     placesAutocompleteFrom.on("change", e => {
       this.setState({ startPointInput: true });
+      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
+      var city = e.suggestion.city;
+
+       var route = this.state.route;
+       route.fromAddress = address.number + ", " + address.name + ", " + city;
+       this.setState({route});
+
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
@@ -316,6 +322,12 @@ export class DriverMap extends React.Component {
 
     placesAutocompleteTo.on("change", e => {
       this.setState({ startPointInput: false });
+      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
+      var city = e.suggestion.city;
+
+       var route = this.state.route;
+       route.toAddress = address.number + ", " + address.name + ", " + city;
+       this.setState({route});
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
@@ -547,6 +559,7 @@ export class DriverMap extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
+            console.log(this.state.route);
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
           }}
         >
