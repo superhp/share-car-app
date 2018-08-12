@@ -30,11 +30,11 @@ export class ViewRideRequests extends React.Component {
     api
       .get("RideRequest/false")
       .then(response => {
+        if(response.data != ""){
         console.log((response.data: User));
         const d = response.data;
-
         this.setState({ passengerRequests: d });
-      })
+      }})
       .then(() => {
         const unseenRequests = [];
 

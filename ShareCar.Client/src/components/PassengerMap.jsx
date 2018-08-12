@@ -27,7 +27,7 @@ import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map"
 import "../styles/testmap.css";
 
-export class test extends React.Component {
+export class PassengerMap extends React.Component {
   state = {
     points: 0,
     coordinates: {
@@ -313,28 +313,6 @@ export class test extends React.Component {
     });
   }
 
-  saveRide() {
-
-    var addressFrom = addressParser.parseCustomAddress(this.state.route.fromAddress);
-    var addressTo = addressParser.parseCustomAddress(this.state.route.toAddress);
-
-    var ride = {
-      FromCity: addressFrom.city,
-      FromStreet: addressFrom.street,
-      FromNumber: addressFrom.number,
-      ToCity: addressTo.city,
-      ToStreet: addressTo.street,
-      ToNumber: addressTo.number,
-      RouteGeometry: this.state.route.routeGeometry
-    }
-    var rides = [];
-    rides.push(ride);
-    api.post("https://localhost:44360/api/Ride", rides).then(res => {
-      console.log(res);
-    });
-    // other stuff not implemented
-  }
-
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
       //make sure the coord is on street
@@ -392,26 +370,6 @@ export class test extends React.Component {
 
     vectorSource.clear();
     vectorSource.addFeature(feature);
-  }
-
-  createDriverRoute(polyline) {
-    this.state.route.routeGeometry = polyline;
-    var route = new Polyline({
-      factor: 1e5
-    }).readGeometry(polyline, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857"
-    });
-    var feature = new Feature({
-      type: "route",
-      geometry: route
-    });
-    if (this.state.routeFeature) {
-      this.state.vectorSource.removeFeature(this.state.routeFeature); // removes old route from map
-    }
-    feature.setStyle(this.state.routeStyles.route);
-    this.state.vectorSource.addFeature(feature);
-    this.setState({ routeFeature: feature });
   }
 
   createPassengerRoute(polyline) {
@@ -520,7 +478,6 @@ export class test extends React.Component {
     var placesAutocompletePassenger = places({
       container: document.querySelector("#passenger-address")
     });
-console.log("fffffffffffffffffffff");
     placesAutocompletePassenger.on("change", e => {
       this.CenterMap(
         e.suggestion.latlng.lng,
@@ -562,127 +519,13 @@ console.log("fffffffffffffffffffff");
     this.state.vectorSource.addFeature(feature);
   }
 
-  handleDriverMapClick(markersOnMap, coordinates) {
-    if (markersOnMap > 1) {
-      if (this.state.features.destinationFeature) {
-        this.state.vectorSource.removeFeature(
-          this.state.features.destinationFeature
-        );
-      }
-
-      this.setState({
-        coordinates: {
-          firstPoint: this.state.coordinates.firstPoint,
-          lastPoint: coordinates
-        }
-      });
-
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
-        this.setInputTo(
-          (e.address.house_number ? e.address.house_number + ", " : "") +
-          e.address.road +
-          ", " +
-          e.address.city
-        );
-      });
-      this.createFeature(coordinates, false);
-    } else {
-      this.setState({
-        coordinates: { firstPoint: coordinates, lastPoint: [] }
-      });
-
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
-        this.setInputFrom(
-          (e.address.house_number ? e.address.house_number + ", " : "") +
-          e.address.road +
-          ", " +
-          e.address.city
-        );
-      });
-
-      this.createFeature(coordinates, true);
-    }
-  }
-
-  handleAddressInput(coordinates) {
-
-    if (this.state.startPointInput) {
-      if (this.state.features.startPointFeature) {
-        this.state.vectorSource.removeFeature(
-          this.state.features.startPointFeature
-        );
-      }
-      this.setState({
-        coordinates: {
-          firstPoint: coordinates,
-          lastPoint: this.state.coordinates.lastPoint
-        }
-      });
-
-      this.createFeature(coordinates, true);
-    } else {
-      if (this.state.features.destinationFeature) {
-        this.state.vectorSource.removeFeature(
-          this.state.features.destinationFeature
-        );
-      }
-
-      this.setState({
-        coordinates: {
-          firstPoint: this.state.coordinates.firstPoint,
-          lastPoint: coordinates
-        }
-      });
-
-      this.createFeature(coordinates, false);
-    }
-  }
-
-  addRoutePoint(evt, clickedOnMap) {
-    console.log(evt);
-    this.getNearest(evt).then(coordinates => {
-      var markersOnMap = this.state.points;
-      markersOnMap++;
-      this.setState({ points: markersOnMap });
-
-      if (clickedOnMap) {
-        // Separates route point adding by clicking and by writing an address
-
-        this.handleDriverMapClick(markersOnMap, coordinates);
-      } else {
-        this.handleAddressInput(coordinates);
-      }
-
-      if (markersOnMap < 2) {
-        // only one point on a map, impossible to display route
-        return;
-      }
-
-      var point1 = this.state.coordinates.firstPoint;
-      var point2 = this.state.coordinates.lastPoint;
-
-      console.log(this.state.vectorSource.getFeatures());
-      console.log(this.state.features);
-
-      fetch(this.state.url_osrm_route + point1 + ";" + point2)
-        .then(r => {
-          return r.json();
-        })
-        .then(json => {
-          if (json.code !== "Ok") {
-            return;
-          }
-          this.createDriverRoute(json.routes[0].geometry);
-        });
-    });
-  }
 
   componentDidMount() {
     //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-/*
-    var vectorSourceProperty = new SourceVector(),
+
+    var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
-        source: vectorSourceProperty
+        source: vectorSource
       });
 
     console.clear();
@@ -701,14 +544,12 @@ console.log("fffffffffffffffffffff");
         zoom: 11,
         minZoom: 9
       })
-    });*/
+    });
 
-    this.setState({ map : map.map, vectorSource: map.vectorSource }, function () {
+    this.setState({ map, vectorSource}, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
-      if (this.state.driver) {
-        this.driverAddressInputSuggestion();
-      } else {
+
         this.showRoutes();
         this.passengerAddressInputSuggestion();
 
@@ -717,25 +558,16 @@ console.log("fffffffffffffffffffff");
         else {
           this.handleFromOfficeSelection();
         }
-      }
+      
     });
 
 
 
     map.on("click", evt => {
-      if (this.state.driver) {
-        var coord4326 = transform(
-          [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
-          "EPSG:3857",
-          "EPSG:4326"
-        );
-        this.addRoutePoint(coord4326, true);
-      } else {
-
-        if (this.state.filteredRoute.toOffice) {
+if(this.state.filteredRoute.toOffice) {
           this.handlePassengerMapClick(evt);
         }
-      }
+      
     });
 
 
@@ -743,43 +575,7 @@ console.log("fffffffffffffffffffff");
 
   render() {
     return (
-      <div>
-        <div className="displayRoutes">
-          {this.state.driver ? (
-            <div>
-              <div className="map-input-selection">
-                <div className="form-group">
-                  <input
-                    type="search"
-                    className="form-group location-select"
-                    id="driver-address-input-from"
-                    placeholder="Select From Location..."
-                  />
-                  <SimpleMenu
-                    handleSelection={(e, indexas, button) =>
-                      this.handleOfficeSelection(e, indexas, button)
-                    }
-                    whichButton="from"
-                  />
-                </div>
 
-                <div className="form-group">
-                  <input
-                    type="search"
-                    className="form-group location-select"
-                    id="driver-address-input-to"
-                    placeholder="Select To Location..."
-                  />
-                  <SimpleMenu
-                    handleSelection={(e, indexas, button) =>
-                      this.handleOfficeSelection(e, indexas, button)
-                    }
-                    whichButton="to"
-                  />
-                </div>
-              </div>
-            </div>
-          ) : (
             <div>
               <span>Show routes...</span>
               <form>
@@ -805,7 +601,7 @@ console.log("fffffffffffffffffffff");
                     checked={this.state.filteredRoute.toOffice === false}
                     onClick={() => {
                       this.state.filteredRoute.toOffice = false;
-                      this.handleToOfficeSelection();
+                      this.handleFromOfficeSelection();
                     }}
                     onChange={() => this.showRoutes()}
                   />
@@ -824,9 +620,8 @@ console.log("fffffffffffffffffffff");
                   </option>
                 </select>
               </form>
-              {this.state.filteredRoute.toOffice ? (
                 <div className="form-group">
-                  <label>Destination:</label>
+                  <label>Center map on...</label>
                   <input
                     type="search"
                     class="form-group"
@@ -834,9 +629,6 @@ console.log("fffffffffffffffffffff");
                     placeholder="Select destination..."
                   />
                 </div>
-              ) : (
-                <div />
-              )}
               <button
                 onClick={() => {
                   this.selectRoute();
@@ -863,35 +655,22 @@ console.log("fffffffffffffffffffff");
                     <RidesOfDriver
                       rides={this.state.ridesOfRoute}
                       driver={this.state.driverEmail}
+                      pickUpPoint = {this.state.pickUpPoint}
                     />
                   ) : (
                     <div />
                   )}
-                </tbody>
-              ) : (
+                  
+              </tbody>)
+                                :<div></div>
+                            }
                 <div />
-              )}
-            </div>
-          )}
-        </div>
         <div id="map" />
-        {this.state.isContinueClicked ? (
-          <RidesScheduler routeInfo={this.state.route} />
-        ) : null}
-        <Button
-          disabled={this.state.route.routeGeometry == "" ? true : false}
-          className="continue-button"
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            this.setState({ isContinueClicked: !this.state.isContinueClicked });
-            // this.saveRide();
-          }}
-        >
-          Continue
-        </Button>
+        
       </div>
+                
     );
-  }
+  
 }
-export default test;
+}
+export default PassengerMap;

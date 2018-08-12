@@ -27,7 +27,7 @@ import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map"
 import "../styles/testmap.css";
 
-export class test extends React.Component {
+export class DriverMap extends React.Component {
   state = {
     points: 0,
     coordinates: {
@@ -106,90 +106,6 @@ export class test extends React.Component {
     driver: this.props.match.params.role == "driver" ? true : false
   };
 
-  selectRoute() {
-    if (this.state.passengerRouteFeatures.length != 0) { // checks if there are any routes displayed
-      this.state.showDrivers = true;
-      this.state.showRoutes = false;
-      this.state.showRides = false;
-      var counter = this.state.passengerRouteFeaturesCounter;
-      if (counter == 0) {
-        this.state.passengerRouteFeatures[
-          this.state.passengerRouteFeatures.length - 1
-        ].feature.setStyle(this.state.routeStyles.route);
-      } else {
-        this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
-          this.state.routeStyles.route
-        );
-      }
-
-      this.state.passengerRouteFeatures[counter].feature.setStyle(
-        this.state.selectedRouteStyle.route
-      );
-      this.setState({
-        selectedRoute: this.state.passengerRouteFeatures[counter]
-      }, () => {
-
-        console.log(counter);
-        console.log(this.state.passengerRouteFeatures);
-        console.log(this.state.selectedRoute);
-        console.log("=======================")
-
-        counter++;
-
-        if (counter >= this.state.passengerRouteFeatures.length) {
-          counter = 0;
-        }
-        console.log(counter);
-        this.setState({ passengerRouteFeaturesCounter: counter });
-        console.log(this.state.selectedRoute);
-        this.getRidesByRoute(this.state.selectedRoute.route);
-      });
-
-    }
-  }
-
-  getRidesByRoute(route) {
-    console.log(route);
-    //    var route = {
-    //    Geometry: route.geometry
-    //  };
-    // api.get(`/Ride/ridesByRoute=` + route).then(response => {
-    this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
-      var drivers = [];
-      console.log(this.state.ridesOfRoute);
-
-      this.state.ridesOfRoute.forEach(ride => {
-        console.log("ride:   " + ride)
-        if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
-          drivers.push(ride.driverFirstName + ride.driverLastName);
-          console.log("driver:   " + ride.driverFirstName)
-
-          var driversArray = this.state.driversOfRoute;
-          driversArray.push({
-            firstName: ride.driverFirstName,
-            lastName: ride.driverLastName,
-            email: ride.driverEmail
-          });
-
-          this.setState({ driversOfRoute: driversArray })
-
-        }
-      });
-
-      console.log("state drivers: ====   " + this.state.driversOfRoute);
-
-
-      if (drivers.length != 0) {
-        this.setState({ showDriver: true });
-      } else {
-        this.setState({ showDriver: false });
-      }
-
-      console.log(this.state.driversOfRoute);
-    });
-
-  }
-
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
 
@@ -199,7 +115,6 @@ export class test extends React.Component {
 
     this.setState({ filteredRoute: getState });
 
-    if (this.props.match.params.role == "driver") {
       var getState = this.state.filteredRoute;
       getState.office = OfficeAddresses[indexas];
       this.setState({ filteredRoute: getState });
@@ -243,96 +158,7 @@ export class test extends React.Component {
           false
         );
       }
-    } else {
-      this.showRoutes();
-    }
-  }
-
-  //removes passenger pick up point marker from map and clears states related with it
-  handleFromOfficeSelection() {
-    if (!this.state.filteredRoute.toOffice) {
-      if (this.state.passengerPickUpPointFeature) {
-        this.state.vectorSource.removeFeature(
-          this.state.passengerPickUpPointFeature
-        );
-        this.state.passengerPickUpPointFeature = null;
-      }
-      this.setState({ pickUpPoint: [this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude] }, () => {
-        console.log(this.state.pickUpPoint);
-
-      });
-    }
-  }
-
-  showRoutes() {
-    this.state.vectorSource.clear();
-    this.CenterMap(this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude, this.state.map);
-    this.setState({ showDriver: true, showRoutes: false, driversOfRoute: [], driverEmail: "", showRides: false, passengerRouteFeaturesCounter: 0 });
-    //  this.state.showDrivers = true;
-    //  this.state.showRoutes = false;
-    //   this.state.driversOfRoute
-    //  this.state.driverEmail
-    //  this.state.showRides
-    console.log(this.state.filteredRoute);
-    var routeDto;
-    this.state.filteredRoute.toOffice
-      ? routeDto = {
-
-        AddressTo: {
-          City: this.state.filteredRoute.office.city,
-          Street: this.state.filteredRoute.office.street,
-          Number: this.state.filteredRoute.office.number
-        }
-      }
-      : routeDto = {
-
-        AddressFrom: {
-          City: this.state.filteredRoute.office.city,
-          Street: this.state.filteredRoute.office.street,
-          Number: this.state.filteredRoute.office.number
-        }
-      }
-    console.log(routeDto);
-    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      console.log(res.data);
-
-      console.log(res);
-      console.log(res.status);
-      if (res.status == 200 && res.data != "") {
-        console.log(res.data);
-        this.setState({ passengerRoutes: res.data });
-        this.state.passengerRoutes.forEach((element) => {
-          console.log(element.geometry);
-        });
-        this.state.passengerRouteFeatures = []; // deletes old routes
-
-        this.state.passengerRoutes.forEach((element) => {
-          this.createPassengerRoute(element);
-        });
-      }
-    });
-  }
-
-  saveRide() {
-
-    var addressFrom = addressParser.parseCustomAddress(this.state.route.fromAddress);
-    var addressTo = addressParser.parseCustomAddress(this.state.route.toAddress);
-
-    var ride = {
-      FromCity: addressFrom.city,
-      FromStreet: addressFrom.street,
-      FromNumber: addressFrom.number,
-      ToCity: addressTo.city,
-      ToStreet: addressTo.street,
-      ToNumber: addressTo.number,
-      RouteGeometry: this.state.route.routeGeometry
-    }
-    var rides = [];
-    rides.push(ride);
-    api.post("https://localhost:44360/api/Ride", rides).then(res => {
-      console.log(res);
-    });
-    // other stuff not implemented
+    
   }
 
   getNearest(coordinates) {
@@ -379,19 +205,6 @@ export class test extends React.Component {
       });
     }
     console.log(this.state.features);
-  }
-
-  setPassengersPickUpPoint(val) {
-    this.CenterMap(val[0], val[1], this.state.map);
-    var xy = [];
-    xy = transform(val, "EPSG:4326", "EPSG:3857");
-    console.log(xy);
-    var vectorSource = this.state.Vector;
-
-    var feature = new Feature(new Point(xy));
-
-    vectorSource.clear();
-    vectorSource.addFeature(feature);
   }
 
   createDriverRoute(polyline) {
@@ -489,6 +302,13 @@ export class test extends React.Component {
 
     placesAutocompleteFrom.on("change", e => {
       this.setState({ startPointInput: true });
+      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
+      var city = e.suggestion.city;
+
+       var route = this.state.route;
+       route.fromAddress = address.number + ", " + address.name + ", " + city;
+       this.setState({route});
+
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
@@ -502,6 +322,12 @@ export class test extends React.Component {
 
     placesAutocompleteTo.on("change", e => {
       this.setState({ startPointInput: false });
+      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
+      var city = e.suggestion.city;
+
+       var route = this.state.route;
+       route.toAddress = address.number + ", " + address.name + ", " + city;
+       this.setState({route});
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
@@ -514,53 +340,11 @@ export class test extends React.Component {
     });
   }
 
-  passengerAddressInputSuggestion() {
-    var places = require("places.js");
-
-    var placesAutocompletePassenger = places({
-      container: document.querySelector("#passenger-address")
-    });
-console.log("fffffffffffffffffffff");
-    placesAutocompletePassenger.on("change", e => {
-      this.CenterMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-    });
-  }
-
   CenterMap(long, lat, map) {
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(13);
   }
 
-  showRidesOfDriver(driver) {
-    if (this.state.showRides) {
-      if (driver == this.state.driver) {
-        this.setState({ showRides: false, driverEmail: "" });
-      } else {
-        this.setState({ driverEmail: driver });
-      }
-    } else {
-      this.setState({ showRides: true, driverEmail: driver });
-    }
-  }
-
-  handlePassengerMapClick(evt) {
-    var feature = new Feature(new Point(evt.coordinate));
-    var lonlat = [];
-    lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-
-    this.setState({ pickUpPoint: lonlat });
-    if (this.state.passengerPickUpPointFeature) {
-      this.state.vectorSource.removeFeature(
-        this.state.passengerPickUpPointFeature
-      );
-    }
-    this.setState({ passengerPickUpPointFeature: feature });
-    this.state.vectorSource.addFeature(feature);
-  }
 
   handleDriverMapClick(markersOnMap, coordinates) {
     if (markersOnMap > 1) {
@@ -679,10 +463,10 @@ console.log("fffffffffffffffffffff");
 
   componentDidMount() {
     //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-/*
-    var vectorSourceProperty = new SourceVector(),
+
+    var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
-        source: vectorSourceProperty
+        source: vectorSource
       });
 
     console.clear();
@@ -701,41 +485,26 @@ console.log("fffffffffffffffffffff");
         zoom: 11,
         minZoom: 9
       })
-    });*/
+    });
 
-    this.setState({ map : map.map, vectorSource: map.vectorSource }, function () {
+    this.setState({ map, vectorSource }, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
-      if (this.state.driver) {
         this.driverAddressInputSuggestion();
-      } else {
-        this.showRoutes();
-        this.passengerAddressInputSuggestion();
 
-        if (this.state.filteredRoute.toOffice) {
-        }
-        else {
-          this.handleFromOfficeSelection();
-        }
-      }
     });
 
 
 
     map.on("click", evt => {
-      if (this.state.driver) {
         var coord4326 = transform(
           [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
           "EPSG:3857",
           "EPSG:4326"
         );
         this.addRoutePoint(coord4326, true);
-      } else {
 
-        if (this.state.filteredRoute.toOffice) {
-          this.handlePassengerMapClick(evt);
-        }
-      }
+      
     });
 
 
@@ -745,7 +514,6 @@ console.log("fffffffffffffffffffff");
     return (
       <div>
         <div className="displayRoutes">
-          {this.state.driver ? (
             <div>
               <div className="map-input-selection">
                 <div className="form-group">
@@ -779,100 +547,7 @@ console.log("fffffffffffffffffffff");
                 </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <span>Show routes...</span>
-              <form>
-                <span>To office</span>
-                <td>
-                  <input
-                    type="radio"
-                    name="site_name"
-                    value={"To office"}
-                    checked={this.state.filteredRoute.toOffice === true}
-                    onClick={() => {
-                      this.state.filteredRoute.toOffice = true;
-                    }}
-                    onChange={() => this.showRoutes()}
-                  />
-                </td>
-                <span>From office</span>
-                <td>
-                  <input
-                    type="radio"
-                    name="address"
-                    value={"From office"}
-                    checked={this.state.filteredRoute.toOffice === false}
-                    onClick={() => {
-                      this.state.filteredRoute.toOffice = false;
-                      this.handleToOfficeSelection();
-                    }}
-                    onChange={() => this.showRoutes()}
-                  />
-                </td>
-                <span>Select office</span>
-                <select
-                  onChange={e => {
-                    this.handleOfficeSelection(e);
-                  }}
-                >
-                  <option value={0}>
-                    {OfficeAddresses[0].street + OfficeAddresses[0].number}
-                  </option>
-                  <option value={1}>
-                    {OfficeAddresses[1].street + OfficeAddresses[1].number}
-                  </option>
-                </select>
-              </form>
-              {this.state.filteredRoute.toOffice ? (
-                <div className="form-group">
-                  <label>Destination:</label>
-                  <input
-                    type="search"
-                    class="form-group"
-                    id="passenger-address"
-                    placeholder="Select destination..."
-                  />
-                </div>
-              ) : (
-                <div />
-              )}
-              <button
-                onClick={() => {
-                  this.selectRoute();
-                }}
-              >
-                Next
-              </button>
-              {this.state.showDriver ? (
-                <tbody>
-                  {this.state.driversOfRoute.map(driver => (
-                    <tr key={driver.id}>
-                      <td>
-                        <button
-                          onClick={() => {
-                            this.showRidesOfDriver(driver.email);
-                          }}
-                        >
-                          {driver.firstName}{" "}
-                        </button>{" "}
-                      </td>
-                    </tr>
-                  ))}
-                  {this.state.showRides ? (
-                    <RidesOfDriver
-                      rides={this.state.ridesOfRoute}
-                      driver={this.state.driverEmail}
-                    />
-                  ) : (
-                    <div />
-                  )}
-                </tbody>
-              ) : (
-                <div />
-              )}
-            </div>
-          )}
+          
         </div>
         <div id="map" />
         {this.state.isContinueClicked ? (
@@ -884,8 +559,8 @@ console.log("fffffffffffffffffffff");
           variant="contained"
           color="primary"
           onClick={() => {
+            console.log(this.state.route);
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
-            // this.saveRide();
           }}
         >
           Continue
@@ -894,4 +569,4 @@ console.log("fffffffffffffffffffff");
     );
   }
 }
-export default test;
+export default DriverMap;

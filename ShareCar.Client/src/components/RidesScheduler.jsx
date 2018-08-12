@@ -62,7 +62,7 @@ class RidesScheduler extends React.Component {
   };
 
   componentDidMount() {
-    console.log(addressParser(this.props.routeInfo.fromAddress));
+    console.log(addressParser.parseCustomAddress(this.props.routeInfo.fromAddress));
   }
 
   handleSelect(e) {
@@ -97,18 +97,18 @@ class RidesScheduler extends React.Component {
 
   handleCreate = () => {
     var ridesToPost = [];
-    var fromAddressParsed = addressParser(this.props.routeInfo.fromAddress);
-    var toAddressParsed = addressParser(this.props.routeInfo.toAddress);
+    var fromAddressParsed = addressParser.parseCustomAddress(this.props.routeInfo.fromAddress);
+    var toAddressParsed = addressParser.parseCustomAddress(this.props.routeInfo.toAddress);
     this.state.selectedDates.forEach(element => {
       var month = element.getMonth() + 1;
       ridesToPost.push({
-        fromNumber: fromAddressParsed[0],
-        fromStreet: fromAddressParsed[1],
-        fromCity: fromAddressParsed[2],
+        fromNumber: fromAddressParsed.number,
+        fromStreet: fromAddressParsed.street,
+        fromCity: fromAddressParsed.city,
         fromCountry: "Lithuania",
-        toNumber: toAddressParsed[0],
-        toStreet: toAddressParsed[1],
-        toCity: toAddressParsed[2],
+        toNumber: toAddressParsed.number,
+        toStreet: toAddressParsed.street,
+        toCity: toAddressParsed.city,
         toCountry: "Lithuania",
         routeGeometry: this.props.routeInfo.routeGeometry,
         rideDateTime: new Date(

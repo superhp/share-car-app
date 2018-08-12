@@ -2,6 +2,7 @@
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
+using ShareCar.Logic.Address_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,13 @@ namespace ShareCar.Logic.Route_Logic
     {
         private readonly IMapper _mapper;
         private readonly IRouteRepository _routeRepository;
-        public RouteLogic(IRouteRepository routeRepository, IMapper mapper)
+        private readonly IAddressLogic _addressLogic;
+
+        public RouteLogic(IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
         {
             _routeRepository = routeRepository;
             _mapper = mapper;
+            _addressLogic = addressLogic;
         }
         public int GetRouteId(int fromId, int toId)
         {
@@ -44,16 +48,24 @@ namespace ShareCar.Logic.Route_Logic
             return routeDto;
         }
 
-        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
+        public List<RouteDto> GetRoutes(RouteDto routeDto)
         {
-            AddressDto address = routeDto.AddressTo;
+            Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
             bool isFromOffice = false;
+
             if (routeDto.AddressFrom != null)
             {
-                address = routeDto.AddressFrom;
-                isFromOffice = true;
+                address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
+                isFromOffice = true;                
             }
-            IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, _mapper.Map<AddressDto, Address>(address));
+            else
+            {
+             //   routeDto.AddressToId = _addressLogic.GetAddressId(address);
+
+            }
+
+
+            IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
             
             if (routeDto.FromTime != DateTime.MinValue)
             {
@@ -109,7 +121,11 @@ namespace ShareCar.Logic.Route_Logic
             {
                 FromId = route.FromId,
                 ToId = route.ToId,
-                Geometry = route.Geometry
+                Geometry = route.Geometry,
+                FromAddress = _mapper.Map<AddressDto,Address>(route.AddressFrom),
+                ToAddress = _mapper.Map<AddressDto, Address>(route.AddressTo)
+
+
             };
             //Route routes = _mapper.Map<RouteDto, Route>(route);
             _routeRepository.AddRoute(entityRoute);

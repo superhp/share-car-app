@@ -107,7 +107,8 @@ export class DriverRideRequestsList extends React.Component {
           <MapComponent
             id="map"
             className="requestMap"
-            coords={this.state.coordinates}
+            coordinates={this.state.coordinates}
+            show={this.state.show}
             ref={this.child}
             driver={true}
           />

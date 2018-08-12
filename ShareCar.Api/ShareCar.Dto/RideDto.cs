@@ -16,6 +16,7 @@ namespace ShareCar.Dto
         public string ToCity { get; set; }
         public string ToStreet { get; set; }
         public string ToNumber { get; set; }
+        public string RouteGeometry { get; set; }
         public string DriverEmail { get; set; }
         public string DriverFirstName { get; set; }
         public string DriverLastName { get; set; }
@@ -23,7 +24,6 @@ namespace ShareCar.Dto
         public DateTime RideDateTime { get; set; }
         public List<RideRequestDto> Requests { get; set; }
         public int NumberOfSeats { get; set; }
-        public string RouteGeometry { get; set; }
 
     }
 }

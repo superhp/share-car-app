@@ -33,22 +33,35 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   state = {
     loading: true,
     user: null,
+    rideNotifications: [],
+    showNotification:false,
     roleSelection: {
-      rideNotifications: [],
       isDriver: null
     }
   };
 
   componentDidMount() {
+    api.get(`/Ride/checkFinished`).then(response => {
+      console.log(response.data);
+      this.state.rideNotifications = response.data;
+   //  this.setState({ rideNotifications: response.data });   
+   if(response.data.length != 0)
+   {
+     this.state.showNotification = true;
+   } 
+   else{
+     this.state.showNotification = false;
+   }
+     console.log(this.state.rideNotifications.length);  
     this.userService.getLoggedInUser(this.updateLoggedInUser);
-    //  api.get(`/Ride/checkFinished`).then(response => {
-    //   console.log(response);
-    //  this.setState({ rideNotifications: response.data });
-    //  });
+  });
   }
 
+
+
   updateLoggedInUser = (user: UserProfileData) => {
-    this.setState({ loading: false, user: user });
+   this.setState({ loading: false, user: user });
+
   };
 
   logout = () => {
@@ -74,11 +87,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div>
-        {/* {this.state.rideNotifications.length == 0 ? (
-          <div />
-        ) : (
-          <RideCompletedNotification rides={this.state.rideNotifications} />
-        )} */}
+        { this.state.showNotification 
+        ?  <RideCompletedNotification rides={this.state.rideNotifications} />
+        : <div></div> 
+
+         }
         <RoleContext.Consumer>
           {({ role, changeRole }) => (
             <div className="role-container">
@@ -94,7 +107,8 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
             </div>
           )}
         </RoleContext.Consumer>
-      </div>
+        </div>
+
     );
     return <div>{content}</div>;
   }
