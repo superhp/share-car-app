@@ -38,7 +38,7 @@ export class test extends React.Component {
           width: 6,
           color: [0, 200, 0, 0.8]
         }),
-        zIndex : 10
+        zIndex: 10
       })
     },
     passengersSelectedOffice: "",
@@ -124,22 +124,22 @@ export class test extends React.Component {
       );
       this.setState({
         selectedRoute: this.state.passengerRouteFeatures[counter]
-      },()=>{
+      }, () => {
 
-console.log(counter);
-console.log(this.state.passengerRouteFeatures);
-console.log(this.state.selectedRoute);
-console.log("=======================")
+        console.log(counter);
+        console.log(this.state.passengerRouteFeatures);
+        console.log(this.state.selectedRoute);
+        console.log("=======================")
 
-              counter++;
+        counter++;
 
-      if (counter >= this.state.passengerRouteFeatures.length) {
-        counter = 0;
-      }
-      console.log(counter);
-      this.setState({ passengerRouteFeaturesCounter: counter });
-console.log(this.state.selectedRoute);
-      this.getRidesByRoute(this.state.selectedRoute.route);
+        if (counter >= this.state.passengerRouteFeatures.length) {
+          counter = 0;
+        }
+        console.log(counter);
+        this.setState({ passengerRouteFeaturesCounter: counter });
+        console.log(this.state.selectedRoute);
+        this.getRidesByRoute(this.state.selectedRoute.route);
       });
 
     }
@@ -147,19 +147,19 @@ console.log(this.state.selectedRoute);
 
   getRidesByRoute(route) {
     console.log(route);
-//    var route = {
-  //    Geometry: route.geometry
-  //  };
-   // api.get(`/Ride/ridesByRoute=` + route).then(response => {
-      this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, ()=>{
-              var drivers = [];
-              console.log(this.state.ridesOfRoute);
+    //    var route = {
+    //    Geometry: route.geometry
+    //  };
+    // api.get(`/Ride/ridesByRoute=` + route).then(response => {
+    this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
+      var drivers = [];
+      console.log(this.state.ridesOfRoute);
 
       this.state.ridesOfRoute.forEach(ride => {
-        console.log("ride:   "+ride)
+        console.log("ride:   " + ride)
         if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
           drivers.push(ride.driverFirstName + ride.driverLastName);
-          console.log("driver:   "+ride.driverFirstName)
+          console.log("driver:   " + ride.driverFirstName)
 
           var driversArray = this.state.driversOfRoute;
           driversArray.push({
@@ -168,12 +168,12 @@ console.log(this.state.selectedRoute);
             email: ride.driverEmail
           });
 
-          this.setState({driversOfRoute:driversArray})
+          this.setState({ driversOfRoute: driversArray })
 
         }
       });
 
-console.log("state drivers: ====   "+this.state.driversOfRoute);
+      console.log("state drivers: ====   " + this.state.driversOfRoute);
 
 
       if (drivers.length != 0) {
@@ -183,17 +183,17 @@ console.log("state drivers: ====   "+this.state.driversOfRoute);
       }
 
       console.log(this.state.driversOfRoute);
-      });
+    });
 
   }
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
-    
+
     var getState = this.state.filteredRoute;
 
     getState.office = OfficeAddresses[index];
-  
+
     this.setState({ filteredRoute: getState });
 
     if (this.props.match.params.role == "driver") {
@@ -207,14 +207,14 @@ console.log("state drivers: ====   "+this.state.driversOfRoute);
         ", " +
         this.state.filteredRoute.office.city;
 
-        var route = this.state.route;
-        
+      var route = this.state.route;
+
 
       if (button == "from") {
         this.setState({ startPointInput: true });
 
-route.addressFrom = address;
-this.setState({route:route});
+        route.addressFrom = address;
+        this.setState({ route: route });
 
         this.setInputFrom(address);
 
@@ -229,7 +229,7 @@ this.setState({route:route});
         this.setState({ startPointInput: false });
 
         route.addressTo = address;
-        this.setState({route:route});
+        this.setState({ route: route });
 
         this.setInputTo(address);
         this.addRoutePoint(
@@ -245,7 +245,8 @@ this.setState({route:route});
     }
   }
 
-  handleToOfficeSelection() {
+  //removes passenger pick up point marker from map and clears states related with it
+  handleFromOfficeSelection() {
     if (!this.state.filteredRoute.toOffice) {
       if (this.state.passengerPickUpPointFeature) {
         this.state.vectorSource.removeFeature(
@@ -253,18 +254,22 @@ this.setState({route:route});
         );
         this.state.passengerPickUpPointFeature = null;
       }
+      this.setState({ pickUpPoint: [this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude] }, () => {
+        console.log(this.state.pickUpPoint);
+
+      });
     }
   }
 
   showRoutes() {
     this.state.vectorSource.clear();
     this.CenterMap(this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude, this.state.map);
-   this.setState({showDriver:true, showRoutes :false, driversOfRoute:[],driverEmail:"",showRides:false,passengerRouteFeaturesCounter:0});
-  //  this.state.showDrivers = true;
-  //  this.state.showRoutes = false;
- //   this.state.driversOfRoute
-  //  this.state.driverEmail
-  //  this.state.showRides
+    this.setState({ showDriver: true, showRoutes: false, driversOfRoute: [], driverEmail: "", showRides: false, passengerRouteFeaturesCounter: 0 });
+    //  this.state.showDrivers = true;
+    //  this.state.showRoutes = false;
+    //   this.state.driversOfRoute
+    //  this.state.driverEmail
+    //  this.state.showRides
     console.log(this.state.filteredRoute);
     var routeDto;
     this.state.filteredRoute.toOffice
@@ -290,7 +295,7 @@ this.setState({route:route});
 
       console.log(res);
       console.log(res.status);
-      if (res.status == 200 && res.data != null) {
+      if (res.status == 200 && res.data != "") {
         console.log(res.data);
         this.setState({ passengerRoutes: res.data });
         this.state.passengerRoutes.forEach((element) => {
@@ -352,8 +357,8 @@ this.setState({route:route});
 
     this.state.vectorSource.addFeature(feature);
     console.log(fromFeature);
-    if (fromFeature){
-    console.log("creating from feature");
+    if (fromFeature) {
+      console.log("creating from feature");
       this.setState({
         features: {
           startPointFeature: feature,
@@ -362,13 +367,14 @@ this.setState({route:route});
       });
 
     }
-    else{
+    else {
       this.setState({
         features: {
           startPointFeature: this.state.features.startPointFeature,
           destinationFeature: feature
         }
-      });}
+      });
+    }
     console.log(this.state.features);
   }
 
@@ -511,7 +517,7 @@ this.setState({route:route});
     var placesAutocompletePassenger = places({
       container: document.querySelector("#passenger-address")
     });
-
+console.log("fffffffffffffffffffff");
     placesAutocompletePassenger.on("change", e => {
       this.CenterMap(
         e.suggestion.latlng.lng,
@@ -693,20 +699,23 @@ this.setState({route:route});
       })
     });
 
-    this.setState({ map, vectorSource: vectorSourceProperty },function(){
+    this.setState({ map, vectorSource: vectorSourceProperty }, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
       if (this.state.driver) {
         this.driverAddressInputSuggestion();
       } else {
         this.showRoutes();
+        this.passengerAddressInputSuggestion();
+
         if (this.state.filteredRoute.toOffice) {
-          this.passengerAddressInputSuggestion();
+        }
+        else {
+          this.handleFromOfficeSelection();
         }
       }
     });
-    //this.state.map = map; // setState doesn't
-   // this.state.vectorSource = vectorSource;
+
 
 
     map.on("click", evt => {
@@ -718,6 +727,7 @@ this.setState({route:route});
         );
         this.addRoutePoint(coord4326, true);
       } else {
+
         if (this.state.filteredRoute.toOffice) {
           this.handlePassengerMapClick(evt);
         }
@@ -730,54 +740,65 @@ this.setState({route:route});
   render() {
     return (
       <div>
-                          <select
-                    onChange={e => {
-                      this.handleOfficeSelection(e);
+          <div className="form-group">
+            <label>Find location:</label>
+            <input
+              type="search"
+              class="form-group"
+              id="passenger-address"
+              placeholder="Select destination..."
+            />
+          </div>
+
+        <select
+          onChange={e => {
+            this.handleOfficeSelection(e);
+          }}
+        >
+          <option value={0}>
+            {OfficeAddresses[0].street + OfficeAddresses[0].number}
+          </option>
+          <option value={1}>
+            {OfficeAddresses[1].street + OfficeAddresses[1].number}
+          </option>
+        </select>
+        <div id="map"></div>
+
+        <button
+          onClick={() => {
+            this.selectRoute();
+          }}
+        >
+          Next
+              </button>
+        {this.state.showDriver ? (
+          <tbody>
+            {this.state.driversOfRoute.map(driver => (
+              <tr key={driver.id}>
+                <td>
+                  <button
+                    onClick={() => {
+                      this.showRidesOfDriver(driver.email);
                     }}
                   >
-                    <option value={0}>
-                      {OfficeAddresses[0].street + OfficeAddresses[0].number}
-                    </option>
-                    <option value={1}>
-                      {OfficeAddresses[1].street + OfficeAddresses[1].number}
-                    </option>
-                  </select>
-        <div id="map"></div>
-        
-        <button
-                  onClick={() => {
-                    this.selectRoute();
-                  }}
-                >
-                  Next
-              </button>
-                {this.state.showDriver ? (
-                  <tbody>
-                    {this.state.driversOfRoute.map(driver => (
-                      <tr key={driver.id}>
-                        <td>
-                          <button
-                            onClick={() => {
-                              this.showRidesOfDriver(driver.email);
-                            }}
-                          >
-                            {driver.firstName}{" "}
-                          </button>{" "}
-                        </td>
-                      </tr>
-                    ))}
-                    {this.state.showRides ? (
-                      <RidesOfDriver
-                        rides={this.state.ridesOfRoute}
-                        driver={this.state.driverEmail}
-                      />
-                    ) : (
-                        <div></div>
-                      )}
-                  </tbody>
-                ) : (
-                    <div></div>
-                  )}
+                    {driver.firstName}{" "}
+                  </button>{" "}
+                </td>
+              </tr>
+            ))}
+            {this.state.showRides ? (
+              <RidesOfDriver
+                rides={this.state.ridesOfRoute}
+                driver={this.state.driverEmail}
+                pickUpPoint={this.state.pickUpPoint}
+              />
+            ) : (
+                <div></div>
+              )}
+          </tbody>
+        ) : (
+            <div></div>
+          )}
         <div className="displayRoutes">
           {this.state.driver ? (
             <div>
@@ -839,7 +860,7 @@ this.setState({route:route});
                       checked={this.state.filteredRoute.toOffice === false}
                       onClick={() => {
                         this.state.filteredRoute.toOffice = false;
-                        this.handleToOfficeSelection();
+                        this.handleFromOfficeSelection();
                       }}
                       onChange={() => this.showRoutes()}
                     />
@@ -847,29 +868,16 @@ this.setState({route:route});
                   <span>Select office</span>
 
                 </form>
-                {this.state.filteredRoute.toOffice ? (
-                  <div className="form-group">
-                    <label>Destination:</label>
-                    <input
-                      type="search"
-                      class="form-group"
-                      id="passenger-address"
-                      placeholder="Select destination..."
-                    />
-                  </div>
-                ) : (
-                    <div />
-                  )}
 
               </div>
             )}
         </div>
-       
-       {/* sits divas bus pasalintas*/}
-       <div/>
-{/*    
+
+        {/* sits divas bus pasalintas*/}
+        <div />
+        {/*    
         <div id="map" />
-*/}   
+*/}
         <Button
           className="continue-button"
           variant="contained"

@@ -50,7 +50,7 @@ namespace ShareCar.Api.Controllers
                 return Ok(passengers);
             }
             else
-                return BadRequest("No passengers");
+                return NotFound("No passengers");
         }
 
     }

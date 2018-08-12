@@ -8,9 +8,9 @@ sendrequest(rideId, driverEmail){
     var request = {
         RideId : rideId,
         DriverEmail : driverEmail,
-        City: "Vilnius",
-        Street:"gin",
-        HouseNumber:1
+        Longtitude: this.props.pickUpPoint[0],
+        Latitude: this.props.pickUpPoint[1]
+        
     }
     api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
         console.log(res);

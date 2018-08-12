@@ -48,7 +48,6 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
    if(response.data.length != 0)
    {
      this.state.showNotification = true;
-     console.log('ggggggggggggggggg');
    } 
    else{
      this.state.showNotification = false;
