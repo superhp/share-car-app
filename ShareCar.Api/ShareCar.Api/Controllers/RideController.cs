@@ -95,14 +95,14 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("routes")]
-        public IActionResult GetRoutes([FromBody]RouteDto routeDto)
+        public async Task<IActionResult> GetRoutesAsync([FromBody]RouteDto routeDto)
         {
 
 
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
 
-            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto);
+            IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto);
             return Ok(routes);
         }
 

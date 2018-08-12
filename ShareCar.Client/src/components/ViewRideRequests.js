@@ -32,7 +32,6 @@ export class ViewRideRequests extends React.Component {
       .then(response => {
         console.log((response.data: User));
         const d = response.data;
-console.log(d);
         this.setState({ passengerRequests: d });
       })
       .then(() => {

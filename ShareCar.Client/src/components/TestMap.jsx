@@ -99,12 +99,11 @@ export class test extends React.Component {
       "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
     url_osrm_route:
       "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/",
-    driver: false//this.props.match.params.role == "driver" ? true : false
+    driver: this.props.match.params.role == "driver" ? true : false
   };
 
   selectRoute() {
-    console.log(this.state.passengerRouteFeatures);
-    if (this.state.passengerRouteFeatures.length != 0) {
+    if (this.state.passengerRouteFeatures.length != 0) { // checks if there are any routes displayed
       this.state.showDrivers = true;
       this.state.showRoutes = false;
       this.state.showRides = false;
@@ -123,40 +122,58 @@ export class test extends React.Component {
         this.state.selectedRouteStyle.route
       );
       this.setState({
-        selectedRoute: this.state.passengerRouteFeatures[counter].geometry
-      });
-      counter++;
+        selectedRoute: this.state.passengerRouteFeatures[counter]
+      },()=>{
+
+console.log(counter);
+console.log(this.state.passengerRouteFeatures);
+console.log(this.state.selectedRoute);
+console.log("=======================")
+
+              counter++;
 
       if (counter >= this.state.passengerRouteFeatures.length) {
         counter = 0;
       }
       console.log(counter);
       this.setState({ passengerRouteFeaturesCounter: counter });
+console.log(this.state.selectedRoute);
+      this.getRidesByRoute(this.state.selectedRoute.route);
+      });
 
-      this.getRidesByRoute(this.state.selectedRoute);
     }
   }
 
-  getRidesByRoute(routeGeometry) {
-    var route = {
-      Geometry: routeGeometry
-    };
-    api.get(`/Ride/ridesByRoute=` + routeGeometry).then(response => {
-      this.setState({ ridesOfRoute: response.data, driversOfRoute: [] });
-
-      var drivers = [];
+  getRidesByRoute(route) {
+    console.log(route);
+//    var route = {
+  //    Geometry: route.geometry
+  //  };
+   // api.get(`/Ride/ridesByRoute=` + route).then(response => {
+      this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, ()=>{
+              var drivers = [];
+              console.log(this.state.ridesOfRoute);
 
       this.state.ridesOfRoute.forEach(ride => {
+        console.log("ride:   "+ride)
         if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
           drivers.push(ride.driverFirstName + ride.driverLastName);
+          console.log("driver:   "+ride.driverFirstName)
 
-          this.state.driversOfRoute.push({
+          var driversArray = this.state.driversOfRoute;
+          driversArray.push({
             firstName: ride.driverFirstName,
             lastName: ride.driverLastName,
             email: ride.driverEmail
           });
+
+          this.setState({driversOfRoute:driversArray})
+
         }
       });
+
+console.log("state drivers: ====   "+this.state.driversOfRoute);
+
 
       if (drivers.length != 0) {
         this.setState({ showDriver: true });
@@ -165,7 +182,8 @@ export class test extends React.Component {
       }
 
       console.log(this.state.driversOfRoute);
-    });
+      });
+
   }
 
   handleOfficeSelection(e, indexas, button) {
@@ -240,8 +258,12 @@ this.setState({route:route});
   showRoutes() {
     this.state.vectorSource.clear();
     this.CenterMap(this.state.filteredRoute.office.longtitude, this.state.filteredRoute.office.latitude, this.state.map);
-    this.state.showDrivers = true;
-    this.state.showRoutes = false;
+   this.setState({showDriver:true, showRoutes :false, driversOfRoute:[],driverEmail:"",showRides:false,passengerRouteFeaturesCounter:0});
+  //  this.state.showDrivers = true;
+  //  this.state.showRoutes = false;
+ //   this.state.driversOfRoute
+  //  this.state.driverEmail
+  //  this.state.showRides
     console.log(this.state.filteredRoute);
     var routeDto;
     this.state.filteredRoute.toOffice
@@ -263,9 +285,11 @@ this.setState({route:route});
       }
     console.log(routeDto);
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
+      console.log(res.data);
+
       console.log(res);
       console.log(res.status);
-      if (res.status == 200) {
+      if (res.status == 200 && res.data != null) {
         console.log(res.data);
         this.setState({ passengerRoutes: res.data });
         this.state.passengerRoutes.forEach((element) => {
@@ -274,13 +298,14 @@ this.setState({route:route});
         this.state.passengerRouteFeatures = []; // deletes old routes
 
         this.state.passengerRoutes.forEach((element) => {
-          this.createPassengerRoute(element.geometry);
+          this.createPassengerRoute(element);
         });
       }
     });
   }
 
   saveRide() {
+
     var addressFrom = addressParser.parseCustomAddress(this.state.route.fromAddress);
     var addressTo = addressParser.parseCustomAddress(this.state.route.toAddress);
 
@@ -380,10 +405,10 @@ this.setState({route:route});
   }
 
   createPassengerRoute(polyline) {
-    this.state.route.routeGeometry = polyline;
+    this.state.route.routeGeometry = polyline.geometry;
     var route = new Polyline({
       factor: 1e5
-    }).readGeometry(polyline, {
+    }).readGeometry(polyline.geometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
@@ -396,7 +421,8 @@ this.setState({route:route});
 
     this.state.passengerRouteFeatures.push({
       feature: feature,
-      geometry: polyline
+      geometry: polyline.geometry,
+      route: polyline
     });
 
     this.state.vectorSource.addFeature(feature);
@@ -665,6 +691,7 @@ this.setState({route:route});
         zoom: 11
       })
     });
+
     this.setState({ map, vectorSource: vectorSourceProperty },function(){
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
@@ -702,7 +729,20 @@ this.setState({route:route});
   render() {
     return (
       <div>
+                          <select
+                    onChange={e => {
+                      this.handleOfficeSelection(e);
+                    }}
+                  >
+                    <option value={0}>
+                      {OfficeAddresses[0].street + OfficeAddresses[0].number}
+                    </option>
+                    <option value={1}>
+                      {OfficeAddresses[1].street + OfficeAddresses[1].number}
+                    </option>
+                  </select>
         <div id="map"></div>
+        
         <button
                   onClick={() => {
                     this.selectRoute();
@@ -731,11 +771,11 @@ this.setState({route:route});
                         driver={this.state.driverEmail}
                       />
                     ) : (
-                        <div />
+                        <div></div>
                       )}
                   </tbody>
                 ) : (
-                    <div />
+                    <div></div>
                   )}
         <div className="displayRoutes">
           {this.state.driver ? (
@@ -804,18 +844,7 @@ this.setState({route:route});
                     />
                   </td>
                   <span>Select office</span>
-                  <select
-                    onChange={e => {
-                      this.handleOfficeSelection(e);
-                    }}
-                  >
-                    <option value={0}>
-                      {OfficeAddresses[0].street + OfficeAddresses[0].number}
-                    </option>
-                    <option value={1}>
-                      {OfficeAddresses[1].street + OfficeAddresses[1].number}
-                    </option>
-                  </select>
+
                 </form>
                 {this.state.filteredRoute.toOffice ? (
                   <div className="form-group">

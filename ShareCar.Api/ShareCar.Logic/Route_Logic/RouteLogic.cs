@@ -48,7 +48,7 @@ namespace ShareCar.Logic.Route_Logic
             return routeDto;
         }
 
-        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
+        public List<RouteDto> GetRoutes(RouteDto routeDto)
         {
             Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
             bool isFromOffice = false;
@@ -63,7 +63,6 @@ namespace ShareCar.Logic.Route_Logic
              //   routeDto.AddressToId = _addressLogic.GetAddressId(address);
 
             }
-
 
 
             IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
