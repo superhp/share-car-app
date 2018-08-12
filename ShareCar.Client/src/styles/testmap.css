@@ -2,6 +2,9 @@
   position: absolute;
   height: 100vh;
 }
+#map div {
+  border: none !important;
+}
 div.map-input-selection {
   display: flex;
   flex-wrap: wrap;

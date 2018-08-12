@@ -22,6 +22,7 @@ import { OfficeAddresses } from "./AddressData";
 import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
+import RidesScheduler from "./RidesScheduler";
 import "../styles/testmap.css";
 
 export class test extends React.Component {
@@ -54,6 +55,7 @@ export class test extends React.Component {
       lastName: "",
       rides: []
     },
+    isContinueClicked: false,
     passengerStylesCouter: 0,
     pickUpPoint: [],
     route: "",
@@ -605,7 +607,8 @@ export class test extends React.Component {
       ],
       view: new View({
         center: [-5685003, -3504484],
-        zoom: 11
+        zoom: 11,
+        minZoom: 9
       })
     });
     this.setState({ map, vectorSource });
@@ -771,13 +774,17 @@ export class test extends React.Component {
           )}
         </div>
         <div id="map" />
-
+        {this.state.isContinueClicked ? (
+          <RidesScheduler routeInfo={this.state.route} />
+        ) : null}
         <Button
+          disabled={this.state.route.routeGeometry == "" ? true : false}
           className="continue-button"
           variant="contained"
           color="primary"
           onClick={() => {
-            this.saveRide();
+            this.setState({ isContinueClicked: !this.state.isContinueClicked });
+            // this.saveRide();
           }}
         >
           Continue

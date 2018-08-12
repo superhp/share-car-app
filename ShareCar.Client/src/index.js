@@ -21,6 +21,7 @@ import test from "./components/TestMap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+import RidesScheduler from "./components/RidesScheduler";
 
 const options = {
   position: "bottom center",
@@ -44,6 +45,10 @@ ReactDOM.render(
             component={UserProfile}
           />
           <Route path="/:role(driver|passenger)/test" component={test} />
+          <Route
+            path="/:role(driver|passenger)/scheduler"
+            component={RidesScheduler}
+          />
           <Route path="/:role(driver|passenger)/map" component={MapComponent} />
           <Route path="/:role(driver|passenger)/rides" component={Rides} />
           <Route
