@@ -18,6 +18,8 @@ import WinnerBoard from "./components/WinnerBoard";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import test from "./components/TestMap";
+import DriverMap from "./components/DriverMap";
+import PassengerMap from "./components/PassengerMap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -44,7 +46,9 @@ ReactDOM.render(
             path="/:role(driver|passenger)/profile"
             component={UserProfile}
           />
-          <Route path="/:role(driver|passenger)/test" component={test} />
+          <Route path="/:role(driver)/DriverMap" component={DriverMap} />
+          <Route path="/:role(passenger)/PassengerMap" component={PassengerMap} />
+
           <Route
             path="/:role(driver|passenger)/scheduler"
             component={RidesScheduler}

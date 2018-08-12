@@ -154,7 +154,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].Longtitude = address.Longtitude;
                     dtoRequests[count].Latitude = address.Latitude;
 
-                    //dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                     count++;
             }
             return dtoRequests;
