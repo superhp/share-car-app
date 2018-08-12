@@ -75,8 +75,8 @@ console.log(vectorSource);
   }
 */
   // Shows passenger pick up point for a driver
-  setPassengersPickUpPoint(val) {
-    this.CenterMap(val[0], val[1], this.state.map);
+  setPassengersPickUpPoint(val,map) {
+    this.CenterMap(val[0], val[1], map);
     var xy = [];
     xy = transform(val, "EPSG:4326", "EPSG:3857");
     console.log(xy);
@@ -87,6 +87,10 @@ console.log(vectorSource);
     vectorSource.clear();
     vectorSource.addFeature(feature);
   }
+
+componentWillMount(){
+  
+}
 
   componentDidMount() {
     var component = this;
@@ -109,7 +113,10 @@ console.log(vectorSource);
         controls: []
       });
     this.setState({ map: map });
-    this.setState({ Vector: vectorSource });
+    this.setState({ Vector: vectorSource },()=>{
+      this.setPassengersPickUpPoint(this.props.coordinates, map);
+
+    });
     if (!this.props.driver) {
       map.on("click", function(evt) {
         // Allows passenger to set a dingle marker on a map
@@ -151,9 +158,11 @@ feature.setStyle(style);
         console.log('+++' + vectorSource);
 
 */
+
       });
     }
-    this.CenterMap(25.279652, 54.687157, map);
+
+    //this.CenterMap(25.279652, 54.687157, map);
   }
 
   CenterMap(long, lat, map) {
@@ -165,6 +174,9 @@ feature.setStyle(style);
   render() {
     return (
       <div>
+        {
+
+        }
         {this.props.driver ? (
           <div id="map" />
         ) : (
