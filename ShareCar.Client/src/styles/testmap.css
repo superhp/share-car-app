@@ -28,8 +28,10 @@
   height: 50px;
   bottom: 0;
   z-index: 999;
-  background-color: #007bff;
+  background-color: #007bff !important;
   color: #007bff;
+  margin: 5px !important;
+
 }
 .driver-button-container {
   display: flex;

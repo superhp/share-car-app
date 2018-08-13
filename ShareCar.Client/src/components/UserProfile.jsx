@@ -195,18 +195,17 @@ class UserProfile extends Component<
                     <Grid item xs={12}>
                       <Typography
                         justify="center"
-                        content="h3"
-                        className="h3"
+                        content="h2"
                         color="textPrimary"
-                        font="50px !important"
-                      ><font font-size="50px">{this.state.user.pointCount}</font>
+                      >
+                        {this.state.user.pointCount}
                       </Typography>
                     </Grid>
                   </Grid>
                 </CardContent>
                 <CardActions>
-                  <Link to="/winnerBoard">
-                    <Button variant="contained" color="primary" className="generic-container-color">
+                  <Link to="/winnerBoard" >
+                    <Button variant="contained" color="primary" className="generic-container-color" >
                       Winner Board
                     </Button>
                   </Link>

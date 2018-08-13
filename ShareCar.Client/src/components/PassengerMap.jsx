@@ -608,7 +608,7 @@ export class PassengerMap extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            className="next-button generic-container-color"
+            className="next-button"
             onClick={() => {
               this.selectRoute(-1);
             }}
