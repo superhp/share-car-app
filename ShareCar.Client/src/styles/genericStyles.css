@@ -10,6 +10,10 @@
 .generic-container-color {
     background-color: #007bff !important;
 }
+.generic-button{
+    margin: 3px !important;
+    width: 100px;
+}
 .generic-table
 {
     width: 100%;

@@ -195,10 +195,11 @@ class UserProfile extends Component<
                     <Grid item xs={12}>
                       <Typography
                         justify="center"
-                        content="h2"
+                        content="h3"
+                        className="h3"
                         color="textPrimary"
-                      >
-                        {this.state.user.pointCount}
+                        font="50px !important"
+                      ><font font-size="50px">{this.state.user.pointCount}</font>
                       </Typography>
                     </Grid>
                   </Grid>
