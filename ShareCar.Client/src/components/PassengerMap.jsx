@@ -106,7 +106,7 @@ export class PassengerMap extends React.Component {
     driver: this.props.match.params.role == "driver" ? true : false
   };
 
-  selectRoute() {
+  selectRoute(value) {
     if (this.state.passengerRouteFeatures.length != 0) { // checks if there are any routes displayed
       this.state.showDrivers = true;
       this.state.showRoutes = false;
@@ -116,10 +116,27 @@ export class PassengerMap extends React.Component {
         this.state.passengerRouteFeatures[
           this.state.passengerRouteFeatures.length - 1
         ].feature.setStyle(this.state.routeStyles.route);
+
+        if (this.state.passengerRouteFeatures.length != 1){
+        this.state.passengerRouteFeatures[
+           1
+        ].feature.setStyle(this.state.routeStyles.route);
+      }
       } else {
         this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
           this.state.routeStyles.route
         );
+        if(value == -1){
+        if(counter != this.state.passengerRouteFeatures.length -1){
+        this.state.passengerRouteFeatures[counter + 1].feature.setStyle(
+          this.state.routeStyles.route
+        );
+      }else{
+        this.state.passengerRouteFeatures[0].feature.setStyle(
+          this.state.routeStyles.route
+        );
+      }
+    }
       }
 
       this.state.passengerRouteFeatures[counter].feature.setStyle(
@@ -134,12 +151,15 @@ export class PassengerMap extends React.Component {
         console.log(this.state.selectedRoute);
         console.log("=======================")
 
-        counter++;
+        counter+=value;
 
         if (counter >= this.state.passengerRouteFeatures.length) {
           counter = 0;
         }
-        console.log(counter);
+        if(counter < 0){
+          counter = this.state.passengerRouteFeatures.length -1;
+
+        }
         this.setState({ passengerRouteFeaturesCounter: counter });
         console.log(this.state.selectedRoute);
         this.getRidesByRoute(this.state.selectedRoute.route);
@@ -589,10 +609,10 @@ if(this.state.filteredRoute.toOffice) {
               </button>
               <button
                 onClick={() => {
-                  this.selectRoute(1);
+                  this.selectRoute(-1);
                 }}
               >
-                Presi
+                Previous
               </button>
               {this.state.showDriver ? (
                 <tbody>
