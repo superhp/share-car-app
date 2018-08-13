@@ -3,8 +3,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10%;
-    margin-top: 10%;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 .role-image {
     display: block;
@@ -23,14 +23,3 @@
 .role-image:hover {
     background-color: rgb(118, 194, 238);
 }
-.role-text{
-    margin-top: 10%;
-    text-align: center;
-    color: #007bff;
-}
-.role-header {
-    margin-top: 20%;
-    text-align: center;
-    margin-bottom: 5%;
-}
-  
