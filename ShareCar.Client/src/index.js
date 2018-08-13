@@ -59,10 +59,10 @@ ReactDOM.render(
             path="/:role(driver|passenger)/newRideForm"
             component={NewRideForm}
           />
-          <Route
+   {/*       <Route
             path="/:role(driver|passenger)/rideRequest"
             component={RideRequestForm}
-          />
+          />*/}
           <Route path="/winnerBoard" component={WinnerBoard} />
         </AlertProvider>
       </Layout>

@@ -582,10 +582,17 @@ if(this.state.filteredRoute.toOffice) {
                 </div>
               <button
                 onClick={() => {
-                  this.selectRoute();
+                  this.selectRoute(1);
                 }}
               >
                 Next
+              </button>
+              <button
+                onClick={() => {
+                  this.selectRoute(1);
+                }}
+              >
+                Presi
               </button>
               {this.state.showDriver ? (
                 <tbody>

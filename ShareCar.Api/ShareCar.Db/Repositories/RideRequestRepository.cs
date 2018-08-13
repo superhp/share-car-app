@@ -28,14 +28,13 @@ namespace ShareCar.Db.Repositories
         public IEnumerable<Request> FindDriverRequests(string email)
         {
 
-                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).AsNoTracking();
-
+                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).ToList();
 
         }
 
         public IEnumerable<Request> FindRequestsByRideId(int rideId)
         {
-            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED);
+            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED).ToList();
         }
 
         public void DeletedRide(IEnumerable<Request> requests)
@@ -51,7 +50,7 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED)));
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED))).ToList();
         }
 
         public Request FindRequestById(int id)
@@ -61,7 +60,7 @@ namespace ShareCar.Db.Repositories
 
         public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED);
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED).ToList();
         }
 
         public void SeenByDriver(int[] requests)

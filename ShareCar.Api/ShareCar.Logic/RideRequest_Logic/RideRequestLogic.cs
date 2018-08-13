@@ -126,6 +126,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
+            
             int count = 0;
             foreach (var request in entityRequests)
             {
@@ -154,7 +155,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].Longtitude = address.Longtitude;
                     dtoRequests[count].Latitude = address.Latitude;
 
-                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+              //      dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                     count++;
             }
             return dtoRequests;

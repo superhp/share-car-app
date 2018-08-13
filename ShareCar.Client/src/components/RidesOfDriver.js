@@ -27,7 +27,7 @@ sendrequest(rideId, driverEmail){
                           {
                     ride.driverEmail === this.props.driver
                    ?    <div>
-                       <td>RideId: {ride.rideId} </td>
+                       <td>Date: {ride.rideDateTime} </td>
                    <button onClick={()=>{this.sendrequest(ride.rideId, ride.driverEmail)}}>Request</button>
                    </div>
                 : <td></td>    

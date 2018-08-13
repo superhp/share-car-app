@@ -56,6 +56,7 @@ namespace ShareCar.Logic.Passenger_Logic
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
             _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
+
         }
         public int GetUsersPoints(string email)
         {
