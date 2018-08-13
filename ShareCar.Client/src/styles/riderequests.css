@@ -36,3 +36,6 @@ div.requestListTable table tbody tr td {
   flex-direction: row;
   flex-wrap: nowrap;
 }
+.requestMap {
+  display: none;
+}

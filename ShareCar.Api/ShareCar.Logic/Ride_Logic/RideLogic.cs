@@ -135,6 +135,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public bool SetRideAsInactive(RideDto rideDto)
         {
+            
             return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
@@ -186,29 +187,32 @@ namespace ShareCar.Logic.Ride_Logic
         {
             AddressDto fromAddress = new AddressDto
             {
-                Country = ride.FromCountry,
                 City = ride.FromCity,
                 Street = ride.FromStreet,
                 Number = ride.FromNumber
             };
             AddressDto toAddress = new AddressDto
             {
-                Country = ride.ToCountry,
                 City = ride.ToCity,
                 Street = ride.ToStreet,
                 Number = ride.ToNumber
             };
-            //ADD ADDRESS VALIDATION WITH LONGTITUDE AND LATITUDE
+
+
 
             if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
                 RouteDto route = new RouteDto();
                 route.FromId = _addressLogic.GetAddressId(fromAddress);
                 route.ToId = _addressLogic.GetAddressId(toAddress);
-                
+                route.Geometry = ride.RouteGeometry;
+                route.AddressFrom = fromAddress;
+                route.AddressTo = toAddress;
+
                 int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
                 if (routeId == -1)
                 {
+                    route.Geometry = ride.RouteGeometry;
                     _routeLogic.AddRoute(route);
                     ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
                 }
@@ -220,9 +224,15 @@ namespace ShareCar.Logic.Ride_Logic
 
         }
 
-        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto, string email)
+        public async Task<IEnumerable<RouteDto>> GetRoutesAsync(RouteDto routeDto, string email)
         {
-            return _routeLogic.GetRoutes(routeDto, email);
+            List<RouteDto> routes = _routeLogic.GetRoutes(routeDto, string email);
+            foreach (RouteDto route in routes)
+            {
+                await AddDriversNamesToRidesAsync(route.Rides);
+            }
+            return routes;
+
         }
 
         public async Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail)

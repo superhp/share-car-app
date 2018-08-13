@@ -1,5 +1,6 @@
 ﻿using ShareCar.Db.Entities;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,9 +38,10 @@ namespace ShareCar.Db.Repositories
             {
                 try
                 {
-                    return _databaseContext.Addresses.Single(x => (x.City == address.City && x.Street == address.Street && x.Number == address.Number)).AddressId;
+                    
+                    return  _databaseContext.Addresses.First(x => x.City == address.City && x.Street == address.Street && x.Number == address.Number).AddressId;
                 }
-                catch
+                catch(Exception e)
                 {
                     return -1;
                 }

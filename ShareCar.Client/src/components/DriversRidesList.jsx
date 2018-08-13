@@ -14,11 +14,25 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import DeleteIcon from "@material-ui/icons/Delete";
+import InfoIcon from "@material-ui/icons/Info";
 import "typeface-roboto";
-
 var moment = require("moment");
 
+const style = {
+  margin: "1em 0",
+}
+const fontColor = {
+  color: "#007BFF"
+}
 export class DriversRidesList extends React.Component {
+  handleDeletion(rideToDisactivate) {
+    api.put("Ride/disactivate", rideToDisactivate).then(res => {
+      if (res.status == 200) {
+        this.props.onDelete(rideToDisactivate);
+      }
+    });
+  }
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
@@ -30,61 +44,51 @@ export class DriversRidesList extends React.Component {
     ) : null;
     return (
       <Grid container>
-        {this.props.driversRides.map((req, index) => (
-          <Grid key={index} item xs={12}>
+        {this.props.driversRides.length != 0 ? this.props.driversRides.map((req, index) => (
+          <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card">
-              <CardActions>
-                <CardContent>
-                  <Typography component="p">
-                    {req.fromStreet} {req.fromNumber}, {req.fromCity}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {req.toStreet} {req.toNumber}, {req.toCity}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    onClick={() => {
-                      this.props.onRideClick(req.rideId);
-                    }}
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className="generic-container-color"
-                  >
-                    {!this.props.rideClicked ? "View" : "Hide"}
-                  </Button>
-                </CardActions>
-              </CardActions>
+            <Grid container>
+            <Grid item xs={8}>
+                  <CardContent>
+                    <Typography style={fontColor} component="p">
+                      From {req.fromStreet} {req.fromNumber}, {req.fromCity}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      To {req.toStreet} {req.toNumber}, {req.toCity}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
+                    </Typography>
+                  </CardContent>
+                  </Grid>
+                  <Grid item xs={4}>
+
+                        <Button
+                          onClick={() => {
+                            this.props.onRideClick(req.rideId);
+                          }}
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="generic-container-color"
+                        >
+                          {!this.props.rideClicked ? "View" : "Hide"}
+                          <InfoIcon/>
+                        </Button>
+                        <Button
+                          size="small"
+                          onClick={() => this.handleDeletion(req)}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Delete
+                          <DeleteIcon />
+                        </Button>
+                  </Grid>
+                  </Grid>
             </Card>
           </Grid>
-        ))}
-        {/* {!this.state.clicked ? (
-          <Grid item xs={12}>
-            <Link to="/newRideForm">
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className="add-new-button"
-              >
-                Add new Ride
-              </Button>
-            </Link>
-          </Grid>
-        ) : (
-          <button
-            onClick={() => {
-              this.setState({ clicked: !this.state.clicked });
-            }}
-            className="btn btn-primary btn-lg btn-block"
-          >
-            Back
-          </button>
-        )} */}
+        )) : "You have no rides"}
         {detailedRideInfo}
       </Grid>
     );

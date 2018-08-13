@@ -12,5 +12,8 @@ namespace ShareCar.Dto
         public int RideId { get; set; }
         //public RideDto Ride { get; set; }
         public bool Completed { get; set; }
+        public string Phone { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

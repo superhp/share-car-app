@@ -4,7 +4,11 @@ import api from "../helpers/axiosHelper";
 class RideCompletedNotification extends React.Component {
 
     sendResponse(response, rideId) {
-        api.post(`https://localhost:44360/api/Ride/passengerResponse`, response, rideId);
+        var passengerResponse = {
+Response:response,
+RideId:rideId
+        }
+        api.post(`https://localhost:44360/api/Ride/passengerResponse`, passengerResponse);
     }
     render() {
         console.log(this.props.rides);
@@ -22,12 +26,12 @@ class RideCompletedNotification extends React.Component {
 
                                 <td>
                                     <button
-                                        onClick={() => this.sendResponse(true, ride.id)}
+                                        onClick={() => this.sendResponse(true, ride.rideId)}
                                     >
                                         Yes
                   </button>
                                     <button
-                                        onClick={() => this.sendResponse(false, ride.id)}
+                                        onClick={() => this.sendResponse(false, ride.rideId)}
                                     >
                                         No
                   </button>

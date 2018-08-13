@@ -1,0 +1,46 @@
+#map {
+  position: absolute;
+  height: 100vh;
+}
+#map div {
+  border: none !important;
+}
+div.map-input-selection {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 10%;
+}
+div.map-input-selection .form-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 0 0 100%;
+}
+span.algolia-places {
+  display: flex !important;
+  justify-content: center;
+  width: 90%;
+}
+div.map-input-selection input.location-select {
+  z-index: 999;
+}
+div.displayRoutes {
+  position: absolute;
+  left: 0;
+  top: 10;
+  width: 100%;
+}
+button.continue-button {
+  position: absolute;
+  bottom: 80px;
+  right: 10px;
+  z-index: 999;
+  background-color: #007bff;
+}
+button.select-office-menu {
+  background-color: #007bff;
+  color: white;
+  z-index: 1;
+}

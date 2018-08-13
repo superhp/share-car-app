@@ -1,5 +1,5 @@
 div.container {
-  margin-top: 10%;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +48,7 @@ div.table-responsive table tr {
 div.table-responsive table tr td {
   display: flex;
   flex-direction: column;
-  font-size: 150%;
+  font-size: 14px;
   font-weight: bold;
   border: 1 px solid black;
 }
@@ -64,4 +64,5 @@ div.table-responsive table td button {
 }
 div.rides-card {
   margin: 1em;
+  height: 80px;
 }

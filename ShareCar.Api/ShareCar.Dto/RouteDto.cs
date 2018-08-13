@@ -15,5 +15,7 @@ namespace ShareCar.Dto
         public DateTime UntillTime { get; set; }
         public AddressDto AddressFrom { get; set; }
         public AddressDto AddressTo { get; set; }
+        public int AddressFromId { get; set; }
+        public int AddressToId { get; set; }
     }
 }

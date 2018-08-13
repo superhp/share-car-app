@@ -14,6 +14,10 @@ import "typeface-roboto";
 import Snackbar from "@material-ui/core/Snackbar";
 import { CardHeader } from "../../node_modules/@material-ui/core";
 
+const fontColor = {
+  color: "#007BFF"
+}
+
 export class DriverRideRequestsList extends React.Component {
   // constructor(props) {
   //   super(props);
@@ -74,23 +78,26 @@ export class DriverRideRequestsList extends React.Component {
   render() {
     let passengersList =
       this.state.passengers != null ? (
-        <Grid container>
+        <Grid container justify="center" >
           <Grid item xs={12}>
-            <Typography variant="headline" component="h3">
+            <Typography style={fontColor} variant="title">
               Passengers
             </Typography>
           </Grid>
-          {this.state.passengers.map((pas, index) => (
+          {this.state.passengers.length != 0 ? this.state.passengers.map((pas, index) => (
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Typography color="textSecondary" component="p">
-                    #1 {pas.email}
+                  <Typography variant="title">
+                    #1 {pas.firstName + " " + pas.lastName}
+                  </Typography>
+                  <Typography variant="p">
+                    Phone {pas.phone}
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+          )) : "No Passengers For This Drive"}
         </Grid>
       ) : null;
 
@@ -99,7 +106,9 @@ export class DriverRideRequestsList extends React.Component {
         {this.state.show ? (
           <MapComponent
             id="map"
-            coords={this.state.coordinates}
+            className="requestMap"
+            coordinates={this.state.coordinates}
+            show={this.state.show}
             ref={this.child}
             driver={true}
           />
@@ -108,7 +117,7 @@ export class DriverRideRequestsList extends React.Component {
         )}
         <Grid container justify="center">
           <Grid item xs={12}>
-            <Typography variant="headline" component="h3">
+            <Typography style={fontColor} variant="title">
               Pending Requests
             </Typography>
           </Grid>
@@ -129,17 +138,16 @@ export class DriverRideRequestsList extends React.Component {
                 .filter(x => x.rideId == this.props.selectedRide)
                 .map((req, index) => (
                   <Grid item xs={12}>
+                  <Grid container>
                     <Card className="rides-card">
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <CardContent>
+                    <Grid container justify="center">
+                    <Grid item xs={12} zeroMinWidth>
                             <Typography component="p">
                               #{index + 1} {req.passengerFirstName}{" "}
                               {req.passengerLastName}
                             </Typography>
-                          </CardContent>
-                        </Grid>
-                      </Grid>
+                    </Grid>
+                          <Grid item xs={12} zeroMinWidth>
                       <CardActions>
                         <Button
                           onClick={() => {
@@ -182,8 +190,11 @@ export class DriverRideRequestsList extends React.Component {
                           Deny
                         </Button>
                       </CardActions>
+                      </Grid>
+                      </Grid>
                     </Card>
-                  </Grid>
+                    </Grid>
+                    </Grid>
                 ))
             : "No requests"}
           {passengersList}
