@@ -34,7 +34,7 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     loading: true,
     user: null,
     rideNotifications: [],
-    showNotification:false,
+    showNotification: false,
     roleSelection: {
       isDriver: null
     }
@@ -44,24 +44,19 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     api.get(`/Ride/checkFinished`).then(response => {
       console.log(response.data);
       this.state.rideNotifications = response.data;
-   //  this.setState({ rideNotifications: response.data });   
-   if(response.data.length != 0)
-   {
-     this.state.showNotification = true;
-   } 
-   else{
-     this.state.showNotification = false;
-   }
-     console.log(this.state.rideNotifications.length);  
-    this.userService.getLoggedInUser(this.updateLoggedInUser);
-  });
+      //  this.setState({ rideNotifications: response.data });
+      if (response.data.length != 0) {
+        this.state.showNotification = true;
+      } else {
+        this.state.showNotification = false;
+      }
+      console.log(this.state.rideNotifications.length);
+      this.userService.getLoggedInUser(this.updateLoggedInUser);
+    });
   }
 
-
-
   updateLoggedInUser = (user: UserProfileData) => {
-   this.setState({ loading: false, user: user });
-
+    this.setState({ loading: false, user: user });
   };
 
   logout = () => {
@@ -87,28 +82,27 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div>
-        { this.state.showNotification 
-        ?  <RideCompletedNotification rides={this.state.rideNotifications} />
-        : <div></div> 
-
-         }
+        {this.state.showNotification ? (
+          <RideCompletedNotification rides={this.state.rideNotifications} />
+        ) : (
+          <div />
+        )}
         <RoleContext.Consumer>
           {({ role, changeRole }) => (
             <div className="role-container">
-              <Link to="/driver" onClick={changeRole("driver")}>
+              <Link to="/driver/rides" onClick={changeRole("driver")}>
                 <img className="role-image" src={driverLogo} />
               </Link>
               <h2 className="role-selection">Driver</h2>
 
-              <Link to="/passenger" onClick={changeRole("passenger")}>
+              <Link to="/passenger/Requests" onClick={changeRole("passenger")}>
                 <img className="role-image" src={passengerLogo} />
               </Link>
               <h2 className="role-selection">Passenger</h2>
             </div>
           )}
         </RoleContext.Consumer>
-        </div>
-
+      </div>
     );
     return <div>{content}</div>;
   }
