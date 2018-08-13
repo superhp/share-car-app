@@ -54,17 +54,6 @@ ReactDOM.render(
           />
           {/* <Route path="/:role(driver|passenger)/map" component={MapComponent} /> */}
           <Route path="/:role(driver|passenger)/rides" component={Rides} />
-<<<<<<< HEAD
-=======
-          <Route
-            path="/:role(driver|passenger)/newRideForm"
-            component={NewRideForm}
-          />
-   {/*       <Route
-            path="/:role(driver|passenger)/rideRequest"
-            component={RideRequestForm}
-          />*/}
->>>>>>> ad535e17a2ddc97cfd3bc564eb2d344ffaac4393
           <Route path="/winnerBoard" component={WinnerBoard} />
         </AlertProvider>
       </Layout>
