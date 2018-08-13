@@ -89,7 +89,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             {
                 entityRequest = _rideRequestRepository.FindPassengerRequests(email);
             }
-
+           
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
             return SortRequests(converted);
             }       
@@ -141,8 +141,8 @@ namespace ShareCar.Logic.RideRequest_Logic
                     else
                     {
                         var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-                        dtoRequests[count].PassengerFirstName = user.FirstName;
-                        dtoRequests[count].PassengerLastName = user.LastName;
+                        dtoRequests[count].DriverFirstName = user.FirstName;
+                        dtoRequests[count].DriverLastName = user.LastName;
                     }
 
 
