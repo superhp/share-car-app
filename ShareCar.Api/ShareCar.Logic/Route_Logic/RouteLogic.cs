@@ -64,51 +64,21 @@ namespace ShareCar.Logic.Route_Logic
 
 
             IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
-           
-                foreach(var route in entityRoutes)
-                {
-                    foreach(var ride in route.Rides)
-                    {
-                        foreach(var request in ride.Requests)
-                        {
-                            if(request.PassengerEmail == email && request.Status != Db.Entities.Status.DENIED)
-                            {
-                                route.Rides.Remove(ride);
-                                break;
-                            }
-                        }
-                        if((ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false))
-                        {
-                            route.Rides.Remove(ride);
-                        }
-                    }
-                }
-            
-                foreach (var route in entityRoutes)
-                {
-                    foreach (var ride in route.Rides)
-                    {
-                        foreach (var request in ride.Requests)
-                        {
-                            if (request.PassengerEmail == email && request.Status != Db.Entities.Status.DENIED)
-                            {
-                                route.Rides.Remove(ride);
-                                break;
-                            }
-                        }
-                        if ((ride.DriverEmail == email) || (ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
-                        {
-                            route.Rides.Remove(ride);
-                        }
-                    }
-                
-            }
             List<RouteDto> dtoRoutes = new List<RouteDto>();
-            foreach (var route in entityRoutes)
+            foreach(var route in entityRoutes)
             {
                 RouteDto mappedRoute = new RouteDto();
                 mappedRoute.Rides = new List<RideDto>();
-                if(route.Rides != null)
+                List<Ride> rides = new List<Ride>();
+                foreach(var ride in route.Rides)
+                {
+                    if(!((ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false)))
+                    {
+                        rides.Add(ride);
+                    }
+                }
+                route.Rides = rides;
+                if (route.Rides.Count != 0)
                 {
                    
                     mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);

@@ -111,9 +111,8 @@ export class PassengerMap extends React.Component {
       "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/"
   };
 
-  selectRoute() {
-    if (this.state.passengerRouteFeatures.length != 0) {
-      // checks if there are any routes displayed
+  selectRoute(value) {
+    if (this.state.passengerRouteFeatures.length != 0) { // checks if there are any routes displayed
       this.state.showDrivers = true;
       this.state.showRoutes = false;
       this.state.showRides = false;
@@ -122,36 +121,55 @@ export class PassengerMap extends React.Component {
         this.state.passengerRouteFeatures[
           this.state.passengerRouteFeatures.length - 1
         ].feature.setStyle(this.state.routeStyles.route);
+
+        if (this.state.passengerRouteFeatures.length != 1){
+        this.state.passengerRouteFeatures[
+           1
+        ].feature.setStyle(this.state.routeStyles.route);
+      }
       } else {
         this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
           this.state.routeStyles.route
         );
+        if(value == -1){
+        if(counter != this.state.passengerRouteFeatures.length -1){
+        this.state.passengerRouteFeatures[counter + 1].feature.setStyle(
+          this.state.routeStyles.route
+        );
+      }else{
+        this.state.passengerRouteFeatures[0].feature.setStyle(
+          this.state.routeStyles.route
+        );
+      }
+    }
       }
 
       this.state.passengerRouteFeatures[counter].feature.setStyle(
         this.state.selectedRouteStyle.route
       );
-      this.setState(
-        {
-          selectedRoute: this.state.passengerRouteFeatures[counter]
-        },
-        () => {
-          console.log(counter);
-          console.log(this.state.passengerRouteFeatures);
-          console.log(this.state.selectedRoute);
-          console.log("=======================");
+      this.setState({
+        selectedRoute: this.state.passengerRouteFeatures[counter]
+      }, () => {
 
-          counter++;
+        console.log(counter);
+        console.log(this.state.passengerRouteFeatures);
+        console.log(this.state.selectedRoute);
+        console.log("=======================")
 
-          if (counter >= this.state.passengerRouteFeatures.length) {
-            counter = 0;
-          }
-          console.log(counter);
-          this.setState({ passengerRouteFeaturesCounter: counter });
-          console.log(this.state.selectedRoute);
-          this.getRidesByRoute(this.state.selectedRoute.route);
+        counter+=value;
+
+        if (counter >= this.state.passengerRouteFeatures.length) {
+          counter = 0;
         }
-      );
+        if(counter < 0){
+          counter = this.state.passengerRouteFeatures.length -1;
+
+        }
+        this.setState({ passengerRouteFeaturesCounter: counter });
+        console.log(this.state.selectedRoute);
+        this.getRidesByRoute(this.state.selectedRoute.route);
+      });
+
     }
   }
 
@@ -592,7 +610,17 @@ export class PassengerMap extends React.Component {
             color="primary"
             className="next-button generic-container-color"
             onClick={() => {
-              this.selectRoute();
+              this.selectRoute(-1);
+            }}
+          >
+            View Previous Ride
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className="next-button"
+            onClick={() => {
+              this.selectRoute(1);
             }}
           >
             View Next Ride
