@@ -14,13 +14,13 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
-        private readonly IRideRequestLogic _rideRequestLogic;
+        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
         
-        public RouteLogic(IRideRequestLogic rideRequestLogic, IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
+        public RouteLogic(IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
         {
-            _rideRequestLogic = rideRequestLogic;
+            //_rideRequestLogic = rideRequestLogic;
             _routeRepository = routeRepository;
             _mapper = mapper;
             _addressLogic = addressLogic;
@@ -76,7 +76,15 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach(var ride in route.Rides)
                     {
-                        if((_rideRequestLogic.isAlreadyRequested(email, ride.RideId)) || (ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false))
+                        foreach(var request in ride.Requests)
+                        {
+                            if(request.PassengerEmail == email)
+                            {
+                                route.Rides.Remove(ride);
+                                break;
+                            }
+                        }
+                        if((ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }
@@ -89,7 +97,15 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach (var ride in route.Rides)
                     {
-                        if ((_rideRequestLogic.isAlreadyRequested(email, ride.RideId)) || (ride.DriverEmail == email) || (ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
+                        foreach (var request in ride.Requests)
+                        {
+                            if (request.PassengerEmail == email)
+                            {
+                                route.Rides.Remove(ride);
+                                break;
+                            }
+                        }
+                        if ((ride.DriverEmail == email) || (ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }

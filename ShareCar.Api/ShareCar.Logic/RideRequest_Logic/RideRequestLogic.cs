@@ -166,18 +166,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
             _rideRequestRepository.DeletedRide(entityRequests);
         }
-        public bool isAlreadyRequested (string email, int rideId)
-        {
-            RideRequestDto request = _mapper.Map<Request, RideRequestDto>(_rideRequestRepository.GetRequest(email, rideId));
-            if (request == null || request.Status == Dto.Status.DENIED)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+        
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
             IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
