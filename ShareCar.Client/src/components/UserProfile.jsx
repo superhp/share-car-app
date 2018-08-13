@@ -204,8 +204,8 @@ class UserProfile extends Component<
                   </Grid>
                 </CardContent>
                 <CardActions>
-                  <Link to="/winnerBoard">
-                    <Button variant="contained" color="primary" className="generic-container-color">
+                  <Link to="/winnerBoard" >
+                    <Button variant="contained" color="primary" className="generic-container-color" >
                       Winner Board
                     </Button>
                   </Link>

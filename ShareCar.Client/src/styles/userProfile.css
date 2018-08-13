@@ -44,7 +44,8 @@ img.thumbnail {
   width: 25%;
   top: 1px;
   right: 1px;
-  border-radius: 10%;
+  border-radius: 5px;
+  z-index: 1000;
 }
 .logout-text {
   color: white;

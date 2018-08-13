@@ -9,22 +9,20 @@
   align-items: center;
 }
 
-
 .navBar-button {
   flex: 1;
   height: 100%;
   background-color: #007bff;
-  margin: 1px ;
+  margin: 1px;
   margin-top: 13 px;
   flex-direction: column;
   align-items: center;
-
 }
 a.navBar-button {
   align-items: center;
-  color: white
+  color: white;
 }
-.button-container{
+.button-container {
   display: flex;
   flex-direction: column;
   justify-content: center;

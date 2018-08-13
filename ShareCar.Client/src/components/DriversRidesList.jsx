@@ -47,16 +47,16 @@ export class DriversRidesList extends React.Component {
         {this.props.driversRides.length != 0 ? this.props.driversRides.map((req, index) => (
           <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card">
-            <Grid container>
+            <Grid container >
             <Grid item xs={8}>
-                  <CardContent>
-                    <Typography style={fontColor} component="p">
+                  <CardContent > 
+                    <Typography  style={fontColor} component="p">
                       From {req.fromStreet} {req.fromNumber}, {req.fromCity}
                     </Typography>
-                    <Typography color="textSecondary">
+                    <Typography  color="textSecondary">
                       To {req.toStreet} {req.toNumber}, {req.toCity}
                     </Typography>
-                    <Typography color="textSecondary">
+                    <Typography  color="textSecondary">
                       {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
                     </Typography>
                   </CardContent>
@@ -70,7 +70,7 @@ export class DriversRidesList extends React.Component {
                           variant="contained"
                           color="primary"
                           size="small"
-                          className="generic-container-color"
+                          className="generic-container-color generic-button"
                         >
                           {!this.props.rideClicked ? "View" : "Hide"}
                           <InfoIcon/>
@@ -80,6 +80,7 @@ export class DriversRidesList extends React.Component {
                           onClick={() => this.handleDeletion(req)}
                           variant="contained"
                           color="secondary"
+                          className="generic-button"
                         >
                           Delete
                           <DeleteIcon />

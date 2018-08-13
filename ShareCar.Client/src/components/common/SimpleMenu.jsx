@@ -54,10 +54,12 @@ class SimpleMenu extends React.Component {
             aria-haspopup="true"
             onClick={this.handleToggle}
           >
-            Or Select Office
+            {this.props.buttonText != null
+              ? this.props.buttonText
+              : "Or Select Office"}
           </Button>
           <Popper
-            classsName="list-of-items"
+            className="list-of-items"
             open={open}
             style={{ zIndex: 999999 }}
             anchorEl={this.anchorEl}
