@@ -265,6 +265,7 @@ namespace ShareCar.Logic.Ride_Logic
             List<string> emails = new List<string>();
             List<string> FirstNames = new List<string>();
             List<string> LastNames = new List<string>();
+            List<string> phones = new List<string>();
             foreach (RideDto ride in dtoRides)
             {
                 if (!emails.Contains(ride.DriverEmail))
@@ -273,14 +274,17 @@ namespace ShareCar.Logic.Ride_Logic
                     var driver = await _userManager.FindByEmailAsync(ride.DriverEmail);
                     FirstNames.Add(driver.FirstName);
                     LastNames.Add(driver.LastName);
+                    phones.Add(driver.Phone);
                     ride.DriverFirstName = driver.FirstName;
                     ride.DriverLastName = driver.LastName;
+                    ride.DriverPhone = driver.Phone;
                 }
                 else
                 {
                     int index = emails.IndexOf(ride.DriverEmail);
                     ride.DriverFirstName = FirstNames[index];
                     ride.DriverLastName = LastNames[index];
+                    ride.DriverPhone = phones[index];
                 }
             }
             return true;

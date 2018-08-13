@@ -60,15 +60,15 @@ namespace ShareCar.Db.Repositories
             return userDto;
         }
 
-        public async Task UpdateUserAsync(User user, ClaimsPrincipal principal)
+        public async Task<IdentityResult> UpdateUserAsync(User user, ClaimsPrincipal principal)
         {
             var _user = await _userManager.GetUserAsync(principal);
             _user.FirstName = user.FirstName;
             _user.LastName = user.LastName;
             _user.Phone = user.Phone;
             _user.LicensePlate = user.LicensePlate;
-
-            await _userManager.UpdateAsync(_user);
+            var userAsync = await _userManager.UpdateAsync(_user);
+            return userAsync;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ShareCar.Logic.User_Logic
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
         }
 
-        public async void UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User)
+        public async Task UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User)
         {
             var _userToUpdate = await _userRepository.GetLoggedInUser(User);
              
@@ -51,7 +51,7 @@ namespace ShareCar.Logic.User_Logic
                 _userToUpdate.LicensePlate = updatedUser.LicensePlate;
 
                 var _user = _mapper.Map<UserDto, User>(_userToUpdate);
-                await Task.Run(() => _userRepository.UpdateUserAsync(_user, User));
+                await _userRepository.UpdateUserAsync(_user, User);
             }
 
         }

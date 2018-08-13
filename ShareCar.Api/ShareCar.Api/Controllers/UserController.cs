@@ -47,7 +47,7 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Invalid parameters");
             }
 
-            await  Task.Run(()=>_userLogic.UpdateUserAsync(user, User));
+            await _userLogic.UpdateUserAsync(user, User);
             return Ok();
         }
 
