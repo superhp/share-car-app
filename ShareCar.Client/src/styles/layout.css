@@ -2,7 +2,9 @@
   color: solid black;
   height: 100%;
 }
-
+.ol-viewport {
+  margin-bottom: 0 !important;
+}
 .app-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;

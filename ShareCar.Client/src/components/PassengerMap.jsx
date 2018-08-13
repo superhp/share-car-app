@@ -86,6 +86,7 @@ export class PassengerMap extends React.Component {
     showDrivers: false,
     showRides: false,
     ridesOfRoute: [],
+    viewNext: false,
     passengerRoutes: [],
     passengerRouteFeatures: [],
     passengerRouteFeaturesCounter: 0,
@@ -151,9 +152,14 @@ export class PassengerMap extends React.Component {
           this.getRidesByRoute(this.state.selectedRoute.route);
         }
       );
+    } else {
+      this.setState({ showDrivers: false });
     }
   }
 
+  handleCloseDriver() {
+    this.setState({ showDriver: false });
+  }
   getRidesByRoute(route) {
     console.log(route);
     //    var route = {
@@ -174,7 +180,8 @@ export class PassengerMap extends React.Component {
           driversArray.push({
             firstName: ride.driverFirstName,
             lastName: ride.driverLastName,
-            email: ride.driverEmail
+            email: ride.driverEmail,
+            driverPhone: ride.driverPhone
           });
 
           this.setState({ driversOfRoute: driversArray });
@@ -330,7 +337,6 @@ export class PassengerMap extends React.Component {
     }
     console.log(this.state.features);
   }
-
 
   createPassengerRoute(polyline) {
     this.state.route.routeGeometry = polyline.geometry;
@@ -498,7 +504,7 @@ export class PassengerMap extends React.Component {
             justify="center"
           >
             <Grid item xs={10}>
-              <Card>
+              <Card className="paper-background">
                 <Grid container justify="center">
                   <Grid item xs={6}>
                     <Grid container alignItems="center" justify="center">
@@ -576,26 +582,14 @@ export class PassengerMap extends React.Component {
               </Card>
             </Grid>
           </Grid>
-          <Grid className="algolia-input" item xs={10}>
-            <div className="centerElement">
-              <input
-                type="search"
-                class="form-group"
-                id="passenger-address"
-                placeholder="Center map by location..."
-              />
-            </div>
+          <Grid container justify="center" className="algolia-input" xs={10}>
+            <input
+              type="search"
+              class="form-group"
+              id="passenger-address"
+              placeholder="Center map by location..."
+            />
           </Grid>
-          <Button
-            variant="contained"
-            color="primary"
-            className="next-button"
-            onClick={() => {
-              this.selectRoute();
-            }}
-          >
-            View Next Ride
-          </Button>
           {this.state.showDriver ? (
             <Grid container justify="center">
               <Grid item xs={10}>
@@ -608,8 +602,8 @@ export class PassengerMap extends React.Component {
                       xs={12}
                       key={driver.id}
                     >
-                      <Grid container>
-                        <Grid item xs={12}>
+                      <Grid container alignItems="center" justify="center">
+                        <Grid className="names-and-phones" item xs={12}>
                           <Grid container>
                             <Grid className="driver-name" item xs={12}>
                               <Typography variant="caption">Driver </Typography>
@@ -619,19 +613,31 @@ export class PassengerMap extends React.Component {
                             </Grid>
                           </Grid>
                           <Grid className="call" item xs={12}>
-                            <Typography variant="h2">{driver.phone}</Typography>
                             <Phone />
+                            <Typography variant="body1">
+                              {driver.driverPhone}
+                            </Typography>
                           </Grid>
                         </Grid>
                       </Grid>
                       <Button
                         color="primary"
                         variant="contained"
+                        style={{ "background-color": "#007bff" }}
                         onClick={() => {
                           this.showRidesOfDriver(driver.email);
                         }}
                       >
                         View Time
+                      </Button>{" "}
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => {
+                          this.handleCloseDriver();
+                        }}
+                      >
+                        Close
                       </Button>{" "}
                     </Grid>
                   ))}
@@ -640,6 +646,7 @@ export class PassengerMap extends React.Component {
                       rides={this.state.ridesOfRoute}
                       driver={this.state.driverEmail}
                       pickUpPoint={this.state.pickUpPoint}
+                      className="date-display"
                     />
                   ) : (
                     <div />
@@ -653,6 +660,18 @@ export class PassengerMap extends React.Component {
           <div />
         </div>
         <div id="map" />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ "background-color": "#007bff" }}
+          className="next-button"
+          onClick={() => {
+            this.setState({ viewNext: !this.state.viewNext });
+            this.selectRoute();
+          }}
+        >
+          View Next Route
+        </Button>
       </div>
     );
   }
