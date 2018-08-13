@@ -107,6 +107,8 @@ export class DriverMap extends React.Component {
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
+if(indexas){
+console.log(indexas);
 
     var getState = this.state.filteredRoute;
 
@@ -155,7 +157,7 @@ export class DriverMap extends React.Component {
         ],
         false
       );
-    }
+    }}
   }
 
   getNearest(coordinates) {
