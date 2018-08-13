@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
+using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.RideRequest_Logic;
@@ -24,9 +25,11 @@ namespace ShareCar.Api.Controllers
         private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IUserRepository _userRepository;
         private readonly IPassengerLogic _passengerLogic;
+        private readonly IAddressLogic _addressLogic;
 
-        public RideController(IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
+        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
         {
+            _addressLogic = addressLogic;
             _rideLogic = rideLogic;
             _rideRequestLogic = rideRequestLogic;
             _routeLogic = routeLogic;
@@ -62,7 +65,18 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-            IEnumerable<RideDto> rides = _rideLogic.FindRidesByDriver(userDto.Email);
+            List<RideDto> rides = (List<RideDto>)_rideLogic.FindRidesByDriver(userDto.Email);
+
+            foreach(var ride in rides)
+            {
+                foreach(var req in ride.Requests)
+                {
+                    AddressDto adr = _addressLogic.FindAddressById(req.AddressId);
+                    req.Longtitude = adr.Longtitude;
+                    req.Latitude = adr.Latitude;
+                }
+            }
+
             return SendResponse(rides);
         }
 

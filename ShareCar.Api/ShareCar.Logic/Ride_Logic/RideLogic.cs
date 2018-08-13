@@ -61,8 +61,11 @@ namespace ShareCar.Logic.Ride_Logic
             List<RideDto> dtoRide = new List<RideDto>();
             int count = 0;
             
+
+
             foreach (var ride in rides)
             {
+
                 RouteDto route = _routeLogic.GetRouteById(ride.RouteId); 
                 dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
                 AddressDto fromAddress = _addressLogic.FindAddressById(route.FromId);
@@ -247,15 +250,18 @@ namespace ShareCar.Logic.Ride_Logic
                foreach (PassengerDto passenger in passengers)
                {
                    Ride ride = _rideRepository.FindRideById(passenger.RideId);
-                   if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
-                   {
+                if (ride != null)
+                {
+                    if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
+                    {
 
-                       var user = await _userManager.FindByEmailAsync(ride.DriverEmail);
-                       RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
-                       dtoRide.DriverFirstName = user.FirstName;
-                       dtoRide.DriverLastName = user.LastName;
-                    dtoRides.Add(dtoRide);
-         }
+                        var user = await _userManager.FindByEmailAsync(ride.DriverEmail);
+                        RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
+                        dtoRide.DriverFirstName = user.FirstName;
+                        dtoRide.DriverLastName = user.LastName;
+                        dtoRides.Add(dtoRide);
+                    }
+                }
      }
             return dtoRides;
         }

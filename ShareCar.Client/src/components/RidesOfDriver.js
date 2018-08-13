@@ -16,6 +16,7 @@ export class RidesOfDriver extends React.Component {
       Longtitude: this.props.pickUpPoint[0],
       Latitude: this.props.pickUpPoint[1]
     };
+    console.log(request);
     api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
       console.log(res);
       this.setState({ showForm: false });

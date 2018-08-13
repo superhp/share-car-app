@@ -13,6 +13,5 @@ namespace ShareCar.Logic.Address_Logic
         bool AddNewAddress(AddressDto address);
         AddressDto FindAddressById(int id);
         int GetAddressId(AddressDto address);
-
     }
 }

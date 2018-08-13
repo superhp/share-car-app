@@ -222,8 +222,6 @@ export class PassengerMap extends React.Component {
     var index = e.target.value;
 if(indexas){
 
-
-  
     var getState = this.state.filteredRoute;
 
     getState.office = OfficeAddresses[indexas];
@@ -459,7 +457,10 @@ if(indexas){
     var lonlat = [];
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
-    this.setState({ pickUpPoint: lonlat });
+    this.setState({ pickUpPoint: lonlat },()=>{
+      console.log(this.state.pickUpPoint);
+
+    });
     if (this.state.passengerPickUpPointFeature) {
       this.state.vectorSource.removeFeature(
         this.state.passengerPickUpPointFeature
