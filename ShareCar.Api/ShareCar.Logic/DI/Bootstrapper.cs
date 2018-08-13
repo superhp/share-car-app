@@ -28,23 +28,24 @@ namespace ShareCar.Logic.DI
         {
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddScoped<IIdentity, FacebookIdentity>();
-            services.AddSingleton<IRideRepository, RideRepository>();
-            services.AddSingleton<IRouteRepository, RouteRepository>();
-            services.AddSingleton<IPassengerRepository, PassengerRepository>();
-            services.AddSingleton<IRideLogic, RideLogic>();
-            services.AddSingleton<IRouteLogic, RouteLogic>();
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IRideRequestLogic, RideRequestLogic>();
-            services.AddSingleton<IRideRequestRepository, RideRequestRepository>();
-            services.AddSingleton<IUserLogic, UserLogic>();
-            services.AddSingleton<IAddressRepository, AddressRepository>();
-            services.AddSingleton<IAddressLogic, AddressLogic>();
-            services.AddSingleton<IPassengerLogic, PassengerLogic>();
-            services.AddSingleton<IPassengerRepository, PassengerRepository>();
+            services.AddScoped<IRideLogic, RideLogic>();
+            services.AddScoped<IRouteLogic, RouteLogic>();
+            services.AddScoped<IRideRequestLogic, RideRequestLogic>();
+            services.AddScoped<IUserLogic, UserLogic>();
+            services.AddScoped<IAddressLogic, AddressLogic>();
+            services.AddScoped<IPassengerLogic, PassengerLogic>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
         {
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IRideRequestRepository, RideRequestRepository>();
+            services.AddScoped<IPassengerRepository, PassengerRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<IRideRepository, RideRepository>();
+
+            services.AddScoped<IPassengerRepository, PassengerRepository>();
+
             services.AddScoped<Db.Repositories.IUserRepository, Db.Repositories.UserRepository>();
         }
 

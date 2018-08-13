@@ -89,7 +89,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             {
                 entityRequest = _rideRequestRepository.FindPassengerRequests(email);
             }
-
+           
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
             return SortRequests(converted);
             }       
@@ -126,6 +126,7 @@ namespace ShareCar.Logic.RideRequest_Logic
         public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
+            
             int count = 0;
             foreach (var request in entityRequests)
             {
@@ -141,8 +142,8 @@ namespace ShareCar.Logic.RideRequest_Logic
                     else
                     {
                         var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-                        dtoRequests[count].PassengerFirstName = user.FirstName;
-                        dtoRequests[count].PassengerLastName = user.LastName;
+                        dtoRequests[count].DriverFirstName = user.FirstName;
+                        dtoRequests[count].DriverLastName = user.LastName;
                     }
 
 
@@ -154,7 +155,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].Longtitude = address.Longtitude;
                     dtoRequests[count].Latitude = address.Latitude;
 
-                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+              //      dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                     count++;
             }
             return dtoRequests;
@@ -166,7 +167,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<Request> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
             _rideRequestRepository.DeletedRide(entityRequests);
         }
-
+        
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
             IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);

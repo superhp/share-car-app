@@ -24,17 +24,9 @@ namespace ShareCar.Db.Repositories
 
         public bool AddNewPassenger(Passenger passenger)
         {
-            //     try
-            //    {
             _databaseContext.Passengers.Add(passenger);
             _databaseContext.SaveChanges();
             return true;
-            //   }
-            //catch
-            //    {
-            //        return false;
-            //    }
-
         }
 
         public void RemovePassenger(Passenger passenger)
@@ -43,7 +35,6 @@ namespace ShareCar.Db.Repositories
             _databaseContext.SaveChanges();
 
         }
-
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
         {
                 return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);

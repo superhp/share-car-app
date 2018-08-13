@@ -3,6 +3,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
+        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
-
+        
         public RouteLogic(IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
         {
+            //_rideRequestLogic = rideRequestLogic;
             _routeRepository = routeRepository;
             _mapper = mapper;
             _addressLogic = addressLogic;
@@ -48,7 +51,7 @@ namespace ShareCar.Logic.Route_Logic
             return routeDto;
         }
 
-        public List<RouteDto> GetRoutes(RouteDto routeDto)
+        public List<RouteDto> GetRoutes(RouteDto routeDto, string email)
         {
             Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
             bool isFromOffice = false;
@@ -73,7 +76,15 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach(var ride in route.Rides)
                     {
-                        if((ride.RideDateTime<routeDto.FromTime)||(ride.isActive == false))
+                        foreach(var request in ride.Requests)
+                        {
+                            if(request.PassengerEmail == email)
+                            {
+                                route.Rides.Remove(ride);
+                                break;
+                            }
+                        }
+                        if((ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }
@@ -86,7 +97,15 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach (var ride in route.Rides)
                     {
-                        if ((ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
+                        foreach (var request in ride.Requests)
+                        {
+                            if (request.PassengerEmail == email)
+                            {
+                                route.Rides.Remove(ride);
+                                break;
+                            }
+                        }
+                        if ((ride.DriverEmail == email) || (ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }

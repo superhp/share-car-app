@@ -5,8 +5,8 @@ class RideCompletedNotification extends React.Component {
 
     sendResponse(response, rideId) {
         var passengerResponse = {
-Response:response,
-RideId:rideId
+            Response: response,
+            RideId: rideId
         }
         api.post(`https://localhost:44360/api/Ride/passengerResponse`, passengerResponse);
     }

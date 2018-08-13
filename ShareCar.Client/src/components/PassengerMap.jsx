@@ -233,7 +233,8 @@ export class PassengerMap extends React.Component {
     this.CenterMap(
       this.state.filteredRoute.office.longtitude,
       this.state.filteredRoute.office.latitude,
-      this.state.map
+      this.state.map,
+      13
     );
     this.setState({
       showDriver: true,
@@ -330,18 +331,6 @@ export class PassengerMap extends React.Component {
     console.log(this.state.features);
   }
 
-  setPassengersPickUpPoint(val) {
-    this.CenterMap(val[0], val[1], this.state.map);
-    var xy = [];
-    xy = transform(val, "EPSG:4326", "EPSG:3857");
-    console.log(xy);
-    var vectorSource = this.state.Vector;
-
-    var feature = new Feature(new Point(xy));
-
-    vectorSource.clear();
-    vectorSource.addFeature(feature);
-  }
 
   createPassengerRoute(polyline) {
     this.state.route.routeGeometry = polyline.geometry;
@@ -405,44 +394,6 @@ export class PassengerMap extends React.Component {
     this.state.route.toAddress = value;
   }
 
-  driverAddressInputSuggestion() {
-    var places = require("places.js");
-
-    var placesAutocompleteFrom = places({
-      container: document.querySelector("#driver-address-input-from")
-    });
-
-    var placesAutocompleteTo = places({
-      container: document.querySelector("#driver-address-input-to")
-    });
-
-    placesAutocompleteFrom.on("change", e => {
-      this.setState({ startPointInput: true });
-      this.CenterMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-      this.addRoutePoint(
-        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
-        false
-      );
-    });
-
-    placesAutocompleteTo.on("change", e => {
-      this.setState({ startPointInput: false });
-      this.CenterMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-      this.addRoutePoint(
-        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
-        false
-      );
-    });
-  }
-
   passengerAddressInputSuggestion() {
     var places = require("places.js");
 
@@ -453,14 +404,15 @@ export class PassengerMap extends React.Component {
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
-        this.state.map
+        this.state.map,
+        19
       );
     });
   }
 
-  CenterMap(long, lat, map) {
+  CenterMap(long, lat, map, zoom) {
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(13);
+    map.getView().setZoom(zoom);
   }
 
   showRidesOfDriver(driver) {
