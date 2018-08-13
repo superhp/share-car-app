@@ -33,6 +33,11 @@ export class DriversRidesList extends React.Component {
       }
     });
   }
+
+componentDidMount(){
+  console.log(this.props.driversRides);
+}
+
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
@@ -57,7 +62,7 @@ export class DriversRidesList extends React.Component {
                       To {req.toStreet} {req.toNumber}, {req.toCity}
                     </Typography>
                     <Typography  color="textSecondary">
-                      {moment(req.rideDateTime).format("dddd MMM Mo YYYY")}
+                      {moment(req.rideDateTime).format("dddd MMM DD YYYY")}
                     </Typography>
                   </CardContent>
                   </Grid>

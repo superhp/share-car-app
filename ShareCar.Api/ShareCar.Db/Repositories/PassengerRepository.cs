@@ -55,7 +55,7 @@ namespace ShareCar.Db.Repositories
                 passenger.Completed = response;
                 _databaseContext.SaveChanges();
             }
-            catch
+            catch(Exception e)
             {
 
             }

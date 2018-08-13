@@ -18,11 +18,13 @@ import Button from "@material-ui/core/Button";
 
 export class PassengerRideRequestsList extends React.Component {
 state={
-    show:false
+    show:false,
+    coordinates:[]
 }
     render() {
         return (
             <div className="request-card-container"> 
+
                 <Card className="request-card">
                     {this.props.requests.map(req =>
                         <tr  key={req.id}>
@@ -44,28 +46,29 @@ state={
                               coordinates: [req.longtitude, req.latitude]
                             });
 
-                            window.scrollTo(0, 0);
                           }}
                         >
                           Show on map
                         </Button>
-                        {this.state.show ? (
-          <MapComponent
-            id="map"
-            className="requestMap"
-            coordinates={[req.longtitude,req.latitude]}
-            show={this.state.show}
-          />
-        ) : (
-          ""
-        )}
+                        
                              {   /*<Typography component="p">
                                     Address: {      }
                     </Typography>*/}
                             </CardContent>
                         </tr>
                     )}
-                </Card> 
+                </Card>
+                {this.state.show ? (
+
+          <MapComponent
+          id="map"
+          className="requestMap"
+          coordinates={this.state.coordinates}
+          show={this.state.show}
+        />
+      ) : (
+        <div></div>
+      )} 
             </div>
                 
 
