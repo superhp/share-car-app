@@ -26,6 +26,28 @@ export class ViewRideRequests extends React.Component {
       });
     }
   }
+
+coordinatesToLocation(latitude, longtitude) {
+    return new Promise(function (resolve, reject) {
+      fetch(
+        "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
+        latitude +
+        "&lon=" +
+        longtitude +
+        "&format=json"
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (json) {
+          resolve(json);
+        });
+    });
+  }
+
+
+
+
   showPassengerRequests() {
     api
       .get("RideRequest/false")
@@ -33,8 +55,9 @@ export class ViewRideRequests extends React.Component {
         if(response.data != ""){
         console.log((response.data: User));
         const d = response.data;
-        this.setState({ passengerRequests: d });
-      }})
+        this.setState({ passengerRequests: d }); 
+        }
+})
       .then(() => {
         const unseenRequests = [];
 
