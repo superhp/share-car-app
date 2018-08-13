@@ -35,7 +35,8 @@ namespace ShareCar.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                optionsLifetime: ServiceLifetime.Transient
             );
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
