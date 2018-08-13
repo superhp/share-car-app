@@ -15,6 +15,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { WinnersList } from "./WinnersList";
 import 'typeface-roboto';
 import "../styles/genericStyles.css";
+import "../styles/winnerBoard.css";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 export class WinnerBoard extends React.Component {
     state = {
@@ -42,6 +44,7 @@ export class WinnerBoard extends React.Component {
     render() {
         return (
             <div>
+                <Link role="button" to={"/driver/profile"}>Profile</Link>
                 <Grid container>
                      <Grid item xs={12}>
                          <AppBar position="static" color="primary" >

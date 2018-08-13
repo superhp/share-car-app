@@ -1,0 +1,19 @@
+.back-to-user {
+    flex: 1 100%;
+    background: #007bff;
+    border: none;
+    align-self: flex-end;
+    overflow: hidden;
+    position: fixed;
+    height: 6%;
+    width: 25%;
+    top: 1px;
+    right: 1px;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+  .logout-text {
+    color: white;
+    font-size: 20px;
+  }
+  

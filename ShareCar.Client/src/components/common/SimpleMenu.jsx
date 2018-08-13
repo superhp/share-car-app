@@ -59,7 +59,7 @@ class SimpleMenu extends React.Component {
               : "Or Select Office"}
           </Button>
           <Popper
-            classsName="list-of-items"
+            className="list-of-items"
             open={open}
             style={{ zIndex: 999999 }}
             anchorEl={this.anchorEl}
