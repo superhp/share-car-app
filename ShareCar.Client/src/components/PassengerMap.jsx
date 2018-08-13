@@ -31,6 +31,7 @@ import Grid from "@material-ui/core/Grid";
 import Phone from "@material-ui/icons/Phone";
 import map from "./Maps/Map";
 import "../styles/testmap.css";
+import "../styles/genericStyles.css";
 
 export class PassengerMap extends React.Component {
   state = {
@@ -589,7 +590,7 @@ export class PassengerMap extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            className="next-button"
+            className="next-button generic-container-color"
             onClick={() => {
               this.selectRoute();
             }}
