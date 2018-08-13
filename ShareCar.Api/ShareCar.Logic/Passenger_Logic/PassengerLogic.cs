@@ -52,7 +52,6 @@ namespace ShareCar.Logic.Passenger_Logic
             }
             return dtoPassengers;
         }
-
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
             _passengerRepository.RespondeToRide(response, rideId, passengerEmail);

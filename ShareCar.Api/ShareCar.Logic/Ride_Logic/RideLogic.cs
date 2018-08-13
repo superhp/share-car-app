@@ -224,9 +224,9 @@ namespace ShareCar.Logic.Ride_Logic
 
         }
 
-        public async Task<IEnumerable<RouteDto>> GetRoutesAsync(RouteDto routeDto)
+        public async Task<IEnumerable<RouteDto>> GetRoutesAsync(RouteDto routeDto, string email)
         {
-            List<RouteDto> routes = _routeLogic.GetRoutes(routeDto);
+            List<RouteDto> routes = _routeLogic.GetRoutes(routeDto, email);
             foreach (RouteDto route in routes)
             {
                 await AddDriversNamesToRidesAsync(route.Rides);

@@ -101,8 +101,9 @@ namespace ShareCar.Api.Controllers
 
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
-
-            IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto, userDto.Email);
+            
             return Ok(routes);
         }
 

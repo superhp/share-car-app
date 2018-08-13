@@ -47,7 +47,6 @@ namespace ShareCar.Db.Repositories
             }
             _databaseContext.SaveChanges();
         }
-
         public IEnumerable<Request> FindPassengerRequests(string email)
         {
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED))).ToList();
