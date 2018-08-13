@@ -78,7 +78,7 @@ namespace ShareCar.Logic.Route_Logic
                     }
                 }
                 route.Rides = rides;
-                if (route.Rides.Count == 0)
+                if (route.Rides.Count != 0)
                 {
                    
                     mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
