@@ -98,7 +98,6 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRoutesAsync([FromBody]RouteDto routeDto)
         {
 
-
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
             var userDto = await _userRepository.GetLoggedInUser(User);
