@@ -5,10 +5,15 @@ import api from "../helpers/axiosHelper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import SnackBars from "../components/common/Snackbars";
 
 var moment = require("moment");
 
 export class RidesOfDriver extends React.Component {
+  state = {
+    snackBarClicked: false,
+    snackBarMessage: ""
+  };
   sendrequest(rideId, driverEmail) {
     var request = {
       RideId: rideId,
@@ -16,10 +21,21 @@ export class RidesOfDriver extends React.Component {
       Longtitude: this.props.pickUpPoint[0],
       Latitude: this.props.pickUpPoint[1]
     };
-    console.log(request);
+
     api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
-      console.log(res);
-      this.setState({ showForm: false });
+      this.setState({
+        showForm: false,
+        snackBarClicked: true,
+        snackBarMessage: "Request sent!"
+      });
+      setTimeout(
+        function() {
+          this.setState({
+            snackBarClicked: false
+          });
+        }.bind(this),
+        3000
+      );
     });
   }
 
@@ -56,6 +72,10 @@ export class RidesOfDriver extends React.Component {
             </Grid>
           ))}
         </tbody>
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+        />
       </Grid>
     );
   }

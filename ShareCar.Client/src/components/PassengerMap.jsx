@@ -220,16 +220,15 @@ export class PassengerMap extends React.Component {
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
-if(indexas){
+    if (indexas) {
+      var getState = this.state.filteredRoute;
 
-    var getState = this.state.filteredRoute;
+      getState.office = OfficeAddresses[indexas];
 
-    getState.office = OfficeAddresses[indexas];
+      this.setState({ filteredRoute: getState });
 
-    this.setState({ filteredRoute: getState });
-
-    this.showRoutes();
-}
+      this.showRoutes();
+    }
   }
   //removes passenger pick up point marker from map and clears states related with it
   handleFromOfficeSelection() {
@@ -457,9 +456,8 @@ if(indexas){
     var lonlat = [];
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
-    this.setState({ pickUpPoint: lonlat },()=>{
+    this.setState({ pickUpPoint: lonlat }, () => {
       console.log(this.state.pickUpPoint);
-
     });
     if (this.state.passengerPickUpPointFeature) {
       this.state.vectorSource.removeFeature(

@@ -36,6 +36,10 @@ div.requestListTable table tbody tr td {
   flex-direction: row;
   flex-wrap: nowrap;
 }
-.requestMap {
-  display: none;
+
+.new-badge {
+  margin-top: 10px;
+}
+.name-para {
+  padding-left: 20px;
 }

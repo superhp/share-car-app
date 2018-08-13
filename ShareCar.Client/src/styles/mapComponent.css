@@ -1,9 +1,13 @@
 body {
   height: 100vh;
 }
-#map .ol-viewport {
+/* #map .ol-viewport {
   height: 100%;
   width: 100%;
   border: 2px solid black;
   margin-bottom: 100px;
+} */
+#map1 {
+  position: relative !important;
+  height: 200px !important;
 }

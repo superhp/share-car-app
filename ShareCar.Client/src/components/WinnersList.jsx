@@ -14,43 +14,42 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import 'typeface-roboto'
+import "typeface-roboto";
 
 export class WinnersList extends React.Component {
-    render() {
-        return (
-            <Grid container>
-                <td className="rides-card name-container"> 
-                    {this.props.winnersList.map((winner, index) => (
-                        <Grid item xs={12}>
-                            <Card className="rides-card">
-                                <CardActions>
-                                    <CardContent >
-                                        <Typography component="p">
-                                            {winner.firstName} {winner.lastName}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    ))}
-                </td>
-                <td className="point-container">
-                    {this.props.pointsList.map((point, index) => (
-                        <Grid item xs={12}>
-                            <Card className="rides-card ">
-                                <CardActions>
-                                    <CardContent>
-                                        <Typography component="p">
-                                            {point}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    ))}
-                </td>
-            </Grid>
-        )
-    }
+  render() {
+    return (
+      <Grid container>
+        {this.props.winnersList.map((winner, index) => (
+          <Grid item xs={12}>
+            <Card className="rides-card">
+              <CardActions>
+                <Grid container>
+                  <CardContent className="winner-mapping">
+                    <Typography component="p">
+                      {winner.firstName} {winner.lastName}
+                    </Typography>
+                    <Typography variant="display1">
+                      {this.props.pointsList[index]} pts
+                    </Typography>
+                  </CardContent>
+                </Grid>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+        {/* {this.props.pointsList.map((point, index) => (
+          <Grid item xs={12}>
+            <Card className="rides-card ">
+              <CardActions>
+                <CardContent>
+                  <Typography component="p">{point}</Typography>
+                </CardContent>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))} */}
+      </Grid>
+    );
+  }
 }

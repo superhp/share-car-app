@@ -75,7 +75,7 @@ console.log(vectorSource);
   }
 */
   // Shows passenger pick up point for a driver
-  setPassengersPickUpPoint(val,map) {
+  setPassengersPickUpPoint(val, map) {
     this.CenterMap(val[0], val[1], map);
     var xy = [];
     xy = transform(val, "EPSG:4326", "EPSG:3857");
@@ -88,9 +88,7 @@ console.log(vectorSource);
     vectorSource.addFeature(feature);
   }
 
-componentWillMount(){
-  
-}
+  componentWillMount() {}
 
   componentDidMount() {
     var component = this;
@@ -109,13 +107,12 @@ componentWillMount(){
           }),
           vectorLayer
         ],
-        target: "map",
+        target: "map1",
         controls: []
       });
     this.setState({ map: map });
-    this.setState({ Vector: vectorSource },()=>{
+    this.setState({ Vector: vectorSource }, () => {
       this.setPassengersPickUpPoint(this.props.coordinates, map);
-
     });
     if (!this.props.driver) {
       map.on("click", function(evt) {
@@ -158,7 +155,6 @@ feature.setStyle(style);
         console.log('+++' + vectorSource);
 
 */
-
       });
     }
 
@@ -174,13 +170,11 @@ feature.setStyle(style);
   render() {
     return (
       <div>
-        {
-
-        }
+        {}
         {this.props.driver ? (
-          <div id="map" />
+          <div id="map1" />
         ) : (
-          <div onClick={this.updateCoordinates.bind(this)} id="map" />
+          <div onClick={this.updateCoordinates.bind(this)} id="map1" />
         )}
       </div>
     );

@@ -15,13 +15,11 @@ import Rides from "./components/Rides";
 import NewRideForm from "./components/NewRideForm";
 import RideRequestForm from "./components/RideRequestForm";
 import WinnerBoard from "./components/WinnerBoard";
-import { Provider as AlertProvider } from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
 import test from "./components/TestMap";
 import DriverMap from "./components/DriverMap";
 import PassengerMap from "./components/PassengerMap";
 import Map from "./components/Map";
-
+import SnackBars from "./components/common/Snackbars";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import RidesScheduler from "./components/RidesScheduler";
@@ -40,22 +38,19 @@ ReactDOM.render(
       <Route path="/login" component={Login} />
       <Layout>
         <Route exact path="/" component={RoleSelection} />
-        <AlertProvider template={AlertTemplate} {...options}>
-          {/* <Route path="/driveris" component={Driver} /> */}
-          <Route path="/passenger/Requests" component={Passenger} />
-          <Route
-            path="/:role(driver|passenger)/profile"
-            component={UserProfile}
-          />
-          <Route path="/:role(driver|passenger)/Map" component={Map} />
-          <Route
-            path="/:role(driver|passenger)/scheduler"
-            component={RidesScheduler}
-          />
-          {/* <Route path="/:role(driver|passenger)/map" component={MapComponent} /> */}
-          <Route path="/:role(driver|passenger)/rides" component={Rides} />
-          <Route path="/winnerBoard" component={WinnerBoard} />
-        </AlertProvider>
+        <Route path="/passenger/Requests" component={Passenger} />
+        <Route path="/snack" component={SnackBars} />
+
+        <Route
+          path="/:role(driver|passenger)/profile"
+          component={UserProfile}
+        />
+        <Route path="/:role(driver|passenger)/Map" component={Map} />
+        <Route path="/:role(driver|passenger)/rides" component={Rides} />
+        <Route
+          path="/:role(driver|passenger)/winnerBoard"
+          component={WinnerBoard}
+        />
       </Layout>
     </Switch>
   </Router>,

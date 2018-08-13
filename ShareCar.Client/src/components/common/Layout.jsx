@@ -10,6 +10,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
+import { LinksToHeadings } from "../LinkDictionary";
 
 type LayoutProps = {
   children?: React.Node
@@ -34,13 +35,14 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
         <div className="content">
           <Grid container justify="center">
             <Grid item xs={12}>
-              <AppBar position="static" color="primary" 
-                    className="generic-container-color">
+              <AppBar
+                position="static"
+                color="primary"
+                className="generic-container-color"
+              >
                 <Toolbar>
                   <Typography variant="title" color="inherit">
-                    {this.props.location.pathname == "/"
-                      ? "Role"
-                      : this.props.location.pathname.replace("/", "")}
+                    {LinksToHeadings[this.props.location.pathname]}
                   </Typography>
                 </Toolbar>
               </AppBar>

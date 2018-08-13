@@ -15,11 +15,14 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import SnackBars from "../components/common/Snackbars";
 import "typeface-roboto";
 
 type UserProfileState = {
   loading: boolean,
-  user: UserProfileData | null
+  user: UserProfileData | null,
+  snackBarClicked: boolean,
+  snackBarMessage: string
 };
 class UserProfile extends Component<
   {},
@@ -57,7 +60,12 @@ class UserProfile extends Component<
       phone: this.state.user.user.phone
     };
     api.post(`https://localhost:44360/api/user`, data).then(res => {
-      if (res.status == 200) this.props.alert.show("Profile updated");
+      if (res.status == 200) {
+        this.setState({
+          snackBarClicked: true,
+          snackBarMessage: "Profile updated!"
+        });
+      }
     });
   }
 
@@ -171,6 +179,14 @@ class UserProfile extends Component<
             <button
               onClick={e => {
                 this.handleSubmit(e);
+                setTimeout(
+                  function() {
+                    this.setState({
+                      snackBarClicked: false
+                    });
+                  }.bind(this),
+                  3000
+                );
               }}
               className="btn btn-primary"
             >
@@ -193,22 +209,45 @@ class UserProfile extends Component<
                       </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography
-                        justify="center"
-                        content="h2"
-                        color="textPrimary"
-                      >
-                        {this.state.user.pointCount}
-                      </Typography>
+                      <Grid container justify="center">
+                        <Typography
+                          justify="center"
+                          variant="display1"
+                          color="textPrimary"
+                        >
+                          {this.state.user.pointCount}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </CardContent>
                 <CardActions>
-                  <Link to="/winnerBoard" >
-                    <Button variant="contained" color="primary" className="generic-container-color" >
-                      Winner Board
-                    </Button>
-                  </Link>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="row"
+                    justify="center"
+                  >
+                    <Link
+                      to={"/" + this.props.match.params.role + "/winnerBoard"}
+                    >
+                      {" "}
+                      <Grid
+                        container
+                        alignItems="center"
+                        direction="row"
+                        justify="center"
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className="generic-container-color"
+                        >
+                          Winner Board
+                        </Button>
+                      </Grid>
+                    </Link>
+                  </Grid>
                 </CardActions>
               </Card>
             </Grid>
@@ -217,7 +256,16 @@ class UserProfile extends Component<
       </div>
     );
 
-    return <div>{content}</div>;
+    return (
+      <div>
+        {content}{" "}
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+        />
+        ;
+      </div>
+    );
   }
 }
 

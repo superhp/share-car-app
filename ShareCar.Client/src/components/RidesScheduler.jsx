@@ -27,6 +27,8 @@ import "./common/TimePickers";
 import TimePickers from "./common/TimePickers";
 import Switch from "@material-ui/core/Switch";
 import addressParser from "../helpers/addressParser";
+import SnackBars from "../components/common/Snackbars";
+
 var moment = require("moment");
 
 const styles = {
@@ -54,7 +56,8 @@ class RidesScheduler extends React.Component {
   state = {
     open: true,
     selectedDates: [],
-    time: "7:00"
+    time: "07:00",
+    snackBarClicked: false
   };
 
   handleClickOpen = () => {
@@ -62,7 +65,9 @@ class RidesScheduler extends React.Component {
   };
 
   componentDidMount() {
-    console.log(addressParser.parseCustomAddress(this.props.routeInfo.fromAddress));
+    console.log(
+      addressParser.parseCustomAddress(this.props.routeInfo.fromAddress)
+    );
   }
 
   handleSelect(e) {
@@ -97,10 +102,24 @@ class RidesScheduler extends React.Component {
 
   handleCreate = () => {
     var ridesToPost = [];
-    var fromAddressParsed = addressParser.parseCustomAddress(this.props.routeInfo.fromAddress);
-    var toAddressParsed = addressParser.parseCustomAddress(this.props.routeInfo.toAddress);
+    var fromAddressParsed = addressParser.parseCustomAddress(
+      this.props.routeInfo.fromAddress
+    );
+    var toAddressParsed = addressParser.parseCustomAddress(
+      this.props.routeInfo.toAddress
+    );
     this.state.selectedDates.forEach(element => {
       var month = element.getMonth() + 1;
+      console.log(
+        element.getFullYear() +
+          "-" +
+          "0" +
+          month +
+          "-" +
+          element.getDate() +
+          "T" +
+          this.state.time
+      );
       ridesToPost.push({
         fromNumber: fromAddressParsed.number,
         fromStreet: fromAddressParsed.street,
@@ -111,21 +130,30 @@ class RidesScheduler extends React.Component {
         toCity: toAddressParsed.city,
         toCountry: "Lithuania",
         routeGeometry: this.props.routeInfo.routeGeometry,
-        rideDateTime: new Date(
+        rideDateTime:
           element.getFullYear() +
-            "-" +
-            month +
-            "-" +
-            element.getDate() +
-            " " +
-            this.state.time
-        )
+          "-" +
+          month +
+          "-" +
+          element.getDate() +
+          "T" +
+          this.state.time
       });
     });
+
     api.post("Ride", ridesToPost).then(res => {
       if (res.status == 200) {
-        this.setState({ open: false });
-        console.log("Rides Saved!");
+        this.setState({
+          open: false,
+          snackBarClicked: true,
+          snackBarMessage: "Rides successfully created!"
+        });
+        setTimeout(
+          function() {
+            this.setState({ snackBarClicked: false });
+          }.bind(this),
+          3000
+        );
       }
     });
   };
@@ -208,6 +236,10 @@ class RidesScheduler extends React.Component {
             {/* <Switch checked={true} value="checkedA" /> */}
           </Grid>
         </Dialog>
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+        />
       </div>
     );
   }

@@ -1,54 +1,61 @@
-.generic{
-    display: flex;
-    flex-direction: column;
-    color: black;
-    margin: 10px;
-    border-radius: 5px;
-    width: 300px;
+.generic {
+  display: flex;
+  flex-direction: column;
+  color: black;
+  margin: 10px;
+  border-radius: 5px;
+  width: 300px;
 }
 
 .generic-container-color {
-    background-color: #007bff !important;
+  background-color: #007bff !important;
 }
-.generic-button{
-    margin: 3px !important;
-    width: 100px;
+.generic-button {
+  margin: 3px !important;
+  width: 100px;
 }
-.generic-table
-{
-    width: 100%;
-    text-align: center;
+.generic-table {
+  width: 100%;
+  text-align: center;
 }
-.request-card-container{
-    width: 300px;
-    box-shadow: 2px 1px 2px 1px #212529, 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-    margin-top: 10px;
+.request-card-container {
+  width: 300px;
+  box-shadow: 2px 1px 2px 1px #212529, 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+  margin-top: 10px;
 }
-.request-card{
-    box-shadow: 0px 1px 20px #9a9a9a;
-    margin-bottom: 20px;
+.request-card {
+  box-shadow: 0px 1px 20px #9a9a9a;
+  margin-bottom: 20px;
 }
 td {
-    background-color: aliceblue;
-    padding: 0.5rem;
-    border: 1 px solid white;
-    text-align: center;
-    }
-
-    th {
-        background-color: #007bff;
-        color: aliceblue;
-        border: 1 px solid white;
-        font-size: 16px;
-        margin: 3px;
-        }
-
-.winner-container{
-    margin-top: 20px !important;
+  background-color: aliceblue;
+  padding: 0.5rem;
+  border: 1 px solid white;
+  text-align: center;
 }
-.point-container{
-    width: 25% !important;
+
+th {
+  background-color: #007bff;
+  color: aliceblue;
+  border: 1 px solid white;
+  font-size: 16px;
+  margin: 3px;
 }
-.name-container{
-    width: 50% !important;
+
+.winner-container {
+  margin-top: 20px !important;
+}
+.point-container {
+  width: 25% !important;
+}
+.name-container {
+  width: 50% !important;
+}
+.winner-mapping {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }

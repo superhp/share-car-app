@@ -10,13 +10,15 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Badge from "@material-ui/core/Badge";
+
 import "typeface-roboto";
 import Snackbar from "@material-ui/core/Snackbar";
 import { CardHeader } from "../../node_modules/@material-ui/core";
 
 const fontColor = {
   color: "#007BFF"
-}
+};
 
 export class DriverRideRequestsList extends React.Component {
   // constructor(props) {
@@ -78,26 +80,26 @@ export class DriverRideRequestsList extends React.Component {
   render() {
     let passengersList =
       this.state.passengers != null ? (
-        <Grid container justify="center" >
+        <Grid container justify="center">
           <Grid item xs={12}>
             <Typography style={fontColor} variant="title">
               Passengers
             </Typography>
           </Grid>
-          {this.state.passengers.length != 0 ? this.state.passengers.map((pas, index) => (
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Typography variant="title">
-                    #1 {pas.firstName + " " + pas.lastName}
-                  </Typography>
-                  <Typography variant="p">
-                    Phone {pas.phone}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          )) : "No Passengers For This Drive"}
+          {this.state.passengers.length != 0
+            ? this.state.passengers.map((pas, index) => (
+                <Grid item xs={12}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="title">
+                        #1 {pas.firstName + " " + pas.lastName}
+                      </Typography>
+                      <Typography variant="p">Phone {pas.phone}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))
+            : "No Passengers For This Drive"}
         </Grid>
       ) : null;
 
@@ -138,63 +140,72 @@ export class DriverRideRequestsList extends React.Component {
                 .filter(x => x.rideId == this.props.selectedRide)
                 .map((req, index) => (
                   <Grid item xs={12}>
-                  <Grid container>
-                    <Card className="rides-card">
-                    <Grid container justify="center">
-                    <Grid item xs={12} zeroMinWidth>
-                            <Typography component="p">
-                              #{index + 1} {req.passengerFirstName}{" "}
-                              {req.passengerLastName}
-                            </Typography>
-                    </Grid>
+                    <Grid container>
+                      <Card className="rides-card">
+                        <Grid container justify="center">
                           <Grid item xs={12} zeroMinWidth>
-                      <CardActions>
-                        <Button
-                          onClick={() => {
-                            this.setState({ show: !this.state.show });
-                            this.setState({
-                              coordinates: [req.longtitude, req.latitude]
-                            });
+                            <Grid container justify="center">
+                              {!req.seenByDriver ? (
+                                <Badge
+                                  className="new-badge"
+                                  badgeContent={"new"}
+                                  color="primary"
+                                />
+                              ) : null}
+                              <Typography className="name-para" component="p">
+                                #{index + 1} {req.passengerFirstName}{" "}
+                                {req.passengerLastName}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} zeroMinWidth>
+                            <CardActions>
+                              <Button
+                                onClick={() => {
+                                  this.setState({ show: !this.state.show });
+                                  this.setState({
+                                    coordinates: [req.longtitude, req.latitude]
+                                  });
 
-                            window.scrollTo(0, 0);
-                          }}
-                        >
-                          Show on map
-                        </Button>
-                        <Button
-                          color="primary"
-                          onClick={() => {
-                            this.sendRequestResponse(
-                              "Accept",
-                              1,
-                              req.requestId,
-                              req.rideId,
-                              req.driverEmail
-                            );
-                          }}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          color="secondary"
-                          onClick={() => {
-                            this.sendRequestResponse(
-                              "Deny",
-                              2,
-                              req.requestId,
-                              req.rideId
-                            );
-                            window.location.reload();
-                          }}
-                        >
-                          Deny
-                        </Button>
-                      </CardActions>
-                      </Grid>
-                      </Grid>
-                    </Card>
+                                  window.scrollTo(0, 0);
+                                }}
+                              >
+                                Show on map
+                              </Button>
+                              <Button
+                                color="primary"
+                                onClick={() => {
+                                  this.sendRequestResponse(
+                                    "Accept",
+                                    1,
+                                    req.requestId,
+                                    req.rideId,
+                                    req.driverEmail
+                                  );
+                                }}
+                              >
+                                Accept
+                              </Button>
+                              <Button
+                                color="secondary"
+                                onClick={() => {
+                                  this.sendRequestResponse(
+                                    "Deny",
+                                    2,
+                                    req.requestId,
+                                    req.rideId
+                                  );
+                                  window.location.reload();
+                                }}
+                              >
+                                Deny
+                              </Button>
+                            </CardActions>
+                          </Grid>
+                        </Grid>
+                      </Card>
                     </Grid>
-                    </Grid>
+                  </Grid>
                 ))
             : "No requests"}
           {passengersList}
