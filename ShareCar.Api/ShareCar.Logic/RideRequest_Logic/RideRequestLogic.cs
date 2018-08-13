@@ -51,10 +51,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
             if (isUpdated && request.Status == Dto.Status.ACCEPTED)
             {
+                var entityRequest = _rideRequestRepository.FindRequestById(request.RequestId);      
                 var rideToUpdateSeats = _rideLogic.FindRideById(request.RideId);
                 if (rideToUpdateSeats.NumberOfSeats != 0)
                 {
-                    _passengerLogic.AddPassenger(new PassengerDto { Email = request.DriverEmail, RideId = request.RideId, Completed = false });
+                    _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
                     rideToUpdateSeats.NumberOfSeats--;
                     var updatedSeats = _rideLogic.UpdateRide(rideToUpdateSeats);
                     return true;
@@ -155,7 +156,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].Longtitude = address.Longtitude;
                     dtoRequests[count].Latitude = address.Latitude;
 
-              //      dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
+                    dtoRequests[count].RideDate = _rideLogic.FindRideById(request.RideId).RideDateTime;
                     count++;
             }
             return dtoRequests;
