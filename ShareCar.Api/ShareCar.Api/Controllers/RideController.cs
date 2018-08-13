@@ -91,9 +91,10 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("routes")]
-        public IActionResult GetRoutes(RouteDto routeDto)
+        public async Task<IActionResult> GetRoutes(RouteDto routeDto)
         {
-            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto, userDto.Email);
             return Ok(routes);
         }
 

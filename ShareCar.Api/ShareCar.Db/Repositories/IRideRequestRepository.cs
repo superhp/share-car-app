@@ -18,5 +18,6 @@ namespace ShareCar.Db.Repositories
         void SeenByDriver(int[] requests);
         void DeletedRide(IEnumerable<Request> requests);
         IEnumerable<Request> FindRequestsByRideId(int rideId);
+        Request GetRequest(string email, int rideId);
     }
 }

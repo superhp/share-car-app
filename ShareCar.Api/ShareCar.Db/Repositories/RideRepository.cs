@@ -23,6 +23,7 @@ namespace ShareCar.Db.Repositories
 
         public void AddRide(Ride ride)
         {
+            ride.isActive = true;
             _databaseContext.Rides.Add(ride);
             _databaseContext.SaveChanges();
         }
@@ -73,7 +74,7 @@ namespace ShareCar.Db.Repositories
                 var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
                 rideToUpdate.RouteId = ride.RouteId;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
-                rideToUpdate.isActive = ride.isActive;
+                rideToUpdate.isActive = true;
                 rideToUpdate.NumberOfSeats = ride.NumberOfSeats;
                 
                 _databaseContext.Rides.Update(rideToUpdate);

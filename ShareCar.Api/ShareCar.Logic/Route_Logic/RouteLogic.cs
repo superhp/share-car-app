@@ -2,6 +2,7 @@
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Dto;
+using ShareCar.Logic.RideRequest_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
+        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
-        public RouteLogic(IRouteRepository routeRepository, IMapper mapper)
+        public RouteLogic(IRideRequestLogic rideRequestLogic, IRouteRepository routeRepository, IMapper mapper)
         {
+            _rideRequestLogic = rideRequestLogic;
             _routeRepository = routeRepository;
             _mapper = mapper;
         }
@@ -44,7 +47,7 @@ namespace ShareCar.Logic.Route_Logic
             return routeDto;
         }
 
-        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto)
+        public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto, string email)
         {
             AddressDto address = routeDto.AddressTo;
             bool isFromOffice = false;
@@ -61,7 +64,7 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach(var ride in route.Rides)
                     {
-                        if((ride.RideDateTime<routeDto.FromTime)||(ride.isActive == false))
+                        if((_rideRequestLogic.isAlreadyRequested(email, ride.RideId)) || (ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }
@@ -74,7 +77,7 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach (var ride in route.Rides)
                     {
-                        if ((ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
+                        if ((_rideRequestLogic.isAlreadyRequested(email, ride.RideId)) || (ride.DriverEmail == email) || (ride.RideDateTime > routeDto.UntillTime) || (ride.isActive == false))
                         {
                             route.Rides.Remove(ride);
                         }
