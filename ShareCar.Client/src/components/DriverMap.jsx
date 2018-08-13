@@ -24,7 +24,7 @@ import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
-import map from "./Maps/Map"
+import map from "./Maps/Map";
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -102,8 +102,7 @@ export class DriverMap extends React.Component {
     url_osrm_nearest:
       "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
     url_osrm_route:
-      "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/",
-    driver: this.props.match.params.role == "driver" ? true : false
+      "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/"
   };
 
   handleOfficeSelection(e, indexas, button) {
@@ -115,50 +114,48 @@ export class DriverMap extends React.Component {
 
     this.setState({ filteredRoute: getState });
 
-      var getState = this.state.filteredRoute;
-      getState.office = OfficeAddresses[indexas];
-      this.setState({ filteredRoute: getState });
-      var address =
-        this.state.filteredRoute.office.number +
-        ", " +
-        this.state.filteredRoute.office.street +
-        ", " +
-        this.state.filteredRoute.office.city;
+    var getState = this.state.filteredRoute;
+    getState.office = OfficeAddresses[indexas];
+    this.setState({ filteredRoute: getState });
+    var address =
+      this.state.filteredRoute.office.number +
+      ", " +
+      this.state.filteredRoute.office.street +
+      ", " +
+      this.state.filteredRoute.office.city;
 
-      var route = this.state.route;
+    var route = this.state.route;
 
+    if (button == "from") {
+      this.setState({ startPointInput: true });
 
-      if (button == "from") {
-        this.setState({ startPointInput: true });
+      route.addressFrom = address;
+      this.setState({ route: route });
 
-        route.addressFrom = address;
-        this.setState({ route: route });
+      this.setInputFrom(address);
 
-        this.setInputFrom(address);
+      this.addRoutePoint(
+        [
+          this.state.filteredRoute.office.longtitude,
+          this.state.filteredRoute.office.latitude
+        ],
+        false
+      );
+    } else {
+      this.setState({ startPointInput: false });
 
-        this.addRoutePoint(
-          [
-            this.state.filteredRoute.office.longtitude,
-            this.state.filteredRoute.office.latitude
-          ],
-          false
-        );
-      } else {
-        this.setState({ startPointInput: false });
+      route.addressTo = address;
+      this.setState({ route: route });
 
-        route.addressTo = address;
-        this.setState({ route: route });
-
-        this.setInputTo(address);
-        this.addRoutePoint(
-          [
-            this.state.filteredRoute.office.longtitude,
-            this.state.filteredRoute.office.latitude
-          ],
-          false
-        );
-      }
-    
+      this.setInputTo(address);
+      this.addRoutePoint(
+        [
+          this.state.filteredRoute.office.longtitude,
+          this.state.filteredRoute.office.latitude
+        ],
+        false
+      );
+    }
   }
 
   getNearest(coordinates) {
@@ -168,7 +165,7 @@ export class DriverMap extends React.Component {
         .then(response => {
           return response.json();
         })
-        .then(function (json) {
+        .then(function(json) {
           if (json.code === "Ok") {
             resolve(json.waypoints[0].location);
           } else reject();
@@ -180,7 +177,7 @@ export class DriverMap extends React.Component {
     // fromFeature param indicates which feature is added - start point or destination
     var feature = new Feature({
       type: "place",
-      geometry: new Point(fromLonLat(coordinates)),
+      geometry: new Point(fromLonLat(coordinates))
     });
     feature.setStyle(this.state.routeStyles.icon);
 
@@ -194,9 +191,7 @@ export class DriverMap extends React.Component {
           destinationFeature: this.state.features.destinationFeature
         }
       });
-
-    }
-    else {
+    } else {
       this.setState({
         features: {
           startPointFeature: this.state.features.startPointFeature,
@@ -260,18 +255,18 @@ export class DriverMap extends React.Component {
   }
 
   coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-        latitude +
-        "&lon=" +
-        longtitude +
-        "&format=json"
+          latitude +
+          "&lon=" +
+          longtitude +
+          "&format=json"
       )
-        .then(function (response) {
+        .then(function(response) {
           return response.json();
         })
-        .then(function (json) {
+        .then(function(json) {
           resolve(json);
         });
     });
@@ -305,9 +300,9 @@ export class DriverMap extends React.Component {
       var address = addressParser.parseAlgolioAddress(e.suggestion.name);
       var city = e.suggestion.city;
 
-       var route = this.state.route;
-       route.fromAddress = address.number + ", " + address.name + ", " + city;
-       this.setState({route});
+      var route = this.state.route;
+      route.fromAddress = address.number + ", " + address.name + ", " + city;
+      this.setState({ route });
 
       this.CenterMap(
         e.suggestion.latlng.lng,
@@ -325,9 +320,9 @@ export class DriverMap extends React.Component {
       var address = addressParser.parseAlgolioAddress(e.suggestion.name);
       var city = e.suggestion.city;
 
-       var route = this.state.route;
-       route.toAddress = address.number + ", " + address.name + ", " + city;
-       this.setState({route});
+      var route = this.state.route;
+      route.toAddress = address.number + ", " + address.name + ", " + city;
+      this.setState({ route });
       this.CenterMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
@@ -344,7 +339,6 @@ export class DriverMap extends React.Component {
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(13);
   }
-
 
   handleDriverMapClick(markersOnMap, coordinates) {
     if (markersOnMap > 1) {
@@ -364,9 +358,9 @@ export class DriverMap extends React.Component {
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputTo(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-          e.address.road +
-          ", " +
-          e.address.city
+            e.address.road +
+            ", " +
+            e.address.city
         );
       });
       this.createFeature(coordinates, false);
@@ -378,9 +372,9 @@ export class DriverMap extends React.Component {
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputFrom(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-          e.address.road +
-          ", " +
-          e.address.city
+            e.address.road +
+            ", " +
+            e.address.city
         );
       });
 
@@ -389,7 +383,6 @@ export class DriverMap extends React.Component {
   }
 
   handleAddressInput(coordinates) {
-
     if (this.state.startPointInput) {
       if (this.state.features.startPointFeature) {
         this.state.vectorSource.removeFeature(
@@ -487,67 +480,59 @@ export class DriverMap extends React.Component {
       })
     });
 
-    this.setState({ map, vectorSource }, function () {
+    this.setState({ map, vectorSource }, function() {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
-        this.driverAddressInputSuggestion();
-
+      this.driverAddressInputSuggestion();
     });
-
-
 
     map.on("click", evt => {
-        var coord4326 = transform(
-          [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
-          "EPSG:3857",
-          "EPSG:4326"
-        );
-        this.addRoutePoint(coord4326, true);
-
-      
+      var coord4326 = transform(
+        [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
+        "EPSG:3857",
+        "EPSG:4326"
+      );
+      this.addRoutePoint(coord4326, true);
     });
-
-
   }
 
   render() {
     return (
       <div>
         <div className="displayRoutes">
-            <div>
-              <div className="map-input-selection">
-                <div className="form-group">
-                  <input
-                    type="search"
-                    className="form-group location-select"
-                    id="driver-address-input-from"
-                    placeholder="Select From Location..."
-                  />
-                  <SimpleMenu
-                    handleSelection={(e, indexas, button) =>
-                      this.handleOfficeSelection(e, indexas, button)
-                    }
-                    whichButton="from"
-                  />
-                </div>
+          <div>
+            <div className="map-input-selection">
+              <div className="form-group">
+                <input
+                  type="search"
+                  className="form-group location-select"
+                  id="driver-address-input-from"
+                  placeholder="Select From Location..."
+                />
+                <SimpleMenu
+                  handleSelection={(e, indexas, button) =>
+                    this.handleOfficeSelection(e, indexas, button)
+                  }
+                  whichButton="from"
+                />
+              </div>
 
-                <div className="form-group">
-                  <input
-                    type="search"
-                    className="form-group location-select"
-                    id="driver-address-input-to"
-                    placeholder="Select To Location..."
-                  />
-                  <SimpleMenu
-                    handleSelection={(e, indexas, button) =>
-                      this.handleOfficeSelection(e, indexas, button)
-                    }
-                    whichButton="to"
-                  />
-                </div>
+              <div className="form-group">
+                <input
+                  type="search"
+                  className="form-group location-select"
+                  id="driver-address-input-to"
+                  placeholder="Select To Location..."
+                />
+                <SimpleMenu
+                  handleSelection={(e, indexas, button) =>
+                    this.handleOfficeSelection(e, indexas, button)
+                  }
+                  whichButton="to"
+                />
               </div>
             </div>
-          
+          </div>
         </div>
         <div id="map" />
         {this.state.isContinueClicked ? (

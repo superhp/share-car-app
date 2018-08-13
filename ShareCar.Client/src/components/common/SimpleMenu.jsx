@@ -54,7 +54,9 @@ class SimpleMenu extends React.Component {
             aria-haspopup="true"
             onClick={this.handleToggle}
           >
-            Or Select Office
+            {this.props.buttonText != null
+              ? this.props.buttonText
+              : "Or Select Office"}
           </Button>
           <Popper
             classsName="list-of-items"

@@ -61,24 +61,17 @@ namespace ShareCar.Logic.Route_Logic
                 address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
                 isFromOffice = true;                
             }
-            else
-            {
-             //   routeDto.AddressToId = _addressLogic.GetAddressId(address);
-
-            }
 
 
             IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
-            
-            if (routeDto.FromTime != DateTime.MinValue)
-            {
+           
                 foreach(var route in entityRoutes)
                 {
                     foreach(var ride in route.Rides)
                     {
                         foreach(var request in ride.Requests)
                         {
-                            if(request.PassengerEmail == email)
+                            if(request.PassengerEmail == email && request.Status != Db.Entities.Status.DENIED)
                             {
                                 route.Rides.Remove(ride);
                                 break;
@@ -90,16 +83,14 @@ namespace ShareCar.Logic.Route_Logic
                         }
                     }
                 }
-            }
-            if (routeDto.UntillTime != DateTime.MinValue)
-            {
+            
                 foreach (var route in entityRoutes)
                 {
                     foreach (var ride in route.Rides)
                     {
                         foreach (var request in ride.Requests)
                         {
-                            if (request.PassengerEmail == email)
+                            if (request.PassengerEmail == email && request.Status != Db.Entities.Status.DENIED)
                             {
                                 route.Rides.Remove(ride);
                                 break;
@@ -110,7 +101,7 @@ namespace ShareCar.Logic.Route_Logic
                             route.Rides.Remove(ride);
                         }
                     }
-                }
+                
             }
             List<RouteDto> dtoRoutes = new List<RouteDto>();
             foreach (var route in entityRoutes)
