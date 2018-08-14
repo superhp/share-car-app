@@ -697,7 +697,7 @@ export class PassengerMap extends React.Component {
           className="next-button"
           onClick={() => {
             this.setState({ viewNext: !this.state.viewNext });
-            this.selectRoute();
+            this.selectRoute(1);
           }}
         >
           View Next Route
