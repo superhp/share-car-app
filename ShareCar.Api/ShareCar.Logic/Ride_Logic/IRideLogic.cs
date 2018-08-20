@@ -9,18 +9,18 @@ namespace ShareCar.Logic.Ride_Logic
     public interface IRideLogic
     {
         //Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail);
-        IEnumerable<RideDto> FindRidesByDriver(string email);
-        RideDto FindRideById(int id);
-        IEnumerable<RideDto> FindRidesByDate(DateTime date);
-        IEnumerable<RideDto> FindRidesByDestination(int addressToId);
-        IEnumerable<RideDto> FindRidesByStartPoint(int adressFromId);
-        IEnumerable<PassengerDto> FindPassengersByRideId(int rideId);
+        IEnumerable<RideDto> GetRidesByDriver(string email);
+        RideDto GetRideById(int id);
+        IEnumerable<RideDto> GetRidesByDate(DateTime date);
+        IEnumerable<RideDto> GetRidesByDestination(int addressToId);
+        IEnumerable<RideDto> GetRidesByStartPoint(int adressFromId);
+        IEnumerable<PassengerDto> GetPassengersByRideId(int rideId);
         bool DoesUserBelongsToRide(string email, int rideId);
-        Task<List<RideDto>> FindFinishedPassengerRidesAsync(string passengerEmail);
+        Task<List<RideDto>> GetFinishedPassengerRidesAsync(string passengerEmail);
         bool SetRideAsInactive(RideDto ride);
         bool AddRide(RideDto ride, string email);
         bool UpdateRide(RideDto ride);
-        IEnumerable<RideDto> FindSimilarRides(int rideId);
+        IEnumerable<RideDto> GetSimilarRides(int rideId);
         Task<IEnumerable<RouteDto>> GetRoutesAsync(RouteDto routeDto, string email);
         Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string routeGeometry);
     }

@@ -8,18 +8,17 @@ namespace ShareCar.Db.Repositories
 {
    public interface IRideRepository
     {
-        Ride FindRideById(int id);
-        IEnumerable<Ride> FindRidesByDriver(string email);
-        IEnumerable<Ride> FindRidesByDate(DateTime date);
-        IEnumerable<Ride> FindRidesByDestination(int addressToId);
-        IEnumerable<Ride> FindRidesByStartPoint(int addressFromId);
-        IEnumerable<Passenger> FindPassengersByRideId(int rideId);
-        //       Task<IEnumerable<Passenger>> FindRidesByPassenger(ClaimsPrincipal User);
+        Ride GetRideById(int id);
+        IEnumerable<Ride> GetRidesByDriver(string email);
+        IEnumerable<Ride> GetRidesByDate(DateTime date);
+        IEnumerable<Ride> GetRidesByDestination(int addressToId);
+        IEnumerable<Ride> GetRidesByStartPoint(int addressFromId);
+        IEnumerable<Passenger> GetPassengersByRideId(int rideId);
         bool UpdateRide(Ride ride);
         bool SetRideAsInactive(Ride ride);
         void AddRide(Ride ride);
-        IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId);
-        IEnumerable<Ride> FindRidesByPassenger(Passenger passenger);
+        IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId);
+        IEnumerable<Ride> GetRidesByPassenger(Passenger passenger);
         IEnumerable<Ride> GetRidesByRoute(string routeGeometry);
     }
 }

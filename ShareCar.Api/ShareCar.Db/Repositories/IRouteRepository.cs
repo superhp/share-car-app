@@ -6,7 +6,7 @@ namespace ShareCar.Db.Repositories
     public interface IRouteRepository
     {
         int GetRouteId(int fromId, int toId);
-        Route FindRouteById(int id);
+        Route GetRouteById(int id);
         bool AddRoute(Route route);
         bool UpdateRoute(Route route);
         IEnumerable<Route> GetRoutes(bool isOfficeAddress, Address address);

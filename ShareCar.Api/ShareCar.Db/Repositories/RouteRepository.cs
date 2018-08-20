@@ -25,7 +25,7 @@ namespace ShareCar.Db.Repositories
                 return -1; // Address doesnt exist
             }
         }
-        public Route FindRouteById(int id)
+        public Route GetRouteById(int id)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace ShareCar.Db.Repositories
         }
         public bool UpdateRoute(Route route)
         {
-            Route routeToUpdate = FindRouteById(route.RouteId);
+            Route routeToUpdate = GetRouteById(route.RouteId);
             if(routeToUpdate.Rides == null)
             {
                 routeToUpdate.Rides = new List<Ride>();

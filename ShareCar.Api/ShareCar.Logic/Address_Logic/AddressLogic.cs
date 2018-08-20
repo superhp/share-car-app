@@ -55,10 +55,10 @@ namespace ShareCar.Logic.Address_Logic
 
         }
 
-        public AddressDto FindAddressById(int id)
+        public AddressDto GetAddressById(int id)
         {
             
-         Address address = _addressRepository.FindAddressById(id);
+         Address address = _addressRepository.GetAddressById(id);
 
             return _mapper.Map<Address, AddressDto>(address);
         }

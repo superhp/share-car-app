@@ -39,7 +39,7 @@ namespace ShareCar.Api.Controllers
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
-            IEnumerable<RideDto> rides = _rideLogic.FindSimilarRides(rideId);
+            IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(rideId);
             return SendResponse(rides);
         }
         
@@ -56,7 +56,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            List<RideDto> rides = await _rideLogic.FindFinishedPassengerRidesAsync(userDto.Email);
+            List<RideDto> rides = await _rideLogic.GetFinishedPassengerRidesAsync(userDto.Email);
             return Ok(rides);
         }
 
@@ -65,13 +65,13 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-            List<RideDto> rides = (List<RideDto>)_rideLogic.FindRidesByDriver(userDto.Email);
+            List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
 
             foreach(var ride in rides)
             {
                 foreach(var req in ride.Requests)
                 {
-                    AddressDto adr = _addressLogic.FindAddressById(req.AddressId);
+                    AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
                     req.Longtitude = adr.Longtitude;
                     req.Latitude = adr.Latitude;
                 }
@@ -83,21 +83,21 @@ namespace ShareCar.Api.Controllers
         [HttpGet("ridedate={rideDate}")]
         public  IActionResult GetRidesByDate(DateTime rideDate)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByDate(rideDate);
+            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDate(rideDate);
             return SendResponse(rides);
         }
 
         [HttpGet("addressFromId={addressFromId}")]
         public  IActionResult GetRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByStartPoint(addressFromId);
+            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByStartPoint(addressFromId);
             return SendResponse(rides);
         }
 
         [HttpGet("addressToId={addressToId}")]
         public  IActionResult GetRidesByDestination(int addressToId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.FindRidesByDestination(addressToId);
+            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDestination(addressToId);
             return SendResponse(rides);
         }
 
@@ -130,7 +130,7 @@ namespace ShareCar.Api.Controllers
             }
 
 
-            IEnumerable<PassengerDto> passengers =  _rideLogic.FindPassengersByRideId(rideId);
+            IEnumerable<PassengerDto> passengers =  _rideLogic.GetPassengersByRideId(rideId);
             if (passengers.ToList().Any())
             {
                 return Ok(passengers);

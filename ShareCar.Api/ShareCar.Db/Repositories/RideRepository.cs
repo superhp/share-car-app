@@ -28,19 +28,19 @@ namespace ShareCar.Db.Repositories
             _databaseContext.SaveChanges();
         }
 
-        public IEnumerable<Ride> FindRidesByDate(DateTime date)
+        public IEnumerable<Ride> GetRidesByDate(DateTime date)
         {
             return _databaseContext.Rides
                     .Where(x => x.RideDateTime == date && x.isActive == true);
         }
 
-        public IEnumerable<Ride> FindRidesByDestination(int addressToId)
+        public IEnumerable<Ride> GetRidesByDestination(int addressToId)
         {
             return _databaseContext.Rides
                 .Where(x => x.Route.ToId == addressToId && x.isActive == true);
         }
 
-        public Ride FindRideById(int id)
+        public Ride GetRideById(int id)
         {
             try
             {
@@ -52,17 +52,17 @@ namespace ShareCar.Db.Repositories
             }
         }
 
-        public IEnumerable<Ride> FindRidesByStartPoint(int addressFromId)
+        public IEnumerable<Ride> GetRidesByStartPoint(int addressFromId)
         {
             return _databaseContext.Rides
                 .Where(x => x.Route.FromId == addressFromId && x.isActive == true);
         }
-        public IEnumerable<Passenger> FindPassengersByRideId(int id)
+        public IEnumerable<Passenger> GetPassengersByRideId(int id)
         {
             return _databaseContext.Passengers.Where(x => x.RideId == id);
         }
         
-        public IEnumerable<Ride> FindRidesByPassenger(Passenger passenger)
+        public IEnumerable<Ride> GetRidesByPassenger(Passenger passenger)
         {
             return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger) && x.isActive == true);
         }
@@ -95,12 +95,12 @@ namespace ShareCar.Db.Repositories
             return true;
 
         }
-        public IEnumerable<Ride> FindSimmilarRides(string driverEmail, int routeId, int rideId)
+        public IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId)
         {
             return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId && x.isActive == true);
         }
 
-        public IEnumerable<Ride> FindRidesByDriver(string email)
+        public IEnumerable<Ride> GetRidesByDriver(string email)
         {
             return _databaseContext.Rides
                 .Include(x=>x.Requests)

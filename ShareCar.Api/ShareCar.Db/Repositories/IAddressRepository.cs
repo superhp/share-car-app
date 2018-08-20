@@ -9,7 +9,7 @@ namespace ShareCar.Db.Repositories
     public interface IAddressRepository
     {
          bool AddNewAddress(Address address);
-         Address FindAddressById(int id);
+         Address GetAddressById(int id);
         int GetAddressId(Address address);
 
     }

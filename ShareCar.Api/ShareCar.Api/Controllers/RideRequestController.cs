@@ -37,7 +37,7 @@ namespace ShareCar.Api.Controllers
 
             
 
-            IEnumerable<RideRequestDto> request = await _requestLogic.FindUsersRequests(isDriver, userDto.Email);
+            IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }
@@ -51,7 +51,7 @@ namespace ShareCar.Api.Controllers
             }
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
-            string email = _rideLogic.FindRideById(request.RideId).DriverEmail;
+            string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
             bool result = _requestLogic.AddRequest(request, email);
             
             if (result)

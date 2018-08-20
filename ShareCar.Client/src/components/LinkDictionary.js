@@ -7,5 +7,7 @@ export var LinksToHeadings = {
   "/driver/Map": "Route Creation",
   "/passenger/Map": "View Drivers Routes",
   "/driver/rides": "My Active Rides",
-  "/driver/winnerBoard": "Monthly Leaders"
+  "/driver/winnerBoard": "Monthly Leaders",
+  "/passenger/winnerBoard": "Monthly Leaders"
+
 };

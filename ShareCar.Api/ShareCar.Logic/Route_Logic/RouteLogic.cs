@@ -33,7 +33,7 @@ namespace ShareCar.Logic.Route_Logic
         
         public RouteDto GetRouteById(int id)
         {
-            Route route = _routeRepository.FindRouteById(id);
+            Route route = _routeRepository.GetRouteById(id);
             if (route == null)
             {
                 return null;

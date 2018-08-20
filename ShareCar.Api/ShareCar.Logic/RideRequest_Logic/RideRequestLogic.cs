@@ -52,7 +52,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             if (isUpdated && request.Status == Dto.Status.ACCEPTED)
             {
                 var entityRequest = _rideRequestRepository.FindRequestById(request.RequestId);      
-                var rideToUpdateSeats = _rideLogic.FindRideById(request.RideId);
+                var rideToUpdateSeats = _rideLogic.GetRideById(request.RideId);
                 if (rideToUpdateSeats.NumberOfSeats != 0)
                 {
                     _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
@@ -78,7 +78,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public async Task<IEnumerable<RideRequestDto>> FindUsersRequests(bool driver, string email)
+        public async Task<IEnumerable<RideRequestDto>> GetUsersRequests(bool driver, string email)
         {
 
             IEnumerable<Request> entityRequest;
@@ -148,14 +148,14 @@ namespace ShareCar.Logic.RideRequest_Logic
                     }
 
 
-                    AddressDto address = _addressLogic.FindAddressById(request.AddressId);
+                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
                     dtoRequests[count].City = address.City;
                     dtoRequests[count].Street = address.Street;
                     dtoRequests[count].HouseNumber = address.Number;
                     dtoRequests[count].Longtitude = address.Longtitude;
                     dtoRequests[count].Latitude = address.Latitude;
-               RideDto ride = _rideLogic.FindRideById(request.RideId);
+               RideDto ride = _rideLogic.GetRideById(request.RideId);
                 if (ride != null) {
                     dtoRequests[count].RideDate = ride.RideDateTime;
                     }

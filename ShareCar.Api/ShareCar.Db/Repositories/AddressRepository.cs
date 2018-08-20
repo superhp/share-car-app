@@ -68,7 +68,7 @@ namespace ShareCar.Db.Repositories
             
         }
 
-        public Address FindAddressById(int id)
+        public Address GetAddressById(int id)
         {
             try
             {
