@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.Route_Repository
 {
     public class RouteRepository: IRouteRepository
     {

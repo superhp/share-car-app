@@ -7,7 +7,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.User_Repository
 {
     public class UserRepository : IUserRepository
     {

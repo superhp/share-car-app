@@ -3,7 +3,7 @@ using ShareCar.Db.Entities;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.RideRequest_Repository
 {
    public class RideRequestRepository : IRideRequestRepository
     {

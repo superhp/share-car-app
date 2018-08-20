@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.Ride_Repository
 {
    public interface IRideRepository
     {

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.Address_Repository
 {
     public class AddressRepository : IAddressRepository
     {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.Ride_Repository
 {
     public class RideRepository : IRideRepository
     {

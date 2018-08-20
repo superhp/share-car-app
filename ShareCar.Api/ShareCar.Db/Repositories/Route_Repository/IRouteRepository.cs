@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ShareCar.Db.Entities;
 
-namespace ShareCar.Db.Repositories
+namespace ShareCar.Db.Repositories.Route_Repository
 {
     public interface IRouteRepository
     {
