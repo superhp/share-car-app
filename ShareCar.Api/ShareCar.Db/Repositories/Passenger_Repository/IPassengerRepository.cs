@@ -9,8 +9,8 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
     {
         int GetUsersPoints(string email);
         bool AddNewPassenger(Passenger passenger);
-        IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email);
+        IEnumerable<Passenger> GetUnrespondedPassengersByEmail(string email);
         IEnumerable<Passenger> GetPassengersByRideId(int rideId);
-        void RespondeToRide(bool response, int rideId, string passengerEmail);
+        void RespondToRide(bool response, int rideId, string passengerEmail);
     }
 }
