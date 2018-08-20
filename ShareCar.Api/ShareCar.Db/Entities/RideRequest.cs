@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Request
+    public class RideRequest
     {
         public int RequestId { get; set; }
         public string PassengerEmail { get; set; }

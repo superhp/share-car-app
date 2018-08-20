@@ -8,8 +8,8 @@ namespace ShareCar.Logic.RideRequest_Logic
     public interface IRideRequestLogic
     {
         Task<IEnumerable<RideRequestDto>> GetUsersRequests(bool driver, string email);
-        bool UpdateRequest(RideRequestDto request);
-        bool AddRequest(RideRequestDto request, string driverEmail);
+        void UpdateRequest(RideRequestDto request);
+        void AddRequest(RideRequestDto request, string driverEmail);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
         void DeletedRide(int rideId);

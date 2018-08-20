@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Repositories;
+using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.Passenger_Logic;
@@ -36,13 +37,7 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
             _passengerLogic = passengerLogic;
         }
-        [HttpGet("simillarRides={rideId}")]
-        public IActionResult GetSimillarRides(int rideId)
-        {
-            IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(rideId);
-            return SendResponse(rides);
-        }
-        
+ 
         [HttpPost("passengerResponse")]
         public async Task PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
@@ -57,10 +52,9 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
 
             List<RideDto> rides = await _rideLogic.GetFinishedPassengerRidesAsync(userDto.Email);
-            return Ok(rides);
+           return SendResponse(rides);
         }
 
-        // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
@@ -105,7 +99,7 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
         {
             IEnumerable<RideDto> rides = await _rideLogic.GetRidesByRouteAsync(routeGeometry);
-            return Ok(rides);
+            return SendResponse(rides);
         }
 
         [HttpPost("routes")]
@@ -114,6 +108,7 @@ namespace ShareCar.Api.Controllers
 
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
+
             var userDto = await _userRepository.GetLoggedInUser(User);
             IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto, userDto.Email);
             
@@ -140,44 +135,26 @@ namespace ShareCar.Api.Controllers
                 return NotFound();
             }
         }
-        
-        [HttpPut]
-        public IActionResult Put([FromBody] RideDto ride)
-        {
-            if (ride == null)
-            {
-                return BadRequest("Invalid parameter");
-            }
 
-            
-                return Ok();
-            
-
-        }
         [HttpPut("disactivate")]
         public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
-
-            var userDto = await _userRepository.GetLoggedInUser(User);
             if (rideDto == null)
             {
                 return BadRequest("invalid parameter");
 
             }
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
             _rideRequestLogic.DeletedRide(rideDto.RideId);
-            bool result = _rideLogic.SetRideAsInactive(rideDto);
-            if (result)
-            {
+            _rideLogic.SetRideAsInactive(rideDto);
+                        
                 return Ok();
-            }
-            else
-            {
-                return BadRequest("operation failed");
-            }
 
         }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] IEnumerable<RideDto> rides)
+        public async Task<IActionResult> AddRides([FromBody] IEnumerable<RideDto> rides)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (rides == null)
@@ -187,22 +164,14 @@ namespace ShareCar.Api.Controllers
             int count = 0;
             foreach (var ride in rides)
             {
-                bool result =  _rideLogic.AddRide(ride, userDto.Email);
-                if (result)
-                {
+                _rideLogic.AddRide(ride, userDto.Email);
+                
+                
                     count++;
-                }
-                else break;
-            }
-            if (count == rides.Count())
-            {
-                return Ok();
-            }
-            else
-            {
 
-                return BadRequest("Operation failed");
             }
+
+            return Ok();
 
         }
 
@@ -210,13 +179,15 @@ namespace ShareCar.Api.Controllers
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
+            return Ok(ride);
+            /* method should execute code below, but since frontend doesn't handle Not found response, controller just returns Ok all the time
             if (ride.Any())
             {
                 return Ok(ride);
 
             }
-            return Ok(ride);
-
+            return NotFoud();
+            */
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
+using ShareCar.Db.Repositories.Route_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.RideRequest_Logic;
@@ -14,7 +15,6 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
-        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
         
@@ -95,7 +95,7 @@ namespace ShareCar.Logic.Route_Logic
             return dtoRoutes;
         }
 
-        public bool AddRoute(RouteDto route)
+        public void AddRoute(RouteDto route)
         {
             Route entityRoute = new Route
             {
@@ -107,9 +107,7 @@ namespace ShareCar.Logic.Route_Logic
 
 
             };
-            //Route routes = _mapper.Map<RouteDto, Route>(route);
             _routeRepository.AddRoute(entityRoute);
-            return true;
         }
     }
 }

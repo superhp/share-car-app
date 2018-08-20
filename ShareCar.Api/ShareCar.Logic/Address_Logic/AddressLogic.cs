@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Entities;
 using ShareCar.Dto;
+using ShareCar.Db.Repositories.Address_Repository;
 
 namespace ShareCar.Logic.Address_Logic
 {
@@ -18,7 +19,7 @@ namespace ShareCar.Logic.Address_Logic
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-        public bool AddNewAddress(AddressDto address)
+        public void AddNewAddress(AddressDto address)
         {
             Address entityAddress = new Address
             {
@@ -29,7 +30,7 @@ namespace ShareCar.Logic.Address_Logic
                 Latitude = address.Latitude
             };
             
-              return _addressRepository.AddNewAddress(entityAddress);
+               _addressRepository.AddNewAddress(entityAddress);
 
         }
 
@@ -43,12 +44,9 @@ namespace ShareCar.Logic.Address_Logic
 
             if (id == -1)
             {
-                bool added = _addressRepository.AddNewAddress(entityAddress);
-
-                if (added)
-                {
-                    return _addressRepository.GetAddressId(entityAddress);
-                }
+                   _addressRepository.AddNewAddress(entityAddress);
+                
+                    return _addressRepository.GetAddressId(entityAddress);               
             }
 
             return id;
