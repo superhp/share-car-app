@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -26,8 +25,8 @@ import "react-infinite-calendar/styles.css"; // only needs to be imported once
 import "./common/TimePickers";
 import TimePickers from "./common/TimePickers";
 import Switch from "@material-ui/core/Switch";
-import addressParser from "../helpers/addressParser";
-import SnackBars from "../components/common/Snackbars";
+import addressParser from "../../helpers/addressParser";
+import SnackBars from "../common/Snackbars";
 
 var moment = require("moment");
 

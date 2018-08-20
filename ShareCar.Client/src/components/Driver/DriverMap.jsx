@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RideRequestForm } from "./RideRequestForm";
 import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -18,14 +18,14 @@ import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
-import { OfficeAddresses } from "./AddressData";
-import addressParser from "../helpers/addressParser";
+import { OfficeAddresses } from "../AddressData";
+import addressParser from "../../helpers/addressParser";
 import RidesOfDriver from "./RidesOfDriver";
-import SimpleMenu from "./common/SimpleMenu";
+import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
-import map from "./Maps/Map";
-import "../styles/testmap.css";
+import map from "../Maps/Map";
+import "../../styles/testmap.css";
 
 export class DriverMap extends React.Component {
   state = {

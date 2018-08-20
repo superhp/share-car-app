@@ -1,11 +1,10 @@
 import * as React from "react";
-import { Status } from "./status";
-import "../styles/riderequests.css";
-import api from "../helpers/axiosHelper";
+import "../../styles/riderequests.css";
+import api from "../../helpers/axiosHelper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import SnackBars from "../components/common/Snackbars";
+import SnackBars from "../../components/common/Snackbars";
 
 var moment = require("moment");
 

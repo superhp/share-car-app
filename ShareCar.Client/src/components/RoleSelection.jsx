@@ -7,17 +7,16 @@ import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
 import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
-import RideCompletedNotification from "./RideCompletedNotification";
+import RideCompletedNotification from "./Passenger/RideCompletedNotification";
 import "../styles/roleSelection.css";
 import axios from "axios";
 import api from "../helpers/axiosHelper";
-import Driver from "./Driver";
+//import Driver from "./Driver";
 import { RoleContext } from "../helpers/roles";
-import RideRequestForm from "../components/RideRequestForm";
+//import RideRequestForm from "../components/RideRequestForm";
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
-import test from "../components/TestMap";
-
+//
 const options = {
   position: "bottom center",
   timeout: 3000,

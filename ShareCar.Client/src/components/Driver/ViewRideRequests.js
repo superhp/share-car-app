@@ -2,10 +2,9 @@ import * as React from "react";
 //import * as todoItem from "../../data/todoItem";
 //import { StatusInput } from "../TodoItem/StatusInput";
 //import { Loader } from "../Loader";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
-import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
-import { DriverRideRequestsList } from "./DriverRideRequestList";
+import api from "../../helpers/axiosHelper";
+import { PassengerRideRequestsList } from "../Passenger/PassengerRideRequestsList";
+import { DriverRideRequestsList } from "../Driver/DriverRideRequestList";
 export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],

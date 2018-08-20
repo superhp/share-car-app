@@ -15,7 +15,7 @@ import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 
-import "../styles/mapComponent.css";
+import "../../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
   constructor(props) {

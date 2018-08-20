@@ -1,8 +1,8 @@
 import * as React from "react";
-import api from "../helpers/axiosHelper";
-import "../styles/riderequests.css";
-import MapComponent from "./MapComponent";
-import "../styles/genericStyles.css";
+import api from "../../helpers/axiosHelper";
+import "../../styles/riderequests.css";
+import MapComponent from "../Maps/MapComponent";
+import "../../styles/genericStyles.css";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
@@ -14,7 +14,7 @@ import Badge from "@material-ui/core/Badge";
 
 import "typeface-roboto";
 import Snackbar from "@material-ui/core/Snackbar";
-import { CardHeader } from "../../node_modules/@material-ui/core";
+//import { CardHeader } from "../../node_modules/@material-ui/core";
 
 const fontColor = {
   color: "#007BFF"

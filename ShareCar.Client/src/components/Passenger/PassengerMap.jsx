@@ -1,7 +1,6 @@
 import * as React from "react";
-import { RideRequestForm } from "./RideRequestForm";
 import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -18,10 +17,10 @@ import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
 import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
-import { OfficeAddresses } from "./AddressData";
-import addressParser from "../helpers/addressParser";
-import RidesOfDriver from "./RidesOfDriver";
-import SimpleMenu from "./common/SimpleMenu";
+import { OfficeAddresses } from "../AddressData";
+import addressParser from "../../helpers/addressParser";
+import RidesOfDriver from "../Driver/RidesOfDriver";
+import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import Radio from "@material-ui/core/Radio";
@@ -29,9 +28,9 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Phone from "@material-ui/icons/Phone";
-import map from "./Maps/Map";
-import "../styles/testmap.css";
-import "../styles/genericStyles.css";
+import map from "../Maps/Map";
+import "../../styles/testmap.css";
+import "../../styles/genericStyles.css";
 
 export class PassengerMap extends React.Component {
   state = {

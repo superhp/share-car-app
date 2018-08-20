@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/passengersList.css";
+import "../../styles/passengersList.css";
 
 const PassengersList = props => {
   return (

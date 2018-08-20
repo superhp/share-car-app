@@ -1,5 +1,5 @@
 import * as React from "react";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 
 class RideCompletedNotification extends React.Component {
 

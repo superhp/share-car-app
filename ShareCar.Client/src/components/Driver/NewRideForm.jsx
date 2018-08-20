@@ -1,12 +1,12 @@
 import * as React from "react";
 import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import DateTimePicker from "react-datetime-picker";
-import "../styles/newRideForm.css";
+import "../../styles/newRideForm.css";
 import addressParser from "../helpers/addressParser";
-import "../styles/genericStyles.css";
-import MapComponent from "./MapComponent";
-import { OfficeAddresses } from "./AddressData";
+import "../../styles/genericStyles.css";
+import MapComponent from "../Maps/MapComponent";
+import { OfficeAddresses } from "../AddressData";
 
 var moment = require("moment");
 export class NewRideForm extends React.Component {

@@ -2,20 +2,12 @@ import UserService from "../services/userService";
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import { Router, Switch } from "react-router";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+
 import Paper from "@material-ui/core/Paper";
 import "typeface-roboto";
-import "../styles/genericStyles.css";
+import "../../styles/genericStyles.css";
 
 export class Rides extends React.Component {
   state = {
