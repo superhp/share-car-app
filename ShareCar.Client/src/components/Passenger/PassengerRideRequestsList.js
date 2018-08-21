@@ -1,15 +1,9 @@
 import * as React from "react";
-import { Status } from "./status";
+import { Status } from "../status";
 import "../../styles/riderequests.css";
 import Moment from "react-moment";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { withStyles } from '@material-ui/core/styles';
 import "../../styles/genericStyles.css";
 import { Typography } from "../../../node_modules/@material-ui/core";
 import MapComponent from "../Maps/MapComponent";

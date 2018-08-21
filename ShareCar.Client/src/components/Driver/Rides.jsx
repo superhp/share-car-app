@@ -1,7 +1,4 @@
-import UserService from "../services/userService";
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
-import { Router, Switch } from "react-router";
 import api from "../../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
 

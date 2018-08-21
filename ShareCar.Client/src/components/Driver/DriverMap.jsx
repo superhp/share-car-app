@@ -1,5 +1,4 @@
 import * as React from "react";
-import { RideRequestForm } from "./RideRequestForm";
 import axios from "axios";
 import api from "../../helpers/axiosHelper";
 import { transform } from "ol/proj";

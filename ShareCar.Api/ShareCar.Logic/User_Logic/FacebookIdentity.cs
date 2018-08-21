@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
+using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
