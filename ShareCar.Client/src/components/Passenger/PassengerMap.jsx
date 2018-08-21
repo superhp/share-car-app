@@ -15,7 +15,7 @@ import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "../AddressData";
-import RidesOfDriver from "../Driver/RidesOfDriver";
+import RidesOfDriver from "../Passenger/RidesOfDriver";
 import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
@@ -28,11 +28,7 @@ import "../../styles/genericStyles.css";
 
 export class PassengerMap extends React.Component {
   state = {
-    points: 0,
-    coordinates: {
-      firstPoint: [],
-      lastPoint: []
-    },
+
     selectedRouteStyle: {
       route: new Style({
         stroke: new Stroke({
@@ -42,7 +38,6 @@ export class PassengerMap extends React.Component {
         zIndex: 10
       })
     },
-    passengersSelectedOffice: "",
     passengerPickUpPointFeature: null,
     selectedRoute: "",
     filteredRoute: {
@@ -51,16 +46,7 @@ export class PassengerMap extends React.Component {
       dateTimeFrom: "",
       dateTimeTo: ""
     }, // route object containing filttering information acocrding to which passenger will get route suggestions
-    driversOfRoute: [],
-    driversInfo: {
-      firstName: "",
-      lastName: "",
-      rides: []
-    },
-    isContinueClicked: false,
-    passengerStylesCouter: 0,
     pickUpPoint: [],
-    utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
@@ -70,7 +56,6 @@ export class PassengerMap extends React.Component {
       startPointFeature: "",
       destinationFeature: ""
     },
-    routeFeature: "",
     route: {
       fromAddress: "",
       toAddress: "",
@@ -145,10 +130,6 @@ export class PassengerMap extends React.Component {
           selectedRoute: this.state.passengerRouteFeatures[counter]
         },
         () => {
-          console.log(counter);
-          console.log(this.state.passengerRouteFeatures);
-          console.log(this.state.selectedRoute);
-          console.log("=======================");
 
           counter += value;
 
@@ -251,11 +232,7 @@ export class PassengerMap extends React.Component {
       showRides: false,
       passengerRouteFeaturesCounter: 0
     });
-    //  this.state.showDrivers = true;
-    //  this.state.showRoutes = false;
-    //   this.state.driversOfRoute
-    //  this.state.driverEmail
-    //  this.state.showRides
+
     console.log(this.state.filteredRoute);
     var routeDto;
     this.state.filteredRoute.toOffice
@@ -293,7 +270,6 @@ export class PassengerMap extends React.Component {
 
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
-      //make sure the coord is on street
       fetch(this.state.url_osrm_nearest + coordinates.join())
         .then(response => {
           return response.json();
@@ -440,14 +416,11 @@ export class PassengerMap extends React.Component {
   }
 
   componentDidMount() {
-    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
     var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
       });
 
-    console.clear();
 
     var map = new Map({
       target: "map",

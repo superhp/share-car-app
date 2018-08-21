@@ -6,7 +6,6 @@ import history from "./helpers/history";
 import Layout from "./components/common/Layout";
 import Login from "./components/Login";
 import RoleSelection from "./components/RoleSelection";
-//import Driver from "./Driver/components/Driver";
 import Passenger from "./components/Passenger/Passenger";
 import UserProfile from "./components/UserProfile";
 import Rides from "./components/Driver/Rides";
@@ -29,6 +28,8 @@ ReactDOM.render(
           path="/:role(driver|passenger)/profile"
           component={UserProfile}
         />
+
+
         <Route path="/:role(driver|passenger)/Map" component={Map} />
         <Route path="/:role(driver|passenger)/rides" component={Rides} />
         <Route

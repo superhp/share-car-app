@@ -30,45 +30,8 @@ export default class MapComponent extends React.Component<{}> {
   centerMapParent(val) {
     this.CenterMap(val.lng, val.lat, this.state.map);
   }
-  /*
-  displayRoute() {
-    var vectorSource = this.state.Vector;
 
-    var route = new Polyline({
-      factor: 1e6
-  }).readGeometry('mfp_I__vpASBG?u@FuBRiCRMMC?AAKAe@FyBTC@E?IDKDA@K@]BUBUBA?C?EBMHUBK@mAL{CZQ@qBRUBmAFc@@}@FAYCsCCqBCgBKoJCgBcDuAwAo@KEUKWMECe@Uk@WSSSGOIKCU?{@c@IBKDOHgEtBiAl@i@ZIDWLIm@AIQuACOQwAE_@Ic@]uBw@aFgAuHAKKo@?KAQ?KIuDQcH@eACeB?OCq@Ag@Ag@OuF?OAi@?c@@c@Du@r@cH@UBQ@K?E~@kJRyBf@uE@KFi@VoBFc@Da@@ETaC@QJ{@Ny@Ha@RiAfBuJF]DOh@yAHSf@aADIR_@\\q@N[@EPa@Zw@`@oA^gABIFUH[^sAJ_@Nq@Ps@DQRq@Ng@Pq@La@BKJYb@kAm@w@SYCCi@u@_AkAgAuAu@_AW]aBwBo@{@s@eAgAcBEE[]Jk@JmA?c@?QAQG]LKDEDCHOTm@^uA@Gb@wA`A_DJ[pAgCJSlAwBJSf@{@b@w@nAcCZq@LMLKRIFAL?J@HBFBp@XPHTJRHTJNFTRNFd@N\\HF@J@J@@V?N@rA@dB', {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
-  });
-  console.log(route);
-  var feature = new Feature({
-    type: 'route',
-    geometry: route
-  });
-  console.log("===" + vectorSource);
-
-/*
-  var styles = {
-    route: new Style({
-      stroke: new Stroke({
-        width: 6, color: [40, 40, 40, 0.8]
-      })
-    }),
-    icon: new Style({
-      image: new Icon({
-        anchor: [0.5, 1]
-            })
-    })
-  };
-
-console.log(vectorSource);
-
-  feature.setStyle(styles.route);
-
-  vectorSource.addFeature();
-  }
-*/
-  // Shows passenger pick up point for a driver
+  // Shows passenger pick up point 
   setPassengersPickUpPoint(val, map) {
     this.CenterMap(val[0], val[1], map);
     var xy = [];
@@ -82,10 +45,7 @@ console.log(vectorSource);
     vectorSource.addFeature(feature);
   }
 
-  componentWillMount() {}
-
   componentDidMount() {
-    var component = this;
     var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -101,58 +61,31 @@ console.log(vectorSource);
           }),
           vectorLayer
         ],
-        target: "map1",
+        target: "map",
         controls: []
       });
-    this.setState({ map: map });
+    this.setState({ map });
     this.setState({ Vector: vectorSource }, () => {
       this.setPassengersPickUpPoint(this.props.coordinates, map);
     });
     if (!this.props.driver) {
       map.on("click", function(evt) {
-        // Allows passenger to set a dingle marker on a map
+        // Allows passenger to set a single marker on a map
 
         var feature = new Feature(new Point(evt.coordinate));
         console.log(vectorSource);
         var lonlat = [];
         lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
-        component.setState({ coordinates: lonlat });
+        this.setState({ coordinates: lonlat });
 
         vectorSource.clear();
         vectorSource.addFeature(
           feature
-        ); /*
-        var route = new Polyline({
-          factor: 1e6
-      }).readGeometry('mfp_I__vpASBG?u@FuBRiCRMMC?AAKAe@FyBTC@E?IDKDA@K@]BUBUBA?C?EBMHUBK@mAL{CZQ@qBRUBmAFc@@}@FAYCsCCqBCgBKoJCgBcDuAwAo@KEUKWMECe@Uk@WSSSGOIKCU?{@c@IBKDOHgEtBiAl@i@ZIDWLIm@AIQuACOQwAE_@Ic@]uBw@aFgAuHAKKo@?KAQ?KIuDQcH@eACeB?OCq@Ag@Ag@OuF?OAi@?c@@c@Du@r@cH@UBQ@K?E~@kJRyBf@uE@KFi@VoBFc@Da@@ETaC@QJ{@Ny@Ha@RiAfBuJF]DOh@yAHSf@aADIR_@\\q@N[@EPa@Zw@`@oA^gABIFUH[^sAJ_@Nq@Ps@DQRq@Ng@Pq@La@BKJYb@kAm@w@SYCCi@u@_AkAgAuAu@_AW]aBwBo@{@s@eAgAcBEE[]Jk@JmA?c@?QAQG]LKDEDCHOTm@^uA@Gb@wA`A_DJ[pAgCJSlAwBJSf@{@b@w@nAcCZq@LMLKRIFAL?J@HBFBp@XPHTJRHTJNFTRNFd@N\\HF@J@J@@V?N@rA@dB', {
-          dataProjection: 'EPSG:4326',
-          featureProjection: 'EPSG:3857'
-      });
-
-
-console.log(route);
-
-
-      var feature = new Feature({
-        type: 'route',
-        geometry: route
-      });
-      var style = new Style({
-        fill: new Fill({ color: '#0091ea', weight: 10 }),
-        stroke: new Stroke({ color: '#0091ea', width: 6 })
-    });
-
-feature.setStyle(style);
-
-      vectorSource.addFeature(feature);
-        console.log('+++' + vectorSource);
-
-*/
+        ); 
       });
     }
 
-    //this.CenterMap(25.279652, 54.687157, map);
   }
 
   CenterMap(long, lat, map) {
@@ -164,11 +97,10 @@ feature.setStyle(style);
   render() {
     return (
       <div>
-        {}
         {this.props.driver ? (
-          <div id="map1" />
+          <div id="map" />
         ) : (
-          <div onClick={this.updateCoordinates.bind(this)} id="map1" />
+          <div onClick={this.updateCoordinates.bind(this)} id="map" />
         )}
       </div>
     );

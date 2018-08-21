@@ -27,34 +27,7 @@ export class DriverMap extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
-    selectedRouteStyle: {
-      route: new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: [0, 200, 0, 0.8]
-        }),
-        zIndex: 10
-      })
-    },
-    passengersSelectedOffice: "",
-    passengerPickUpPointFeature: null,
-    selectedRoute: "",
-    filteredRoute: {
-      toOffice: false,
-      office: OfficeAddresses[0],
-      dateTimeFrom: "",
-      dateTimeTo: ""
-    }, // route object containing filttering information acocrding to which passenger will get route suggestions
-    driversOfRoute: [],
-    driversInfo: {
-      firstName: "",
-      lastName: "",
-      rides: []
-    },
     isContinueClicked: false,
-    passengerStylesCouter: 0,
-    pickUpPoint: [],
-    utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
@@ -70,12 +43,6 @@ export class DriverMap extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
-    showDrivers: false,
-    showRides: false,
-    ridesOfRoute: [],
-    passengerRoutes: [],
-    passengerRouteFeatures: [],
-    passengerRouteFeaturesCounter: 0,
     routeStyles: {
       route: new Style({
         stroke: new Stroke({
@@ -90,7 +57,6 @@ export class DriverMap extends React.Component {
         })
       })
     },
-    driverEmail: "",
     url_osrm_nearest:
       "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
     url_osrm_route:
@@ -151,7 +117,6 @@ console.log(indexas);
 
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
-      //make sure the coord is on street
       fetch(this.state.url_osrm_nearest + coordinates.join())
         .then(response => {
           return response.json();
@@ -258,7 +223,6 @@ console.log(indexas);
     routeState.toAddress = value;
     this.setState({ route: routeState }); 
    }
-
 
   driverAddressInputSuggestion() {
     var places = require("places.js");
@@ -398,8 +362,7 @@ console.log(indexas);
       markersOnMap++;
       this.setState({ points: markersOnMap });
 
-      if (clickedOnMap) {
-        // Separates route point adding by clicking and by writing an address
+      if (clickedOnMap) {        // Separates route point adding by clicking and by writing an address
 
         this.handleDriverMapClick(markersOnMap, coordinates);
       } else {
