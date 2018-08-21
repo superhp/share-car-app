@@ -1,6 +1,4 @@
 import * as React from "react";
-import axios from "axios";
-import api from "../../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -14,16 +12,12 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "../AddressData";
 import addressParser from "../../helpers/addressParser";
-import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
-import map from "../Maps/Map";
 import "../../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -60,7 +54,6 @@ export class DriverMap extends React.Component {
     isContinueClicked: false,
     passengerStylesCouter: 0,
     pickUpPoint: [],
-    route: "",
     utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
@@ -115,9 +108,6 @@ console.log(indexas);
 
     this.setState({ filteredRoute: getState });
 
-    var getState = this.state.filteredRoute;
-    getState.office = OfficeAddresses[indexas];
-    this.setState({ filteredRoute: getState });
     var address =
       this.state.filteredRoute.office.number +
       ", " +
@@ -127,7 +117,7 @@ console.log(indexas);
 
     var route = this.state.route;
 
-    if (button == "from") {
+    if (button === "from") {
       this.setState({ startPointInput: true });
 
       route.addressFrom = address;
@@ -203,17 +193,19 @@ console.log(indexas);
     console.log(this.state.features);
   }
 
-  createDriverRoute(polyline) {
-    this.state.route.routeGeometry = polyline;
-    var route = new Polyline({
+  createDriverRoute(route) {
+    var routeState = this.state.route;
+    routeState.routeGeometry = route.geometry;
+    this.setState({ route: routeState });
+        let decodedRoute = new Polyline({
       factor: 1e5
-    }).readGeometry(polyline, {
+    }).readGeometry(route, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
     var feature = new Feature({
       type: "route",
-      geometry: route
+      geometry: decodedRoute
     });
     if (this.state.routeFeature) {
       this.state.vectorSource.removeFeature(this.state.routeFeature); // removes old route from map
@@ -221,30 +213,6 @@ console.log(indexas);
     feature.setStyle(this.state.routeStyles.route);
     this.state.vectorSource.addFeature(feature);
     this.setState({ routeFeature: feature });
-  }
-
-  createPassengerRoute(polyline) {
-    this.state.route.routeGeometry = polyline.geometry;
-    var route = new Polyline({
-      factor: 1e5
-    }).readGeometry(polyline.geometry, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857"
-    });
-    var feature = new Feature({
-      type: "route",
-      geometry: route
-    });
-
-    feature.setStyle(this.state.routeStyles.route);
-
-    this.state.passengerRouteFeatures.push({
-      feature: feature,
-      geometry: polyline.geometry,
-      route: polyline
-    });
-
-    this.state.vectorSource.addFeature(feature);
   }
 
   to4326(coordinates) {
@@ -276,14 +244,21 @@ console.log(indexas);
   setInputFrom(value) {
     var inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
-    this.state.route.fromAddress = value;
+
+    var routeState = this.state.route;
+    routeState.fromAddress = value;
+    this.setState({ route: routeState });
+
   }
 
   setInputTo(value) {
     var inputField = document.querySelector("#driver-address-input-to");
     inputField.value = value;
-    this.state.route.toAddress = value;
-  }
+    var routeState = this.state.route;
+    routeState.toAddress = value;
+    this.setState({ route: routeState }); 
+   }
+
 
   driverAddressInputSuggestion() {
     var places = require("places.js");
@@ -540,7 +515,7 @@ console.log(indexas);
           <RidesScheduler routeInfo={this.state.route} />
         ) : null}
         <Button
-          disabled={this.state.route.routeGeometry == "" ? true : false}
+          disabled={this.state.route.routeGeometry === "" ? true : false}
           className="continue-button"
           variant="contained"
           color="primary"

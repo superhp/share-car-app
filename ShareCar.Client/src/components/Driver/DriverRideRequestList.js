@@ -3,7 +3,6 @@ import api from "../../helpers/axiosHelper";
 import "../../styles/riderequests.css";
 import MapComponent from "../Maps/MapComponent";
 import "../../styles/genericStyles.css";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -11,10 +10,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Badge from "@material-ui/core/Badge";
-
 import "typeface-roboto";
 import Snackbar from "@material-ui/core/Snackbar";
-//import { CardHeader } from "../../node_modules/@material-ui/core";
 
 const fontColor = {
   color: "#007BFF"
@@ -41,7 +38,7 @@ export class DriverRideRequestsList extends React.Component {
     api
       .get("Passenger/rideId=" + this.props.selectedRide)
       .then(response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           this.setState({ passengers: response.data });
         }
       })
@@ -66,7 +63,7 @@ export class DriverRideRequestsList extends React.Component {
       DriverEmail: driverEmail
     };
     api.put("https://localhost:44360/api/RideRequest", data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.setState({ clickedRequest: true });
       }
     });
@@ -86,7 +83,7 @@ export class DriverRideRequestsList extends React.Component {
               Passengers
             </Typography>
           </Grid>
-          {this.state.passengers.length != 0
+          {this.state.passengers.length !== 0
             ? this.state.passengers.map((pas, index) => (
                 <Grid item xs={12}>
                   <Card>
@@ -134,10 +131,10 @@ export class DriverRideRequestsList extends React.Component {
             message={<span id="message-id">Request accepted</span>}
           />
           {this.props.rideRequests.filter(
-            x => x.rideId == this.props.selectedRide
-          ).length != 0
+            x => x.rideId === this.props.selectedRide
+          ).length !== 0
             ? this.props.rideRequests
-                .filter(x => x.rideId == this.props.selectedRide)
+                .filter(x => x.rideId === this.props.selectedRide)
                 .map((req, index) => (
                   <Grid item xs={12}>
                     <Grid container>

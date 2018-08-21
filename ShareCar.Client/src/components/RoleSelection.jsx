@@ -1,7 +1,6 @@
 //@flow
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
-import { Router, Switch } from "react-router";
+import { Link } from "react-router-dom";
 import UserService from "../services/userService";
 import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
@@ -9,21 +8,8 @@ import driverLogo from "../images/driver.png";
 import passengerLogo from "../images/passenger.png";
 import RideCompletedNotification from "./Passenger/RideCompletedNotification";
 import "../styles/roleSelection.css";
-import axios from "axios";
 import api from "../helpers/axiosHelper";
-//import Driver from "./Driver";
 import { RoleContext } from "../helpers/roles";
-//import RideRequestForm from "../components/RideRequestForm";
-import { Provider as AlertProvider } from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
-//
-const options = {
-  position: "bottom center",
-  timeout: 3000,
-  offset: "30px",
-  transition: "fade",
-  type: "success"
-};
 
 class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   userService = new UserService();
@@ -43,13 +29,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     api.get(`/Ride/checkFinished`).then(response => {
       console.log(response.data);
       this.state.rideNotifications = response.data;
-      //  this.setState({ rideNotifications: response.data });
-      if (response.data.length != 0) {
-        this.state.showNotification = true;
+      if (response.data.length !== 0) {
+        this.setState({howNotification : true});
       } else {
-        this.state.showNotification = false;
+        this.setState({howNotification : false});
       }
-      console.log(this.state.rideNotifications.length);
       this.userService.getLoggedInUser(this.updateLoggedInUser);
     });
   }

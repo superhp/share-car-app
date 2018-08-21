@@ -22,8 +22,6 @@ import TimePickers from "../common/TimePickers";
 import addressParser from "../../helpers/addressParser";
 import SnackBars from "../common/Snackbars";
 
-var moment = require("moment");
-
 const styles = {
   appBar: {
     position: "relative"
@@ -35,11 +33,6 @@ const styles = {
 
 // Render the Calendar
 var today = new Date();
-var lastWeek = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  today.getDate() - 7
-);
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -135,7 +128,7 @@ class RidesScheduler extends React.Component {
     });
 
     api.post("Ride", ridesToPost).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.setState({
           open: false,
           snackBarClicked: true,
@@ -204,7 +197,7 @@ class RidesScheduler extends React.Component {
                   Schedule Your Rides
                 </Typography>
                 <Button
-                  disabled={this.state.selectedDates.length == 0 ? true : false}
+                  disabled={this.state.selectedDates.length === 0 ? true : false}
                   variant="contained"
                   color="inherit"
                   onClick={this.handleCreate}

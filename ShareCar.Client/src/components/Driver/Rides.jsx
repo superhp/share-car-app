@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import api from "../../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
 
@@ -19,7 +19,7 @@ export class Rides extends React.Component {
   handleRideDelete(rideToDelete) {
     this.setState({
       driversRides: this.state.driversRides.filter(
-        x => x.rideId != rideToDelete.rideId
+        x => x.rideId !== rideToDelete.rideId
       )
     });
   }
@@ -34,7 +34,7 @@ export class Rides extends React.Component {
     api
       .get("Ride")
       .then(response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           const d = response.data;
           console.log(response.data);
           this.setState({ driversRides: d });
@@ -54,10 +54,10 @@ export class Rides extends React.Component {
         selectedRide={this.state.selectedRideId}
         rideClicked={this.state.clicked}
         onRideClick={this.handleClick.bind(this)}
-        driversRides={this.state.driversRides.length != 0 ?
+        driversRides={this.state.driversRides.length !== 0 ?
           this.state.clicked
             ? this.state.driversRides.filter(
-                x => x.rideId == this.state.selectedRideId
+                x => x.rideId === this.state.selectedRideId
               )
             : this.state.driversRides
         : []}

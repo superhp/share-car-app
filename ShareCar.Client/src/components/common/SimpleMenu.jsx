@@ -71,10 +71,10 @@ class SimpleMenu extends React.Component {
                 {...TransitionProps}
                 id="menu-list-grow"
                 style={{ zIndex: 999999 }}
-                style={{
-                  transformOrigin:
-                    placement === "bottom" ? "center top" : "center bottom"
-                }}
+              //  style={{
+              //    transformOrigin:
+             //       placement === "bottom" ? "center top" : "center bottom"
+             //   }}
               >
                 <Paper style={{ zIndex: 999999 }}>
                   <ClickAwayListener onClickAway={this.handleClose}>

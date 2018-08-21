@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import "../styles/navbar.css";
-import { RoleContext } from "../helpers/roles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Map from "@material-ui/icons/Map";
 import NoteAdd from "@material-ui/icons/NoteAdd";

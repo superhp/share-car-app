@@ -16,14 +16,6 @@ import SnackBars from "./components/common/Snackbars";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
-const options = {
-  position: "bottom center",
-  timeout: 3000,
-  offset: "30px",
-  transition: "fade",
-  type: "success"
-};
-
 ReactDOM.render(
   <Router history={history}>
     <Switch>

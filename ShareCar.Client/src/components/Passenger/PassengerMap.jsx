@@ -1,5 +1,4 @@
 import * as React from "react";
-import axios from "axios";
 import api from "../../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
@@ -14,11 +13,8 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "../AddressData";
-import addressParser from "../../helpers/addressParser";
 import RidesOfDriver from "../Driver/RidesOfDriver";
 import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
@@ -27,7 +23,6 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Phone from "@material-ui/icons/Phone";
-import map from "../Maps/Map";
 import "../../styles/testmap.css";
 import "../../styles/genericStyles.css";
 
@@ -65,7 +60,6 @@ export class PassengerMap extends React.Component {
     isContinueClicked: false,
     passengerStylesCouter: 0,
     pickUpPoint: [],
-    route: "",
     utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
@@ -111,18 +105,17 @@ export class PassengerMap extends React.Component {
   };
 
   selectRoute(value) {
-    if (this.state.passengerRouteFeatures.length != 0) {
+    if (this.state.passengerRouteFeatures.length !== 0) {
       // checks if there are any routes displayed
-      this.state.showDrivers = true;
-      this.state.showRoutes = false;
-      this.state.showRides = false;
+
+      this.setState({ showDrivers: true, showRoutes: false, showRides: false });
       var counter = this.state.passengerRouteFeaturesCounter;
-      if (counter == 0) {
+      if (counter === 0) {
         this.state.passengerRouteFeatures[
           this.state.passengerRouteFeatures.length - 1
         ].feature.setStyle(this.state.routeStyles.route);
 
-        if (this.state.passengerRouteFeatures.length != 1) {
+        if (this.state.passengerRouteFeatures.length !== 1) {
           this.state.passengerRouteFeatures[1].feature.setStyle(
             this.state.routeStyles.route
           );
@@ -131,8 +124,8 @@ export class PassengerMap extends React.Component {
         this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
           this.state.routeStyles.route
         );
-        if (value == -1) {
-          if (counter != this.state.passengerRouteFeatures.length - 1) {
+        if (value === -1) {
+          if (counter !== this.state.passengerRouteFeatures.length - 1) {
             this.state.passengerRouteFeatures[counter + 1].feature.setStyle(
               this.state.routeStyles.route
             );
@@ -177,11 +170,7 @@ export class PassengerMap extends React.Component {
     this.setState({ showDriver: false });
   }
   getRidesByRoute(route) {
-    console.log(route);
-    //    var route = {
-    //    Geometry: route.geometry
-    //  };
-    // api.get(`/Ride/ridesByRoute=` + route).then(response => {
+
     this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
       var drivers = [];
       console.log(this.state.ridesOfRoute);
@@ -204,24 +193,19 @@ export class PassengerMap extends React.Component {
         }
       });
 
-      console.log("state drivers: ====   " + this.state.driversOfRoute);
-
-      if (drivers.length != 0) {
+      if (drivers.length !== 0) {
         this.setState({ showDriver: true });
       } else {
         this.setState({ showDriver: false });
       }
-
-      console.log(this.state.driversOfRoute);
     });
   }
 
-  handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;
-    if (indexas) {
+  handleOfficeSelection(e, index, button) {
+    if (index) {
       var getState = this.state.filteredRoute;
 
-      getState.office = OfficeAddresses[indexas];
+      getState.office = OfficeAddresses[index];
 
       this.setState({ filteredRoute: getState });
 
@@ -235,7 +219,7 @@ export class PassengerMap extends React.Component {
         this.state.vectorSource.removeFeature(
           this.state.passengerPickUpPointFeature
         );
-        this.state.passengerPickUpPointFeature = null;
+        this.setState({ passengerPickUpPointFeature: null });
       }
       this.setState(
         {
@@ -276,32 +260,29 @@ export class PassengerMap extends React.Component {
     var routeDto;
     this.state.filteredRoute.toOffice
       ? (routeDto = {
-          AddressTo: {
-            City: this.state.filteredRoute.office.city,
-            Street: this.state.filteredRoute.office.street,
-            Number: this.state.filteredRoute.office.number
-          }
-        })
+        AddressTo: {
+          City: this.state.filteredRoute.office.city,
+          Street: this.state.filteredRoute.office.street,
+          Number: this.state.filteredRoute.office.number
+        }
+      })
       : (routeDto = {
-          AddressFrom: {
-            City: this.state.filteredRoute.office.city,
-            Street: this.state.filteredRoute.office.street,
-            Number: this.state.filteredRoute.office.number
-          }
-        });
+        AddressFrom: {
+          City: this.state.filteredRoute.office.city,
+          Street: this.state.filteredRoute.office.street,
+          Number: this.state.filteredRoute.office.number
+        }
+      });
     console.log(routeDto);
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      console.log(res.data);
 
-      console.log(res);
-      console.log(res.status);
-      if (res.status == 200 && res.data != "") {
+      if (res.status === 200 && res.data !== "") {
         console.log(res.data);
         this.setState({ passengerRoutes: res.data });
         this.state.passengerRoutes.forEach(element => {
           console.log(element.geometry);
         });
-        this.state.passengerRouteFeatures = []; // deletes old routes
+        this.setState({ passengerRouteFeatures: [] }); // deletes old routes
 
         this.state.passengerRoutes.forEach(element => {
           this.createPassengerRoute(element);
@@ -317,7 +298,7 @@ export class PassengerMap extends React.Component {
         .then(response => {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           if (json.code === "Ok") {
             resolve(json.waypoints[0].location);
           } else reject();
@@ -354,25 +335,28 @@ export class PassengerMap extends React.Component {
     console.log(this.state.features);
   }
 
-  createPassengerRoute(polyline) {
-    this.state.route.routeGeometry = polyline.geometry;
-    var route = new Polyline({
+  createPassengerRoute(route) {
+    var routeState = this.state.route;
+    routeState.routeGeometry = route.geometry;
+    this.setState({ route: routeState });
+
+    let decodedRoute = new Polyline({
       factor: 1e5
-    }).readGeometry(polyline.geometry, {
+    }).readGeometry(route.geometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
     var feature = new Feature({
       type: "route",
-      geometry: route
+      geometry: decodedRoute
     });
 
     feature.setStyle(this.state.routeStyles.route);
 
     this.state.passengerRouteFeatures.push({
       feature: feature,
-      geometry: polyline.geometry,
-      route: polyline
+      geometry: route.geometry,
+      route: route
     });
 
     this.state.vectorSource.addFeature(feature);
@@ -387,34 +371,23 @@ export class PassengerMap extends React.Component {
   }
 
   coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-          latitude +
-          "&lon=" +
-          longtitude +
-          "&format=json"
+        latitude +
+        "&lon=" +
+        longtitude +
+        "&format=json"
       )
-        .then(function(response) {
+        .then(function (response) {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           resolve(json);
         });
     });
   }
 
-  setInputFrom(value) {
-    var inputField = document.querySelector("#driver-address-input-from");
-    inputField.value = value;
-    this.state.route.fromAddress = value;
-  }
-
-  setInputTo(value) {
-    var inputField = document.querySelector("#driver-address-input-to");
-    inputField.value = value;
-    this.state.route.toAddress = value;
-  }
 
   passengerAddressInputSuggestion() {
     var places = require("places.js");
@@ -439,7 +412,7 @@ export class PassengerMap extends React.Component {
 
   showRidesOfDriver(driver) {
     if (this.state.showRides) {
-      if (driver == this.state.driver) {
+      if (driver === this.state.driver) {
         this.setState({ showRides: false, driverEmail: "" });
       } else {
         this.setState({ driverEmail: driver });
@@ -492,7 +465,7 @@ export class PassengerMap extends React.Component {
       })
     });
 
-    this.setState({ map, vectorSource }, function() {
+    this.setState({ map, vectorSource }, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
       this.showRoutes();
@@ -538,7 +511,9 @@ export class PassengerMap extends React.Component {
                             name="site_name"
                             checked={this.state.filteredRoute.toOffice === true}
                             onClick={() => {
-                              this.state.filteredRoute.toOffice = true;
+                              let filteredRouteState = this.state.filteredRoute;
+                              filteredRouteState.toOffice = true;
+                              this.setState({filteredRoute : filteredRouteState});
                             }}
                             onChange={() => this.showRoutes()}
                             value={"To office"}
@@ -566,8 +541,9 @@ export class PassengerMap extends React.Component {
                             }
                             onChange={() => this.showRoutes()}
                             onClick={() => {
-                              this.state.filteredRoute.toOffice = false;
-                              this.handleFromOfficeSelection();
+                              let filteredRouteState = this.state.filteredRoute;
+                              filteredRouteState.toOffice = false;
+                              this.setState({filteredRoute : filteredRouteState});                              this.handleFromOfficeSelection();
                             }}
                             value={"From office"}
                             name="radio-button-demo"
@@ -666,14 +642,14 @@ export class PassengerMap extends React.Component {
                       className="date-display"
                     />
                   ) : (
-                    <div />
-                  )}
+                      <div />
+                    )}
                 </Card>
               </Grid>
             </Grid>
           ) : (
-            <div />
-          )}
+              <div />
+            )}
           <div />
         </div>
         <div id="map" />

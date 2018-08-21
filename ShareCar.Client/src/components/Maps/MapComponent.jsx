@@ -6,15 +6,9 @@ import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import View from "ol/View";
 import Feature from "ol/Feature";
-import Icon from "ol/style/Icon";
 import TileLayer from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
-import Polyline from "ol/format/Polyline";
-import Style from "ol/style/Style";
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-
 import "../../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
