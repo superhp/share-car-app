@@ -64,47 +64,34 @@ export class DriverMap extends React.Component {
   };
 
   handleOfficeSelection(e, index, button) {
-    //var index = e.target.value;
-if(index){
-console.log(index);
-/*
-    var getState = this.state.filteredRoute;
 
-    getState.office = OfficeAddresses[index];
+    if (index === 0 || index === 1) { // if(index) doesn't work when index is 0
+      var address =
+        OfficeAddresses[index].number +
+        ", " +
+        OfficeAddresses[index].street +
+        ", " +
+        OfficeAddresses[index].city;
 
-    this.setState({ filteredRoute: getState });
-*/
-    var address =
-    OfficeAddresses[index].number +
-      ", " +
-      OfficeAddresses[index].street +
-      ", " +
-      OfficeAddresses[index].city;
+      var route = this.state.route;
 
-    var route = this.state.route;
+      if (button === "from") {
+        this.setState({ startPointInput: true });
 
-    if (button === "from") {
-      this.setState({ startPointInput: true });
+        route.addressFrom = address;
+        this.setState({ route: route });
 
-      route.addressFrom = address;
-      this.setState({ route: route });
+        this.setInputFrom(address);
 
-      this.setInputFrom(address);
+      } else {
+        this.setState({ startPointInput: false });
 
-      this.addRoutePoint(
-        [
-          this.state.filteredRoute.office.longtitude,
-          this.state.filteredRoute.office.latitude
-        ],
-        false
-      );
-    } else {
-      this.setState({ startPointInput: false });
+        route.addressTo = address;
+        this.setState({ route: route });
 
-      route.addressTo = address;
-      this.setState({ route: route });
+        this.setInputTo(address);
 
-      this.setInputTo(address);
+      }
       this.addRoutePoint(
         [
           OfficeAddresses[index].longtitude,
@@ -112,7 +99,7 @@ console.log(index);
         ],
         false
       );
-    }}
+    }
   }
 
   getNearest(coordinates) {
@@ -121,7 +108,7 @@ console.log(index);
         .then(response => {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           if (json.code === "Ok") {
             resolve(json.waypoints[0].location);
           } else reject();
@@ -162,7 +149,7 @@ console.log(index);
     var routeState = this.state.route;
     routeState.routeGeometry = route.geometry;
     this.setState({ route: routeState });
-        let decodedRoute = new Polyline({
+    let decodedRoute = new Polyline({
       factor: 1e5
     }).readGeometry(route, {
       dataProjection: "EPSG:4326",
@@ -189,18 +176,18 @@ console.log(index);
   }
 
   coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-          latitude +
-          "&lon=" +
-          longtitude +
-          "&format=json"
+        latitude +
+        "&lon=" +
+        longtitude +
+        "&format=json"
       )
-        .then(function(response) {
+        .then(function (response) {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           resolve(json);
         });
     });
@@ -221,8 +208,8 @@ console.log(index);
     inputField.value = value;
     var routeState = this.state.route;
     routeState.toAddress = value;
-    this.setState({ route: routeState }); 
-   }
+    this.setState({ route: routeState });
+  }
 
   driverAddressInputSuggestion() {
     var places = require("places.js");
@@ -298,9 +285,9 @@ console.log(index);
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputTo(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-            e.address.road +
-            ", " +
-            e.address.city
+          e.address.road +
+          ", " +
+          e.address.city
         );
       });
       this.createFeature(coordinates, false);
@@ -312,9 +299,9 @@ console.log(index);
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputFrom(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-            e.address.road +
-            ", " +
-            e.address.city
+          e.address.road +
+          ", " +
+          e.address.city
         );
       });
 
@@ -355,9 +342,8 @@ console.log(index);
     }
   }
 
-  addRoutePoint(evt, clickedOnMap) {
-    console.log(evt);
-    this.getNearest(evt).then(coordinates => {
+  addRoutePoint(coordinates, clickedOnMap) {
+    this.getNearest(coordinates).then(coordinates => {
       var markersOnMap = this.state.points;
       markersOnMap++;
       this.setState({ points: markersOnMap });
@@ -394,8 +380,6 @@ console.log(index);
   }
 
   componentDidMount() {
-    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
     var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -419,7 +403,7 @@ console.log(index);
       })
     });
 
-    this.setState({ map, vectorSource }, function() {
+    this.setState({ map, vectorSource }, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
       this.driverAddressInputSuggestion();
@@ -449,9 +433,11 @@ console.log(index);
                   placeholder="Select From Location..."
                 />
                 <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
-                  }
+                  handleSelection={(e, index, button) => {
+                    console.log(index);
+                    this.handleOfficeSelection(e, index, button)
+
+                  }}
                   whichButton="from"
                 />
               </div>
