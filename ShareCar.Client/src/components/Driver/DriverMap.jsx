@@ -145,13 +145,14 @@ export class DriverMap extends React.Component {
     console.log(this.state.features);
   }
 
-  createDriverRoute(route) {
+  createDriverRoute(routeGeometry) {
+    console.log(routeGeometry);
     var routeState = this.state.route;
-    routeState.routeGeometry = route.geometry;
+    routeState.routeGeometry = routeGeometry;
     this.setState({ route: routeState });
     let decodedRoute = new Polyline({
       factor: 1e5
-    }).readGeometry(route, {
+    }).readGeometry(routeGeometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
@@ -450,8 +451,8 @@ export class DriverMap extends React.Component {
                   placeholder="Select To Location..."
                 />
                 <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
+                  handleSelection={(e, index, button) =>
+                    this.handleOfficeSelection(e, index, button)
                   }
                   whichButton="to"
                 />
@@ -469,6 +470,7 @@ export class DriverMap extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
+          
             console.log(this.state.route);
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
           }}

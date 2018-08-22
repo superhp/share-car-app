@@ -28,11 +28,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   componentDidMount() {
     api.get(`/Ride/checkFinished`).then(response => {
       console.log(response.data);
-      this.state.rideNotifications = response.data;
+      this.setState({rideNotifications : response.data});
       if (response.data.length !== 0) {
-        this.setState({howNotification : true});
+        this.setState({showNotification : true});
       } else {
-        this.setState({howNotification : false});
+        this.setState({showNotification : false});
       }
       this.userService.getLoggedInUser(this.updateLoggedInUser);
     });

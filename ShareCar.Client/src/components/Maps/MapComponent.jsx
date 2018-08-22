@@ -27,8 +27,8 @@ export default class MapComponent extends React.Component<{}> {
     this.props.onUpdate(this.state.coordinates);
   }
 
-  centerMapParent(val) {
-    this.CenterMap(val.lng, val.lat, this.state.map);
+  centerMapParent(value) {
+    this.CenterMap(value.lng, value.lat, this.state.map);
   }
 
   // Shows passenger pick up point 

@@ -183,7 +183,7 @@ export class PassengerMap extends React.Component {
   }
 
   handleOfficeSelection(e, index, button) {
-    if (index) {
+    if (index === 0 || index === 1) {// if(index) doesn't work when index is 0
       var getState = this.state.filteredRoute;
 
       getState.office = OfficeAddresses[index];
@@ -193,6 +193,7 @@ export class PassengerMap extends React.Component {
       this.showRoutes();
     }
   }
+
   //removes passenger pick up point marker from map and clears states related with it
   handleFromOfficeSelection() {
     if (!this.state.filteredRoute.toOffice) {

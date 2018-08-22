@@ -123,7 +123,6 @@ namespace ShareCar.Logic.Ride_Logic
 
              ride.DriverEmail = email;        
 
-            ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
 
                 ParseExtraRideDtoData(ride);
@@ -233,17 +232,15 @@ namespace ShareCar.Logic.Ride_Logic
                hourAfterRide.AddHours(1);
                foreach (PassengerDto passenger in passengers)
                {
-                   Ride ride = _rideRepository.GetRideById(passenger.RideId);
-                if (ride != null)
+                if (passenger.Ride != null)
                 {
-                    if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
+                    if (DateTime.Compare(passenger.Ride.RideDateTime, hourAfterRide) < 0)
                     {
 
-                        var user = await _userManager.FindByEmailAsync(ride.DriverEmail);
-                        RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
-                        dtoRide.DriverFirstName = user.FirstName;
-                        dtoRide.DriverLastName = user.LastName;
-                        dtoRides.Add(dtoRide);
+                        var user = await _userManager.FindByEmailAsync(passenger.Ride.DriverEmail);
+                        passenger.Ride.DriverFirstName = user.FirstName;
+                        passenger.Ride.DriverLastName = user.LastName;
+                        dtoRides.Add(passenger.Ride);
                     }
                 }
      }

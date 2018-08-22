@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,10 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
         public void AddNewPassenger(Passenger passenger)
         {
 
-                _databaseContext.Passengers.Add(passenger);
-                _databaseContext.SaveChanges();
+            _databaseContext.Passengers.Add(passenger);
+            _databaseContext.SaveChanges();
 
-            }
+        }
 
         public void RemovePassenger(Passenger passenger)
         {
@@ -41,7 +42,8 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         public IEnumerable<Passenger> GetUnrespondedPassengersByEmail(string email)
         {
-                return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
+            return _databaseContext.Passengers.Include(x => x.Ride).
+            Where(x => x.Email == email && x.PassengerResponded == false);
 
         }
 
@@ -53,10 +55,10 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
 
-                Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
-                passenger.PassengerResponded = true;
-                passenger.Completed = response;
-                _databaseContext.SaveChanges();
+            Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
+            passenger.PassengerResponded = true;
+            passenger.Completed = response;
+            _databaseContext.SaveChanges();
 
         }
     }
