@@ -63,23 +63,23 @@ export class DriverMap extends React.Component {
       "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/"
   };
 
-  handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;
-if(indexas){
-console.log(indexas);
-
+  handleOfficeSelection(e, index, button) {
+    //var index = e.target.value;
+if(index){
+console.log(index);
+/*
     var getState = this.state.filteredRoute;
 
     getState.office = OfficeAddresses[index];
 
     this.setState({ filteredRoute: getState });
-
+*/
     var address =
-      this.state.filteredRoute.office.number +
+    OfficeAddresses[index].number +
       ", " +
-      this.state.filteredRoute.office.street +
+      OfficeAddresses[index].street +
       ", " +
-      this.state.filteredRoute.office.city;
+      OfficeAddresses[index].city;
 
     var route = this.state.route;
 
@@ -107,8 +107,8 @@ console.log(indexas);
       this.setInputTo(address);
       this.addRoutePoint(
         [
-          this.state.filteredRoute.office.longtitude,
-          this.state.filteredRoute.office.latitude
+          OfficeAddresses[index].longtitude,
+          OfficeAddresses[index].latitude
         ],
         false
       );

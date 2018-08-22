@@ -22,19 +22,14 @@ namespace ShareCar.Api.Controllers
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
-        private readonly IRouteLogic _routeLogic;
-        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IUserRepository _userRepository;
+        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IPassengerLogic _passengerLogic;
-        private readonly IAddressLogic _addressLogic;
-
-        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
+        public RideController(IRideLogic rideLogic, IRideRequestLogic rideRequestLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
         {
-            _addressLogic = addressLogic;
             _rideLogic = rideLogic;
-            _rideRequestLogic = rideRequestLogic;
-            _routeLogic = routeLogic;
             _userRepository = userRepository;
+            _rideRequestLogic = rideRequestLogic;
             _passengerLogic = passengerLogic;
         }
  
@@ -60,16 +55,6 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
-
-            foreach(var ride in rides)
-            {
-                foreach(var req in ride.Requests)
-                {
-                    AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
-                    req.Longtitude = adr.Longtitude;
-                    req.Latitude = adr.Latitude;
-                }
-            }
 
             return SendResponse(rides);
         }
@@ -145,8 +130,8 @@ namespace ShareCar.Api.Controllers
 
             }
             var userDto = await _userRepository.GetLoggedInUser(User);
-
             _rideRequestLogic.DeletedRide(rideDto.RideId);
+
             _rideLogic.SetRideAsInactive(rideDto);
                         
                 return Ok();

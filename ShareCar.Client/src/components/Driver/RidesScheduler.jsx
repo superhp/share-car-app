@@ -126,8 +126,12 @@ class RidesScheduler extends React.Component {
           this.state.time
       });
     });
-
+    console.log("--------------------");
+console.log(ridesToPost);
     api.post("Ride", ridesToPost).then(res => {
+      console.log("post sent");
+      console.log(ridesToPost);
+      console.log(res);
       if (res.status === 200) {
         this.setState({
           open: false,

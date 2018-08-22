@@ -60,7 +60,7 @@ namespace ShareCar.Logic.Ride_Logic
             IEnumerable<Ride> rides = _rideRepository.GetRidesByDriver(email);
 
 
-            List<RideDto> dtoRide = new List<RideDto>();
+            List<RideDto> dtoRides = new List<RideDto>();
             int count = 0;
             
 
@@ -69,20 +69,34 @@ namespace ShareCar.Logic.Ride_Logic
             {
 
                 RouteDto route = _routeLogic.GetRouteById(ride.RouteId); 
-                dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
+                dtoRides.Add(_mapper.Map<Ride, RideDto>(ride));
                 AddressDto fromAddress = _addressLogic.GetAddressById(route.FromId);
-                dtoRide[count].FromCountry = fromAddress.Country;
-                dtoRide[count].FromCity = fromAddress.City;
-                dtoRide[count].FromStreet = fromAddress.Street;
-                dtoRide[count].FromNumber = fromAddress.Number;
+                dtoRides[count].FromCountry = fromAddress.Country;
+                dtoRides[count].FromCity = fromAddress.City;
+                dtoRides[count].FromStreet = fromAddress.Street;
+                dtoRides[count].FromNumber = fromAddress.Number;
                 AddressDto toAddress = _addressLogic.GetAddressById(route.ToId);
-                dtoRide[count].ToCountry = toAddress.Country;
-                dtoRide[count].ToCity = toAddress.City;
-                dtoRide[count].ToStreet = toAddress.Street;
-                dtoRide[count].ToNumber = toAddress.Number;
+                dtoRides[count].ToCountry = toAddress.Country;
+                dtoRides[count].ToCity = toAddress.City;
+                dtoRides[count].ToStreet = toAddress.Street;
+                dtoRides[count].ToNumber = toAddress.Number;
                 count++;
             }
-            return dtoRide;
+            AddCoordinatesToRequests(dtoRides);
+            return dtoRides;
+        }
+
+        private void AddCoordinatesToRequests(List<RideDto> rides)
+        {
+            foreach (RideDto ride in rides)
+            {
+                foreach (RideRequestDto request in ride.Requests)
+                {
+                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+                    request.Longtitude = address.Longtitude;
+                    request.Latitude = address.Latitude;
+                }
+            }
         }
 
         public IEnumerable<RideDto> GetRidesByStartPoint(int addressFromId)
@@ -120,6 +134,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public void SetRideAsInactive(RideDto rideDto)
         {           
+
              _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
