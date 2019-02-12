@@ -34,35 +34,10 @@ export class DriverMap extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
-    selectedRouteStyle: {
-      route: new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: [0, 200, 0, 0.8]
-        }),
-        zIndex: 10
-      })
-    },
-    passengersSelectedOffice: "",
-    passengerPickUpPointFeature: null,
-    selectedRoute: "",
     filteredRoute: {
-      toOffice: false,
-      office: OfficeAddresses[0],
-      dateTimeFrom: "",
-      dateTimeTo: ""
+      office: OfficeAddresses[0]
     }, // route object containing filttering information acocrding to which passenger will get route suggestions
-    driversOfRoute: [],
-    driversInfo: {
-      firstName: "",
-      lastName: "",
-      rides: []
-    },
     isContinueClicked: false,
-    passengerStylesCouter: 0,
-    pickUpPoint: [],
-    route: "",
-    utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
@@ -78,12 +53,7 @@ export class DriverMap extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
-    showDrivers: false,
-    showRides: false,
-    ridesOfRoute: [],
-    passengerRoutes: [],
     passengerRouteFeatures: [],
-    passengerRouteFeaturesCounter: 0,
     routeStyles: {
       route: new Style({
         stroke: new Stroke({
@@ -98,66 +68,66 @@ export class DriverMap extends React.Component {
         })
       })
     },
-    driverEmail: "",
     url_osrm_nearest:
-      "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
+      "http://router.project-osrm.org/nearest/v1/driving/",
     url_osrm_route:
-      "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/"
+      "http://router.project-osrm.org/route/v1/driving/"
   };
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
-if(indexas){
-console.log(indexas);
+    if(indexas){
+        console.log(indexas);
 
-    var getState = this.state.filteredRoute;
+        var getState = this.state.filteredRoute;
 
-    getState.office = OfficeAddresses[index];
+        getState.office = OfficeAddresses[index];
 
-    this.setState({ filteredRoute: getState });
+        this.setState({ filteredRoute: getState });
 
-    var getState = this.state.filteredRoute;
-    getState.office = OfficeAddresses[indexas];
-    this.setState({ filteredRoute: getState });
-    var address =
-      this.state.filteredRoute.office.number +
-      ", " +
-      this.state.filteredRoute.office.street +
-      ", " +
-      this.state.filteredRoute.office.city;
+        var getState = this.state.filteredRoute;
+        getState.office = OfficeAddresses[indexas];
+        this.setState({ filteredRoute: getState });
+        var address =
+          this.state.filteredRoute.office.number +
+          ", " +
+          this.state.filteredRoute.office.street +
+          ", " +
+          this.state.filteredRoute.office.city;
 
-    var route = this.state.route;
+        var route = this.state.route;
 
-    if (button == "from") {
-      this.setState({ startPointInput: true });
+        if (button == "from") {
+          this.setState({ startPointInput: true });
 
-      route.addressFrom = address;
-      this.setState({ route: route });
+          route.addressFrom = address;
+          this.setState({ route: route });
 
-      this.setInputFrom(address);
+          this.setInputFrom(address);
 
-      this.addRoutePoint(
-        [
-          this.state.filteredRoute.office.longtitude,
-          this.state.filteredRoute.office.latitude
-        ],
-        false
-      );
-    } else {
-      this.setState({ startPointInput: false });
+          this.addRoutePoint(
+            [
+              this.state.filteredRoute.office.longtitude,
+              this.state.filteredRoute.office.latitude
+            ],
+            false
+          );
+        } else {
+          this.setState({ startPointInput: false });
 
-      route.addressTo = address;
-      this.setState({ route: route });
+          route.addressTo = address;
+          this.setState({ route: route });
 
-      this.setInputTo(address);
-      this.addRoutePoint(
-        [
-          this.state.filteredRoute.office.longtitude,
-          this.state.filteredRoute.office.latitude
-        ],
-        false
-      );
-    }}
+          this.setInputTo(address);
+          this.addRoutePoint(
+            [
+              this.state.filteredRoute.office.longtitude,
+              this.state.filteredRoute.office.latitude
+            ],
+            false
+          );
+        }
+    }
   }
 
   getNearest(coordinates) {
@@ -222,38 +192,6 @@ console.log(indexas);
     feature.setStyle(this.state.routeStyles.route);
     this.state.vectorSource.addFeature(feature);
     this.setState({ routeFeature: feature });
-  }
-
-  createPassengerRoute(polyline) {
-    this.state.route.routeGeometry = polyline.geometry;
-    var route = new Polyline({
-      factor: 1e5
-    }).readGeometry(polyline.geometry, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857"
-    });
-    var feature = new Feature({
-      type: "route",
-      geometry: route
-    });
-
-    feature.setStyle(this.state.routeStyles.route);
-
-    this.state.passengerRouteFeatures.push({
-      feature: feature,
-      geometry: polyline.geometry,
-      route: polyline
-    });
-
-    this.state.vectorSource.addFeature(feature);
-  }
-
-  to4326(coordinates) {
-    return transform(
-      [parseFloat(coordinates[0]), parseFloat(coordinates[1])],
-      "EPSG:3857",
-      "EPSG:4326"
-    );
   }
 
   coordinatesToLocation(latitude, longtitude) {

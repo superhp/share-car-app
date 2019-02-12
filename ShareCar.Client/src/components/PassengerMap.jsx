@@ -35,11 +35,6 @@ import "../styles/genericStyles.css";
 
 export class PassengerMap extends React.Component {
   state = {
-    points: 0,
-    coordinates: {
-      firstPoint: [],
-      lastPoint: []
-    },
     selectedRouteStyle: {
       route: new Style({
         stroke: new Stroke({
@@ -49,7 +44,6 @@ export class PassengerMap extends React.Component {
         zIndex: 10
       })
     },
-    passengersSelectedOffice: "",
     passengerPickUpPointFeature: null,
     selectedRoute: "",
     filteredRoute: {
@@ -59,20 +53,9 @@ export class PassengerMap extends React.Component {
       dateTimeTo: ""
     }, // route object containing filttering information acocrding to which passenger will get route suggestions
     driversOfRoute: [],
-    driversInfo: {
-      firstName: "",
-      lastName: "",
-      rides: []
-    },
-    isContinueClicked: false,
-    passengerStylesCouter: 0,
-    pickUpPoint: [],
-    route: "",
-    utils: "",
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
-    startPointInput: false, // If marker on a map was added by writing an address, it should be known if it was From or To input field
     features: {
       // markers on a map
       startPointFeature: "",
@@ -312,50 +295,6 @@ export class PassengerMap extends React.Component {
     });
   }
 
-  getNearest(coordinates) {
-    return new Promise((resolve, reject) => {
-      //make sure the coord is on street
-      fetch(this.state.url_osrm_nearest + coordinates.join())
-        .then(response => {
-          return response.json();
-        })
-        .then(function(json) {
-          if (json.code === "Ok") {
-            resolve(json.waypoints[0].location);
-          } else reject();
-        });
-    });
-  }
-
-  createFeature(coordinates, fromFeature) {
-    // fromFeature param indicates which feature is added - start point or destination
-    var feature = new Feature({
-      type: "place",
-      geometry: new Point(fromLonLat(coordinates))
-    });
-    feature.setStyle(this.state.routeStyles.icon);
-
-    this.state.vectorSource.addFeature(feature);
-    console.log(fromFeature);
-    if (fromFeature) {
-      console.log("creating from feature");
-      this.setState({
-        features: {
-          startPointFeature: feature,
-          destinationFeature: this.state.features.destinationFeature
-        }
-      });
-    } else {
-      this.setState({
-        features: {
-          startPointFeature: this.state.features.startPointFeature,
-          destinationFeature: feature
-        }
-      });
-    }
-    console.log(this.state.features);
-  }
-
   createPassengerRoute(polyline) {
     this.state.route.routeGeometry = polyline.geometry;
     var route = new Polyline({
@@ -378,44 +317,6 @@ export class PassengerMap extends React.Component {
     });
 
     this.state.vectorSource.addFeature(feature);
-  }
-
-  to4326(coordinates) {
-    return transform(
-      [parseFloat(coordinates[0]), parseFloat(coordinates[1])],
-      "EPSG:3857",
-      "EPSG:4326"
-    );
-  }
-
-  coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function(resolve, reject) {
-      fetch(
-        "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-          latitude +
-          "&lon=" +
-          longtitude +
-          "&format=json"
-      )
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(json) {
-          resolve(json);
-        });
-    });
-  }
-
-  setInputFrom(value) {
-    var inputField = document.querySelector("#driver-address-input-from");
-    inputField.value = value;
-    this.state.route.fromAddress = value;
-  }
-
-  setInputTo(value) {
-    var inputField = document.querySelector("#driver-address-input-to");
-    inputField.value = value;
-    this.state.route.toAddress = value;
   }
 
   passengerAddressInputSuggestion() {
