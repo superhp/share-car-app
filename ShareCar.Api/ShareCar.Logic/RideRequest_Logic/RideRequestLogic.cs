@@ -10,6 +10,7 @@ using ShareCar.Db.Repositories;
 using AutoMapper;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
+using ShareCar.Db.Repositories.RideRequest_Repository;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {

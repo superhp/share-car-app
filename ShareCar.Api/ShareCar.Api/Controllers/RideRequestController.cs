@@ -9,6 +9,7 @@ using ShareCar.Dto;
 using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
 using ShareCar.Logic.Ride_Logic;
+using ShareCar.Db.Repositories.User_Repository;
 
 namespace ShareCar.Api.Controllers
 {

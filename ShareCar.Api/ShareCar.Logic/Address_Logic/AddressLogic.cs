@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Entities;
 using ShareCar.Dto;
+using ShareCar.Db.Repositories.Address_Repository;
 
 namespace ShareCar.Logic.Address_Logic
 {

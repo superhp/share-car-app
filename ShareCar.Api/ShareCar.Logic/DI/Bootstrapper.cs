@@ -8,6 +8,12 @@ using ShareCar.Db.Repositories;
 using ShareCar.Logic.Address_Logic;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
+using ShareCar.Db.Repositories.Address_Repository;
+using ShareCar.Db.Repositories.RideRequest_Repository;
+using ShareCar.Db.Repositories.Passenger_Repository;
+using ShareCar.Db.Repositories.Route_Repository;
+using ShareCar.Db.Repositories.Ride_Repository;
+using ShareCar.Db.Repositories.User_Repository;
 
 namespace ShareCar.Logic.DI
 {
@@ -46,7 +52,7 @@ namespace ShareCar.Logic.DI
 
             services.AddScoped<IPassengerRepository, PassengerRepository>();
 
-            services.AddScoped<Db.Repositories.IUserRepository, Db.Repositories.UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
 

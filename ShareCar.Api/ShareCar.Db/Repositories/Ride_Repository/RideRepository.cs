@@ -7,6 +7,7 @@ using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Repositories.User_Repository;
 
 namespace ShareCar.Db.Repositories.Ride_Repository
 {

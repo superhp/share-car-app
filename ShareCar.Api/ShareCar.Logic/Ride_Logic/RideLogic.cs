@@ -11,6 +11,7 @@ using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Logic.Passenger_Logic;
+using ShareCar.Db.Repositories.Ride_Repository;
 
 namespace ShareCar.Logic.Ride_Logic
 {

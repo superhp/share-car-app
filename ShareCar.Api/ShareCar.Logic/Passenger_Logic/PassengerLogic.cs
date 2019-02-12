@@ -9,6 +9,7 @@ using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Ride_Logic;
+using ShareCar.Db.Repositories.Passenger_Repository;
 
 namespace ShareCar.Logic.Passenger_Logic
 {
