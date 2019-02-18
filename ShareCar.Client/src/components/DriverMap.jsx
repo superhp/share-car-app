@@ -25,6 +25,7 @@ import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map";
+import { getNearest } from "./../utils/mapUtils";
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -68,8 +69,8 @@ export class DriverMap extends React.Component {
         })
       })
     },
-    url_osrm_nearest:
-      "//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/",
+    // url_osrm_nearest:
+    //   "//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/",
     url_osrm_route:
       "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/"
   };
@@ -120,21 +121,6 @@ export class DriverMap extends React.Component {
       ],
       false
     );
-  }
-
-  getNearest(coordinates) {
-    return new Promise((resolve, reject) => {
-      //make sure the coord is on street
-      fetch(this.state.url_osrm_nearest + coordinates.join() + "?number=3&bearings=0,20")
-        .then(response => {
-          return response.json();
-        })
-        .then(function(json) {
-          if (json.code === "Ok") {
-            resolve(json.waypoints[0].location);
-          } else reject();
-        });
-    });
   }
 
   createFeature(coordinates, fromFeature) {
@@ -348,8 +334,7 @@ export class DriverMap extends React.Component {
   }
 
   addRoutePoint(evt, clickedOnMap) {
-    console.log(evt);
-    this.getNearest(evt).then(coordinates => {
+    getNearest(evt).then(coordinates => {
       var markersOnMap = this.state.points;
       markersOnMap++;
       this.setState({ points: markersOnMap });
