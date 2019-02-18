@@ -1,7 +1,4 @@
 import * as React from "react";
-//import { RideRequestForm } from "./RideRequestForm";
-//import axios from "axios";
-//import api from "../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -15,12 +12,9 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-//import Fill from "ol/style/Fill";
-//import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "./AddressData";
 import addressParser from "../helpers/addressParser";
-//import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
@@ -68,9 +62,7 @@ export class DriverMap extends React.Component {
           src: "http://cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png"
         })
       })
-    },
-    url_osrm_route:
-      "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/"
+    }
   };
 
   handleOfficeSelection(e, indexas, button) {
@@ -130,9 +122,7 @@ export class DriverMap extends React.Component {
     feature.setStyle(this.state.routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
-    console.log(fromFeature);
     if (fromFeature) {
-      console.log("creating from feature");
       this.setState({
         features: {
           startPointFeature: feature,
@@ -147,7 +137,6 @@ export class DriverMap extends React.Component {
         }
       });
     }
-    console.log(this.state.features);
   }
 
   createDriverRoute(polyline) {
@@ -323,23 +312,26 @@ export class DriverMap extends React.Component {
         return;
       }
 
-      var point1 = this.state.coordinates.firstPoint;
-      var point2 = this.state.coordinates.lastPoint;
-
-      console.log(this.state.vectorSource.getFeatures());
-      console.log(this.state.features);
-
-      fetch(this.state.url_osrm_route + point1 + ";" + point2)
-        .then(r => {
-          return r.json();
-        })
-        .then(json => {
-          if (json.code !== "Ok") {
-            return;
-          }
-          this.createDriverRoute(json.routes[0].geometry);
-        });
+      this.createRouteFromPoints();
     });
+  }
+
+  createRouteFromPoints() {
+    const URL_OSMR_ROUTE = "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/";
+    
+    var point1 = this.state.coordinates.firstPoint;
+    var point2 = this.state.coordinates.lastPoint;
+  
+    fetch(URL_OSMR_ROUTE + point1 + ";" + point2)
+      .then(r => {
+        return r.json();
+      })
+      .then(json => {
+        if (json.code !== "Ok") {
+        return;
+        }
+        this.createDriverRoute(json.routes[0].geometry);
+      });
   }
 
   componentDidMount() {
