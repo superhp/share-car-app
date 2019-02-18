@@ -1,7 +1,7 @@
 import * as React from "react";
-import { RideRequestForm } from "./RideRequestForm";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
+//import { RideRequestForm } from "./RideRequestForm";
+//import axios from "axios";
+//import api from "../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -15,12 +15,12 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import geom from "ol/geom";
+//import Fill from "ol/style/Fill";
+//import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { OfficeAddresses } from "./AddressData";
 import addressParser from "../helpers/addressParser";
-import RidesOfDriver from "./RidesOfDriver";
+//import RidesOfDriver from "./RidesOfDriver";
 import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
@@ -64,76 +64,68 @@ export class DriverMap extends React.Component {
       icon: new Style({
         image: new Icon({
           anchor: [0.5, 1],
-          src: "//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png"
+          src: "http://cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png"
         })
       })
     },
     url_osrm_nearest:
-      "http://router.project-osrm.org/nearest/v1/driving/",
+      "//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/",
     url_osrm_route:
-      "http://router.project-osrm.org/route/v1/driving/"
+      "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/"
   };
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
     if(indexas){
-        console.log(indexas);
-
-        var getState = this.state.filteredRoute;
-
-        getState.office = OfficeAddresses[index];
-
-        this.setState({ filteredRoute: getState });
-
         var getState = this.state.filteredRoute;
         getState.office = OfficeAddresses[indexas];
         this.setState({ filteredRoute: getState });
-        var address =
-          this.state.filteredRoute.office.number +
-          ", " +
-          this.state.filteredRoute.office.street +
-          ", " +
-          this.state.filteredRoute.office.city;
-
+		
+        var address = this.officeToString(this.state.filteredRoute.office);
         var route = this.state.route;
 
-        if (button == "from") {
-          this.setState({ startPointInput: true });
-
-          route.addressFrom = address;
-          this.setState({ route: route });
-
-          this.setInputFrom(address);
-
-          this.addRoutePoint(
-            [
-              this.state.filteredRoute.office.longtitude,
-              this.state.filteredRoute.office.latitude
-            ],
-            false
-          );
-        } else {
-          this.setState({ startPointInput: false });
-
-          route.addressTo = address;
-          this.setState({ route: route });
-
-          this.setInputTo(address);
-          this.addRoutePoint(
-            [
-              this.state.filteredRoute.office.longtitude,
-              this.state.filteredRoute.office.latitude
-            ],
-            false
-          );
-        }
+        this.updateRoute(button, route, address);
     }
+  }
+
+  officeToString(office) {
+	  var address =
+        office.number +
+        ", " +
+        office.street +
+        ", " +
+        office.city;
+
+    return address;
+  }
+
+  updateRoute(buttonType, route, address){
+    if(buttonType == "from"){
+      this.setState({startPointInput: true});
+      route.addressFrom = address;
+      this.setInputFrom(address);
+    }
+    else{
+      this.setState({startPointInput: false});
+      route.addressTo = address;
+      this.setInputTo(address);
+    }
+    
+    this.setState({ route: route });
+    
+    this.addRoutePoint(
+      [
+        this.state.filteredRoute.office.longtitude,
+        this.state.filteredRoute.office.latitude
+      ],
+      false
+    );
   }
 
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
       //make sure the coord is on street
-      fetch(this.state.url_osrm_nearest + coordinates.join())
+      fetch(this.state.url_osrm_nearest + coordinates.join() + "?number=3&bearings=0,20")
         .then(response => {
           return response.json();
         })
