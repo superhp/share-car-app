@@ -25,7 +25,7 @@ import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map";
-import { getNearest, coordinatesToLocation } from "./../utils/mapUtils";
+import { getNearest, coordinatesToLocation, centerMap } from "./../utils/mapUtils";
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -202,7 +202,7 @@ export class DriverMap extends React.Component {
       route.fromAddress = address.number + ", " + address.name + ", " + city;
       this.setState({ route });
 
-      this.CenterMap(
+      centerMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
         this.state.map
@@ -221,7 +221,7 @@ export class DriverMap extends React.Component {
       var route = this.state.route;
       route.toAddress = address.number + ", " + address.name + ", " + city;
       this.setState({ route });
-      this.CenterMap(
+      centerMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
         this.state.map
@@ -231,11 +231,6 @@ export class DriverMap extends React.Component {
         false
       );
     });
-  }
-
-  CenterMap(long, lat, map) {
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(13);
   }
 
   handleDriverMapClick(markersOnMap, coordinates) {
@@ -378,7 +373,7 @@ export class DriverMap extends React.Component {
     });
 
     this.setState({ map, vectorSource }, function() {
-      this.CenterMap(25.279652, 54.687157, this.state.map);
+      centerMap(25.279652, 54.687157, this.state.map);
 
       this.driverAddressInputSuggestion();
     });

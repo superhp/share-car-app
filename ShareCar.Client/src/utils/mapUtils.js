@@ -1,3 +1,5 @@
+import { transform } from "ol/proj";
+
 const URL_OSRM_NEAREST = "//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/";
 const BEARINGS = "?number=3&bearings=0,20";
 const LOCATION_IQ = "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=";
@@ -33,4 +35,9 @@ export const coordinatesToLocation = (latitude, longtitude) => {
           resolve(json);
         });
     });
-  }
+}
+
+export const centerMap = (long, lat, map) => {
+    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
+    map.getView().setZoom(13);
+}
