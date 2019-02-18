@@ -20,6 +20,7 @@ import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map";
 import { getNearest, coordinatesToLocation, centerMap } from "./../utils/mapUtils";
+import { routeStyles } from "./../utils/mapStyles";
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -48,21 +49,7 @@ export class DriverMap extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
-    passengerRouteFeatures: [],
-    routeStyles: {
-      route: new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: [40, 40, 40, 0.8]
-        })
-      }),
-      icon: new Style({
-        image: new Icon({
-          anchor: [0.5, 1],
-          src: "http://cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png"
-        })
-      })
-    }
+    passengerRouteFeatures: []
   };
 
   handleOfficeSelection(e, indexas, button) {
@@ -119,7 +106,7 @@ export class DriverMap extends React.Component {
       type: "place",
       geometry: new Point(fromLonLat(coordinates))
     });
-    feature.setStyle(this.state.routeStyles.icon);
+    feature.setStyle(routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
     if (fromFeature) {
@@ -154,7 +141,7 @@ export class DriverMap extends React.Component {
     if (this.state.routeFeature) {
       this.state.vectorSource.removeFeature(this.state.routeFeature); // removes old route from map
     }
-    feature.setStyle(this.state.routeStyles.route);
+    feature.setStyle(routeStyles.route);
     this.state.vectorSource.addFeature(feature);
     this.setState({ routeFeature: feature });
   }
