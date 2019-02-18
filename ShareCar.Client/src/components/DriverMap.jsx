@@ -25,7 +25,7 @@ import SimpleMenu from "./common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map";
-import { getNearest } from "./../utils/mapUtils";
+import { getNearest, coordinatesToLocation } from "./../utils/mapUtils";
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -69,8 +69,6 @@ export class DriverMap extends React.Component {
         })
       })
     },
-    // url_osrm_nearest:
-    //   "//cts-maps.northeurope.cloudapp.azure.com/nearest/v1/driving/",
     url_osrm_route:
       "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/"
   };
@@ -172,24 +170,6 @@ export class DriverMap extends React.Component {
     this.setState({ routeFeature: feature });
   }
 
-  coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function(resolve, reject) {
-      fetch(
-        "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-          latitude +
-          "&lon=" +
-          longtitude +
-          "&format=json"
-      )
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(json) {
-          resolve(json);
-        });
-    });
-  }
-
   setInputFrom(value) {
     var inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
@@ -273,7 +253,7 @@ export class DriverMap extends React.Component {
         }
       });
 
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
+      coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputTo(
           (e.address.house_number ? e.address.house_number + ", " : "") +
             e.address.road +
@@ -287,7 +267,7 @@ export class DriverMap extends React.Component {
         coordinates: { firstPoint: coordinates, lastPoint: [] }
       });
 
-      this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
+      coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputFrom(
           (e.address.house_number ? e.address.house_number + ", " : "") +
             e.address.road +
