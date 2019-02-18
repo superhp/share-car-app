@@ -188,49 +188,45 @@ export class DriverMap extends React.Component {
     var placesAutocompleteFrom = places({
       container: document.querySelector("#driver-address-input-from")
     });
-
     var placesAutocompleteTo = places({
       container: document.querySelector("#driver-address-input-to")
     });
 
     placesAutocompleteFrom.on("change", e => {
       this.setState({ startPointInput: true });
-      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
-      var city = e.suggestion.city;
-
-      var route = this.state.route;
-      route.fromAddress = address.number + ", " + address.name + ", " + city;
-      this.setState({ route });
-
-      centerMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-      this.addRoutePoint(
-        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
-        false
-      );
+      this.handleRouteCreation(e, "from");
     });
 
     placesAutocompleteTo.on("change", e => {
       this.setState({ startPointInput: false });
-      var address = addressParser.parseAlgolioAddress(e.suggestion.name);
-      var city = e.suggestion.city;
-
-      var route = this.state.route;
-      route.toAddress = address.number + ", " + address.name + ", " + city;
-      this.setState({ route });
-      centerMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-      this.addRoutePoint(
-        [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
-        false
-      );
+      this.handleRouteCreation(e, "to");
     });
+  }
+
+  handleRouteCreation(e, addressType) {
+    var address = addressParser.parseAlgolioAddress(e.suggestion.name);
+    var city = e.suggestion.city;
+    var route = this.state.route;
+
+    if(addressType == "from"){
+      route.fromAddress = [address.number, address.name, city].join(", ");
+    }
+    else {
+      route.toAddress = [address.number, address.name, city].join(", ");
+    }
+
+    this.setState({ route });
+    
+    centerMap(
+      e.suggestion.latlng.lng,
+      e.suggestion.latlng.lat,
+      this.state.map
+    );
+
+    this.addRoutePoint(
+      [e.suggestion.latlng.lng, e.suggestion.latlng.lat],
+      false
+    );
   }
 
   handleDriverMapClick(markersOnMap, coordinates) {
