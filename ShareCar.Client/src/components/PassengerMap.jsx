@@ -156,7 +156,7 @@ export class PassengerMap extends React.Component {
 }
 
   handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;
+    var index = e.target.value;   //why use it here?
     if (indexas) {
       var getState = this.state.filteredRoute;
 
@@ -170,11 +170,12 @@ export class PassengerMap extends React.Component {
   //removes passenger pick up point marker from map and clears states related with it
   handleFromOfficeSelection() {
     if (!this.state.filteredRoute.toOffice) {
-      if (this.state.passengerPickUpPointFeature) {
+      let pickupFeature = this.state.passengerPickUpPointFeature;
+      if (pickupFeature) {
         this.state.vectorSource.removeFeature(
-          this.state.passengerPickUpPointFeature
+          pickupFeature
         );
-        this.state.passengerPickUpPointFeature = null;
+        pickupFeature = null;
       }
       this.setState(
         {
@@ -182,9 +183,6 @@ export class PassengerMap extends React.Component {
             this.state.filteredRoute.office.longtitude,
             this.state.filteredRoute.office.latitude
           ]
-        },
-        () => {
-          console.log(this.state.pickUpPoint);
         }
       );
     }
@@ -195,8 +193,7 @@ export class PassengerMap extends React.Component {
     centerMap(
       this.state.filteredRoute.office.longtitude,
       this.state.filteredRoute.office.latitude,
-      this.state.map,
-      13
+      this.state.map
     );
     this.setState({
       showDriver: true,
@@ -206,40 +203,30 @@ export class PassengerMap extends React.Component {
       showRides: false,
       passengerRouteFeaturesCounter: 0
     });
-    //  this.state.showDrivers = true;
-    //  this.state.showRoutes = false;
-    //   this.state.driversOfRoute
-    //  this.state.driverEmail
-    //  this.state.showRides
-    console.log(this.state.filteredRoute);
-    var routeDto;
+    let routeDto;
     this.state.filteredRoute.toOffice
       ? (routeDto = {
-          AddressTo: {
-            City: this.state.filteredRoute.office.city,
-            Street: this.state.filteredRoute.office.street,
-            Number: this.state.filteredRoute.office.number
-          }
+          AddressTo: this.buildAddress(this.state.filteredRoute)
         })
       : (routeDto = {
-          AddressFrom: {
-            City: this.state.filteredRoute.office.city,
-            Street: this.state.filteredRoute.office.street,
-            Number: this.state.filteredRoute.office.number
-          }
+          AddressFrom: this.buildAddress(this.state.filteredRoute)
         });
-    console.log(routeDto);
-    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      console.log(res.data);
+    
+    this.fetchRoutes(routeDto);
+  }
 
-      console.log(res);
-      console.log(res.status);
+  buildAddress(route) {
+    return {
+      City: route.office.city,
+      Street: route.office.street,
+      Number: route.office.number
+    }
+  }
+
+  fetchRoutes(routeDto) {
+    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
       if (res.status == 200 && res.data != "") {
-        console.log(res.data);
         this.setState({ passengerRoutes: res.data });
-        this.state.passengerRoutes.forEach(element => {
-          console.log(element.geometry);
-        });
         this.state.passengerRouteFeatures = []; // deletes old routes
 
         this.state.passengerRoutes.forEach(element => {
@@ -283,8 +270,7 @@ export class PassengerMap extends React.Component {
       centerMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
-        this.state.map,
-        19
+        this.state.map
       );
     });
   }
@@ -305,10 +291,8 @@ export class PassengerMap extends React.Component {
     var feature = new Feature(new Point(evt.coordinate));
     var lonlat = [];
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
+    this.setState({ pickUpPoint: lonlat });
 
-    this.setState({ pickUpPoint: lonlat }, () => {
-      console.log(this.state.pickUpPoint);
-    });
     if (this.state.passengerPickUpPointFeature) {
       this.state.vectorSource.removeFeature(
         this.state.passengerPickUpPointFeature
@@ -319,14 +303,10 @@ export class PassengerMap extends React.Component {
   }
 
   componentDidMount() {
-    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
     var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
       });
-
-    console.clear();
 
     var map = new Map({
       target: "map",
@@ -435,18 +415,6 @@ export class PassengerMap extends React.Component {
                       this.handleOfficeSelection(e, indexas, button)
                     }
                   />
-                  {/* <select
-                    onChange={e => {
-                      this.handleOfficeSelection(e);
-                    }}
-                  >
-                    <option value={0}>
-                      {OfficeAddresses[0].street + OfficeAddresses[0].number}
-                    </option>
-                    <option value={1}>
-                      {OfficeAddresses[1].street + OfficeAddresses[1].number}
-                    </option>
-                  </select> */}
                 </Grid>
               </Card>
             </Grid>
