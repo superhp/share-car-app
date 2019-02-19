@@ -2,6 +2,7 @@
 using ShareCar.Db.Entities;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ShareCar.Db.Repositories.RideRequest_Repository
 {
@@ -19,42 +20,63 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public bool AddRequest(Request request)
         {
-
-            _databaseContext.Requests.Add(request);
-            _databaseContext.SaveChanges();
-            return true;
+            try
+            {
+                _databaseContext.Requests.Add(request);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
         }
 
-        public IEnumerable<Request> FindDriverRequests(string email)
+        public IEnumerable<Request> GetDriverRequests(string email)
         {
 
                 return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).ToList();
 
         }
 
-        public IEnumerable<Request> FindRequestsByRideId(int rideId)
+        public IEnumerable<Request> GetRequestsByRideId(int rideId)
         {
             return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED).ToList();
         }
 
-        public void DeletedRide(IEnumerable<Request> requests)
+        public bool DeletedRide(IEnumerable<Request> requests)
         {
-            foreach (Request request in requests)
+            try
             {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
-                toUpdate.SeenByPassenger = false;
-                toUpdate.Status = Status.DELETED;
+                foreach (Request request in requests)
+                {
+                    Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                    toUpdate.SeenByPassenger = false;
+                    toUpdate.Status = Status.DELETED;
+                }
+                _databaseContext.SaveChanges();
+                return true;
             }
-            _databaseContext.SaveChanges();
+            catch (Exception e)
+            {
+                return false;
+            }
         }
-        public IEnumerable<Request> FindPassengerRequests(string email)
+        public IEnumerable<Request> GetPassengerRequests(string email)
         {
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED))).ToList();
         }
 
-        public Request FindRequestById(int id)
+        public Request GetRequestById(int id)
         {
-            return _databaseContext.Requests.Single(x => x.RequestId == id);
+            try
+            {
+                return _databaseContext.Requests.Single(x => x.RequestId == id);
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
         }
 
         public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)
@@ -63,16 +85,16 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         }
 
         public void SeenByDriver(int[] requests)
-        { 
+        {
 
-            foreach(int id in requests)
-            {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
-                toUpdate.SeenByDriver = true;
+                foreach (int id in requests)
+                {
+                    Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                    toUpdate.SeenByDriver = true;
+                }
+
+                _databaseContext.SaveChanges();
             }
-            _databaseContext.SaveChanges();
-
-        }
 
         public void SeenByPassenger(int[] requests)
         {

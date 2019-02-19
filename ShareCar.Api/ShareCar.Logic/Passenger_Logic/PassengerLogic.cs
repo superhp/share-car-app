@@ -32,7 +32,7 @@ namespace ShareCar.Logic.Passenger_Logic
 
         }
 
-        public List<PassengerDto> GetPassengersByEmail(string email)
+        public List<PassengerDto> GetUnrepondedPassengersByEmail(string email)
         {
             IEnumerable<Passenger> passengers = _passengerRepository.GetUnrepondedPassengersByEmail(email);
             List<PassengerDto> dtoPassengers = new List<PassengerDto>();
@@ -55,7 +55,7 @@ namespace ShareCar.Logic.Passenger_Logic
         }
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            _passengerRepository.RespondeToRide(response, rideId, passengerEmail);
+            _passengerRepository.RespondToRide(response, rideId, passengerEmail);
 
         }
         public int GetUsersPoints(string email)

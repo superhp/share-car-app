@@ -114,27 +114,15 @@ namespace ShareCar.Logic.Ride_Logic
 
         public bool AddRide(RideDto ride, string email)
         {
-
-            if (ride.DriverEmail == null)
-            {
-                ride.DriverEmail = email;
-            }
+            ride.DriverEmail = email;
 
             ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
             
-            bool addNewRide = true; 
+            AddRouteIdToRide(ride);
 
-            if (addNewRide)
-            {
-                ParseExtraRideDtoData(ride);
+            return _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
 
-                _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-                
-                return true;
-                
-            }
-            return false;
         }
 
         public bool SetRideAsInactive(RideDto rideDto)
@@ -187,7 +175,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         }
 
-        private void ParseExtraRideDtoData(RideDto ride)
+        private void AddRouteIdToRide(RideDto ride)
         {
             AddressDto fromAddress = new AddressDto
             {
@@ -201,8 +189,6 @@ namespace ShareCar.Logic.Ride_Logic
                 Street = ride.ToStreet,
                 Number = ride.ToNumber
             };
-
-
 
             if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
@@ -233,7 +219,7 @@ namespace ShareCar.Logic.Ride_Logic
             List<RouteDto> routes = _routeLogic.GetRoutes(routeDto, email);
             foreach (RouteDto route in routes)
             {
-                await AddDriversNamesToRidesAsync(route.Rides);
+                await AddDriversNamesToRouteRidesAsync(route.Rides);
             }
             return routes;
 
@@ -241,7 +227,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public async Task<List<RideDto>> GetFinishedPassengerRidesAsync(string passengerEmail)
         {
-            List<PassengerDto> passengers = _passengerLogic.GetPassengersByEmail(passengerEmail);
+            List<PassengerDto> passengers = _passengerLogic.GetUnrepondedPassengersByEmail(passengerEmail);
 
         //    IEnumerable<Ride> entityRides = _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passengers));
             List<RideDto> dtoRides = new List<RideDto>();
@@ -267,7 +253,7 @@ namespace ShareCar.Logic.Ride_Logic
             return dtoRides;
         }
 
-        public async Task<bool> AddDriversNamesToRidesAsync(List<RideDto> dtoRides)
+        public async Task<bool> AddDriversNamesToRouteRidesAsync(List<RideDto> dtoRides)
         {
             List<string> emails = new List<string>();
             List<string> FirstNames = new List<string>();
@@ -297,22 +283,20 @@ namespace ShareCar.Logic.Ride_Logic
             return true;
         }
 
-        public async Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string rideLogic)
+        public async Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string routeGeometry)
         {
-            IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(rideLogic);
+            IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(routeGeometry);
 
             List<RideDto> dtoRides = (List<RideDto>) MapToList(entityRides);
 
-            await AddDriversNamesToRidesAsync(dtoRides);
+            await AddDriversNamesToRouteRidesAsync(dtoRides);
 
             return dtoRides;
         }
 
         public bool UpdateRide(RideDto ride)
         {
-            var rideUpdated = _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
-
-            return rideUpdated ? true : false;
+           return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
         }
     }
 }

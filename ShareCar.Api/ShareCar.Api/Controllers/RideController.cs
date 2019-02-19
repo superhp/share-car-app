@@ -41,14 +41,13 @@ namespace ShareCar.Api.Controllers
         public IActionResult GetSimillarRides(int rideId)
         {
             IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(rideId);
-            return SendResponse(rides);
+            return Ok(rides);
         }
         
         [HttpPost("passengerResponse")]
         public async Task PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-
             _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
         }
 
@@ -78,7 +77,7 @@ namespace ShareCar.Api.Controllers
                 }
             }
 
-            return SendResponse(rides);
+            return Ok(rides);
         }
 
         [HttpGet("ridedate={rideDate}")]
@@ -142,19 +141,6 @@ namespace ShareCar.Api.Controllers
             }
         }
         
-        [HttpPut]
-        public IActionResult Put([FromBody] RideDto ride)
-        {
-            if (ride == null)
-            {
-                return BadRequest("Invalid parameter");
-            }
-
-            
-                return Ok();
-            
-
-        }
         [HttpPut("disactivate")]
         public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
@@ -178,7 +164,7 @@ namespace ShareCar.Api.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] IEnumerable<RideDto> rides)
+        public async Task<IActionResult> AddRides([FromBody] IEnumerable<RideDto> rides)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (rides == null)

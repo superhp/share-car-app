@@ -25,13 +25,13 @@ namespace ShareCar.Api.Controllers
             _passengerLogic = passengerLogic;
             _userLogic = userLogic;
         }
-
+        /*
         [HttpPost]
         public IActionResult RideCompleted([FromBody] PassengerDto passenger)
         {
 
             return Ok();
-        }
+        }*/
 
         [HttpGet("rideId={rideId}")]
         public IActionResult GetPassengersByRide(int rideId)

@@ -25,8 +25,7 @@ namespace ShareCar.Db.Repositories.Address_Repository
             }
             catch(Exception e)
             {
-                Console.Write(e);
-                return true;
+                return false;
             }
 
         }

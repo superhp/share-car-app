@@ -22,12 +22,21 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         }
 
 
-        public void AddRide(Ride ride)
+        public bool AddRide(Ride ride)
         {
-            ride.isActive = true;
-            _databaseContext.Rides.Add(ride);
-            _databaseContext.SaveChanges();
-        }
+            try
+            {
+                ride.isActive = true;
+                _databaseContext.Rides.Add(ride);
+
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            }
 
         public IEnumerable<Ride> GetRidesByDate(DateTime date)
         {
@@ -45,7 +54,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         {
             try
             {
-                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive == true); // Throws exception if ride is not found
+                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive == true); 
             }
             catch
             {
@@ -84,18 +93,24 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             }
             catch (Exception e)
             {
-
                 return false;
             }
         }
         public bool SetRideAsInactive(Ride ride)
         {
-            var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
-            rideToDelete.isActive = false;
-            _databaseContext.SaveChanges();
-            return true;
-
+            try
+            {
+                var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).Single(x => x.RideId == ride.RideId);
+                rideToDelete.isActive = false;
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
+
         public IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId)
         {
             return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId && x.isActive == true);

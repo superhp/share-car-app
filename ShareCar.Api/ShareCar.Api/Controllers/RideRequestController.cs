@@ -34,9 +34,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = Boolean.Parse(driver);
-
-            
+            bool isDriver = Boolean.Parse(driver); 
 
             IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
@@ -44,7 +42,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] RideRequestDto request)
+        public async Task<IActionResult> AddRequest([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
@@ -82,7 +80,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] RideRequestDto request)
+        public IActionResult UpdateRequests([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
