@@ -33,17 +33,11 @@ import map from "./Maps/Map";
 import "../styles/testmap.css";
 import "../styles/genericStyles.css";
 
+import { centerMap } from "./../utils/mapUtils";
+import { routeStyles, selectedRouteStyle } from "./../utils/mapStyles";
+
 export class PassengerMap extends React.Component {
   state = {
-    selectedRouteStyle: {
-      route: new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: [0, 200, 0, 0.8]
-        }),
-        zIndex: 10
-      })
-    },
     passengerPickUpPointFeature: null,
     selectedRoute: "",
     filteredRoute: {
@@ -74,84 +68,55 @@ export class PassengerMap extends React.Component {
     passengerRoutes: [],
     passengerRouteFeatures: [],
     passengerRouteFeaturesCounter: 0,
-    routeStyles: {
-      route: new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: [40, 40, 40, 0.8]
-        })
-      }),
-      icon: new Style({
-        image: new Icon({
-          anchor: [0.5, 1],
-          src: "//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png"
-        })
-      })
-    },
-    driverEmail: "",
-    url_osrm_nearest:
-      "//cts-maps.northeurope.cloudapp.azure.com/maps/nearest/v1/driving/",
-    url_osrm_route:
-      "//cts-maps.northeurope.cloudapp.azure.com/maps/route/v1/driving/"
+    driverEmail: ""
   };
 
   selectRoute(value) {
-    if (this.state.passengerRouteFeatures.length != 0) {
-      // checks if there are any routes displayed
+    let counter = this.state.passengerRouteFeaturesCounter;
+    const features = this.state.passengerRouteFeatures;
+    const featuresLength = features.length;
+    
+    if (featuresLength != 0) {
       this.state.showDrivers = true;
       this.state.showRoutes = false;
       this.state.showRides = false;
-      var counter = this.state.passengerRouteFeaturesCounter;
-      if (counter == 0) {
-        this.state.passengerRouteFeatures[
-          this.state.passengerRouteFeatures.length - 1
-        ].feature.setStyle(this.state.routeStyles.route);
 
-        if (this.state.passengerRouteFeatures.length != 1) {
-          this.state.passengerRouteFeatures[1].feature.setStyle(
-            this.state.routeStyles.route
-          );
+      if (counter == 0) {
+        this.state.passengerRouteFeatures[featuresLength - 1]
+          .feature.setStyle(routeStyles.route);
+
+        if (featuresLength != 1) {
+          features[1].feature.setStyle(routeStyles.route);
         }
-      } else {
-        this.state.passengerRouteFeatures[counter - 1].feature.setStyle(
-          this.state.routeStyles.route
-        );
-        if (value == -1) {
-          if (counter != this.state.passengerRouteFeatures.length - 1) {
-            this.state.passengerRouteFeatures[counter + 1].feature.setStyle(
-              this.state.routeStyles.route
-            );
-          } else {
-            this.state.passengerRouteFeatures[0].feature.setStyle(
-              this.state.routeStyles.route
-            );
+      } 
+      else {
+          features[counter - 1].feature.setStyle(routeStyles.route);
+      
+          if (value == -1) {
+            if (counter != featuresLength - 1) {
+              features[counter + 1].feature.setStyle(routeStyles.route);
+            } 
+            else {
+                  features[0].feature.setStyle(routeStyles.route);
+            }
           }
-        }
       }
 
-      this.state.passengerRouteFeatures[counter].feature.setStyle(
-        this.state.selectedRouteStyle.route
-      );
+      features[counter].feature.setStyle(selectedRouteStyle.route);
       this.setState(
         {
-          selectedRoute: this.state.passengerRouteFeatures[counter]
+          selectedRoute: features[counter]
         },
         () => {
-          console.log(counter);
-          console.log(this.state.passengerRouteFeatures);
-          console.log(this.state.selectedRoute);
-          console.log("=======================");
-
           counter += value;
 
-          if (counter >= this.state.passengerRouteFeatures.length) {
+          if (counter >= featuresLength) {
             counter = 0;
           }
           if (counter < 0) {
-            counter = this.state.passengerRouteFeatures.length - 1;
+            counter = featuresLength - 1;
           }
           this.setState({ passengerRouteFeaturesCounter: counter });
-          console.log(this.state.selectedRoute);
           this.getRidesByRoute(this.state.selectedRoute.route);
         }
       );
@@ -161,21 +126,14 @@ export class PassengerMap extends React.Component {
   handleCloseDriver() {
     this.setState({ showDriver: false });
   }
+
   getRidesByRoute(route) {
-    console.log(route);
-    //    var route = {
-    //    Geometry: route.geometry
-    //  };
-    // api.get(`/Ride/ridesByRoute=` + route).then(response => {
     this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
       var drivers = [];
-      console.log(this.state.ridesOfRoute);
 
       this.state.ridesOfRoute.forEach(ride => {
-        console.log("ride:   " + ride);
         if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
           drivers.push(ride.driverFirstName + ride.driverLastName);
-          console.log("driver:   " + ride.driverFirstName);
 
           var driversArray = this.state.driversOfRoute;
           driversArray.push({
@@ -189,17 +147,13 @@ export class PassengerMap extends React.Component {
         }
       });
 
-      console.log("state drivers: ====   " + this.state.driversOfRoute);
-
       if (drivers.length != 0) {
         this.setState({ showDriver: true });
       } else {
         this.setState({ showDriver: false });
       }
-
-      console.log(this.state.driversOfRoute);
     });
-  }
+}
 
   handleOfficeSelection(e, indexas, button) {
     var index = e.target.value;
@@ -238,7 +192,7 @@ export class PassengerMap extends React.Component {
 
   showRoutes() {
     this.state.vectorSource.clear();
-    this.CenterMap(
+    centerMap(
       this.state.filteredRoute.office.longtitude,
       this.state.filteredRoute.office.latitude,
       this.state.map,
@@ -308,7 +262,7 @@ export class PassengerMap extends React.Component {
       geometry: route
     });
 
-    feature.setStyle(this.state.routeStyles.route);
+    feature.setStyle(routeStyles.route);
 
     this.state.passengerRouteFeatures.push({
       feature: feature,
@@ -326,18 +280,13 @@ export class PassengerMap extends React.Component {
       container: document.querySelector("#passenger-address")
     });
     placesAutocompletePassenger.on("change", e => {
-      this.CenterMap(
+      centerMap(
         e.suggestion.latlng.lng,
         e.suggestion.latlng.lat,
         this.state.map,
         19
       );
     });
-  }
-
-  CenterMap(long, lat, map, zoom) {
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(zoom);
   }
 
   showRidesOfDriver(driver) {
@@ -396,7 +345,7 @@ export class PassengerMap extends React.Component {
     });
 
     this.setState({ map, vectorSource }, function() {
-      this.CenterMap(25.279652, 54.687157, this.state.map);
+      centerMap(25.279652, 54.687157, this.state.map);
 
       this.showRoutes();
       this.passengerAddressInputSuggestion();

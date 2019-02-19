@@ -18,3 +18,13 @@ export const routeStyles = {
         })
     })
 };
+
+export const selectedRouteStyle = {
+    route: new Style({
+      stroke: new Stroke({
+        width: 6,
+        color: [0, 200, 0, 0.8]
+      }),
+      zIndex: 10
+    })
+};
