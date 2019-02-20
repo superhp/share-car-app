@@ -36,6 +36,7 @@ import "../styles/genericStyles.css";
 import { centerMap } from "./../utils/mapUtils";
 import { routeStyles, selectedRouteStyle } from "./../utils/mapStyles";
 import { DriverRoutesSugestions } from "./DriverRoutesSugestions";
+import { PassengerRouteSelection } from "./PassengerRouteSelection";
 
 export class PassengerMap extends React.Component {
   state = {
@@ -349,78 +350,17 @@ export class PassengerMap extends React.Component {
     return (
       <div>
         <div className="passengerForm">
-          <Grid
-            className="from-to-container"
-            alignItems="flex-start"
-            container
-            justify="center"
-          >
-            <Grid item xs={10}>
-              <Card className="paper-background">
-                <Grid container justify="center">
-                  <Grid item xs={6}>
-                    <Grid container alignItems="center" justify="center">
-                      <Grid item xs={6}>
-                        <Grid container justify="center">
-                          <Typography variant="body1">To office</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container justify="center">
-                          <Radio
-                            color="primary"
-                            name="site_name"
-                            checked={this.state.filteredRoute.toOffice === true}
-                            onClick={() => {
-                              this.state.filteredRoute.toOffice = true;
-                            }}
-                            onChange={() => this.showRoutes()}
-                            value={"To office"}
-                            name="radio-button-demo"
-                            aria-label="A"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Grid container alignItems="center" justify="center">
-                      <Grid item xs={6}>
-                        <Grid container justify="center">
-                          <Typography variant="body1">From office</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container justify="center">
-                          <Radio
-                            color="primary"
-                            name="address"
-                            checked={
-                              this.state.filteredRoute.toOffice === false
-                            }
-                            onChange={() => this.showRoutes()}
-                            onClick={() => {
-                              this.state.filteredRoute.toOffice = false;
-                              this.handleFromOfficeSelection();
-                            }}
-                            value={"From office"}
-                            name="radio-button-demo"
-                            aria-label="A"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <SimpleMenu
-                    buttonText="Select Office"
-                    handleSelection={(e, indexas, button) =>
-                      this.handleOfficeSelection(e, indexas, button)
-                    }
-                  />
-                </Grid>
-              </Card>
-            </Grid>
-          </Grid>
+          <PassengerRouteSelection 
+            filteredRouteToOffice={this.state.filteredRoute.toOffice}
+            showRoutes={() => this.showRoutes()}
+            directionToOffice={() => {
+              this.state.filteredRoute.toOffice = true;
+            }}
+            handleFromOfficeSelection={() => this.handleFromOfficeSelection()}
+            handleOfficeSelection={(e, indexas, button) =>
+              this.handleOfficeSelection(e, indexas, button)
+            }
+          />
           <Grid container justify="center" className="algolia-input" xs={10}>
             <input
               type="search"
