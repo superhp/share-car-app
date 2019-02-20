@@ -1,42 +1,26 @@
 import * as React from "react";
-import { RideRequestForm } from "./RideRequestForm";
 import axios from "axios";
-import api from "../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
 import Feature from "ol/Feature";
-import Icon from "ol/style/Icon";
 import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
-import Style from "ol/style/Style";
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import geom from "ol/geom";
-import { fromLonLat } from "ol/proj";
-import { OfficeAddresses } from "./AddressData";
-import addressParser from "../helpers/addressParser";
-import RidesOfDriver from "./RidesOfDriver";
-import SimpleMenu from "./common/SimpleMenu";
-import Button from "@material-ui/core/Button";
-import RidesScheduler from "./RidesScheduler";
-import Radio from "@material-ui/core/Radio";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Phone from "@material-ui/icons/Phone";
-import map from "./Maps/Map";
-import "../styles/testmap.css";
-import "../styles/genericStyles.css";
+import Grid from "@material-ui/core/Grid"
 
 import { centerMap } from "./../utils/mapUtils";
 import { routeStyles, selectedRouteStyle } from "./../utils/mapStyles";
 import { DriverRoutesSugestions } from "./DriverRoutesSugestions";
 import { PassengerRouteSelection } from "./PassengerRouteSelection";
+import { PassengerNavigationButton } from "./PassengerNavigationButton";
+import { OfficeAddresses } from "./AddressData";
+import api from "../helpers/axiosHelper";
+
+import "../styles/genericStyles.css";
 
 export class PassengerMap extends React.Component {
   state = {
@@ -53,11 +37,9 @@ export class PassengerMap extends React.Component {
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
     features: {
-      // markers on a map
       startPointFeature: "",
       destinationFeature: ""
     },
-    routeFeature: "",
     route: {
       fromAddress: "",
       toAddress: "",
@@ -361,10 +343,10 @@ export class PassengerMap extends React.Component {
               this.handleOfficeSelection(e, indexas, button)
             }
           />
-          <Grid container justify="center" className="algolia-input" xs={10}>
+          <Grid container justify="center" className="algolia-input" item xs={10}>
             <input
               type="search"
-              class="form-group"
+              className="form-group"
               id="passenger-address"
               placeholder="Center map by location..."
             />
@@ -385,29 +367,17 @@ export class PassengerMap extends React.Component {
           <div />
         </div>
         <div id="map" />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ "background-color": "#007bff" }}
-          className="next-button"
-          onClick={() => {
-            this.selectRoute(-1);
-          }}
-        >
-          View Previous Route
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ "background-color": "#007bff" }}
-          className="next-button"
+        <PassengerNavigationButton 
+          onClick={() => this.selectRoute(-1)}
+          text="View Previous Route"
+        />
+        <PassengerNavigationButton 
           onClick={() => {
             this.setState({ viewNext: !this.state.viewNext });
             this.selectRoute(1);
           }}
-        >
-          View Next Route
-        </Button>
+          text="View Next Route"
+        />
       </div>
     );
   }

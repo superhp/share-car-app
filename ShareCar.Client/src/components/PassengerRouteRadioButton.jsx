@@ -12,10 +12,10 @@ export const PassengerRouteRadioButton = (props) => (
         justify="center"
         item xs={6}
     >
-        <Grid item xs={6} justify="center">
+        <Grid container item xs={6} justify="center">
             <Typography variant="body1">{props.direction}</Typography>
         </Grid>
-        <Grid item xs={6} justify="center">
+        <Grid container item xs={6} justify="center">
             <Radio
                 color="primary"
                 checked={props.filteredRouteToOffice === props.toOffice}
