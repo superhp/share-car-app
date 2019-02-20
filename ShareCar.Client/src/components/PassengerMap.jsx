@@ -61,22 +61,22 @@ export class PassengerMap extends React.Component {
     const features = this.state.passengerRouteFeatures;
     const featuresLength = features.length;
     
-    if (featuresLength != 0) {
+    if (featuresLength !== 0) {
       this.setState({showDriver: true, showRoutes: false, showRides: false});
 
-      if (counter == 0) {
+      if (counter === 0) {
         this.state.passengerRouteFeatures[featuresLength - 1]
           .feature.setStyle(routeStyles.route);
 
-        if (featuresLength != 1) {
+        if (featuresLength !== 1) {
           features[1].feature.setStyle(routeStyles.route);
         }
       } 
       else {
           features[counter - 1].feature.setStyle(routeStyles.route);
       
-          if (value == -1) {
-            if (counter != featuresLength - 1) {
+          if (value === -1) {
+            if (counter !== featuresLength - 1) {
               features[counter + 1].feature.setStyle(routeStyles.route);
             } 
             else {
@@ -131,7 +131,7 @@ export class PassengerMap extends React.Component {
         }
       });
 
-      if (drivers.length != 0) {
+      if (drivers.length !== 0) {
         this.setState({ showDriver: true });
       } else {
         this.setState({ showDriver: false });
@@ -206,7 +206,7 @@ export class PassengerMap extends React.Component {
 
   fetchRoutes(routeDto) {
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      if (res.status == 200 && res.data != "") {
+      if (res.status === 200 && res.data !== "") {
         this.setState({ passengerRoutes: res.data, passengerRouteFeatures: [] });
 
         this.state.passengerRoutes.forEach(element => {
@@ -259,7 +259,7 @@ export class PassengerMap extends React.Component {
 
   showRidesOfDriver(driver) {
     if (this.state.showRides) {
-      if (driver.email == this.state.driverEmail) {
+      if (driver.email === this.state.driverEmail) {
         this.setState({ showRides: false, driverEmail: "" });
       } else {
         this.setState({ driverEmail: driver });
