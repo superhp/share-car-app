@@ -64,19 +64,15 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("seenPassenger")]
-        public IActionResult SeenRequestsPassenger([FromBody] int[] requests)
+        public void SeenRequestsPassenger([FromBody] int[] requests)
         {
             _requestLogic.SeenByPassenger(requests);
-
-            return Ok();
         }
 
         [HttpPost("seenDriver")]
-        public IActionResult SeenDriverPassenger([FromBody] int[] requests)
+        public void SeenDriverPassenger([FromBody] int[] requests)
         {
             _requestLogic.SeenByDriver(requests);
-
-            return Ok();
         }
 
         [HttpPut]
@@ -92,8 +88,10 @@ namespace ShareCar.Api.Controllers
             {
                 return Ok();
             }
-            return BadRequest("Invalid parameter");
-
+            else
+            {
+                return BadRequest("Operation failed");
+            }
 
         }
     }

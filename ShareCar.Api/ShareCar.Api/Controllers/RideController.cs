@@ -60,7 +60,6 @@ namespace ShareCar.Api.Controllers
             return Ok(rides);
         }
 
-        // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
@@ -84,21 +83,21 @@ namespace ShareCar.Api.Controllers
         public  IActionResult GetRidesByDate(DateTime rideDate)
         {
             IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDate(rideDate);
-            return SendResponse(rides);
+            return Ok(rides);
         }
 
         [HttpGet("addressFromId={addressFromId}")]
         public  IActionResult GetRidesByStartPoint(int addressFromId)
         {
             IEnumerable<RideDto> rides =  _rideLogic.GetRidesByStartPoint(addressFromId);
-            return SendResponse(rides);
+            return Ok(rides);
         }
 
         [HttpGet("addressToId={addressToId}")]
         public  IActionResult GetRidesByDestination(int addressToId)
         {
             IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDestination(addressToId);
-            return SendResponse(rides);
+            return Ok(rides);
         }
 
         [HttpGet("ridesByRoute={routeGeometry}")]
@@ -129,16 +128,9 @@ namespace ShareCar.Api.Controllers
                 BadRequest("You don't belong to this ride");
             }
 
-
             IEnumerable<PassengerDto> passengers =  _rideLogic.GetPassengersByRideId(rideId);
-            if (passengers.ToList().Any())
-            {
                 return Ok(passengers);
-            }
-            else
-            {
-                return NotFound();
-            }
+
         }
         
         [HttpPut("disactivate")]
@@ -159,7 +151,7 @@ namespace ShareCar.Api.Controllers
             }
             else
             {
-                return BadRequest("operation failed");
+                return BadRequest("Operation failed");
             }
 
         }
@@ -190,19 +182,6 @@ namespace ShareCar.Api.Controllers
 
                 return BadRequest("Operation failed");
             }
-
-        }
-
-
-
-        private IActionResult SendResponse(IEnumerable<RideDto> ride)
-        {
-            if (ride.Any())
-            {
-                return Ok(ride);
-
-            }
-            return Ok(ride);
 
         }
     }

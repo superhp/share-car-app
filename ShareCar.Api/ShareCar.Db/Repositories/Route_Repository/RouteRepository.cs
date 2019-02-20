@@ -27,14 +27,7 @@ namespace ShareCar.Db.Repositories.Route_Repository
         }
         public Route GetRouteById(int id)
         {
-            try
-            {
-                return _databaseContext.Routes.Single(x => x.RouteId == id); 
-            }
-            catch
-            {
-                return null;
-            }
+                return _databaseContext.Routes.Find(id); 
         }
         public bool AddRoute(Route route)
         {

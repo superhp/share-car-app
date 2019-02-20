@@ -81,7 +81,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         {
             try
             {
-                var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
+                var rideToUpdate = _databaseContext.Rides.Find(ride.RideId); 
                 rideToUpdate.RouteId = ride.RouteId;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
                 rideToUpdate.isActive = true;
@@ -101,6 +101,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             try
             {
                 var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).Single(x => x.RideId == ride.RideId);
+
                 rideToDelete.isActive = false;
                 _databaseContext.SaveChanges();
                 return true;

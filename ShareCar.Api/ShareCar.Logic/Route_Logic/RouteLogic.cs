@@ -63,6 +63,7 @@ namespace ShareCar.Logic.Route_Logic
 
             if (routeDto.AddressFrom != null)
             {
+                // If user needs a ride to office, he recieves routes independently from his location
                 address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
                 isFromOffice = true;                
             }

@@ -50,7 +50,11 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             {
                 foreach (Request request in requests)
                 {
-                    Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                    Request toUpdate = _databaseContext.Requests.Find(request.RequestId);
+                    if (toUpdate == null)
+                    {
+                        return false;
+                    }
                     toUpdate.SeenByPassenger = false;
                     toUpdate.Status = Status.DELETED;
                 }
@@ -69,14 +73,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public Request GetRequestById(int id)
         {
-            try
-            {
-                return _databaseContext.Requests.Single(x => x.RequestId == id);
-            }
-            catch(Exception e)
-            {
-                return null;
-            }
+                return _databaseContext.Requests.Find(id);
         }
 
         public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)

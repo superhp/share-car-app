@@ -69,15 +69,7 @@ namespace ShareCar.Db.Repositories.Address_Repository
 
         public Address GetAddressById(int id)
         {
-            try
-            {
-           return _databaseContext.Addresses.SingleOrDefault(x => x.AddressId == id);
-
-            }
-            catch
-            {
-                return null;
-            }
+           return _databaseContext.Addresses.Find(id);
         }
     }
 }

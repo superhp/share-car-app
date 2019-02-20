@@ -116,7 +116,7 @@ export class NewRideForm extends React.Component {
         if (this.state.addNewForm) {
             var rides = [];
             rides.push(ride);
-            api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
+            api.post(`https://localhost:44360/`, rides).then(res => {
                 console.log(ride);
                 this.setState({ addedStatus: true });
             });
