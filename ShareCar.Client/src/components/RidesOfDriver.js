@@ -18,8 +18,8 @@ export class RidesOfDriver extends React.Component {
     var request = {
       RideId: rideId,
       DriverEmail: driverEmail,
-      Longtitude: this.props.pickUpPoint[0],
-      Latitude: this.props.pickUpPoint[1]
+      Longtitude: this.props.pickUpPoints[0],
+      Latitude: this.props.pickUpPoints[1]
     };
 
     api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {

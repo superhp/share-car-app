@@ -35,6 +35,7 @@ import "../styles/genericStyles.css";
 
 import { centerMap } from "./../utils/mapUtils";
 import { routeStyles, selectedRouteStyle } from "./../utils/mapStyles";
+import { DriverRoutesSugestions } from "./DriverRoutesSugestions";
 
 export class PassengerMap extends React.Component {
   state = {
@@ -61,14 +62,15 @@ export class PassengerMap extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
-    showDrivers: false,
+    showDriver: false,
     showRides: false,
     ridesOfRoute: [],
     viewNext: false,
     passengerRoutes: [],
     passengerRouteFeatures: [],
     passengerRouteFeaturesCounter: 0,
-    driverEmail: ""
+    driverEmail: "",
+    pickUpPoints: []
   };
 
   selectRoute(value) {
@@ -77,7 +79,7 @@ export class PassengerMap extends React.Component {
     const featuresLength = features.length;
     
     if (featuresLength != 0) {
-      this.state.showDrivers = true;
+      this.state.showDriver = true;
       this.state.showRoutes = false;
       this.state.showRides = false;
 
@@ -179,7 +181,7 @@ export class PassengerMap extends React.Component {
       }
       this.setState(
         {
-          pickUpPoint: [
+          pickUpPoints: [
             this.state.filteredRoute.office.longtitude,
             this.state.filteredRoute.office.latitude
           ]
@@ -277,7 +279,7 @@ export class PassengerMap extends React.Component {
 
   showRidesOfDriver(driver) {
     if (this.state.showRides) {
-      if (driver == this.state.driver) {
+      if (driver.email == this.state.driverEmail) {
         this.setState({ showRides: false, driverEmail: "" });
       } else {
         this.setState({ driverEmail: driver });
@@ -291,7 +293,7 @@ export class PassengerMap extends React.Component {
     var feature = new Feature(new Point(evt.coordinate));
     var lonlat = [];
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-    this.setState({ pickUpPoint: lonlat });
+    this.setState({ pickUpPoints: lonlat });
 
     if (this.state.passengerPickUpPointFeature) {
       this.state.vectorSource.removeFeature(
@@ -428,69 +430,15 @@ export class PassengerMap extends React.Component {
             />
           </Grid>
           {this.state.showDriver ? (
-            <Grid container justify="center">
-              <Grid item xs={10}>
-                <Card>
-                  {this.state.driversOfRoute.map(driver => (
-                    <Grid
-                      className="driver-button-container"
-                      justify="center"
-                      item
-                      xs={12}
-                      key={driver.id}
-                    >
-                      <Grid container alignItems="center" justify="center">
-                        <Grid className="names-and-phones" item xs={12}>
-                          <Grid container>
-                            <Grid className="driver-name" item xs={12}>
-                              <Typography variant="caption">Driver </Typography>
-                              <Typography variant="body1">
-                                {driver.firstName} {driver.lastName}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid className="call" item xs={12}>
-                            <Phone />
-                            <Typography variant="body1">
-                              {driver.driverPhone}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Button
-                        color="primary"
-                        variant="contained"
-                        style={{ "background-color": "#007bff" }}
-                        onClick={() => {
-                          this.showRidesOfDriver(driver.email);
-                        }}
-                      >
-                        View Time
-                      </Button>{" "}
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        onClick={() => {
-                          this.handleCloseDriver();
-                        }}
-                      >
-                        Close
-                      </Button>{" "}
-                    </Grid>
-                  ))}
-                  {this.state.showRides ? (
-                    <RidesOfDriver
-                      rides={this.state.ridesOfRoute}
-                      driver={this.state.driverEmail}
-                      pickUpPoint={this.state.pickUpPoint}
-                      className="date-display"
-                    />
-                  ) : (
-                    <div />
-                  )}
-                </Card>
-              </Grid>
-            </Grid>
+            <DriverRoutesSugestions 
+              driversOfRoute={this.state.driversOfRoute}
+              showRides={this.state.showRides}
+              ridesOfRoute={this.state.ridesOfRoute}
+              driverEmail={this.state.driverEmail}
+              pickUpPoints={this.state.pickUpPoints}
+              handleCloseDriver={() => this.handleCloseDriver()}
+              showRidesOfDriver={driver => this.showRidesOfDriver(driver)}
+            />
           ) : (
             <div />
           )}
