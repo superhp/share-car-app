@@ -140,12 +140,12 @@ export class PassengerMap extends React.Component {
 }
 
   handleOfficeSelection(e, indexas, button) {
-    const index = e.target.value;   //why use it here?
     if (indexas) {
-      this.setState({filteredRoute: 
-        {...this.state.filteredRoute, office: OfficeAddresses[indexas]}
-      });
-      this.showRoutes();
+      this.setState({
+        filteredRoute: {
+          ...this.state.filteredRoute, office: OfficeAddresses[indexas]
+        }},
+        () => this.showRoutes());
     }
   }
   //removes passenger pick up point marker from map and clears states related with it
@@ -337,7 +337,7 @@ export class PassengerMap extends React.Component {
               {...this.state.filteredRoute, toOffice: !this.state.filteredRoute.toOffice}
             })}
             handleFromOfficeSelection={() => this.handleFromOfficeSelection()}
-            handleOfficeSelection={(e, indexas, button) =>
+            handleOfficeSelection={(e, indexas, button) => 
               this.handleOfficeSelection(e, indexas, button)
             }
           />
