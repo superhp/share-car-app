@@ -51,6 +51,12 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
             string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
+
+            if (email == null)
+            {
+                return BadRequest("Invalid parameter");
+            }
+
             bool result = _requestLogic.AddRequest(request, email);
             
             if (result)

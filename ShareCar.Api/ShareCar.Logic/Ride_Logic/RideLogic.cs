@@ -96,6 +96,7 @@ namespace ShareCar.Logic.Ride_Logic
             IEnumerable<Ride> rides = _rideRepository.GetRidesByDestination(addressToId);
             return MapToList(rides);
         }
+
         public IEnumerable<PassengerDto> GetPassengersByRideId(int id)
         {
             IEnumerable<Passenger> passengers = _rideRepository.GetPassengersByRideId(id);
@@ -134,6 +135,12 @@ namespace ShareCar.Logic.Ride_Logic
         public bool DoesUserBelongsToRide(string email, int rideId)
         {
             Ride ride = _rideRepository.GetRideById(rideId);
+
+            if(ride == null)
+            {
+                return false;
+            }
+
             if (ride.DriverEmail == email || ride.Passengers.Any(x => x.Email == email))
             {
                 return true;
@@ -167,12 +174,10 @@ namespace ShareCar.Logic.Ride_Logic
 
         public IEnumerable<RideDto> GetSimilarRides(int rideId)
         {
-            Ride ride = _rideRepository.GetRideById(rideId);
             string driverEmail = ride.DriverEmail;
             int routeId = ride.RouteId;
             IEnumerable<Ride> rides = _rideRepository.GetSimmilarRides(driverEmail, routeId, ride.RideId);
             return MapToList(rides);
-
         }
 
         private void AddRouteIdToRide(RideDto ride)

@@ -40,15 +40,30 @@ namespace ShareCar.Api.Controllers
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
         {
-            IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(rideId);
+            RideDto ride = _rideLogic.GetRideById(rideId);
+
+            if(ride == null)
+            {
+                return BadRequest("Invalid parameter");
+            }
+
+            IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(ride);
             return Ok(rides);
         }
         
         [HttpPost("passengerResponse")]
-        public async Task PassengerResponseAsync([FromBody]PassengerResponseDto response)
+        public async Task<IActionResult> PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-            _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
+           bool result = _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Operation failed");
+            }
         }
 
         [HttpGet("checkFinished")]

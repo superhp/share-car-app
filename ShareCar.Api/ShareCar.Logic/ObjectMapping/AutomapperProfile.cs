@@ -18,6 +18,9 @@ namespace ShareCar.Logic.ObjectMapping
             CreateMap<Address, AddressDto>();
             CreateMap<AddressDto, Address>();
             CreateMap<UserDto, User>();
+            CreateMap<Route, RouteDto>();
+            CreateMap<RouteDto, Route>();
+
             //.ForMember(src => src.Title, dest => dest.MapFrom(x => x.VeryDifferentTitle));
             /*      CreateMap<Status, TodoItemStatus>()
                      .ProjectUsing(src => (TodoItemStatus)src);

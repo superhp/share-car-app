@@ -58,6 +58,7 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
                 return false;
             }
         }
+
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
         {
                 return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);

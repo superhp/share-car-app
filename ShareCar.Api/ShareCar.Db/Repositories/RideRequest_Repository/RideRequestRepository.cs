@@ -46,8 +46,6 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public bool DeletedRide(IEnumerable<Request> requests)
         {
-            try
-            {
                 foreach (Request request in requests)
                 {
                     Request toUpdate = _databaseContext.Requests.Find(request.RequestId);
@@ -60,12 +58,8 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
                 }
                 _databaseContext.SaveChanges();
                 return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
+
         public IEnumerable<Request> GetPassengerRequests(string email)
         {
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED))).ToList();
