@@ -62,9 +62,7 @@ export class PassengerMap extends React.Component {
     const featuresLength = features.length;
     
     if (featuresLength != 0) {
-      this.state.showDriver = true;
-      this.state.showRoutes = false;
-      this.state.showRides = false;
+      this.setState({showDriver: true, showRoutes: false, showRides: false});
 
       if (counter == 0) {
         this.state.passengerRouteFeatures[featuresLength - 1]
@@ -112,15 +110,16 @@ export class PassengerMap extends React.Component {
     this.setState({ showDriver: false });
   }
 
+  //very suspicious function
   getRidesByRoute(route) {
     this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
-      var drivers = [];
+      let drivers = [];
 
       this.state.ridesOfRoute.forEach(ride => {
         if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
           drivers.push(ride.driverFirstName + ride.driverLastName);
 
-          var driversArray = this.state.driversOfRoute;
+          let driversArray = this.state.driversOfRoute;
           driversArray.push({
             firstName: ride.driverFirstName,
             lastName: ride.driverLastName,
@@ -141,14 +140,11 @@ export class PassengerMap extends React.Component {
 }
 
   handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;   //why use it here?
+    const index = e.target.value;   //why use it here?
     if (indexas) {
-      var getState = this.state.filteredRoute;
-
-      getState.office = OfficeAddresses[indexas];
-
-      this.setState({ filteredRoute: getState });
-
+      this.setState({filteredRoute: 
+        {...this.state.filteredRoute, office: OfficeAddresses[indexas]}
+      });
       this.showRoutes();
     }
   }
@@ -211,8 +207,7 @@ export class PassengerMap extends React.Component {
   fetchRoutes(routeDto) {
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
       if (res.status == 200 && res.data != "") {
-        this.setState({ passengerRoutes: res.data });
-        this.state.passengerRouteFeatures = []; // deletes old routes
+        this.setState({ passengerRoutes: res.data, passengerRouteFeatures: [] });
 
         this.state.passengerRoutes.forEach(element => {
           this.createPassengerRoute(element);
@@ -222,14 +217,16 @@ export class PassengerMap extends React.Component {
   }
 
   createPassengerRoute(polyline) {
-    this.state.route.routeGeometry = polyline.geometry;
-    var route = new Polyline({
+    this.setState({route: 
+      {...this.state.route, routeGeometry: polyline.geometry}
+    });
+    let route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline.geometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
-    var feature = new Feature({
+    let feature = new Feature({
       type: "route",
       geometry: route
     });
@@ -246,9 +243,9 @@ export class PassengerMap extends React.Component {
   }
 
   passengerAddressInputSuggestion() {
-    var places = require("places.js");
+    const places = require("places.js");
 
-    var placesAutocompletePassenger = places({
+    const placesAutocompletePassenger = places({
       container: document.querySelector("#passenger-address")
     });
     placesAutocompletePassenger.on("change", e => {
@@ -273,8 +270,8 @@ export class PassengerMap extends React.Component {
   }
 
   handlePassengerMapClick(evt) {
-    var feature = new Feature(new Point(evt.coordinate));
-    var lonlat = [];
+    const feature = new Feature(new Point(evt.coordinate));
+    let lonlat = [];
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
     this.setState({ pickUpPoints: lonlat });
 
@@ -288,12 +285,12 @@ export class PassengerMap extends React.Component {
   }
 
   componentDidMount() {
-    var vectorSource = new SourceVector(),
+    const vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
       });
 
-    var map = new Map({
+    const map = new Map({
       target: "map",
       controls: [],
       layers: [
@@ -309,6 +306,7 @@ export class PassengerMap extends React.Component {
       })
     });
 
+    //is it legit?
     this.setState({ map, vectorSource }, function() {
       centerMap(25.279652, 54.687157, this.state.map);
 
@@ -335,9 +333,9 @@ export class PassengerMap extends React.Component {
           <PassengerRouteSelection 
             filteredRouteToOffice={this.state.filteredRoute.toOffice}
             showRoutes={() => this.showRoutes()}
-            directionToOffice={() => {
-              this.state.filteredRoute.toOffice = true;
-            }}
+            directionToOffice={() => this.setState({filteredRoute: 
+              {...this.state.filteredRoute, toOffice: !this.state.filteredRoute.toOffice}
+            })}
             handleFromOfficeSelection={() => this.handleFromOfficeSelection()}
             handleOfficeSelection={(e, indexas, button) =>
               this.handleOfficeSelection(e, indexas, button)
