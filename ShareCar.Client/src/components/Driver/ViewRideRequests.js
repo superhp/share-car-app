@@ -52,7 +52,6 @@ coordinatesToLocation(latitude, longtitude) {
       .get("RideRequest/false")
       .then(response => {
         if(response.data !== ""){
-        console.log((response.data: User));
         const d = response.data;
         this.setState({ passengerRequests: d }); 
         }
@@ -60,18 +59,14 @@ coordinatesToLocation(latitude, longtitude) {
       .then(() => {
         const unseenRequests = [];
 
-        console.log(this.state.passengerRequests.length);
-
         for (var i = 0; i < this.state.passengerRequests.length; i++) {
           if (!this.state.passengerRequests[i].seenByPassenger) {
             unseenRequests.push(this.state.passengerRequests[i].requestId);
           }
         }
 
-        console.log(unseenRequests);
         if (unseenRequests.length !== 0) {
           api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
-            console.log(res);
           });
         }
       })
@@ -96,10 +91,8 @@ coordinatesToLocation(latitude, longtitude) {
           }
         }
 
-        console.log(unseenRequests);
         if (unseenRequests.length !== 0) {
           api.post("RideRequest/seenDriver", unseenRequests).then(res => {
-            console.log(res);
           });
         }
       })

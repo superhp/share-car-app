@@ -27,7 +27,6 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
 
   componentDidMount() {
     api.get(`/Ride/checkFinished`).then(response => {
-      console.log(response.data);
       this.setState({rideNotifications : response.data});
       if (response.data.length !== 0) {
         this.setState({showNotification : true});

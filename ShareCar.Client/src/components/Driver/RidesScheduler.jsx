@@ -51,7 +51,6 @@ class RidesScheduler extends React.Component {
   };
 
   componentDidMount() {
-    console.log(
       addressParser.parseCustomAddress(this.props.routeInfo.fromAddress)
     );
   }
@@ -96,16 +95,7 @@ class RidesScheduler extends React.Component {
     );
     this.state.selectedDates.forEach(element => {
       var month = element.getMonth() + 1;
-      console.log(
-        element.getFullYear() +
-          "-" +
-          "0" +
-          month +
-          "-" +
-          element.getDate() +
-          "T" +
-          this.state.time
-      );
+
       ridesToPost.push({
         fromNumber: fromAddressParsed.number,
         fromStreet: fromAddressParsed.street,
@@ -126,7 +116,6 @@ class RidesScheduler extends React.Component {
           this.state.time
       });
     });
-console.log(ridesToPost);
     api.post("Ride", ridesToPost).then(res => {
 
       if (res.status === 200) {
@@ -146,7 +135,6 @@ console.log(ridesToPost);
   };
 
   handleTime = value => {
-    console.log(value);
     this.setState({ time: value });
   };
 
@@ -170,7 +158,6 @@ console.log(ridesToPost);
   };
 
   render() {
-    // console.log(this.state.selectedDates);
     const { classes } = this.props;
     return (
       <div>

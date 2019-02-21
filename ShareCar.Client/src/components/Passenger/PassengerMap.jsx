@@ -140,7 +140,6 @@ export class PassengerMap extends React.Component {
             counter = this.state.passengerRouteFeatures.length - 1;
           }
           this.setState({ passengerRouteFeaturesCounter: counter });
-          console.log(this.state.selectedRoute);
           this.getRidesByRoute(this.state.selectedRoute.route);
         }
       );
@@ -154,13 +153,10 @@ export class PassengerMap extends React.Component {
 
     this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
       var drivers = [];
-      console.log(this.state.ridesOfRoute);
 
       this.state.ridesOfRoute.forEach(ride => {
-        console.log("ride:   " + ride);
         if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
           drivers.push(ride.driverFirstName + ride.driverLastName);
-          console.log("driver:   " + ride.driverFirstName);
 
           var driversArray = this.state.driversOfRoute;
           driversArray.push({
@@ -209,11 +205,7 @@ export class PassengerMap extends React.Component {
             this.state.filteredRoute.office.longtitude,
             this.state.filteredRoute.office.latitude
           ]
-        },
-        () => {
-          console.log(this.state.pickUpPoint);
-        }
-      );
+        });
     }
   }
 
@@ -234,7 +226,6 @@ export class PassengerMap extends React.Component {
       passengerRouteFeaturesCounter: 0
     });
 
-    console.log(this.state.filteredRoute);
     var routeDto;
     this.state.filteredRoute.toOffice
       ? (routeDto = {
@@ -251,14 +242,11 @@ export class PassengerMap extends React.Component {
           Number: this.state.filteredRoute.office.number
         }
       });
-    console.log(routeDto);
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
 
       if (res.status === 200 && res.data !== "") {
-        console.log(res.data);
         this.setState({ passengerRoutes: res.data });
         this.state.passengerRoutes.forEach(element => {
-          console.log(element.geometry);
         });
         this.setState({ passengerRouteFeatures: [] }); // deletes old routes
 
@@ -292,9 +280,7 @@ export class PassengerMap extends React.Component {
     feature.setStyle(this.state.routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
-    console.log(fromFeature);
     if (fromFeature) {
-      console.log("creating from feature");
       this.setState({
         features: {
           startPointFeature: feature,
@@ -309,7 +295,6 @@ export class PassengerMap extends React.Component {
         }
       });
     }
-    console.log(this.state.features);
   }
 
   createPassengerRoute(route) {
@@ -405,7 +390,6 @@ export class PassengerMap extends React.Component {
     lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
     this.setState({ pickUpPoint: lonlat }, () => {
-      console.log(this.state.pickUpPoint);
     });
     if (this.state.passengerPickUpPointFeature) {
       this.state.vectorSource.removeFeature(

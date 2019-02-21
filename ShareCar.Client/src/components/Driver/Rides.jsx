@@ -36,7 +36,6 @@ export class Rides extends React.Component {
       .then(response => {
         if (response.status === 200) {
           const d = response.data;
-          console.log(response.data);
           this.setState({ driversRides: d });
 
         }

@@ -11,7 +11,6 @@ class RideCompletedNotification extends React.Component {
         api.post(`https://localhost:44360/api/Ride/passengerResponse`, passengerResponse);
     }
     render() {
-        console.log(this.props.rides);
         return (
             <div>
                 <h1>Have you participated in these Rides ? </h1>

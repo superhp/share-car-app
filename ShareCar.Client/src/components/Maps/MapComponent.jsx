@@ -36,7 +36,6 @@ export default class MapComponent extends React.Component<{}> {
     this.CenterMap(val[0], val[1], map);
     var xy = [];
     xy = transform(val, "EPSG:4326", "EPSG:3857");
-    console.log(xy);
     var vectorSource = this.state.Vector;
 
     var feature = new Feature(new Point(xy));
@@ -73,7 +72,6 @@ export default class MapComponent extends React.Component<{}> {
         // Allows passenger to set a single marker on a map
 
         var feature = new Feature(new Point(evt.coordinate));
-        console.log(vectorSource);
         var lonlat = [];
         lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
 
@@ -89,7 +87,6 @@ export default class MapComponent extends React.Component<{}> {
   }
 
   CenterMap(long, lat, map) {
-    console.log("Long: " + long + " Lat: " + lat);
     map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
     map.getView().setZoom(19);
   }

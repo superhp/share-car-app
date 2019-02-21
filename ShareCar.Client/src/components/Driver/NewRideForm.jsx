@@ -34,7 +34,6 @@ export class NewRideForm extends React.Component {
                     country: this.props.drive.fromCountry
                 }
             });
-            console.log("SDG");
             this.setState({
                 toAddress: {
                     number: this.props.drive.toNumber,
@@ -100,7 +99,6 @@ export class NewRideForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.state.fromAddress);
         let ride = {
             FromCountry: this.state.fromAddress.country,
             FromCity: this.state.fromAddress.city,
@@ -117,13 +115,11 @@ export class NewRideForm extends React.Component {
             var rides = [];
             rides.push(ride);
             api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
-                console.log(ride);
                 this.setState({ addedStatus: true });
             });
         } else {
             ride["RideId"] = this.props.drive.rideId;
             ride["DriverEmail"] = this.props.drive.driverEmail;
-            console.log(ride);
             var rides = [];
             rides.push(ride);
             api.put(`https://localhost:44360/api/Ride`, rides).then(res => {

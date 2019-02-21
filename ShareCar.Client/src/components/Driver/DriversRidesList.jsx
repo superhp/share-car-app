@@ -28,11 +28,6 @@ export class DriversRidesList extends React.Component {
       }
     });
   }
-
-componentDidMount(){
-  console.log(this.props.driversRides);
-}
-
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">

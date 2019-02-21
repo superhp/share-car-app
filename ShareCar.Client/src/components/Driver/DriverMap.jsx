@@ -125,9 +125,7 @@ export class DriverMap extends React.Component {
     feature.setStyle(this.state.routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
-    console.log(fromFeature);
     if (fromFeature) {
-      console.log("creating from feature");
       this.setState({
         features: {
           startPointFeature: feature,
@@ -142,11 +140,9 @@ export class DriverMap extends React.Component {
         }
       });
     }
-    console.log(this.state.features);
   }
 
   createDriverRoute(routeGeometry) {
-    console.log(routeGeometry);
     var routeState = this.state.route;
     routeState.routeGeometry = routeGeometry;
     this.setState({ route: routeState });
@@ -364,9 +360,6 @@ export class DriverMap extends React.Component {
       var point1 = this.state.coordinates.firstPoint;
       var point2 = this.state.coordinates.lastPoint;
 
-      console.log(this.state.vectorSource.getFeatures());
-      console.log(this.state.features);
-
       fetch(this.state.url_osrm_route + point1 + ";" + point2)
         .then(r => {
           return r.json();
@@ -435,7 +428,6 @@ export class DriverMap extends React.Component {
                 />
                 <SimpleMenu
                   handleSelection={(e, index, button) => {
-                    console.log(index);
                     this.handleOfficeSelection(e, index, button)
 
                   }}
@@ -471,7 +463,6 @@ export class DriverMap extends React.Component {
           color="primary"
           onClick={() => {
           
-            console.log(this.state.route);
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
           }}
         >
