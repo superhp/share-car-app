@@ -1,14 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
+import api from "../../helpers/axiosHelper";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,20 +11,16 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Grid from "@material-ui/core/Grid";
-import { render } from "react-dom";
 import InfiniteCalendar, {
   Calendar,
   withMultipleDates,
   defaultMultipleDateInterpolation
 } from "react-infinite-calendar";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
-import "./common/TimePickers";
-import TimePickers from "./common/TimePickers";
-import Switch from "@material-ui/core/Switch";
-import addressParser from "../helpers/addressParser";
-import SnackBars from "../components/common/Snackbars";
-
-var moment = require("moment");
+import "../common/TimePickers";
+import TimePickers from "../common/TimePickers";
+import addressParser from "../../helpers/addressParser";
+import SnackBars from "../common/Snackbars";
 
 const styles = {
   appBar: {
@@ -42,11 +33,6 @@ const styles = {
 
 // Render the Calendar
 var today = new Date();
-var lastWeek = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  today.getDate() - 7
-);
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -65,7 +51,6 @@ class RidesScheduler extends React.Component {
   };
 
   componentDidMount() {
-    console.log(
       addressParser.parseCustomAddress(this.props.routeInfo.fromAddress)
     );
   }
@@ -110,16 +95,7 @@ class RidesScheduler extends React.Component {
     );
     this.state.selectedDates.forEach(element => {
       var month = element.getMonth() + 1;
-      console.log(
-        element.getFullYear() +
-          "-" +
-          "0" +
-          month +
-          "-" +
-          element.getDate() +
-          "T" +
-          this.state.time
-      );
+
       ridesToPost.push({
         fromNumber: fromAddressParsed.number,
         fromStreet: fromAddressParsed.street,
@@ -140,9 +116,9 @@ class RidesScheduler extends React.Component {
           this.state.time
       });
     });
-
     api.post("Ride", ridesToPost).then(res => {
-      if (res.status == 200) {
+
+      if (res.status === 200) {
         this.setState({
           open: false,
           snackBarClicked: true,
@@ -159,7 +135,6 @@ class RidesScheduler extends React.Component {
   };
 
   handleTime = value => {
-    console.log(value);
     this.setState({ time: value });
   };
 
@@ -183,7 +158,6 @@ class RidesScheduler extends React.Component {
   };
 
   render() {
-    // console.log(this.state.selectedDates);
     const { classes } = this.props;
     return (
       <div>
@@ -211,7 +185,7 @@ class RidesScheduler extends React.Component {
                   Schedule Your Rides
                 </Typography>
                 <Button
-                  disabled={this.state.selectedDates.length == 0 ? true : false}
+                  disabled={this.state.selectedDates.length === 0 ? true : false}
                   variant="contained"
                   color="inherit"
                   onClick={this.handleCreate}

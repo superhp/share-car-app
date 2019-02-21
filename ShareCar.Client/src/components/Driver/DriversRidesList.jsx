@@ -1,16 +1,11 @@
 import * as React from "react";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
-import "../styles/driversRidesList.css";
-import { Route, Link } from "react-router-dom";
-import NewRideForm from "./NewRideForm";
-import PassengersList from "./PassengersList";
-import "../styles/genericStyles.css";
-import "../styles/driversRidesList.css";
-import { ViewRideRequests } from "../components/ViewRideRequests";
+import api from "../../helpers/axiosHelper";
+import "../../styles/driversRidesList.css";
+import "../../styles/genericStyles.css";
+import "../../styles/driversRidesList.css";
+import { ViewRideRequests } from "./ViewRideRequests";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -28,16 +23,11 @@ const fontColor = {
 export class DriversRidesList extends React.Component {
   handleDeletion(rideToDisactivate) {
     api.put("Ride/disactivate", rideToDisactivate).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.onDelete(rideToDisactivate);
       }
     });
   }
-
-componentDidMount(){
-  console.log(this.props.driversRides);
-}
-
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
@@ -49,7 +39,7 @@ componentDidMount(){
     ) : null;
     return (
       <Grid container>
-        {this.props.driversRides.length != 0 ? this.props.driversRides.map((req, index) => (
+        {this.props.driversRides.length !== 0 ? this.props.driversRides.map((req, index) => (
           <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card">
             <Grid container >

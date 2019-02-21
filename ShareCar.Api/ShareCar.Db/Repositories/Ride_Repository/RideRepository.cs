@@ -16,11 +16,10 @@ namespace ShareCar.Db.Repositories.Ride_Repository
 
         private readonly ApplicationDbContext _databaseContext;
         
-        public RideRepository(ApplicationDbContext context, IUserRepository userRepository)
+        public RideRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
         }
-
 
         public void AddRide(Ride ride)
         {
@@ -32,20 +31,20 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         public IEnumerable<Ride> GetRidesByDate(DateTime date)
         {
             return _databaseContext.Rides
-                    .Where(x => x.RideDateTime == date && x.isActive == true);
+                    .Where(x => x.RideDateTime == date && x.isActive);
         }
 
         public IEnumerable<Ride> GetRidesByDestination(int addressToId)
         {
             return _databaseContext.Rides
-                .Where(x => x.Route.ToId == addressToId && x.isActive == true);
+                .Where(x => x.Route.ToId == addressToId && x.isActive);
         }
 
         public Ride GetRideById(int id)
         {
             try
             {
-                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive == true); // Throws exception if ride is not found
+                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive); // Throws exception if ride is not found
             }
             catch
             {
@@ -56,8 +55,9 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         public IEnumerable<Ride> GetRidesByStartPoint(int addressFromId)
         {
             return _databaseContext.Rides
-                .Where(x => x.Route.FromId == addressFromId && x.isActive == true);
+                .Where(x => x.Route.FromId == addressFromId && x.isActive);
         }
+
         public IEnumerable<Passenger> GetPassengersByRideId(int id)
         {
             return _databaseContext.Passengers.Where(x => x.RideId == id);
@@ -65,14 +65,13 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         
         public IEnumerable<Ride> GetRidesByPassenger(Passenger passenger)
         {
-            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger) && x.isActive == true);
+            return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger) && x.isActive);
         }
 
-        public bool UpdateRide(Ride ride)
+        public void UpdateRide(Ride ride)
         {
-            try
-            {
-                var rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
+
+                Ride rideToUpdate = _databaseContext.Rides.Where(x => x.RideId == ride.RideId).Single();
                 rideToUpdate.RouteId = ride.RouteId;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
                 rideToUpdate.isActive = true;
@@ -80,25 +79,15 @@ namespace ShareCar.Db.Repositories.Ride_Repository
                 
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
 
-                return false;
-            }
         }
-        public bool SetRideAsInactive(Ride ride)
+
+        public void SetRideAsInactive(Ride ride)
         {
-            var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
+            Ride rideToDelete = _databaseContext.Rides.Include(x => x.Requests).SingleOrDefault(x => x.RideId == ride.RideId);
             rideToDelete.isActive = false;
             _databaseContext.SaveChanges();
-            return true;
 
-        }
-        public IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId)
-        {
-            return _databaseContext.Rides.Where(x => x.DriverEmail == driverEmail && x.RouteId == routeId && x.RideId != rideId && x.isActive == true);
         }
 
         public IEnumerable<Ride> GetRidesByDriver(string email)
@@ -111,7 +100,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
 
         public IEnumerable<Ride> GetRidesByRoute(string routeGeometry)
         {
-            return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
+            return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive);
         }
     }
 }

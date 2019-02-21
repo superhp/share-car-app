@@ -1,23 +1,13 @@
-import UserService from "../services/userService";
-import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
-import { Router, Switch } from "react-router";
-import axios from "axios";
+import React from "react";
 import api from "../helpers/axiosHelper";
-import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import { WinnersList } from "./WinnersList";
 import "typeface-roboto";
 import "../styles/genericStyles.css";
 import "../styles/winnerBoard.css";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 export class WinnerBoard extends React.Component {
   state = {
@@ -31,9 +21,8 @@ export class WinnerBoard extends React.Component {
     api
       .get("user/WinnerBoard")
       .then(response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           const d = response.data;
-          console.log(response.data);
           this.setState({ winners: d.users });
           this.setState({ points: d.points });
         }

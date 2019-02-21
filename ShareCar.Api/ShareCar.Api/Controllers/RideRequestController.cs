@@ -35,16 +35,14 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
 
             bool isDriver = Boolean.Parse(driver);
-
-            
-
+          
             IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] RideRequestDto request)
+        public async Task<IActionResult> AddRequest([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
@@ -53,16 +51,10 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
             string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
-            bool result = _requestLogic.AddRequest(request, email);
-            
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            _requestLogic.AddRequest(request, email);
+
+               return Ok();
+
         }
 
         [HttpPost("seenPassenger")]
@@ -82,20 +74,16 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] RideRequestDto request)
+        public IActionResult UpdateRequest([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
                 return BadRequest("Invalid parameter");
             }
 
-            bool result = _requestLogic.UpdateRequest(request);
-            if (result)
-            {
-                return Ok();
-            }
-            return BadRequest("Invalid parameter");
+            _requestLogic.UpdateRequest(request);
 
+                return Ok();
 
         }
     }

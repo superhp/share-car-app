@@ -1,7 +1,4 @@
 import * as React from "react";
-import { RideRequestForm } from "./RideRequestForm";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -15,17 +12,13 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
-import geom from "ol/geom";
 import { fromLonLat } from "ol/proj";
-import { OfficeAddresses } from "./AddressData";
-import addressParser from "../helpers/addressParser";
-import RidesOfDriver from "./RidesOfDriver";
-import SimpleMenu from "./common/SimpleMenu";
+import { OfficeAddresses } from "../AddressData";
+import addressParser from "../../helpers/addressParser";
+import SimpleMenu from "../common/SimpleMenu";
 import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
-import map from "./Maps/Map";
-import "../styles/testmap.css";
+import "../../styles/testmap.css";
 
 export class DriverMap extends React.Component {
   state = {
@@ -34,9 +27,6 @@ export class DriverMap extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
-    filteredRoute: {
-      office: OfficeAddresses[0]
-    }, // route object containing filttering information acocrding to which passenger will get route suggestions
     isContinueClicked: false,
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
@@ -53,7 +43,6 @@ export class DriverMap extends React.Component {
       toAddress: "",
       routeGeometry: ""
     },
-    passengerRouteFeatures: [],
     routeStyles: {
       route: new Style({
         stroke: new Stroke({
@@ -74,70 +63,52 @@ export class DriverMap extends React.Component {
       "http://router.project-osrm.org/route/v1/driving/"
   };
 
-  handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;
-    if(indexas){
-        console.log(indexas);
+  handleOfficeSelection(e, index, button) {
 
-        var getState = this.state.filteredRoute;
+    if (index === 0 || index === 1) { // if(index) doesn't work when index is 0
+      var address =
+        OfficeAddresses[index].number +
+        ", " +
+        OfficeAddresses[index].street +
+        ", " +
+        OfficeAddresses[index].city;
 
-        getState.office = OfficeAddresses[index];
+      var route = this.state.route;
 
-        this.setState({ filteredRoute: getState });
+      if (button === "from") {
+        this.setState({ startPointInput: true });
 
-        var getState = this.state.filteredRoute;
-        getState.office = OfficeAddresses[indexas];
-        this.setState({ filteredRoute: getState });
-        var address =
-          this.state.filteredRoute.office.number +
-          ", " +
-          this.state.filteredRoute.office.street +
-          ", " +
-          this.state.filteredRoute.office.city;
+        route.addressFrom = address;
+        this.setState({ route: route });
 
-        var route = this.state.route;
+        this.setInputFrom(address);
 
-        if (button == "from") {
-          this.setState({ startPointInput: true });
+      } else {
+        this.setState({ startPointInput: false });
 
-          route.addressFrom = address;
-          this.setState({ route: route });
+        route.addressTo = address;
+        this.setState({ route: route });
 
-          this.setInputFrom(address);
+        this.setInputTo(address);
 
-          this.addRoutePoint(
-            [
-              this.state.filteredRoute.office.longtitude,
-              this.state.filteredRoute.office.latitude
-            ],
-            false
-          );
-        } else {
-          this.setState({ startPointInput: false });
-
-          route.addressTo = address;
-          this.setState({ route: route });
-
-          this.setInputTo(address);
-          this.addRoutePoint(
-            [
-              this.state.filteredRoute.office.longtitude,
-              this.state.filteredRoute.office.latitude
-            ],
-            false
-          );
-        }
+      }
+      this.addRoutePoint(
+        [
+          OfficeAddresses[index].longtitude,
+          OfficeAddresses[index].latitude
+        ],
+        false
+      );
     }
   }
 
   getNearest(coordinates) {
     return new Promise((resolve, reject) => {
-      //make sure the coord is on street
       fetch(this.state.url_osrm_nearest + coordinates.join())
         .then(response => {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           if (json.code === "Ok") {
             resolve(json.waypoints[0].location);
           } else reject();
@@ -154,9 +125,7 @@ export class DriverMap extends React.Component {
     feature.setStyle(this.state.routeStyles.icon);
 
     this.state.vectorSource.addFeature(feature);
-    console.log(fromFeature);
     if (fromFeature) {
-      console.log("creating from feature");
       this.setState({
         features: {
           startPointFeature: feature,
@@ -171,20 +140,21 @@ export class DriverMap extends React.Component {
         }
       });
     }
-    console.log(this.state.features);
   }
 
-  createDriverRoute(polyline) {
-    this.state.route.routeGeometry = polyline;
-    var route = new Polyline({
+  createDriverRoute(routeGeometry) {
+    var routeState = this.state.route;
+    routeState.routeGeometry = routeGeometry;
+    this.setState({ route: routeState });
+    let decodedRoute = new Polyline({
       factor: 1e5
-    }).readGeometry(polyline, {
+    }).readGeometry(routeGeometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
     var feature = new Feature({
       type: "route",
-      geometry: route
+      geometry: decodedRoute
     });
     if (this.state.routeFeature) {
       this.state.vectorSource.removeFeature(this.state.routeFeature); // removes old route from map
@@ -194,19 +164,27 @@ export class DriverMap extends React.Component {
     this.setState({ routeFeature: feature });
   }
 
+  to4326(coordinates) {
+    return transform(
+      [parseFloat(coordinates[0]), parseFloat(coordinates[1])],
+      "EPSG:3857",
+      "EPSG:4326"
+    );
+  }
+
   coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-          latitude +
-          "&lon=" +
-          longtitude +
-          "&format=json"
+        latitude +
+        "&lon=" +
+        longtitude +
+        "&format=json"
       )
-        .then(function(response) {
+        .then(function (response) {
           return response.json();
         })
-        .then(function(json) {
+        .then(function (json) {
           resolve(json);
         });
     });
@@ -215,13 +193,19 @@ export class DriverMap extends React.Component {
   setInputFrom(value) {
     var inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
-    this.state.route.fromAddress = value;
+
+    var routeState = this.state.route;
+    routeState.fromAddress = value;
+    this.setState({ route: routeState });
+
   }
 
   setInputTo(value) {
     var inputField = document.querySelector("#driver-address-input-to");
     inputField.value = value;
-    this.state.route.toAddress = value;
+    var routeState = this.state.route;
+    routeState.toAddress = value;
+    this.setState({ route: routeState });
   }
 
   driverAddressInputSuggestion() {
@@ -298,9 +282,9 @@ export class DriverMap extends React.Component {
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputTo(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-            e.address.road +
-            ", " +
-            e.address.city
+          e.address.road +
+          ", " +
+          e.address.city
         );
       });
       this.createFeature(coordinates, false);
@@ -312,9 +296,9 @@ export class DriverMap extends React.Component {
       this.coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
         this.setInputFrom(
           (e.address.house_number ? e.address.house_number + ", " : "") +
-            e.address.road +
-            ", " +
-            e.address.city
+          e.address.road +
+          ", " +
+          e.address.city
         );
       });
 
@@ -355,15 +339,13 @@ export class DriverMap extends React.Component {
     }
   }
 
-  addRoutePoint(evt, clickedOnMap) {
-    console.log(evt);
-    this.getNearest(evt).then(coordinates => {
+  addRoutePoint(coordinates, clickedOnMap) {
+    this.getNearest(coordinates).then(coordinates => {
       var markersOnMap = this.state.points;
       markersOnMap++;
       this.setState({ points: markersOnMap });
 
-      if (clickedOnMap) {
-        // Separates route point adding by clicking and by writing an address
+      if (clickedOnMap) {        // Separates route point adding by clicking and by writing an address
 
         this.handleDriverMapClick(markersOnMap, coordinates);
       } else {
@@ -377,9 +359,6 @@ export class DriverMap extends React.Component {
 
       var point1 = this.state.coordinates.firstPoint;
       var point2 = this.state.coordinates.lastPoint;
-
-      console.log(this.state.vectorSource.getFeatures());
-      console.log(this.state.features);
 
       fetch(this.state.url_osrm_route + point1 + ";" + point2)
         .then(r => {
@@ -395,8 +374,6 @@ export class DriverMap extends React.Component {
   }
 
   componentDidMount() {
-    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
     var vectorSource = new SourceVector(),
       vectorLayer = new LayerVector({
         source: vectorSource
@@ -420,7 +397,7 @@ export class DriverMap extends React.Component {
       })
     });
 
-    this.setState({ map, vectorSource }, function() {
+    this.setState({ map, vectorSource }, function () {
       this.CenterMap(25.279652, 54.687157, this.state.map);
 
       this.driverAddressInputSuggestion();
@@ -450,9 +427,10 @@ export class DriverMap extends React.Component {
                   placeholder="Select From Location..."
                 />
                 <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
-                  }
+                  handleSelection={(e, index, button) => {
+                    this.handleOfficeSelection(e, index, button)
+
+                  }}
                   whichButton="from"
                 />
               </div>
@@ -465,8 +443,8 @@ export class DriverMap extends React.Component {
                   placeholder="Select To Location..."
                 />
                 <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
+                  handleSelection={(e, index, button) =>
+                    this.handleOfficeSelection(e, index, button)
                   }
                   whichButton="to"
                 />
@@ -479,12 +457,12 @@ export class DriverMap extends React.Component {
           <RidesScheduler routeInfo={this.state.route} />
         ) : null}
         <Button
-          disabled={this.state.route.routeGeometry == "" ? true : false}
+          disabled={this.state.route.routeGeometry === "" ? true : false}
           className="continue-button"
           variant="contained"
           color="primary"
           onClick={() => {
-            console.log(this.state.route);
+          
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
           }}
         >

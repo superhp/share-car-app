@@ -22,28 +22,17 @@ namespace ShareCar.Api.Controllers
     public class RideController : Controller
     {
         private readonly IRideLogic _rideLogic;
-        private readonly IRouteLogic _routeLogic;
-        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IUserRepository _userRepository;
+        private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IPassengerLogic _passengerLogic;
-        private readonly IAddressLogic _addressLogic;
-
-        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
+        public RideController(IRideLogic rideLogic, IRideRequestLogic rideRequestLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
         {
-            _addressLogic = addressLogic;
             _rideLogic = rideLogic;
-            _rideRequestLogic = rideRequestLogic;
-            _routeLogic = routeLogic;
             _userRepository = userRepository;
+            _rideRequestLogic = rideRequestLogic;
             _passengerLogic = passengerLogic;
         }
-        [HttpGet("simillarRides={rideId}")]
-        public IActionResult GetSimillarRides(int rideId)
-        {
-            IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(rideId);
-            return SendResponse(rides);
-        }
-        
+ 
         [HttpPost("passengerResponse")]
         public async Task PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
@@ -58,25 +47,14 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
 
             List<RideDto> rides = await _rideLogic.GetFinishedPassengerRidesAsync(userDto.Email);
-            return Ok(rides);
+           return SendResponse(rides);
         }
 
-        // Should pass users role
         [HttpGet]
         public async Task<IActionResult> GetRidesByLoggedUser()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
-
-            foreach(var ride in rides)
-            {
-                foreach(var req in ride.Requests)
-                {
-                    AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
-                    req.Longtitude = adr.Longtitude;
-                    req.Latitude = adr.Latitude;
-                }
-            }
 
             return SendResponse(rides);
         }
@@ -106,7 +84,7 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
         {
             IEnumerable<RideDto> rides = await _rideLogic.GetRidesByRouteAsync(routeGeometry);
-            return Ok(rides);
+            return SendResponse(rides);
         }
 
         [HttpPost("routes")]
@@ -115,6 +93,7 @@ namespace ShareCar.Api.Controllers
 
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
+
             var userDto = await _userRepository.GetLoggedInUser(User);
             IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto, userDto.Email);
             
@@ -141,42 +120,24 @@ namespace ShareCar.Api.Controllers
                 return NotFound();
             }
         }
-        
-        [HttpPut]
-        public IActionResult Put([FromBody] RideDto ride)
-        {
-            if (ride == null)
-            {
-                return BadRequest("Invalid parameter");
-            }
 
-            
-                return Ok();
-            
-
-        }
         [HttpPut("disactivate")]
         public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
-
-            var userDto = await _userRepository.GetLoggedInUser(User);
             if (rideDto == null)
             {
                 return BadRequest("invalid parameter");
 
             }
+            var userDto = await _userRepository.GetLoggedInUser(User);
             _rideRequestLogic.DeletedRide(rideDto.RideId);
-            bool result = _rideLogic.SetRideAsInactive(rideDto);
-            if (result)
-            {
+
+            _rideLogic.SetRideAsInactive(rideDto);
+                        
                 return Ok();
-            }
-            else
-            {
-                return BadRequest("operation failed");
-            }
 
         }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] IEnumerable<RideDto> rides)
         {
@@ -188,22 +149,14 @@ namespace ShareCar.Api.Controllers
             int count = 0;
             foreach (var ride in rides)
             {
-                bool result =  _rideLogic.AddRide(ride, userDto.Email);
-                if (result)
-                {
+                _rideLogic.AddRide(ride, userDto.Email);
+                
+                
                     count++;
-                }
-                else break;
-            }
-            if (count == rides.Count())
-            {
-                return Ok();
-            }
-            else
-            {
 
-                return BadRequest("Operation failed");
             }
+
+            return Ok();
 
         }
 
@@ -211,13 +164,15 @@ namespace ShareCar.Api.Controllers
 
         private IActionResult SendResponse(IEnumerable<RideDto> ride)
         {
+            return Ok(ride);
+            /* method should execute code below, but since frontend doesn't handle Not found response, controller just returns Ok all the time
             if (ride.Any())
             {
                 return Ok(ride);
 
             }
-            return Ok(ride);
-
+            return NotFoud();
+            */
         }
     }
 

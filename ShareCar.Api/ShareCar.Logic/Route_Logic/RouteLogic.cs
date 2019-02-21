@@ -15,7 +15,6 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
-        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
         
@@ -96,7 +95,7 @@ namespace ShareCar.Logic.Route_Logic
             return dtoRoutes;
         }
 
-        public bool AddRoute(RouteDto route)
+        public void AddRoute(RouteDto route)
         {
             Route entityRoute = new Route
             {
@@ -108,9 +107,7 @@ namespace ShareCar.Logic.Route_Logic
 
 
             };
-            //Route routes = _mapper.Map<RouteDto, Route>(route);
             _routeRepository.AddRoute(entityRoute);
-            return true;
         }
     }
 }

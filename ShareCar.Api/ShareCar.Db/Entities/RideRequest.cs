@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ShareCar.Db.Entities
 {
-    public class Request
+    public class RideRequest
     {
+        [Key]
         public int RequestId { get; set; }
         public string PassengerEmail { get; set; }
         public string DriverEmail { get; set; }

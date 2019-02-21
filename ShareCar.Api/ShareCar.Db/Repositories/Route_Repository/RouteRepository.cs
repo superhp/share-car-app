@@ -10,10 +10,12 @@ namespace ShareCar.Db.Repositories.Route_Repository
     public class RouteRepository: IRouteRepository
     {
         private readonly ApplicationDbContext _databaseContext;
+
         public RouteRepository(ApplicationDbContext databaseContext)
         {
             _databaseContext = databaseContext;
         }
+
         public int GetRouteId(int fromId, int toId)
         {
             try
@@ -22,34 +24,31 @@ namespace ShareCar.Db.Repositories.Route_Repository
             }
             catch
             {
-                return -1; // Address doesnt exist
+                return -1; 
             }
         }
+
         public Route GetRouteById(int id)
         {
             try
             {
-                return _databaseContext.Routes.Single(x => x.RouteId == id); // Throws exception if ride is not found
+                return _databaseContext.Routes.Single(x => x.RouteId == id); 
             }
             catch
             {
                 return null;
             }
         }
-        public bool AddRoute(Route route)
+
+        public void AddRoute(Route route)
         {
-            try
-            {
+
                 _databaseContext.Routes.Add(route);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+
         }
-        public bool UpdateRoute(Route route)
+
+        public void UpdateRoute(Route route)
         {
             Route routeToUpdate = GetRouteById(route.RouteId);
             if(routeToUpdate.Rides == null)
@@ -63,7 +62,6 @@ namespace ShareCar.Db.Repositories.Route_Repository
            
             _databaseContext.Routes.Update(routeToUpdate);
             _databaseContext.SaveChanges();
-            return true;
         }
 
         public IEnumerable<Route> GetRoutes(bool isFromOffice, Address address)

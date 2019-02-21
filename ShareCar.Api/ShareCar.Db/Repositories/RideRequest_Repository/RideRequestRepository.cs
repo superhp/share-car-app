@@ -17,49 +17,45 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         }
 
 
-        public bool AddRequest(Request request)
+        public void AddRequest(RideRequest request)
         {
-
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
-            return true;
         }
 
-        public IEnumerable<Request> FindDriverRequests(string email)
+        public IEnumerable<RideRequest> FindDriverRequests(string email)
         {
-
-                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).ToList();
-
+                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING);
         }
 
-        public IEnumerable<Request> FindRequestsByRideId(int rideId)
+        public IEnumerable<RideRequest> FindRequestsByRideId(int rideId)
         {
-            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED).ToList();
+            return _databaseContext.Requests.Where(x => x.RideId == rideId && x.Status != Status.DELETED);
         }
 
-        public void DeletedRide(IEnumerable<Request> requests)
+        public void DeletedRide(IEnumerable<RideRequest> requests)
         {
-            foreach (Request request in requests)
+            foreach (RideRequest request in requests)
             {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 toUpdate.SeenByPassenger = false;
                 toUpdate.Status = Status.DELETED;
             }
             _databaseContext.SaveChanges();
         }
-        public IEnumerable<Request> FindPassengerRequests(string email)
+        public IEnumerable<RideRequest> FindPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED))).ToList();
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || (x.Status != Status.DENIED && x.Status != Status.DELETED)));
         }
 
-        public Request FindRequestById(int id)
+        public RideRequest FindRequestById(int id)
         {
             return _databaseContext.Requests.Single(x => x.RequestId == id);
         }
 
-        public IEnumerable<Request> GetAcceptedRequests(string passengerEmail)
+        public IEnumerable<RideRequest> GetAcceptedRequests(string passengerEmail)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED).ToList();
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == passengerEmail && x.Status == Status.DENIED);
         }
 
         public void SeenByDriver(int[] requests)
@@ -67,7 +63,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
             foreach(int id in requests)
             {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
                 toUpdate.SeenByDriver = true;
             }
             _databaseContext.SaveChanges();
@@ -76,7 +72,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public void SeenByPassenger(int[] requests)
         {
-            IEnumerable<Request> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
+            IEnumerable<RideRequest> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
 
             foreach (var request in toUpdate)
             {
@@ -85,21 +81,15 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             _databaseContext.SaveChanges();
         }
 
-        public bool UpdateRequest(Request request)
+        public void UpdateRequest(RideRequest request)
         {
-            try
-            {
-                Request toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
                 toUpdate.Status = request.Status;
                 toUpdate.SeenByPassenger = false;
                 _databaseContext.Requests.Update(toUpdate);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
+
         }
 
         

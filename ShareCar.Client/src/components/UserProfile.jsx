@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import UserService from "../services/userService";
-import { Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthenticationService from "../services/authenticationService";
 import history from "../helpers/history";
 import "../styles/userProfile.css";
@@ -13,8 +13,6 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import SnackBars from "../components/common/Snackbars";
 import "typeface-roboto";
 
@@ -60,7 +58,7 @@ class UserProfile extends Component<
       phone: this.state.user.user.phone
     };
     api.post(`https://localhost:44360/api/user`, data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.setState({
           snackBarClicked: true,
           snackBarMessage: "Profile updated!"

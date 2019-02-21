@@ -8,9 +8,9 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
     public interface IPassengerRepository
     {
         int GetUsersPoints(string email);
-        bool AddNewPassenger(Passenger passenger);
-        IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email);
+        void AddNewPassenger(Passenger passenger);
+        IEnumerable<Passenger> GetUnrespondedPassengersByEmail(string email);
         IEnumerable<Passenger> GetPassengersByRideId(int rideId);
-        void RespondeToRide(bool response, int rideId, string passengerEmail);
+        void RespondToRide(bool response, int rideId, string passengerEmail);
     }
 }

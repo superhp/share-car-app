@@ -10,7 +10,6 @@ class Login extends Component<{}> {
   authService: AuthenticationService = new AuthenticationService();
 
   responseFacebook = (response: any) => {
-    console.log(response);
 
     this.authService.loginWithFacebook(
       response.accessToken,

@@ -2,10 +2,9 @@ import * as React from "react";
 //import * as todoItem from "../../data/todoItem";
 //import { StatusInput } from "../TodoItem/StatusInput";
 //import { Loader } from "../Loader";
-import axios from "axios";
-import api from "../helpers/axiosHelper";
-import { PassengerRideRequestsList } from "./PassengerRideRequestsList";
-import { DriverRideRequestsList } from "./DriverRideRequestList";
+import api from "../../helpers/axiosHelper";
+import { PassengerRideRequestsList } from "../Passenger/PassengerRideRequestsList";
+import { DriverRideRequestsList } from "../Driver/DriverRideRequestList";
 export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],
@@ -18,10 +17,10 @@ export class ViewRideRequests extends React.Component {
       : this.showPassengerRequests();
   }
   handleRequestClick(button, requestId) {
-    if (button == "Accept" || button == "Deny") {
+    if (button === "Accept" || button === "Deny") {
       this.setState({
         driverRequests: this.state.driverRequests.filter(
-          x => x.requestId != requestId
+          x => x.requestId !== requestId
         )
       });
     }
@@ -52,8 +51,7 @@ coordinatesToLocation(latitude, longtitude) {
     api
       .get("RideRequest/false")
       .then(response => {
-        if(response.data != ""){
-        console.log((response.data: User));
+        if(response.data !== ""){
         const d = response.data;
         this.setState({ passengerRequests: d }); 
         }
@@ -61,18 +59,14 @@ coordinatesToLocation(latitude, longtitude) {
       .then(() => {
         const unseenRequests = [];
 
-        console.log(this.state.passengerRequests.length);
-
         for (var i = 0; i < this.state.passengerRequests.length; i++) {
           if (!this.state.passengerRequests[i].seenByPassenger) {
             unseenRequests.push(this.state.passengerRequests[i].requestId);
           }
         }
 
-        console.log(unseenRequests);
-        if (unseenRequests.length != 0) {
+        if (unseenRequests.length !== 0) {
           api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
-            console.log(res);
           });
         }
       })
@@ -85,7 +79,7 @@ coordinatesToLocation(latitude, longtitude) {
     api
       .get("RideRequest/true")
       .then(response => {
-        if (response.status == 200)
+        if (response.status === 200)
           this.setState({ driverRequests: response.data });
       })
       .then(() => {
@@ -97,10 +91,8 @@ coordinatesToLocation(latitude, longtitude) {
           }
         }
 
-        console.log(unseenRequests);
-        if (unseenRequests.length != 0) {
+        if (unseenRequests.length !== 0) {
           api.post("RideRequest/seenDriver", unseenRequests).then(res => {
-            console.log(res);
           });
         }
       })
@@ -117,9 +109,9 @@ coordinatesToLocation(latitude, longtitude) {
             onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
             rideRequests={
-              this.props.selectedRide != null && this.state.driverRequests != []
+              this.props.selectedRide !== null && this.state.driverRequests !== []
                 ? this.state.driverRequests.filter(
-                    x => x.rideId == this.props.selectedRide
+                    x => x.rideId === this.props.selectedRide
                   )
                 : []
             }

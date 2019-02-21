@@ -13,7 +13,7 @@ namespace ShareCar.Db
         public DbSet<User> User { get; set; }
         public DbSet<Ride> Rides { get; set; }
         public DbSet<Route> Routes { get; set; }
-        public DbSet<Request> Requests { get; set; }
+        public DbSet<RideRequest> Requests { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Passenger> Passengers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
