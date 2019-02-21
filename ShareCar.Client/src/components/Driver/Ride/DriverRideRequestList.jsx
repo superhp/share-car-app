@@ -1,8 +1,4 @@
 import * as React from "react";
-import api from "../../../helpers/axiosHelper";
-import "../../../styles/riderequests.css";
-import MapComponent from "../../Maps/MapComponent";
-import "../../../styles/genericStyles.css";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -13,22 +9,23 @@ import Badge from "@material-ui/core/Badge";
 import "typeface-roboto";
 import Snackbar from "@material-ui/core/Snackbar";
 
+import api from "../../../helpers/axiosHelper";
+import MapComponent from "../../Maps/MapComponent";
+
+import "../../../styles/riderequests.css";
+import "../../../styles/genericStyles.css";
+
 const fontColor = {
   color: "#007BFF"
 };
 
 export class DriverRideRequestsList extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
   state = {
     coordinates: [],
     passengers: [],
     show: false,
     clickedRequest: false
   };
-  // this.child = React.createRef();
-  // }
 
   componentWillMount() {
     this.getAllPassengers();

@@ -1,13 +1,15 @@
 import * as React from "react";
-import { Status } from "../../../utils/status";
-import "../../../styles/riderequests.css";
 import Moment from "react-moment";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import "../../../styles/genericStyles.css";
 import { Typography } from "@material-ui/core";
-import MapComponent from "../../Maps/MapComponent";
 import Button from "@material-ui/core/Button";
+
+import MapComponent from "../../Maps/MapComponent";
+import { Status } from "../../../utils/status";
+
+import "../../../styles/riderequests.css";
+import "../../../styles/genericStyles.css";
 
 
 export class PassengerRideRequestsList extends React.Component {

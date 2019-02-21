@@ -1,14 +1,16 @@
 import * as React from "react";
 import axios from "axios";
-import api from "../../../helpers/axiosHelper";
 import DateTimePicker from "react-datetime-picker";
-import "../../styles/newRideForm.css";
+
 import addressParser from "../helpers/addressParser";
-import "../../styles/genericStyles.css";
+import api from "../../../helpers/axiosHelper";
 import MapComponent from "../../Maps/MapComponent";
 import { OfficeAddresses } from "../AddressData";
 
-var moment = require("moment");
+import "../../styles/newRideForm.css";
+import "../../styles/genericStyles.css";
+
+let moment = require("moment");
 export class NewRideForm extends React.Component {
     state = {
         startDate: moment("2018-07-25", "YYYY-MM-DD").toDate(),
@@ -43,11 +45,11 @@ export class NewRideForm extends React.Component {
                 }
             });
         }
-        var places = require("places.js");
-        var placesAutocompleteFrom = places({
+        let places = require("places.js");
+        let placesAutocompleteFrom = places({
             container: document.querySelector("#address-input-from")
         });
-        var placesAutocompleteTo = places({
+        let placesAutocompleteTo = places({
             container: document.querySelector("#address-input-to")
         });
 
@@ -61,7 +63,7 @@ export class NewRideForm extends React.Component {
                 }
             });
 
-            for (var i = 0; i < OfficeAddresses.length; i++) {
+            for (let i = 0; i < OfficeAddresses.length; i++) {
                 if (this.state.fromAddress.country === OfficeAddresses[i].country
                     && this.state.fromAddress.city === OfficeAddresses[i].city
                     && this.state.fromAddress.street === OfficeAddresses[i].street
@@ -112,7 +114,7 @@ export class NewRideForm extends React.Component {
         };
 
         if (this.state.addNewForm) {
-            var rides = [];
+            let rides = [];
             rides.push(ride);
             api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
                 this.setState({ addedStatus: true });
@@ -120,7 +122,7 @@ export class NewRideForm extends React.Component {
         } else {
             ride["RideId"] = this.props.drive.rideId;
             ride["DriverEmail"] = this.props.drive.driverEmail;
-            var rides = [];
+            let rides = [];
             rides.push(ride);
             api.put(`https://localhost:44360/api/Ride`, rides).then(res => {
                 this.setState({ addedStatus: true });

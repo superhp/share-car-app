@@ -1,10 +1,8 @@
 import * as React from "react";
-//import * as todoItem from "../../data/todoItem";
-//import { StatusInput } from "../TodoItem/StatusInput";
-//import { Loader } from "../Loader";
-import api from "../../helpers/axiosHelper";
-import { PassengerRideRequestsList } from "../Passenger/Ride/PassengerRideRequestsList";
-import { DriverRideRequestsList } from "./Ride/DriverRideRequestList";
+
+import api from "../../../helpers/axiosHelper";
+import { PassengerRideRequestsList } from "../../Passenger/Ride/PassengerRideRequestsList";
+import { DriverRideRequestsList } from "./DriverRideRequestList";
 
 export class ViewRideRequests extends React.Component {
   state = {
@@ -45,22 +43,18 @@ coordinatesToLocation(latitude, longtitude) {
     });
   }
 
-
-
-
   showPassengerRequests() {
     api
       .get("RideRequest/false")
       .then(response => {
         if(response.data !== ""){
-        const d = response.data;
-        this.setState({ passengerRequests: d }); 
+          this.setState({ passengerRequests: response.data }); 
         }
 })
       .then(() => {
         const unseenRequests = [];
 
-        for (var i = 0; i < this.state.passengerRequests.length; i++) {
+        for (let i = 0; i < this.state.passengerRequests.length; i++) {
           if (!this.state.passengerRequests[i].seenByPassenger) {
             unseenRequests.push(this.state.passengerRequests[i].requestId);
           }
@@ -86,7 +80,7 @@ coordinatesToLocation(latitude, longtitude) {
       .then(() => {
         const unseenRequests = [];
 
-        for (var i = 0; i < this.state.driverRequests.length; i++) {
+        for (let i = 0; i < this.state.driverRequests.length; i++) {
           if (!this.state.driverRequests[i].seenByDriver) {
             unseenRequests.push(this.state.driverRequests[i].requestId);
           }

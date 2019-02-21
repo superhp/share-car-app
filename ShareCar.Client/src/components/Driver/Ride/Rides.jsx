@@ -1,9 +1,10 @@
 import React from "react";
+import Paper from "@material-ui/core/Paper";
+import "typeface-roboto";
+
 import api from "../../../helpers/axiosHelper";
 import { DriversRidesList } from "./DriversRidesList";
 
-import Paper from "@material-ui/core/Paper";
-import "typeface-roboto";
 import "../../../styles/genericStyles.css";
 
 export class Rides extends React.Component {

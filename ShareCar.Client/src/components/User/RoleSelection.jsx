@@ -1,15 +1,17 @@
 //@flow
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+
 import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import history from "../../helpers/history";
-import driverLogo from "../../images/driver.png";
-import passengerLogo from "../../images/passenger.png";
 import RideCompletedNotification from "../Passenger/Ride/RideCompletedNotification";
-import "../../styles/roleSelection.css";
 import api from "../../helpers/axiosHelper";
 import { RoleContext } from "../../helpers/roles";
+
+import "../../styles/roleSelection.css";
+import driverLogo from "../../images/driver.png";
+import passengerLogo from "../../images/passenger.png";
 
 class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   userService = new UserService();
@@ -50,7 +52,7 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   };
 
   handleRoleSelection(isDriver) {
-    var currentState = this.state.roleSelection;
+    let currentState = this.state.roleSelection;
     currentState.isDriver = isDriver;
     this.setState({ roleSelection: currentState });
   }
@@ -60,7 +62,7 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
       <p>
         <em>Loading..</em>
       </p>
-    ) : this.state.user == null ? (
+    ) : this.state.user === null ? (
       <p>Failed</p>
     ) : (
       <div>

@@ -8,6 +8,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { withStyles } from "@material-ui/core/styles";
+
 import { OfficeAddresses } from "../../utils/AddressData";
 
 const styles = theme => ({
@@ -25,7 +26,7 @@ class SimpleMenu extends React.Component {
   };
 
   handleToggle = () => {
-    this.setState(state => ({ open: !state.open }));
+    this.setState({ open: !this.state.open });
   };
 
   handleClose = (event, index) => {
@@ -71,10 +72,6 @@ class SimpleMenu extends React.Component {
                 {...TransitionProps}
                 id="menu-list-grow"
                 style={{ zIndex: 999999 }}
-              //  style={{
-              //    transformOrigin:
-             //       placement === "bottom" ? "center top" : "center bottom"
-             //   }}
               >
                 <Paper style={{ zIndex: 999999 }}>
                   <ClickAwayListener onClickAway={this.handleClose}>

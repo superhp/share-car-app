@@ -1,11 +1,13 @@
 import React from "react";
-import api from "../../helpers/axiosHelper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Paper from "@material-ui/core/Paper";
-import { WinnersList } from "./WinnersList";
 import "typeface-roboto";
+
+import { WinnersList } from "./WinnersList";
+import api from "../../helpers/axiosHelper";
+
 import "../../styles/genericStyles.css";
 import "../../styles/winnerBoard.css";
 
@@ -22,9 +24,8 @@ export class WinnerBoard extends React.Component {
       .get("user/WinnerBoard")
       .then(response => {
         if (response.status === 200) {
-          const d = response.data;
-          this.setState({ winners: d.users });
-          this.setState({ points: d.points });
+          this.setState({ winners:  response.data.users });
+          this.setState({ points:  response.data.points });
         }
       })
       .catch(function(error) {

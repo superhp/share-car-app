@@ -1,9 +1,4 @@
 import * as React from "react";
-import api from "../../../helpers/axiosHelper";
-import "../../../styles/driversRidesList.css";
-import "../../../styles/genericStyles.css";
-import "../../../styles/driversRidesList.css";
-import { ViewRideRequests } from "../ViewRideRequests";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
@@ -12,7 +7,16 @@ import Grid from "@material-ui/core/Grid";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoIcon from "@material-ui/icons/Info";
 import "typeface-roboto";
-var moment = require("moment");
+
+import api from "../../../helpers/axiosHelper";
+import { ViewRideRequests } from "./ViewRideRequests";
+
+import "../../../styles/driversRidesList.css";
+import "../../../styles/genericStyles.css";
+import "../../../styles/driversRidesList.css";
+
+
+let moment = require("moment");
 
 const style = {
   margin: "1em 0",

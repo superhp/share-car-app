@@ -1,15 +1,17 @@
 // @flow
 import * as React from "react";
-import "../../styles/layout.css";
-import "../../styles/genericStyles.css";
-import UserService from "../../services/userService";
-import AuthenticationService from "../../services/authenticationService";
-import NavBar from "./NavBar";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
+
+import UserService from "../../services/userService";
+import AuthenticationService from "../../services/authenticationService";
+import NavBar from "./NavBar";
 import { LinksToHeadings } from "../LinkDictionary";
+
+import "../../styles/layout.css";
+import "../../styles/genericStyles.css";
 
 type LayoutProps = {
   children?: React.Node

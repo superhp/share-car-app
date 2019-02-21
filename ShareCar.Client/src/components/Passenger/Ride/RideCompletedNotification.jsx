@@ -4,7 +4,7 @@ import api from "../../../helpers/axiosHelper";
 class RideCompletedNotification extends React.Component {
 
     sendResponse(response, rideId) {
-        var passengerResponse = {
+        const passengerResponse = {
             Response: response,
             RideId: rideId
         }

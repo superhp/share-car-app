@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import api from "../../../helpers/axiosHelper";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,6 +16,8 @@ import InfiniteCalendar, {
   defaultMultipleDateInterpolation
 } from "react-infinite-calendar";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
+
+import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
 import TimePickers from "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
@@ -32,7 +33,7 @@ const styles = {
 };
 
 // Render the Calendar
-var today = new Date();
+const today = new Date();
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -57,14 +58,14 @@ class RidesScheduler extends React.Component {
   handleSelect(e) {
     if (this.state.selectedDates.length > 0) {
       if (this.checkForDateDuplicate(e, this.state.selectedDates)) {
-        var index = -1;
-        for (var i = 0; i < this.state.selectedDates.length; i++) {
+        let index = -1;
+        for (let i = 0; i < this.state.selectedDates.length; i++) {
           if (this.state.selectedDates[i].getTime() === e.getTime()) {
             index = i;
             break;
           }
         }
-        var clone = [...this.state.selectedDates];
+        let clone = [...this.state.selectedDates];
         clone.splice(index, 1);
         this.setState(prevState => ({
           selectedDates: clone
@@ -85,15 +86,15 @@ class RidesScheduler extends React.Component {
   };
 
   handleCreate = () => {
-    var ridesToPost = [];
-    var fromAddressParsed = addressParser.parseCustomAddress(
+    let ridesToPost = [];
+    const fromAddressParsed = addressParser.parseCustomAddress(
       this.props.routeInfo.fromAddress
     );
-    var toAddressParsed = addressParser.parseCustomAddress(
+    const toAddressParsed = addressParser.parseCustomAddress(
       this.props.routeInfo.toAddress
     );
     this.state.selectedDates.forEach(element => {
-      var month = element.getMonth() + 1;
+      const month = element.getMonth() + 1;
 
       ridesToPost.push({
         fromNumber: fromAddressParsed.number,
@@ -138,7 +139,7 @@ class RidesScheduler extends React.Component {
   };
 
   checkForDateDuplicate = function(needle, haystack) {
-    for (var i = 0; i < haystack.length; i++) {
+    for (let i = 0; i < haystack.length; i++) {
       if (needle.getTime() === haystack[i].getTime()) {
         return true;
       }
@@ -147,8 +148,8 @@ class RidesScheduler extends React.Component {
   };
 
   returnUnique = function(duplicateArray) {
-    var uniqueDates = [];
-    for (var i = 0; i < duplicateArray.length; i++) {
+    let uniqueDates = [];
+    for (let i = 0; i < duplicateArray.length; i++) {
       if (!this.checkForDateDuplicate(duplicateArray[i], uniqueDates)) {
         uniqueDates.push(duplicateArray[i]);
       }

@@ -1,11 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import UserService from "../../services/userService";
 import { Link } from "react-router-dom";
-import AuthenticationService from "../../services/authenticationService";
-import history from "../../helpers/history";
-import "../../styles/userProfile.css";
-import api from "../../helpers/axiosHelper";
 import { withAlert } from "react-alert";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
@@ -13,8 +8,15 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import SnackBars from "../common/Snackbars";
 import "typeface-roboto";
+
+import SnackBars from "../common/Snackbars";
+import api from "../../helpers/axiosHelper";
+import AuthenticationService from "../../services/authenticationService";
+import history from "../../helpers/history";
+import UserService from "../../services/userService";
+
+import "../../styles/userProfile.css";
 
 type UserProfileState = {
   loading: boolean,
@@ -108,7 +110,7 @@ class UserProfile extends Component<
               </label>
               <input
                 onChange={e => {
-                  var changedState = { ...this.state.user };
+                  let changedState = { ...this.state };
                   changedState.user.firstName = e.target.value;
                   this.setState({ user: changedState });
                 }}
@@ -132,7 +134,7 @@ class UserProfile extends Component<
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.user.lastName}
                 onChange={e => {
-                  var changedState = { ...this.state.user };
+                  let changedState = { ...this.state };
                   changedState.user.lastName = e.target.value;
                   this.setState({ user: changedState });
                 }}
@@ -150,7 +152,7 @@ class UserProfile extends Component<
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.user.phone}
                 onChange={e => {
-                  var changedState = { ...this.state.user };
+                  let changedState = { ...this.state };
                   changedState.user.phone = e.target.value;
                   this.setState({ user: changedState });
                 }}
@@ -168,7 +170,7 @@ class UserProfile extends Component<
                 aria-describedby="emailHelp"
                 defaultValue={this.state.user.user.licensePlate}
                 onChange={e => {
-                  var changedState = { ...this.state.user };
+                  let changedState = { ...this.state };
                   changedState.user.licensePlate = e.target.value;
                   this.setState({ user: changedState });
                 }}

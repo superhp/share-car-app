@@ -1,12 +1,14 @@
 import * as React from "react";
-import "../../../styles/riderequests.css";
-import api from "../../../helpers/axiosHelper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+
+import api from "../../../helpers/axiosHelper";
 import SnackBars from "../../common/Snackbars";
 
-var moment = require("moment");
+import "../../../styles/riderequests.css";
+
+let moment = require("moment");
 
 export class RidesOfDriver extends React.Component {
   state = {
@@ -14,7 +16,7 @@ export class RidesOfDriver extends React.Component {
     snackBarMessage: ""
   };
   sendrequest(rideId, driverEmail) {
-    var request = {
+    const request = {
       RideId: rideId,
       DriverEmail: driverEmail,
       Longtitude: this.props.pickUpPoints[0],

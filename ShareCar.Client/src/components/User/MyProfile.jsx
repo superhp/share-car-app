@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from "react";
+
 import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import history from "../../helpers/history";
