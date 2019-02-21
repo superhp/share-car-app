@@ -3,24 +3,23 @@ import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
 import Feature from "ol/Feature";
-import Icon from "ol/style/Icon";
 import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
-import Style from "ol/style/Style";
-import Stroke from "ol/style/Stroke";
 import { fromLonLat } from "ol/proj";
+import Button from "@material-ui/core/Button";
+
 import { OfficeAddresses } from "./AddressData";
 import addressParser from "../helpers/addressParser";
-import SimpleMenu from "./common/SimpleMenu";
-import Button from "@material-ui/core/Button";
 import RidesScheduler from "./RidesScheduler";
 import map from "./Maps/Map";
 import { getNearest, coordinatesToLocation, centerMap } from "./../utils/mapUtils";
 import { routeStyles } from "./../utils/mapStyles";
+import { DriverInput } from "./DriverInput";
+
 import "../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -53,43 +52,45 @@ export class DriverMap extends React.Component {
   };
 
   handleOfficeSelection(e, indexas, button) {
-    var index = e.target.value;
-    if(indexas){
-        var getState = this.state.filteredRoute;
-        getState.office = OfficeAddresses[indexas];
-        this.setState({ filteredRoute: getState });
-		
-        var address = this.officeToString(this.state.filteredRoute.office);
-        var route = this.state.route;
-
-        this.updateRoute(button, route, address);
+    if (indexas) {
+      this.setState({
+        filteredRoute: {
+          ...this.state.filteredRoute, office: OfficeAddresses[indexas]
+        }},
+        () => {
+          const address = this.officeToString(this.state.filteredRoute.office);
+          const route = this.state.route;
+          this.updateRoute(button, route, address);
+        }
+      );
     }
   }
 
   officeToString(office) {
-	  var address =
+	  const address =
         office.number +
         ", " +
         office.street +
         ", " +
         office.city;
-
     return address;
   }
 
   updateRoute(buttonType, route, address){
-    if(buttonType == "from"){
+    if(buttonType === "from"){
       this.setState({startPointInput: true});
-      route.addressFrom = address;
+      this.setState({ route:
+        {...this.state.route, addressFrom: address}
+      });
       this.setInputFrom(address);
     }
     else{
       this.setState({startPointInput: false});
-      route.addressTo = address;
+      this.setState({ route:
+        {...this.state.route, addressTo: address}
+      });
       this.setInputTo(address);
     }
-    
-    this.setState({ route: route });
     
     this.addRoutePoint(
       [
@@ -102,39 +103,33 @@ export class DriverMap extends React.Component {
 
   createFeature(coordinates, fromFeature) {
     // fromFeature param indicates which feature is added - start point or destination
-    var feature = new Feature({
+    let feature = new Feature({
       type: "place",
       geometry: new Point(fromLonLat(coordinates))
     });
     feature.setStyle(routeStyles.icon);
-
     this.state.vectorSource.addFeature(feature);
+
     if (fromFeature) {
       this.setState({
-        features: {
-          startPointFeature: feature,
-          destinationFeature: this.state.features.destinationFeature
-        }
+        features: {...this.state.features, startPointFeature: feature}
       });
     } else {
       this.setState({
-        features: {
-          startPointFeature: this.state.features.startPointFeature,
-          destinationFeature: feature
-        }
+        features: {...this.state.features, destinationFeature: feature}
       });
     }
   }
 
   createDriverRoute(polyline) {
-    this.state.route.routeGeometry = polyline;
-    var route = new Polyline({
+    this.setState({route: {...this.state.route, routeGeometry: polyline}});
+    const route = new Polyline({
       factor: 1e5
     }).readGeometry(polyline, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
-    var feature = new Feature({
+    let feature = new Feature({
       type: "route",
       geometry: route
     });
@@ -147,24 +142,23 @@ export class DriverMap extends React.Component {
   }
 
   setInputFrom(value) {
-    var inputField = document.querySelector("#driver-address-input-from");
+    let inputField = document.querySelector("#driver-address-input-from");
     inputField.value = value;
-    this.state.route.fromAddress = value;
+    this.setState({route: {...this.state.route, fromAddress: value }});
   }
 
   setInputTo(value) {
-    var inputField = document.querySelector("#driver-address-input-to");
+    let inputField = document.querySelector("#driver-address-input-to");
     inputField.value = value;
-    this.state.route.toAddress = value;
+    this.setState({route: {...this.state.route, toAddress: value }});
   }
 
   driverAddressInputSuggestion() {
-    var places = require("places.js");
-
-    var placesAutocompleteFrom = places({
+    let places = require("places.js");
+    let placesAutocompleteFrom = places({
       container: document.querySelector("#driver-address-input-from")
     });
-    var placesAutocompleteTo = places({
+    let placesAutocompleteTo = places({
       container: document.querySelector("#driver-address-input-to")
     });
 
@@ -180,18 +174,26 @@ export class DriverMap extends React.Component {
   }
 
   handleRouteCreation(e, addressType) {
-    var address = addressParser.parseAlgolioAddress(e.suggestion.name);
-    var city = e.suggestion.city;
-    var route = this.state.route;
+    const address = addressParser.parseAlgolioAddress(e.suggestion.name);
+    const city = e.suggestion.city;
+    const route = this.state.route;
 
-    if(addressType == "from"){
-      route.fromAddress = [address.number, address.name, city].join(", ");
+    if(addressType === "from"){
+      this.setState({route: 
+        {
+          ...this.state.route, 
+          fromAddress: [address.number, address.name, city].join(", ")
+        }
+      });
     }
     else {
-      route.toAddress = [address.number, address.name, city].join(", ");
+      this.setState({route: 
+        {
+          ...this.state.route, 
+          toAddress: [address.number, address.name, city].join(", ")
+        }
+      });
     }
-
-    this.setState({ route });
     
     centerMap(
       e.suggestion.latlng.lng,
@@ -215,7 +217,7 @@ export class DriverMap extends React.Component {
 
       this.setState({
         coordinates: {
-          firstPoint: this.state.coordinates.firstPoint,
+          ...this.state.coordinates,
           lastPoint: coordinates
         }
       });
@@ -231,7 +233,10 @@ export class DriverMap extends React.Component {
       this.createFeature(coordinates, false);
     } else {
       this.setState({
-        coordinates: { firstPoint: coordinates, lastPoint: [] }
+        coordinates: {
+          firstPoint: coordinates, 
+          lastPoint: [] 
+        }
       });
 
       coordinatesToLocation(coordinates[1], coordinates[0]).then(e => {
@@ -256,8 +261,8 @@ export class DriverMap extends React.Component {
       }
       this.setState({
         coordinates: {
-          firstPoint: coordinates,
-          lastPoint: this.state.coordinates.lastPoint
+          ...this.state.coordinates,
+          firstPoint: coordinates
         }
       });
 
@@ -271,7 +276,7 @@ export class DriverMap extends React.Component {
 
       this.setState({
         coordinates: {
-          firstPoint: this.state.coordinates.firstPoint,
+          ...this.state.coordinates,
           lastPoint: coordinates
         }
       });
@@ -282,20 +287,16 @@ export class DriverMap extends React.Component {
 
   addRoutePoint(evt, clickedOnMap) {
     getNearest(evt).then(coordinates => {
-      var markersOnMap = this.state.points;
-      markersOnMap++;
+      let markersOnMap = this.state.points + 1;
       this.setState({ points: markersOnMap });
 
       if (clickedOnMap) {
-        // Separates route point adding by clicking and by writing an address
-
         this.handleDriverMapClick(markersOnMap, coordinates);
       } else {
         this.handleAddressInput(coordinates);
       }
 
       if (markersOnMap < 2) {
-        // only one point on a map, impossible to display route
         return;
       }
 
@@ -305,16 +306,15 @@ export class DriverMap extends React.Component {
 
   createRouteFromPoints() {
     const URL_OSMR_ROUTE = "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/";
-    
-    var point1 = this.state.coordinates.firstPoint;
-    var point2 = this.state.coordinates.lastPoint;
+    const point1 = this.state.coordinates.firstPoint;
+    const point2 = this.state.coordinates.lastPoint;
   
     fetch(URL_OSMR_ROUTE + point1 + ";" + point2)
       .then(r => {
         return r.json();
       })
       .then(json => {
-        if (json.code !== "Ok") {
+        if (json.code !=== "Ok") {
         return;
         }
         this.createDriverRoute(json.routes[0].geometry);
@@ -322,16 +322,9 @@ export class DriverMap extends React.Component {
   }
 
   componentDidMount() {
-    //var icon_url = '//cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png',
-
-    var vectorSource = new SourceVector(),
-      vectorLayer = new LayerVector({
-        source: vectorSource
-      });
-
-    console.clear();
-
-    var map = new Map({
+    const vectorSource = new SourceVector();
+    const vectorLayer = new LayerVector({ source: vectorSource });
+    const map = new Map({
       target: "map",
       controls: [],
       layers: [
@@ -349,12 +342,11 @@ export class DriverMap extends React.Component {
 
     this.setState({ map, vectorSource }, function() {
       centerMap(25.279652, 54.687157, this.state.map);
-
       this.driverAddressInputSuggestion();
     });
 
     map.on("click", evt => {
-      var coord4326 = transform(
+      const coord4326 = transform(
         [parseFloat(evt.coordinate[0]), parseFloat(evt.coordinate[1])],
         "EPSG:3857",
         "EPSG:4326"
@@ -369,35 +361,22 @@ export class DriverMap extends React.Component {
         <div className="displayRoutes">
           <div>
             <div className="map-input-selection">
-              <div className="form-group">
-                <input
-                  type="search"
-                  className="form-group location-select"
-                  id="driver-address-input-from"
-                  placeholder="Select From Location..."
-                />
-                <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
-                  }
-                  whichButton="from"
-                />
-              </div>
-
-              <div className="form-group">
-                <input
-                  type="search"
-                  className="form-group location-select"
-                  id="driver-address-input-to"
-                  placeholder="Select To Location..."
-                />
-                <SimpleMenu
-                  handleSelection={(e, indexas, button) =>
-                    this.handleOfficeSelection(e, indexas, button)
-                  }
-                  whichButton="to"
-                />
-              </div>
+              <DriverInput 
+                inputId="driver-address-input-from"
+                placeholder="Select From Location..."
+                handleOfficeSelection={(e, indexas, button) =>
+                  this.handleOfficeSelection(e, indexas, button)
+                }
+                direction="from"
+              />
+              <DriverInput 
+                inputId="driver-address-input-to"
+                placeholder="Select To Location..."
+                handleOfficeSelection={(e, indexas, button) =>
+                  this.handleOfficeSelection(e, indexas, button)
+                }
+                direction="to"
+              />
             </div>
           </div>
         </div>
@@ -406,7 +385,7 @@ export class DriverMap extends React.Component {
           <RidesScheduler routeInfo={this.state.route} />
         ) : null}
         <Button
-          disabled={this.state.route.routeGeometry == "" ? true : false}
+          disabled={this.state.route.routeGeometry === "" ? true : false}
           className="continue-button"
           variant="contained"
           color="primary"
@@ -421,4 +400,5 @@ export class DriverMap extends React.Component {
     );
   }
 }
+
 export default DriverMap;
