@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ShareCar.Db.Entities;
+﻿using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,25 +24,44 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return points;
         }
 
-        public void AddNewPassenger(Passenger passenger)
+        public bool AddNewPassenger(Passenger passenger)
         {
+            try
+            {
+                var p = _databaseContext.Passengers.FirstOrDefault(x => x.Email == passenger.Email && x.RideId == passenger.RideId);
 
-            _databaseContext.Passengers.Add(passenger);
-            _databaseContext.SaveChanges();
+                if(p != null)
+                {
+                    return false;
+                }
 
+                _databaseContext.Passengers.Add(passenger);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
         }
 
-        public void RemovePassenger(Passenger passenger)
+        public bool RemovePassenger(Passenger passenger)
         {
-            _databaseContext.Passengers.Remove(passenger);
-            _databaseContext.SaveChanges();
-
+            try
+            {
+                _databaseContext.Passengers.Remove(passenger);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public IEnumerable<Passenger> GetUnrespondedPassengersByEmail(string email)
+        public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
         {
-            return _databaseContext.Passengers.Include(x => x.Ride).
-            Where(x => x.Email == email && x.PassengerResponded == false);
+                return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
 
         }
 
@@ -52,14 +70,20 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return _databaseContext.Passengers.Where(x => x.RideId == rideId);
         }
 
-        public void RespondToRide(bool response, int rideId, string passengerEmail)
+        public bool RespondToRide(bool response, int rideId, string passengerEmail)
         {
+            try {
+                Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
+                passenger.PassengerResponded = true;
+                passenger.Completed = response;
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            }
 
-            Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
-            passenger.PassengerResponded = true;
-            passenger.Completed = response;
-            _databaseContext.SaveChanges();
-
-        }
     }
 }

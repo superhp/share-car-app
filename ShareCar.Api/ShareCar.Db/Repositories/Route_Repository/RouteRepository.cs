@@ -10,12 +10,10 @@ namespace ShareCar.Db.Repositories.Route_Repository
     public class RouteRepository: IRouteRepository
     {
         private readonly ApplicationDbContext _databaseContext;
-
         public RouteRepository(ApplicationDbContext databaseContext)
         {
             _databaseContext = databaseContext;
         }
-
         public int GetRouteId(int fromId, int toId)
         {
             try
@@ -24,49 +22,53 @@ namespace ShareCar.Db.Repositories.Route_Repository
             }
             catch
             {
-                return -1; 
+                return -1; // Address doesnt exist
             }
         }
-
         public Route GetRouteById(int id)
+        {
+                return _databaseContext.Routes.Find(id); 
+        }
+        public bool AddRoute(Route route)
         {
             try
             {
-                return _databaseContext.Routes.Single(x => x.RouteId == id); 
+                _databaseContext.Routes.Add(route);
+                _databaseContext.SaveChanges();
+                return true;
             }
             catch
             {
-                return null;
+                return false;
             }
         }
-
-        public void AddRoute(Route route)
+        public bool UpdateRoute(Route route)
         {
+            try
+            {
+                Route routeToUpdate = GetRouteById(route.RouteId);
+                if (routeToUpdate.Rides == null)
+                {
+                    routeToUpdate.Rides = new List<Ride>();
+                }
+                foreach (var ride in route.Rides)
+                {
+                    routeToUpdate.Rides.Add(ride);
+                }
 
-                _databaseContext.Routes.Add(route);
+                _databaseContext.Routes.Update(routeToUpdate);
                 _databaseContext.SaveChanges();
-
-        }
-
-        public void UpdateRoute(Route route)
-        {
-            Route routeToUpdate = GetRouteById(route.RouteId);
-            if(routeToUpdate.Rides == null)
-            {
-                routeToUpdate.Rides = new List<Ride>();
+                return true;
             }
-            foreach(var ride in route.Rides)
+            catch (Exception e)
             {
-                routeToUpdate.Rides.Add(ride);
+                return false;
             }
-           
-            _databaseContext.Routes.Update(routeToUpdate);
-            _databaseContext.SaveChanges();
         }
 
         public IEnumerable<Route> GetRoutes(bool isFromOffice, Address address)
         {
-            if (isFromOffice == true)
+            if (isFromOffice)
             {
                 return _databaseContext.Routes.Include(x => x.Rides)
                     .Include(x => x.FromAddress)

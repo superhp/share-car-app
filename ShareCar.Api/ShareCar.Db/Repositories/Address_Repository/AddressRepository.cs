@@ -15,11 +15,19 @@ namespace ShareCar.Db.Repositories.Address_Repository
         {
             _databaseContext = context;
         }
-
-        public void AddNewAddress(Address address)
+        public bool AddNewAddress(Address address)
         {
+            try
+            {
                 _databaseContext.Addresses.Add(address);
                 _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
         }
 
         // Address consists of street, house number and city or geo coordinates
@@ -61,15 +69,7 @@ namespace ShareCar.Db.Repositories.Address_Repository
 
         public Address GetAddressById(int id)
         {
-            try
-            {
-           return _databaseContext.Addresses.Single(x => x.AddressId == id);
-
-            }
-            catch
-            {
-                return null;
-            }
+           return _databaseContext.Addresses.Find(id);
         }
     }
 }

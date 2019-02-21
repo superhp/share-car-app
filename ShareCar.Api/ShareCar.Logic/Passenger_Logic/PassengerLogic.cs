@@ -25,16 +25,16 @@ namespace ShareCar.Logic.Passenger_Logic
             _passengerRepository = passengerRepository;
         }
 
-        public void AddPassenger(PassengerDto passenger)
+        public bool AddPassenger(PassengerDto passenger)
         {
 
-             _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
+            return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
 
         }
 
-        public List<PassengerDto> GetPassengersByEmail(string email)
+        public List<PassengerDto> GetUnrepondedPassengersByEmail(string email)
         {
-            IEnumerable<Passenger> passengers = _passengerRepository.GetUnrespondedPassengersByEmail(email);
+            IEnumerable<Passenger> passengers = _passengerRepository.GetUnrepondedPassengersByEmail(email);
             List<PassengerDto> dtoPassengers = new List<PassengerDto>();
             foreach (Passenger passenger in passengers)
             {
@@ -53,9 +53,9 @@ namespace ShareCar.Logic.Passenger_Logic
             }
             return dtoPassengers;
         }
-        public void RespondToRide(bool response, int rideId, string passengerEmail)
+        public bool RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            _passengerRepository.RespondToRide(response, rideId, passengerEmail);
+            return _passengerRepository.RespondToRide(response, rideId, passengerEmail);
 
         }
         public int GetUsersPoints(string email)

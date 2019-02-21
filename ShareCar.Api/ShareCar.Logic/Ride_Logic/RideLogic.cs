@@ -5,8 +5,10 @@ using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
 using AutoMapper;
 using System.Linq;
+using ShareCar.Db.Repositories;
 using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
+using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.Ride_Repository;
@@ -57,7 +59,7 @@ namespace ShareCar.Logic.Ride_Logic
             IEnumerable<Ride> rides = _rideRepository.GetRidesByDriver(email);
 
 
-            List<RideDto> dtoRides = new List<RideDto>();
+            List<RideDto> dtoRide = new List<RideDto>();
             int count = 0;
             
 
@@ -66,35 +68,22 @@ namespace ShareCar.Logic.Ride_Logic
             {
 
                 RouteDto route = _routeLogic.GetRouteById(ride.RouteId); 
-                dtoRides.Add(_mapper.Map<Ride, RideDto>(ride));
+                dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
                 AddressDto fromAddress = _addressLogic.GetAddressById(route.FromId);
-                dtoRides[count].FromCountry = fromAddress.Country;
-                dtoRides[count].FromCity = fromAddress.City;
-                dtoRides[count].FromStreet = fromAddress.Street;
-                dtoRides[count].FromNumber = fromAddress.Number;
+                dtoRide[count].FromCountry = fromAddress.Country;
+                dtoRide[count].FromCity = fromAddress.City;
+                dtoRide[count].FromStreet = fromAddress.Street;
+                dtoRide[count].FromNumber = fromAddress.Number;
                 AddressDto toAddress = _addressLogic.GetAddressById(route.ToId);
-                dtoRides[count].ToCountry = toAddress.Country;
-                dtoRides[count].ToCity = toAddress.City;
-                dtoRides[count].ToStreet = toAddress.Street;
-                dtoRides[count].ToNumber = toAddress.Number;
+                dtoRide[count].ToCountry = toAddress.Country;
+                dtoRide[count].ToCity = toAddress.City;
+                dtoRide[count].ToStreet = toAddress.Street;
+                dtoRide[count].ToNumber = toAddress.Number;
                 count++;
             }
-            AddCoordinatesToRequests(dtoRides);
-            return dtoRides;
+            return dtoRide;
         }
 
-        private void AddCoordinatesToRequests(List<RideDto> rides)
-        {
-            foreach (RideDto ride in rides)
-            {
-                foreach (RideRequestDto request in ride.Requests)
-                {
-                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
-                    request.Longtitude = address.Longtitude;
-                    request.Latitude = address.Latitude;
-                }
-            }
-        }
 
         public IEnumerable<RideDto> GetRidesByStartPoint(int addressFromId)
         {
@@ -114,35 +103,51 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(passengers);
         }
-        
-        public void AddRide(RideDto ride, string email)
+      /*  
+        public IEnumerable<RideDto> FindRidesByPassenger(PassengerDto passenger)
         {
 
-             ride.DriverEmail = email;        
+            IEnumerable<Ride> rides =  _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passenger));
 
+            return MapToList(rides);
+        }*/
+        
+
+        public bool AddRide(RideDto ride, string email)
+        {
+            ride.DriverEmail = email;
+
+            ride.Passengers = new List<PassengerDto>();
             ride.Requests = new List<RideRequestDto>();
+            
+            AddRouteIdToRide(ride);
 
-                ParseExtraRideDtoData(ride);
-
-                _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+            return _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
 
         }
 
-        public void SetRideAsInactive(RideDto rideDto)
-        {           
-
-             _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
+        public bool SetRideAsInactive(RideDto rideDto)
+        {
+            
+            return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
         {
             Ride ride = _rideRepository.GetRideById(rideId);
+
+            if(ride == null)
+            {
+                return false;
+            }
+
             if (ride.DriverEmail == email || ride.Passengers.Any(x => x.Email == email))
             {
                 return true;
             }
             return false;
         }
+
 
         // Returns a list of mapped objects
         private IEnumerable<RideDto> MapToList(IEnumerable<Ride> rides)
@@ -167,7 +172,15 @@ namespace ShareCar.Logic.Ride_Logic
             return DtoPassengers;
         }
 
-        private void ParseExtraRideDtoData(RideDto ride)
+        public IEnumerable<RideDto> GetSimilarRides(int rideId)
+        {
+            string driverEmail = ride.DriverEmail;
+            int routeId = ride.RouteId;
+            IEnumerable<Ride> rides = _rideRepository.GetSimmilarRides(driverEmail, routeId, ride.RideId);
+            return MapToList(rides);
+        }
+
+        private void AddRouteIdToRide(RideDto ride)
         {
             AddressDto fromAddress = new AddressDto
             {
@@ -181,8 +194,6 @@ namespace ShareCar.Logic.Ride_Logic
                 Street = ride.ToStreet,
                 Number = ride.ToNumber
             };
-
-
 
             if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
             {
@@ -213,7 +224,7 @@ namespace ShareCar.Logic.Ride_Logic
             List<RouteDto> routes = _routeLogic.GetRoutes(routeDto, email);
             foreach (RouteDto route in routes)
             {
-                await AddDriversInfoToRidesAsync(route.Rides);
+                await AddDriversNamesToRouteRidesAsync(route.Rides);
             }
             return routes;
 
@@ -221,74 +232,76 @@ namespace ShareCar.Logic.Ride_Logic
 
         public async Task<List<RideDto>> GetFinishedPassengerRidesAsync(string passengerEmail)
         {
-            List<PassengerDto> passengers = _passengerLogic.GetPassengersByEmail(passengerEmail);
+            List<PassengerDto> passengers = _passengerLogic.GetUnrepondedPassengersByEmail(passengerEmail);
 
+        //    IEnumerable<Ride> entityRides = _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passengers));
             List<RideDto> dtoRides = new List<RideDto>();
             DateTime hourAfterRide = new DateTime();
             hourAfterRide = DateTime.Now;
                hourAfterRide.AddHours(1);
                foreach (PassengerDto passenger in passengers)
                {
-                if (passenger.Ride != null)
+                   Ride ride = _rideRepository.GetRideById(passenger.RideId);
+                if (ride != null)
                 {
-                    if (DateTime.Compare(passenger.Ride.RideDateTime, hourAfterRide) < 0)
+                    if (DateTime.Compare(ride.RideDateTime, hourAfterRide) < 0)
                     {
 
-                        var user = await _userManager.FindByEmailAsync(passenger.Ride.DriverEmail);
-                        passenger.Ride.DriverFirstName = user.FirstName;
-                        passenger.Ride.DriverLastName = user.LastName;
-                        dtoRides.Add(passenger.Ride);
+                        var user = await _userManager.FindByEmailAsync(ride.DriverEmail);
+                        RideDto dtoRide = _mapper.Map<Ride, RideDto>(ride);
+                        dtoRide.DriverFirstName = user.FirstName;
+                        dtoRide.DriverLastName = user.LastName;
+                        dtoRides.Add(dtoRide);
                     }
                 }
      }
             return dtoRides;
         }
 
-        public async Task<bool> AddDriversInfoToRidesAsync(List<RideDto> dtoRides)
+        public async Task<bool> AddDriversNamesToRouteRidesAsync(List<RideDto> dtoRides)
         {
-            List<string> Emails = new List<string>();
+            List<string> emails = new List<string>();
             List<string> FirstNames = new List<string>();
             List<string> LastNames = new List<string>();
-            List<string> Phones = new List<string>();
-
+            List<string> phones = new List<string>();
             foreach (RideDto ride in dtoRides)
             {
-                if (!Emails.Contains(ride.DriverEmail))
+                if (!emails.Contains(ride.DriverEmail))
                 {
-                    Emails.Add(ride.DriverEmail);
-                    User driver = await _userManager.FindByEmailAsync(ride.DriverEmail);
+                    emails.Add(ride.DriverEmail);
+                    var driver = await _userManager.FindByEmailAsync(ride.DriverEmail);
                     FirstNames.Add(driver.FirstName);
                     LastNames.Add(driver.LastName);
-                    Phones.Add(driver.Phone);
+                    phones.Add(driver.Phone);
                     ride.DriverFirstName = driver.FirstName;
                     ride.DriverLastName = driver.LastName;
                     ride.DriverPhone = driver.Phone;
                 }
                 else
                 {
-                    int index = Emails.IndexOf(ride.DriverEmail);
+                    int index = emails.IndexOf(ride.DriverEmail);
                     ride.DriverFirstName = FirstNames[index];
                     ride.DriverLastName = LastNames[index];
-                    ride.DriverPhone = Phones[index];
+                    ride.DriverPhone = phones[index];
                 }
             }
-            return true; // It is impossible to await void, so this method must return something
+            return true;
         }
 
-        public async Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string rideLogic)
+        public async Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string routeGeometry)
         {
-            IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(rideLogic);
+            IEnumerable<Ride> entityRides = _rideRepository.GetRidesByRoute(routeGeometry);
 
             List<RideDto> dtoRides = (List<RideDto>) MapToList(entityRides);
 
-            await AddDriversInfoToRidesAsync(dtoRides);
+            await AddDriversNamesToRouteRidesAsync(dtoRides);
 
             return dtoRides;
         }
 
-        public void UpdateRide(RideDto ride)
+        public bool UpdateRide(RideDto ride)
         {
-            _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+           return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
         }
     }
 }

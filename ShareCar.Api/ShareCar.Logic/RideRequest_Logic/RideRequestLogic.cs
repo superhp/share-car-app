@@ -34,7 +34,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _passengerLogic = passengerLogic;
         }
 
-        public void AddRequest(RideRequestDto requestDto, string driverEmail)
+        public bool AddRequest(RideRequestDto requestDto, string driverEmail)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
@@ -42,26 +42,34 @@ namespace ShareCar.Logic.RideRequest_Logic
             int addressId = _addressLogic.GetAddressId(new AddressDto {City=requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
+            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, Request>(requestDto));
+            return isCreated;
         }
 
-        public void UpdateRequest(RideRequestDto request)
+        public bool UpdateRequest(RideRequestDto request)
         {
             request.SeenByPassenger = false;
-            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
-            if (request.Status == Dto.Status.ACCEPTED)
+            var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, Request>(request));
+            if (isUpdated && request.Status == Dto.Status.ACCEPTED)
             {
-                var entityRequest = _rideRequestRepository.FindRequestById(request.RequestId);      
-                var rideToUpdateSeats = _rideLogic.GetRideById(request.RideId);
-                if (rideToUpdateSeats.NumberOfSeats != 0)
+                var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);      
+                var rideToUpdate = _rideLogic.GetRideById(request.RideId);
+                if (rideToUpdate.NumberOfSeats != 0)
                 {
-                    _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                    rideToUpdateSeats.NumberOfSeats--;
-                    _rideLogic.UpdateRide(rideToUpdateSeats);
+                    var added = _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
+                    if (added)
+                    {
+                        rideToUpdate.NumberOfSeats--;
+                        var updatedSeats = _rideLogic.UpdateRide(rideToUpdate);
+                    }
+                    return true;
+                } else
+                {
+                    return false;
                 }
             }
+            return isUpdated;
         }
-
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)
         {
@@ -76,14 +84,14 @@ namespace ShareCar.Logic.RideRequest_Logic
         public async Task<IEnumerable<RideRequestDto>> GetUsersRequests(bool driver, string email)
         {
 
-            IEnumerable<RideRequest> entityRequest;
+            IEnumerable<Request> entityRequest;
             if (driver)
             {
-                entityRequest = _rideRequestRepository.FindDriverRequests(email);                
+                entityRequest = _rideRequestRepository.GetDriverRequests(email);                
             }
             else
             {
-                entityRequest = _rideRequestRepository.FindPassengerRequests(email);
+                entityRequest = _rideRequestRepository.GetPassengerRequests(email);
             }
            
                IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
@@ -119,14 +127,14 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         }
 
-        public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<RideRequest> entityRequests, bool isDriver)
+        public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<Request> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
             
             int count = 0;
             foreach (var request in entityRequests)
             {
-                dtoRequests.Add(_mapper.Map<RideRequest,RideRequestDto>(request));
+                dtoRequests.Add(_mapper.Map<Request,RideRequestDto>(request));
 
              
                     if (isDriver)
@@ -141,7 +149,6 @@ namespace ShareCar.Logic.RideRequest_Logic
                         dtoRequests[count].DriverFirstName = user.FirstName;
                         dtoRequests[count].DriverLastName = user.LastName;
                     }
-
 
                     AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
@@ -164,19 +171,19 @@ namespace ShareCar.Logic.RideRequest_Logic
         }
 
         //Changes request status to deleted
-        public void DeletedRide(int rideId)
+        public bool DeletedRide(int rideId)
         {
-            IEnumerable<RideRequest> entityRequests = _rideRequestRepository.FindRequestsByRideId(rideId);
-            _rideRequestRepository.DeletedRide(entityRequests);
+            IEnumerable<Request> entityRequests = _rideRequestRepository.GetRequestsByRideId(rideId);
+            return _rideRequestRepository.DeletedRide(entityRequests);
         }
         
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
-            IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
+            IEnumerable<Request> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-            foreach(RideRequest request in entityRequests)
+            foreach(Request request in entityRequests)
             {
-                dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
+                dtoRequests.Add(_mapper.Map<Request, RideRequestDto>(request));
             }
             return dtoRequests;
         }

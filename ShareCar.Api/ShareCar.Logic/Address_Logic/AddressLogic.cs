@@ -19,19 +19,10 @@ namespace ShareCar.Logic.Address_Logic
             _addressRepository = addressRepository;
             _mapper = mapper;
         }
-        public void AddNewAddress(AddressDto address)
+        public bool AddNewAddress(AddressDto address)
         {
-            Address entityAddress = new Address
-            {
-                City = address.City,
-                Street = address.Street,
-                Number = address.Number,
-                Longtitude = address.Longtitude,
-                Latitude = address.Latitude
-            };
             
-               _addressRepository.AddNewAddress(entityAddress);
-
+              return _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(address));
         }
 
         public int GetAddressId(AddressDto address)
@@ -39,14 +30,16 @@ namespace ShareCar.Logic.Address_Logic
 
             Address entityAddress = _mapper.Map<AddressDto, Address>(address);
 
-
             int id = _addressRepository.GetAddressId(entityAddress);
 
             if (id == -1)
             {
-                   _addressRepository.AddNewAddress(entityAddress);
-                
-                    return _addressRepository.GetAddressId(entityAddress);               
+                bool added = _addressRepository.AddNewAddress(entityAddress);
+
+                if (added)
+                {
+                    return _addressRepository.GetAddressId(entityAddress);
+                }
             }
 
             return id;
