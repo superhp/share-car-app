@@ -34,6 +34,22 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Google([FromBody] AccessTokenDto googleAccessToken)
+        {
+            try
+            {
+                var jwt = await _facebookIdentity.Login(googleAccessToken);
+                AddJwtToCookie(jwt);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("token");

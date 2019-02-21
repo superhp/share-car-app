@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import FacebookLogin from "react-facebook-login";
+import GoogleLogin from 'react-google-login';
 import history from "../helpers/history";
 import AuthenticationService from "../services/authenticationService";
 import "../styles/login.css";
@@ -17,7 +18,13 @@ class Login extends Component<{}> {
       this.userAuthenticated
     );
   };
-
+  responseGoogle = (response: any) => {
+    console.log(response);
+    this.authService.loginWithGoogle(
+      response.accessToken,
+      this.userAuthenticated
+    );
+  }
   userAuthenticated = () => {
     history.push("/");
   };
@@ -32,6 +39,12 @@ class Login extends Component<{}> {
           fields="name,email,picture"
           callback={this.responseFacebook}
         />
+          <GoogleLogin
+    clientId="875441727934-b39rfvblph43cr5u9blmp4cafbnqcr9k.apps.googleusercontent.com"
+    buttonText="Login"
+    onSuccess={this.responseGoogle}
+    onFailure={this.responseGoogle}
+  />
       </div>
     );
   }

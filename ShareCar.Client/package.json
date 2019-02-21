@@ -24,6 +24,7 @@
     "react-datetime-picker": "^1.4.1",
     "react-dom": "^16.4.1",
     "react-facebook-login": "^4.0.1",
+    "react-google-login": "^5.0.2",
     "react-infinite-calendar": "^2.3.1",
     "react-moment": "^0.7.9",
     "react-popup": "^0.9.3",

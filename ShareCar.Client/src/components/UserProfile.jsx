@@ -60,6 +60,8 @@ class UserProfile extends Component<
       phone: this.state.user.user.phone
     };
     api.post(`https://localhost:44360/api/user`, data).then(res => {
+      console.log("rrrrrrrrrrrrrrrr");
+      console.log(res);
       if (res.status == 200) {
         this.setState({
           snackBarClicked: true,
