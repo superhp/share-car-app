@@ -10,13 +10,13 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
     {
         IEnumerable<Request> GetAcceptedRequests(string passengerEmail);
         bool AddRequest(Request request);
-        Request FindRequestById(int id);
-        IEnumerable<Request> FindPassengerRequests(string email);
-        IEnumerable<Request> FindDriverRequests(string email);
+        Request GetRequestById(int id);
+        IEnumerable<Request> GetPassengerRequests(string email);
+        IEnumerable<Request> GetDriverRequests(string email);
         bool UpdateRequest(Request request);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
-        void DeletedRide(IEnumerable<Request> requests);
-        IEnumerable<Request> FindRequestsByRideId(int rideId);
+        bool DeletedRide(IEnumerable<Request> requests);
+        IEnumerable<Request> GetRequestsByRideId(int rideId);
     }
 }

@@ -26,32 +26,21 @@ namespace ShareCar.Api.Controllers
             _userLogic = userLogic;
         }
 
-        [HttpPost]
-        public IActionResult RideCompleted([FromBody] PassengerDto passenger)
-        {
-
-            return Ok();
-        }
-
         [HttpGet("rideId={rideId}")]
         public IActionResult GetPassengersByRide(int rideId)
         {
             var passengers = _passengerLogic.GetPassengersByRideId(rideId);
             var users = _userLogic.GetAllUsers();
-            if (passengers.Count != 0)
-            {
-                foreach(var passenger in passengers)
-                {
-                    var user = users.Single(x => x.Email == passenger.Email);
-                    passenger.FirstName = user.FirstName;
-                    passenger.LastName = user.LastName;
-                    passenger.Phone = user.Phone;
-                }
-                return Ok(passengers);
-            }
-            else
-                return NotFound("No passengers");
-        }
 
+            foreach (var passenger in passengers)
+            {
+                var user = users.Single(x => x.Email == passenger.Email);
+                passenger.FirstName = user.FirstName;
+                passenger.LastName = user.LastName;
+                passenger.Phone = user.Phone;
+            }
+            return Ok(passengers);
+
+        }
     }
 }

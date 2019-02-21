@@ -8,7 +8,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { withStyles } from "@material-ui/core/styles";
-import { OfficeAddresses } from "../AddressData";
+import { OfficeAddresses } from "../../utils/AddressData";
 
 const styles = theme => ({
   root: {
@@ -71,10 +71,10 @@ class SimpleMenu extends React.Component {
                 {...TransitionProps}
                 id="menu-list-grow"
                 style={{ zIndex: 999999 }}
-                style={{
-                  transformOrigin:
-                    placement === "bottom" ? "center top" : "center bottom"
-                }}
+              //  style={{
+              //    transformOrigin:
+             //       placement === "bottom" ? "center top" : "center bottom"
+             //   }}
               >
                 <Paper style={{ zIndex: 999999 }}>
                   <ClickAwayListener onClickAway={this.handleClose}>

@@ -11,13 +11,16 @@ namespace ShareCar.Logic.ObjectMapping
         {
             CreateMap<Ride, RideDto>();
             CreateMap<RideDto, Ride>();
-            CreateMap<Request, RideRequestDto>();
-            CreateMap<RideRequestDto, Request>();
+            CreateMap<RideRequest, RideRequestDto>();
+            CreateMap<RideRequestDto, RideRequest>();
             CreateMap<Passenger, PassengerDto>();
             CreateMap<PassengerDto, Passenger>();
             CreateMap<Address, AddressDto>();
             CreateMap<AddressDto, Address>();
             CreateMap<UserDto, User>();
+            CreateMap<Route, RouteDto>();
+            CreateMap<RouteDto, Route>();
+
             //.ForMember(src => src.Title, dest => dest.MapFrom(x => x.VeryDifferentTitle));
             /*      CreateMap<Status, TodoItemStatus>()
                      .ProjectUsing(src => (TodoItemStatus)src);

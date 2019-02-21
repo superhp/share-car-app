@@ -21,24 +21,14 @@ namespace ShareCar.Logic.Address_Logic
         }
         public bool AddNewAddress(AddressDto address)
         {
-            Address entityAddress = new Address
-            {
-                City = address.City,
-                Street = address.Street,
-                Number = address.Number,
-                Longtitude = address.Longtitude,
-                Latitude = address.Latitude
-            };
             
-              return _addressRepository.AddNewAddress(entityAddress);
-
+              return _addressRepository.AddNewAddress(_mapper.Map<AddressDto, Address>(address));
         }
 
         public int GetAddressId(AddressDto address)
         {
 
             Address entityAddress = _mapper.Map<AddressDto, Address>(address);
-
 
             int id = _addressRepository.GetAddressId(entityAddress);
 

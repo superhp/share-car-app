@@ -34,9 +34,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = Boolean.Parse(driver);
-
-            
+            bool isDriver = Boolean.Parse(driver); 
 
             IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
@@ -44,7 +42,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] RideRequestDto request)
+        public async Task<IActionResult> AddRequest([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
@@ -53,6 +51,12 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
             string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
+
+            if (email == null)
+            {
+                return BadRequest("Invalid parameter");
+            }
+
             bool result = _requestLogic.AddRequest(request, email);
             
             if (result)
@@ -66,23 +70,19 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("seenPassenger")]
-        public IActionResult SeenRequestsPassenger([FromBody] int[] requests)
+        public void SeenRequestsPassenger([FromBody] int[] requests)
         {
             _requestLogic.SeenByPassenger(requests);
-
-            return Ok();
         }
 
         [HttpPost("seenDriver")]
-        public IActionResult SeenDriverPassenger([FromBody] int[] requests)
+        public void SeenDriverPassenger([FromBody] int[] requests)
         {
             _requestLogic.SeenByDriver(requests);
-
-            return Ok();
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] RideRequestDto request)
+        public IActionResult UpdateRequests([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
@@ -94,8 +94,10 @@ namespace ShareCar.Api.Controllers
             {
                 return Ok();
             }
-            return BadRequest("Invalid parameter");
-
+            else
+            {
+                return BadRequest("Operation failed");
+            }
 
         }
     }

@@ -19,7 +19,7 @@ namespace ShareCar.Db.Repositories.User_Repository
             _userManager = userManager;
             _databaseContext = context;
         }
-
+        
         public async Task CreateFacebookUser(FacebookUserDataDto userDto)
         {
             var appUser = new User

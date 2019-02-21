@@ -8,10 +8,12 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
     public class PassengerRepository : IPassengerRepository
     {
         private readonly ApplicationDbContext _databaseContext;
+
         public PassengerRepository(ApplicationDbContext databaseContext)
         {
             _databaseContext = databaseContext;
         }
+
         public int GetUsersPoints(string email)
         {
             int points = _databaseContext.Passengers
@@ -24,17 +26,39 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         public bool AddNewPassenger(Passenger passenger)
         {
-            _databaseContext.Passengers.Add(passenger);
-            _databaseContext.SaveChanges();
-            return true;
+            try
+            {
+                var p = _databaseContext.Passengers.FirstOrDefault(x => x.Email == passenger.Email && x.RideId == passenger.RideId);
+
+                if(p != null)
+                {
+                    return false;
+                }
+
+                _databaseContext.Passengers.Add(passenger);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
         }
 
-        public void RemovePassenger(Passenger passenger)
+        public bool RemovePassenger(Passenger passenger)
         {
-            _databaseContext.Passengers.Remove(passenger);
-            _databaseContext.SaveChanges();
-
+            try
+            {
+                _databaseContext.Passengers.Remove(passenger);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
+
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
         {
                 return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
@@ -46,19 +70,20 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return _databaseContext.Passengers.Where(x => x.RideId == rideId);
         }
 
-        public void RespondeToRide(bool response, int rideId, string passengerEmail)
+        public bool RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            try
-            {
+            try {
                 Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
                 passenger.PassengerResponded = true;
                 passenger.Completed = response;
                 _databaseContext.SaveChanges();
+                return true;
             }
             catch(Exception e)
             {
-
+                return false;
             }
-        }
+            }
+
     }
 }

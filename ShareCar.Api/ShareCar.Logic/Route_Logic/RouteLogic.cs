@@ -26,6 +26,7 @@ namespace ShareCar.Logic.Route_Logic
             _mapper = mapper;
             _addressLogic = addressLogic;
         }
+
         public int GetRouteId(int fromId, int toId)
         {
             int routeId = _routeRepository.GetRouteId(fromId, toId);
@@ -39,8 +40,10 @@ namespace ShareCar.Logic.Route_Logic
             {
                 return null;
             }
-            
-            RouteDto routeDto = new RouteDto
+
+            RouteDto routeDto = _mapper.Map<Route, RouteDto>(route);
+                
+              /*  = new RouteDto
             {
                 AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress),
                 AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress),
@@ -48,10 +51,11 @@ namespace ShareCar.Logic.Route_Logic
                 ToId = route.ToId,
                 RouteId = route.RouteId,
                 Geometry = route.Geometry
-            };
+            };*/
             return routeDto;
         }
-
+ 
+        // Returns routes by passengers criteria
         public List<RouteDto> GetRoutes(RouteDto routeDto, string email)
         {
             Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
@@ -59,6 +63,7 @@ namespace ShareCar.Logic.Route_Logic
 
             if (routeDto.AddressFrom != null)
             {
+                // If user needs a ride to office, he recieves routes independently from his location
                 address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
                 isFromOffice = true;                
             }
@@ -73,15 +78,14 @@ namespace ShareCar.Logic.Route_Logic
                 List<Ride> rides = new List<Ride>();
                 foreach(var ride in route.Rides)
                 {
-                    if(!((ride.DriverEmail == email) || (ride.RideDateTime<routeDto.FromTime) || (ride.isActive == false)))
+                    if(!((ride.DriverEmail == email) || (ride.RideDateTime < routeDto.FromTime) || (ride.isActive == false)))
                     {
                         rides.Add(ride);
                     }
                 }
                 route.Rides = rides;
                 if (route.Rides.Count != 0)
-                {
-                   
+                {                  
                     mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
                     mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
                     mappedRoute.FromId = route.FromId;
@@ -109,8 +113,7 @@ namespace ShareCar.Logic.Route_Logic
 
             };
             //Route routes = _mapper.Map<RouteDto, Route>(route);
-            _routeRepository.AddRoute(entityRoute);
-            return true;
+            return _routeRepository.AddRoute(entityRoute);
         }
     }
 }
