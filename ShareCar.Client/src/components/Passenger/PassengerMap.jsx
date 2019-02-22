@@ -209,37 +209,38 @@ export class PassengerMap extends React.Component {
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
       if (res.status === 200 && res.data !== "") {
         this.setState({ passengerRoutes: res.data, passengerRouteFeatures: [] });
-
-        this.state.passengerRoutes.forEach(element => {
+        res.data.forEach(element => {
           this.createPassengerRoute(element);
         });
       }
     });
   }
 
-  createPassengerRoute(polyline) {
+  createPassengerRoute(route) {
     this.setState({route: 
-      {...this.state.route, routeGeometry: polyline.geometry}
+      {...this.state.route, routeGeometry: route.geometry}
     });
-    let route = new Polyline({
+    let polyline = new Polyline({
       factor: 1e5
-    }).readGeometry(this.state.route.geometry, {
+    }).readGeometry(route.geometry, {
       dataProjection: "EPSG:4326",
       featureProjection: "EPSG:3857"
     });
     let feature = new Feature({
       type: "route",
-      geometry: route
+      geometry: polyline
     });
-
     feature.setStyle(routeStyles.route);
 
-    this.state.passengerRouteFeatures.push({
-      feature: feature,
-      geometry: route.geometry,
-      route: route
-    });
 
+    this.setState({passengerRouteFeatures: [
+      ...this.state.passengerRouteFeatures, 
+      {
+        feature: feature,
+        geometry: polyline.geometry,
+        route: route
+      }
+    ]})
     this.state.vectorSource.addFeature(feature);
   }
 
@@ -271,9 +272,9 @@ export class PassengerMap extends React.Component {
 
 
   passengerAddressInputSuggestion() {
-    const places = require("places.js");
+    let places = require("places.js");
 
-    const placesAutocompletePassenger = places({
+    let placesAutocompletePassenger = places({
       container: document.querySelector("#passenger-address")
     });
     placesAutocompletePassenger.on("change", e => {
