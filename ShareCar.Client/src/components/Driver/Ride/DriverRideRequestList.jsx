@@ -160,7 +160,6 @@ export class DriverRideRequestsList extends React.Component {
                                   this.setState({
                                     coordinates: [req.longtitude, req.latitude]
                                   });
-
                                   window.scrollTo(0, 0);
                                 }}
                               >
@@ -169,13 +168,7 @@ export class DriverRideRequestsList extends React.Component {
                               <Button
                                 color="primary"
                                 onClick={() => {
-                                  this.sendRequestResponse(
-                                    "Accept",
-                                    1,
-                                    req.requestId,
-                                    req.rideId,
-                                    req.driverEmail
-                                  );
+                                  this.sendRequestResponse("Accept", 1, req.requestId, req.rideId, req.driverEmail);
                                 }}
                               >
                                 Accept

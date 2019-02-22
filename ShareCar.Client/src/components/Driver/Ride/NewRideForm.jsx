@@ -1,11 +1,11 @@
 import * as React from "react";
 import axios from "axios";
-import DateTimePicker from "react-datetime-picker";
 
 import addressParser from "../helpers/addressParser";
 import api from "../../../helpers/axiosHelper";
 import MapComponent from "../../Maps/MapComponent";
 import { OfficeAddresses } from "../AddressData";
+import { RideForm } from "./RideForm";
 
 import "../../styles/newRideForm.css";
 import "../../styles/genericStyles.css";
@@ -20,29 +20,32 @@ export class NewRideForm extends React.Component {
         fromAddress: null,
         toAddress: null
     };
+
     componentWillMount() {
         this.props.drive == null
             ? this.setState({ addNewForm: true })
             : this.setState({ addNewForm: false });
     }
 
+    formAddress(number, street, city, country){
+        const address = {
+            number: number,
+            street: street,
+            city: city,
+            country: country
+        };
+        return address;
+    }
+
     componentDidMount() {
         if (!this.state.addNewForm) {
             this.setState({
-                fromAddress: {
-                    number: this.props.drive.fromNumber,
-                    street: this.props.drive.fromStreet,
-                    city: this.props.drive.fromCity,
-                    country: this.props.drive.fromCountry
-                }
+                fromAddress: this.formAddress(this.props.drive.fromNumber, this.props.drive.fromStreet, 
+                    this.props.drive.fromCity, this.props.drive.fromCountry)
             });
             this.setState({
-                toAddress: {
-                    number: this.props.drive.toNumber,
-                    street: this.props.drive.toStreet,
-                    city: this.props.drive.toCity,
-                    country: this.props.drive.toCountry
-                }
+                toAddress: this.formAddress(this.props.drive.toNumber, this.props.drive.toStreet, 
+                    this.props.drive.toCity, this.props.drive.toCountry)
             });
         }
         let places = require("places.js");
@@ -55,40 +58,27 @@ export class NewRideForm extends React.Component {
 
         placesAutocompleteFrom.on("change", e => {
             this.setState({
-                fromAddress: {
-                    number: addressParser.parseAlgolioAddress(e.suggestion.name).number,
-                    street: addressParser.parseAlgolioAddress(e.suggestion.name).name,
-                    city: e.suggestion.city,
-                    country: e.suggestion.country
-                }
+                fromAddress: this.formAddress(addressParser.parseAlgolioAddress(e.suggestion.name).number, 
+                addressParser.parseAlgolioAddress(e.suggestion.name).name, e.suggestion.city, e.suggestion.country)
             });
-
             for (let i = 0; i < OfficeAddresses.length; i++) {
                 if (this.state.fromAddress.country === OfficeAddresses[i].country
                     && this.state.fromAddress.city === OfficeAddresses[i].city
                     && this.state.fromAddress.street === OfficeAddresses[i].street
                     && this.state.fromAddress.number === OfficeAddresses[i].number
                 ) {
-                    this.setState({
-                        addedOfficeAddress: true
-                    })
+                    this.setState({addedOfficeAddress: true});
                     break;
                 }
                 else {
-                    this.setState({
-                        addedOfficeAddress: false
-                    })
+                    this.setState({addedOfficeAddress: false});
                 }
             }
         });
         placesAutocompleteTo.on("change", e => {
             this.setState({
-                toAddress: {
-                    number: addressParser(e.suggestion.name).number,
-                    street: addressParser(e.suggestion.name).name,
-                    city: e.suggestion.city,
-                    country: e.suggestion.country
-                }
+                toAddress: this.formAddress(addressParser(e.suggestion.name).number, addressParser(e.suggestion.name).name, 
+                e.suggestion.city, e.suggestion.country)
             });
         });
     }
@@ -96,6 +86,14 @@ export class NewRideForm extends React.Component {
     handleChange(date) {
         this.setState({
             startDate: moment(date, "YYYY-MM-DD").toDate()
+        });
+    }
+
+    postRide(ride) {
+        let rides = [];
+        rides.push(ride);
+        api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
+            this.setState({ addedStatus: true });
         });
     }
 
@@ -112,21 +110,12 @@ export class NewRideForm extends React.Component {
             ToNumber: this.state.toAddress.number,
             RideDateTime: this.state.startDate
         };
-
         if (this.state.addNewForm) {
-            let rides = [];
-            rides.push(ride);
-            api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
-                this.setState({ addedStatus: true });
-            });
+            this.postRide(ride);
         } else {
             ride["RideId"] = this.props.drive.rideId;
             ride["DriverEmail"] = this.props.drive.driverEmail;
-            let rides = [];
-            rides.push(ride);
-            api.put(`https://localhost:44360/api/Ride`, rides).then(res => {
-                this.setState({ addedStatus: true });
-            });
+            this.postRide(ride);
         }
     }
 
@@ -135,73 +124,14 @@ export class NewRideForm extends React.Component {
             <div className="container">
                 {this.state.addedStatus ? (
                     <div className="alert alert-success added-label">Ride Added!</div>
-                ) : (
-                        ""
-                    )}
-                <form className="newRideForm" onSubmit={this.handleSubmit.bind(this)}>
-                    <div className="form-group">
-                        <label>From</label>
-                        <input
-                            type="search"
-                            class="form-group"
-                            id="address-input-from"
-                            placeholder="Select From Location..."
-                            defaultValue={
-                                !this.state.addNewForm
-                                    ? this.props.drive.fromNumber +
-                                    ", " +
-                                    this.props.drive.fromStreet +
-                                    ", " +
-                                    this.props.drive.fromCity +
-                                    ", " +
-                                    this.props.drive.fromCountry
-                                    : ""
-                            }
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>To</label>
-                        
-                                <div>
-                                    <input
-                                        type="search"
-                                        class="form-group"
-                                        id="address-input-to"
-                                        placeholder="Select To Location..."
-                                        defaultValue={
-                                            !this.state.addNewForm
-                                                ? this.props.drive.toNumber +
-                                                ", " +
-                                                this.props.drive.toStreet +
-                                                ", " +
-                                                this.props.drive.toCity +
-                                                ", " +
-                                                this.props.drive.toCountry
-                                                : ""
-                                        }
-
-                                    />
-                                <div/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label>Date and Time:</label>
-                        <DateTimePicker
-                            showLeadingZeros={true}
-                            calendarClassName="dateTimePicker"
-                            onChange={date => this.handleChange(date)}
-                            value={this.state.startDate}
-                            className="form-group"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="btn btn-primary btn-lg btn-block save-new-ride"
-                    >
-                        Save
-          </button>
-                </form>
+                ) : ("")}
+                <RideForm 
+                    handleSubmit={() => this.handleSubmit()}
+                    addNewForm={this.state.addNewForm}
+                    drive={this.state.drive}
+                    handleChange={() => this.handleChange()}
+                    startDate={this.state.startDate}
+                />
             </div>
         );
     }
