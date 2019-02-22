@@ -7,7 +7,7 @@ namespace ShareCar.Logic.Route_Logic
     {
         int GetRouteId(int fromId, int toId);
         RouteDto GetRouteById(int id);
-        void AddRoute(RouteDto route);
+        bool AddRoute(RouteDto route);
         List<RouteDto> GetRoutes(RouteDto routeDto, string email);
     }
 }

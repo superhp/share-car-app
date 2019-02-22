@@ -10,7 +10,7 @@ namespace ShareCar.Logic.Address_Logic
 {
    public interface IAddressLogic
     {
-        void AddNewAddress(AddressDto address);
+        bool AddNewAddress(AddressDto address);
         AddressDto GetAddressById(int id);
         int GetAddressId(AddressDto address);
     }
