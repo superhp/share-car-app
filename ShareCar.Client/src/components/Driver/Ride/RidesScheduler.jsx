@@ -1,27 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Grid from "@material-ui/core/Grid";
-import InfiniteCalendar, {
-  Calendar,
-  withMultipleDates,
-  defaultMultipleDateInterpolation
-} from "react-infinite-calendar";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
 
 import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
-import TimePickers from "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
+import { RideSchedulerHelper } from "./RideSchedulerHelper";
 
 const styles = {
   appBar: {
@@ -31,9 +20,6 @@ const styles = {
     flex: 1
   }
 };
-
-// Render the Calendar
-const today = new Date();
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -93,31 +79,39 @@ class RidesScheduler extends React.Component {
     const toAddressParsed = addressParser.parseCustomAddress(
       this.props.routeInfo.toAddress
     );
+
     this.state.selectedDates.forEach(element => {
-      const month = element.getMonth() + 1;
-
-      ridesToPost.push({
-        fromNumber: fromAddressParsed.number,
-        fromStreet: fromAddressParsed.street,
-        fromCity: fromAddressParsed.city,
-        fromCountry: "Lithuania",
-        toNumber: toAddressParsed.number,
-        toStreet: toAddressParsed.street,
-        toCity: toAddressParsed.city,
-        toCountry: "Lithuania",
-        routeGeometry: this.props.routeInfo.routeGeometry,
-        rideDateTime:
-          element.getFullYear() +
-          "-" +
-          month +
-          "-" +
-          element.getDate() +
-          "T" +
-          this.state.time
-      });
+      ridesToPost.push(this.createRide(fromAddressParsed, toAddressParsed, element));
     });
-    api.post("Ride", ridesToPost).then(res => {
+    
+    this.postRides(ridesToPost);
+  };
 
+  createRide(from, to, element) {
+    const ride = {
+      fromNumber: from.number,
+      fromStreet: from.street,
+      fromCity: from.city,
+      fromCountry: "Lithuania",
+      toNumber: to.number,
+      toStreet: to.street,
+      toCity: to.city,
+      toCountry: "Lithuania",
+      routeGeometry: this.props.routeInfo.routeGeometry,
+      rideDateTime:
+        element.getFullYear() +
+        "-" +
+        (element.getMonth() + 1) + 
+        "-" +
+        element.getDate() +
+        "T" +
+        this.state.time
+    };
+    return ride;
+  }
+
+  postRides(ridesToPost) {
+    api.post("Ride", ridesToPost).then(res => {
       if (res.status === 200) {
         this.setState({
           open: false,
@@ -132,7 +126,7 @@ class RidesScheduler extends React.Component {
         );
       }
     });
-  };
+  }
 
   handleTime = value => {
     this.setState({ time: value });
@@ -158,57 +152,23 @@ class RidesScheduler extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
       <div>
         <Dialog
           fullScreen
           open={this.state.open}
-          onClose={this.handleClose}
+          onClose={() => this.handleClose()}
           TransitionComponent={Transition}
         >
-          <Grid container justify="center">
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  onClick={this.handleClose}
-                  aria-label="Close"
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography
-                  variant="subheading"
-                  color="inherit"
-                  className={classes.flex}
-                >
-                  Schedule Your Rides
-                </Typography>
-                <Button
-                  disabled={this.state.selectedDates.length === 0 ? true : false}
-                  variant="contained"
-                  color="inherit"
-                  onClick={this.handleCreate}
-                >
-                  Create Rides
-                </Button>
-              </Toolbar>
-            </AppBar>
-            <InfiniteCalendar
-              onSelect={e => {
-                this.handleSelect(e);
-              }}
-              Component={withMultipleDates(Calendar)}
-              selected={[...this.state.selectedDates]}
-              interpolateSelection={defaultMultipleDateInterpolation}
-              width={375}
-              height={380}
-              disabledDays={[0, 6]}
-              minDate={today}
-            />
-            <TimePickers onTimeSet={value => this.handleTime(value)} />
-            {/* <Switch checked={true} value="checkedA" /> */}
-          </Grid>
+          <RideSchedulerHelper 
+            appBar={this.props.appBar}
+            handleClose={() => this.handleClose()}
+            flex={this.props.flex}
+            selectedDates={this.state.selectedDates}
+            handleCreate={() => this.handleCreate()}
+            handleSelect={e => this.handleSelect(e)}
+            handleTime={value => this.handleTime(value)}
+          />
         </Dialog>
         <SnackBars
           message={this.state.snackBarMessage}
