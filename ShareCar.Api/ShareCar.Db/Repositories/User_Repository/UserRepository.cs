@@ -20,16 +20,15 @@ namespace ShareCar.Db.Repositories.User_Repository
             _databaseContext = context;
         }
 
-        public async Task CreateFacebookUser(FacebookUserDataDto userDto)
+        public async Task CreateUser(UserDto userDto)
         {
             var appUser = new User
             {
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
-                FacebookId = userDto.Id,
                 Email = userDto.Email,
                 UserName = userDto.Email,
-                PictureUrl = userDto.Picture.Data.Url
+                PictureUrl = userDto.PictureUrl
             };
 
 
@@ -39,6 +38,7 @@ namespace ShareCar.Db.Repositories.User_Repository
                 throw new ArgumentException("Failed to create local user account.");
          
         }
+
         public IEnumerable<User> GetAllUsers()
         {
             return _databaseContext.Users;

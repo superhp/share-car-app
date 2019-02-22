@@ -19,9 +19,11 @@ class Login extends Component<{}> {
     );
   };
   responseGoogle = (response: any) => {
-    console.log(response);
+
+var profileObj = {email: response.profileObj.email, givenName : response.profileObj.givenName, familyName: response.profileObj.familyName, imageUrl : response.profileObj.imageUrl}
+
     this.authService.loginWithGoogle(
-      response.accessToken,
+      profileObj,
       this.userAuthenticated
     );
   }
@@ -43,7 +45,7 @@ class Login extends Component<{}> {
     clientId="875441727934-b39rfvblph43cr5u9blmp4cafbnqcr9k.apps.googleusercontent.com"
     buttonText="Login"
     onSuccess={this.responseGoogle}
-    onFailure={this.responseGoogle}
+ //   onFailure={ Generic error message }
   />
       </div>
     );

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
+using ShareCar.Dto.Identity.Google;
 using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
@@ -10,11 +11,13 @@ namespace ShareCar.Api.Controllers
     [Route("api/[controller]/[action]")]
     public class AuthenticationController : Controller
     {
-        private readonly IIdentity _facebookIdentity;
-        
-        public AuthenticationController(IIdentity facebookIdentity)
+        private readonly IFacebookIdentity _facebookIdentity;
+        private readonly IGoogleIdentity _googleIdentity;
+
+        public AuthenticationController(IFacebookIdentity facebookIdentity, IGoogleIdentity googleIdentity)
         {
             _facebookIdentity = facebookIdentity;
+            _googleIdentity = googleIdentity;
         }
 
         [HttpPost]
@@ -34,11 +37,11 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Google([FromBody] AccessTokenDto googleAccessToken)
+        public async Task<IActionResult> Google([FromBody] GoogleUserDataDto userData)
         {
             try
             {
-                var jwt = await _facebookIdentity.Login(googleAccessToken);
+                var jwt = await _googleIdentity.Login(userData);
                 AddJwtToCookie(jwt);
             }
             catch (Exception ex)

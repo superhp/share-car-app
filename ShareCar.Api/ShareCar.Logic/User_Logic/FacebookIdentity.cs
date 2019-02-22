@@ -12,7 +12,7 @@ using ShareCar.Dto.Identity.Facebook;
 
 namespace ShareCar.Logic.User_Logic
 {
-    public class FacebookIdentity : IIdentity
+    public class FacebookIdentity : IFacebookIdentity
     {
         private readonly UserManager<User> _userManager;
         private readonly FacebookAuthSettings _fbAuthSettings;
@@ -37,7 +37,13 @@ namespace ShareCar.Logic.User_Logic
 
             if (user == null)
             {
-                await _userRepository.CreateFacebookUser(userInfo);
+                await _userRepository.CreateUser(new UserDto
+                {
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    Email = userInfo.Email,
+                    PictureUrl = userInfo.Picture.Data.Url
+                });
             }
 
             // generate the jwt for the local user

@@ -16,10 +16,8 @@ class AuthenticationService {
         });
     }
 
-    loginWithGoogle = (accessToken: AccessToken, callback: () => void) => {
-        api.post('authentication/google', {
-            accessToken: accessToken
-        })
+    loginWithGoogle = (profileObj: ProfileObj, callback: () => void) => {
+        api.post('authentication/google', profileObj)
         .then((response) => {
             if (response.status === 200)
                 callback();

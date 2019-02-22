@@ -15,13 +15,11 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
-        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
         
         public RouteLogic(IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
         {
-            //_rideRequestLogic = rideRequestLogic;
             _routeRepository = routeRepository;
             _mapper = mapper;
             _addressLogic = addressLogic;
@@ -43,15 +41,6 @@ namespace ShareCar.Logic.Route_Logic
 
             RouteDto routeDto = _mapper.Map<Route, RouteDto>(route);
                 
-              /*  = new RouteDto
-            {
-                AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress),
-                AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress),
-                FromId = route.FromId,
-                ToId = route.ToId,
-                RouteId = route.RouteId,
-                Geometry = route.Geometry
-            };*/
             return routeDto;
         }
  
@@ -78,7 +67,7 @@ namespace ShareCar.Logic.Route_Logic
                 List<Ride> rides = new List<Ride>();
                 foreach(var ride in route.Rides)
                 {
-                    if(!((ride.DriverEmail == email) || (ride.RideDateTime < routeDto.FromTime) || (ride.isActive == false)))
+                    if(ride.DriverEmail != email && ride.RideDateTime >= routeDto.FromTime && ride.isActive)
                     {
                         rides.Add(ride);
                     }
@@ -112,7 +101,6 @@ namespace ShareCar.Logic.Route_Logic
 
 
             };
-            //Route routes = _mapper.Map<RouteDto, Route>(route);
             return _routeRepository.AddRoute(entityRoute);
         }
     }

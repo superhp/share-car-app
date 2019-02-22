@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Options;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
+using ShareCar.Dto.Identity.Google;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,32 +13,33 @@ using System.Threading.Tasks;
 
 namespace ShareCar.Logic.User_Logic
 {
-    public class GoogleIdentity
+    public class GoogleIdentity : IGoogleIdentity
     {
         private readonly UserManager<User> _userManager;
-        private readonly FacebookAuthSettings _fbAuthSettings;
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
 
-    /*    public GoogleIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
+       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
         {
-            _fbAuthSettings = fbAuthSettings.Value;
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _userRepository = userRepository;
         }
-
-        public async Task<string> Login(FacebookAppAccessTokenDto facebookAccessToken)
+        
+        public async Task<string> Login(GoogleUserDataDto userInfo)
         {
-            var userInfo = await GetUserFromFacebook(facebookAccessToken);
-
             // ready to create the local user account (if necessary) and jwt
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
             if (user == null)
             {
-                await _userRepository.CreateFacebookUser(userInfo);
+                await _userRepository.CreateUser(new UserDto {
+                    FirstName = userInfo.GivenName,
+                    LastName = userInfo.FamilyName,
+                    Email = userInfo.Email,
+                    PictureUrl = userInfo.ImageUrl
+                });
             }
 
             // generate the jwt for the local user
@@ -52,47 +55,12 @@ namespace ShareCar.Logic.User_Logic
             return jwt;
         }
 
-        private async Task<FacebookUserDataDto> GetUserFromFacebook(AccessTokenDto facebookAccessToken)
-        {
-            // generate an app access token
-            var appAccessTokenUrl = _fbAuthSettings.AppAccessTokenUrl
-                .Replace("{AppId}", _fbAuthSettings.AppId)
-                .Replace("{AppSecret}", _fbAuthSettings.AppSecret);
-            var appAccessTokenResponse = await Client.GetStringAsync(appAccessTokenUrl);
-            var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessTokenDto>(appAccessTokenResponse);
-
-            // validate the user access token
-            await CheckIfAccessTokenIsValid(facebookAccessToken, appAccessToken);
-
-            // we've got a valid token so we can request user data from facebook
-            var userInfoUrl = _fbAuthSettings.UserInfoUrl.Replace("{FacebookAccessToken}", facebookAccessToken.AccessToken);
-            var userInfoResponse = await Client.GetStringAsync(userInfoUrl);
-            var userInfo = JsonConvert.DeserializeObject<FacebookUserDataDto>(userInfoResponse);
-
-            return userInfo;
-        }
-
-        private async Task CheckIfAccessTokenIsValid(AccessTokenDto facebookAccessToken, FacebookAppAccessTokenDto appAccessToken)
-        {
-            var debugTokenUrl = _fbAuthSettings.DebugTokenUrl
-                .Replace("{FacebookAccessToken}", facebookAccessToken.AccessToken)
-                .Replace("{AccessToken}", appAccessToken.AccessToken);
-            var userAccessTokenValidationResponse = await Client.GetStringAsync(debugTokenUrl);
-            var userAccessTokenValidation =
-                JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
-
-            if (!userAccessTokenValidation.Data.IsValid)
-            {
-                throw new ArgumentException("Invalid facebook token.");
-            }
-        }
-
         private async Task<string> GenerateJwt(User localUser)
         {
             var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
             var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
 
             return jwt;
-        }*/
+        }
     }
 }
