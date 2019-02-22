@@ -172,7 +172,7 @@ namespace ShareCar.Logic.Ride_Logic
             return DtoPassengers;
         }
 
-        public IEnumerable<RideDto> GetSimilarRides(int rideId)
+        public IEnumerable<RideDto> GetSimilarRides(RideDto ride)
         {
             string driverEmail = ride.DriverEmail;
             int routeId = ride.RouteId;
