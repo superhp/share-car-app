@@ -10,9 +10,11 @@ namespace ShareCar.Db.Repositories.User_Repository
 {
     public interface IUserRepository
     {
-        Task CreateUser(UserDto userDto);
+        Task CreateUser(User user);
         Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal);
         Task<IdentityResult> UpdateUserAsync(User user, ClaimsPrincipal principal);
         IEnumerable<User> GetAllUsers();
+        UnauthorizedUser GetUnauthorizedUser(string email);
+        void CreateUnauthorizedUser(UnauthorizedUser user);
     }
 }

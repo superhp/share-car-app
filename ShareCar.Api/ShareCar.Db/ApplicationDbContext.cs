@@ -16,6 +16,7 @@ namespace ShareCar.Db
         public DbSet<RideRequest> Requests { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Passenger> Passengers { get; set; }
+        public DbSet<UnauthorizedUser> UnauthorizedUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,6 +31,8 @@ namespace ShareCar.Db
             modelBuilder.Entity<Ride>()
                 .Property(x => x.isActive)
                 .HasDefaultValue(true);
+
+        
 
 
         }

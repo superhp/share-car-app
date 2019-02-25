@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
+using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Dto.Identity.Google;
 using ShareCar.Logic.User_Logic;
 
@@ -13,11 +14,43 @@ namespace ShareCar.Api.Controllers
     {
         private readonly IFacebookIdentity _facebookIdentity;
         private readonly IGoogleIdentity _googleIdentity;
+        private readonly IUserLogic _userLogic;
 
-        public AuthenticationController(IFacebookIdentity facebookIdentity, IGoogleIdentity googleIdentity)
+        public AuthenticationController(IFacebookIdentity facebookIdentity, IGoogleIdentity googleIdentity, IUserLogic userLogic)
         {
             _facebookIdentity = facebookIdentity;
             _googleIdentity = googleIdentity;
+            _userLogic = userLogic;
+        }
+
+        [HttpPost]
+        public IActionResult VerificationCode([FromBody] )
+        {
+            try
+            {
+                _userLogic.SubmitCognizantEmailAsync(cogzniantData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult Cognizant([FromBody] CognizantData cogzniantData)
+        {
+            try
+            {
+                _userLogic.SubmitCognizantEmailAsync(cogzniantData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         [HttpPost]
@@ -26,6 +59,12 @@ namespace ShareCar.Api.Controllers
             try
             {
                 var jwt = await _facebookIdentity.Login(facebookAccessToken);
+
+                if (jwt == "")
+                {
+                    return Unauthorized();
+                }
+
                 AddJwtToCookie(jwt);
             }
             catch (Exception ex)

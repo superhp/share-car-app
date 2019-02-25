@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto.Identity;
+using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Logic.Passenger_Logic;
 
@@ -32,6 +35,7 @@ namespace ShareCar.Logic.User_Logic
         {
             var user = await _userRepository.GetLoggedInUser(principal);
             return user;
+            
         }
 
         public IEnumerable<UserDto> GetAllUsers()
@@ -92,6 +96,44 @@ namespace ShareCar.Logic.User_Logic
             }
             userWithPoints = userWithPoints.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             return userWithPoints;
+        }
+
+
+        async Task SubmitCognizantEmailAsync(CognizantData cogzniantData)
+        {
+            UnauthorizedUser unauthorizedUser = _userRepository.GetUnauthorizedUser(cogzniantData.FacebookEmail == null ? cogzniantData.GoogleEmail : cogzniantData.FacebookEmail);
+
+            var smtpClient = new SmtpClient
+            {
+                Host = "smtp.gmail.com", // set your SMTP server name here
+                Port = 587, // Port 
+                EnableSsl = true,
+                Credentials = new NetworkCredential("from@gmail.com", "password")
+            };
+
+            using (var message = new MailMessage("from@gmail.com", "to@mail.com")
+            {
+                Subject = "Subject",
+                Body = unauthorizedUser.VerificationCode.ToString()
+            })
+            {
+                await smtpClient.SendMailAsync(message);
+            }
+        }
+
+        public string SubmitVerificationCode()
+        {
+            // generate the jwt for the local user
+            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+
+            if (localUser == null)
+            {
+                throw new ArgumentException("Local user account could not be found.");
+            }
+
+            var jwt = await GenerateJwt(localUser);
+
+            return jwt;
         }
     }
 }

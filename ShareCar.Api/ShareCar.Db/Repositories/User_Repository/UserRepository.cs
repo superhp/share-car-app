@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -20,19 +21,21 @@ namespace ShareCar.Db.Repositories.User_Repository
             _databaseContext = context;
         }
 
-        public async Task CreateUser(UserDto userDto)
+        public void CreateUnauthorizedUser(UnauthorizedUser user)
         {
-            var appUser = new User
-            {
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Email = userDto.Email,
-                UserName = userDto.Email,
-                PictureUrl = userDto.PictureUrl
-            };
 
+            Random random = new Random();
+            user.VerificationCode = random.Next();
+            var result = _databaseContext.UnauthorizedUsers.Add(user);
 
-            var result = await _userManager.CreateAsync(appUser, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
+            if (result.State != Microsoft.EntityFrameworkCore.EntityState.Added)
+                throw new ArgumentException("Failed to create unauthorized user.");
+        }
+
+        public async Task CreateUser(User user)
+        {
+
+            var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
             if (!result.Succeeded)
                 throw new ArgumentException("Failed to create local user account.");
@@ -46,7 +49,6 @@ namespace ShareCar.Db.Repositories.User_Repository
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
-            
             var userDto = new UserDto
             {
                 Email = user.Email,
@@ -69,6 +71,18 @@ namespace ShareCar.Db.Repositories.User_Repository
             _user.LicensePlate = user.LicensePlate;
             var userAsync = await _userManager.UpdateAsync(_user);
             return userAsync;
+        }
+
+        public UnauthorizedUser GetUnauthorizedUser(string email)
+        {
+            try
+            {
+                return _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

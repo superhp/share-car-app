@@ -28,22 +28,27 @@ namespace ShareCar.Logic.User_Logic
             _userRepository = userRepository;
         }
 
-        public async Task<string> Login(AccessTokenDto facebookAccessToken)
+        public async Task<string> Login(FacebookLoginDataDto facebookLoginData)
         {
-            var userInfo = await GetUserFromFacebook(facebookAccessToken);
+            var userInfo = await GetUserFromFacebook(facebookLoginData.AccessToken);
 
             // ready to create the local user account (if necessary) and jwt
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
-
             if (user == null)
             {
-                await _userRepository.CreateUser(new UserDto
+                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
+                await _userRepository.CreateUser(new User
                 {
                     FirstName = userInfo.FirstName,
                     LastName = userInfo.LastName,
                     Email = userInfo.Email,
-                    PictureUrl = userInfo.Picture.Data.Url
+                    PictureUrl = userInfo.Picture.Data.Url,
+                    FacebookVerified = false,
+                    GoogleVerified = false,
+                    FacebookEmail = userInfo.Email,
+                    GoogleEmail = ""
                 });
+                return "";
             }
 
             // generate the jwt for the local user
