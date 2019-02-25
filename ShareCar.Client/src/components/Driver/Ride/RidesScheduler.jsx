@@ -141,16 +141,6 @@ class RidesScheduler extends React.Component {
     return false;
   };
 
-  returnUnique = function(duplicateArray) {
-    let uniqueDates = [];
-    for (let i = 0; i < duplicateArray.length; i++) {
-      if (!this.checkForDateDuplicate(duplicateArray[i], uniqueDates)) {
-        uniqueDates.push(duplicateArray[i]);
-      }
-    }
-    return uniqueDates;
-  };
-
   render() {
     return (
       <div>
