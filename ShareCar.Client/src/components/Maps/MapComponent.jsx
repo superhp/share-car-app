@@ -10,6 +10,8 @@ import TileLayer from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 
+import { centerMap } from "../../utils/mapUtils";
+
 import "../../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
@@ -28,13 +30,9 @@ export default class MapComponent extends React.Component<{}> {
     this.props.onUpdate(this.state.coordinates);
   }
 
-  centerMapParent(value) {
-    this.CenterMap(value.lng, value.lat, this.state.map);
-  }
-
   // Shows passenger pick up point 
   setPassengersPickUpPoint(val, map) {
-    this.CenterMap(val[0], val[1], map);
+    centerMap(val[0], val[1], map);
     let xy = [];
     xy = transform(val, "EPSG:4326", "EPSG:3857");
     let vectorSource = this.state.Vector;
@@ -84,11 +82,6 @@ export default class MapComponent extends React.Component<{}> {
       });
     }
 
-  }
-
-  CenterMap(long, lat, map) {
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(19);
   }
 
   render() {
