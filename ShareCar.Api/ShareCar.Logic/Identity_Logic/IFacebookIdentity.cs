@@ -6,6 +6,6 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public interface IFacebookIdentity
     {
-        Task<string> Login(FacebookLoginDataDto facebookLoginData);
+        Task<LoginResponseModel> Login(AccessTokenDto accessToken);
     }
 }

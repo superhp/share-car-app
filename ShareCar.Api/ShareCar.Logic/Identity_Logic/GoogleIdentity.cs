@@ -19,20 +19,23 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly UserManager<User> _userManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserLogic _userLogic;
+        private readonly ICognizantIdentity _cognizantIdentity;
         private static readonly HttpClient Client = new HttpClient();
 
-       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
+       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic, ICognizantIdentity cognizantIdentity)
         {
+
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _userLogic = userLogic;
+            _cognizantIdentity = cognizantIdentity;
         }
         
-        public async Task<string> Login(GoogleUserDataDto userInfo)
+        public async Task<LoginResponseModel> Login(GoogleUserDataDto userInfo)
         {
             // ready to create the local user account (if necessary) and jwt
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
-
+            var response = new LoginResponseModel();
             if (user == null)
             {
                 _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
@@ -47,7 +50,16 @@ namespace ShareCar.Logic.Identity_Logic
                     FacebookEmail = userInfo.Email,
                     GoogleEmail = ""
                 });
-                return "";
+                response.WaitingForCode = false;
+                return response;
+            }
+
+            if (!user.GoogleVerified)
+            {
+                var unauthorizedUser = _userLogic.GetUnauthorizedUser(userInfo.Email);
+                await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, unauthorizedUser.VerificationCode);
+                response.WaitingForCode = true;
+                return response;
             }
 
             // generate the jwt for the local user
@@ -59,8 +71,8 @@ namespace ShareCar.Logic.Identity_Logic
             }
 
             var jwt = await GenerateJwt(localUser);
-
-            return jwt;
+            response.JwtToken = jwt;
+            return response;
         }
 
         private async Task<string> GenerateJwt(User localUser)

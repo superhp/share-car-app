@@ -1,4 +1,5 @@
-﻿using ShareCar.Dto.Identity.Google;
+﻿using ShareCar.Dto.Identity;
+using ShareCar.Dto.Identity.Google;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,6 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public interface IGoogleIdentity
     {
-        Task<string> Login(GoogleUserDataDto googleData);
-
+        Task<LoginResponseModel> Login(GoogleUserDataDto googleData);
     }
 }

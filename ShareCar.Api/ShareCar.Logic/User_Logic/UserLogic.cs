@@ -114,5 +114,10 @@ namespace ShareCar.Logic.User_Logic
         {
             _userRepository.CreateUnauthorizedUser(_mapper.Map<UnauthorizedUserDto, UnauthorizedUser>(userDto));
         }
+
+        public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
+        {
+            return _userRepository.SetUsersCognizantEmail(cognizantEmail, loginEmail);
+        }
     }
 }

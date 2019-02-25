@@ -20,13 +20,16 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserLogic _userLogic;
         private static readonly HttpClient Client = new HttpClient();
+        private readonly ICognizantIdentity _cognizantIdentity;
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, ICognizantIdentity cognizantIdentity, UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
         {
             _fbAuthSettings = fbAuthSettings.Value;
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _userLogic = userLogic;
+            _cognizantIdentity = cognizantIdentity;
+
         }
 
         private async Task<FacebookUserDataDto> GetUserFromFacebook(AccessTokenDto facebookAccessToken)
@@ -72,10 +75,10 @@ namespace ShareCar.Logic.Identity_Logic
             return jwt;
         }
 
-        public async Task<string> Login(FacebookLoginDataDto facebookLoginData)
+        public async Task<LoginResponseModel> Login(AccessTokenDto accessToken)
         {
-            var userInfo = await GetUserFromFacebook(facebookLoginData.AccessToken);
-
+            var userInfo = await GetUserFromFacebook(accessToken);
+            var response = new LoginResponseModel();
             // ready to create the local user account (if necessary) and jwt
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
             if (user == null)
@@ -92,7 +95,14 @@ namespace ShareCar.Logic.Identity_Logic
                     FacebookEmail = userInfo.Email,
                     GoogleEmail = ""
                 });
-                return "";
+                response.WaitingForCode = false;
+                return response;
+            }
+            if (!user.FacebookVerified)
+            {
+                var unauthorizedUser = _userLogic.GetUnauthorizedUser(userInfo.Email);
+                _cognizantIdentity.SendVerificationCode(user.CognizantEmail, unauthorizedUser.VerificationCode); response.WaitingForCode = true;
+                return response;
             }
 
             // generate the jwt for the local user
@@ -104,8 +114,8 @@ namespace ShareCar.Logic.Identity_Logic
             }
 
             var jwt = await GenerateJwt(localUser);
-
-            return jwt;
+            response.JwtToken = jwt;
+            return response;
         }
     }
 }

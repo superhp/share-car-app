@@ -23,7 +23,6 @@ namespace ShareCar.Db.Repositories.User_Repository
 
         public void CreateUnauthorizedUser(UnauthorizedUser user)
         {
-
             Random random = new Random();
             user.VerificationCode = random.Next();
             var result = _databaseContext.UnauthorizedUsers.Add(user);
@@ -34,7 +33,7 @@ namespace ShareCar.Db.Repositories.User_Repository
 
         public async Task CreateUser(User user)
         {
-
+            user.UserName = user.Email;
             var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
             if (!result.Succeeded)
@@ -84,5 +83,19 @@ namespace ShareCar.Db.Repositories.User_Repository
                 return null;
             }
         }
+
+        public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
+        {
+            try {
+                var user = _databaseContext.UnauthorizedUsers.Single(x => x.Email == loginEmail);
+                
+                    return true;
+        }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            }
+
     }
 }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace ShareCar.Logic.Identity_Logic
 {
     public interface ICognizantIdentity
-    {
-        Task SubmitCognizantEmailAsync(CognizantData data);
+    { 
         bool SubmitVerificationCode(VerificationCodeSubmitData data);
+        Task SendVerificationCode(string email, int code); 
     }
 }

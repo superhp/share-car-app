@@ -45,37 +45,41 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cognizant([FromBody] CognizantData cogzniantData)
+        public IActionResult Cognizant([FromBody] CognizantData data)
         {
-            try
-            {
-                _cognizantIdentity.SubmitCognizantEmailAsync(cogzniantData);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
 
-            return Ok();
+               var result = _userLogic.SetUsersCognizantEmail(data.CogniznatEmail, data.LoginEmail);
+            if (result)
+            {
+                return Ok();
+            }
+                return BadRequest();
+            
+
         }
 
         [HttpPost]
-        public async Task<IActionResult> Facebook([FromBody] FacebookLoginDataDto facebookLoginData)
+        public async Task<IActionResult> Facebook([FromBody] AccessTokenDto accessToken)
         {
             try
             {
-                var jwt = await _facebookIdentity.Login(facebookLoginData);
+                var response = await _facebookIdentity.Login(accessToken);
+                if(response.JwtToken != null)
+                {
+                    AddJwtToCookie(response.JwtToken);
+                    return Ok();
+                }
+                else
+                {
+                    return Unauthorized();
+                }
 
 
-
-                AddJwtToCookie(jwt);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
-            return Ok();
         }
 
         [HttpPost]
@@ -83,19 +87,21 @@ namespace ShareCar.Api.Controllers
         {
             try
             {
-                var jwt = await _googleIdentity.Login(userData);
-                if (jwt == "")
+                var response = await _googleIdentity.Login(userData);
+                if (response.JwtToken != null)
+                {
+                    AddJwtToCookie(response.JwtToken);
+                    return Ok();
+                }
+                else
                 {
                     return Unauthorized();
                 }
-                AddJwtToCookie(jwt);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
-            return Ok();
         }
 
         [HttpPost]
