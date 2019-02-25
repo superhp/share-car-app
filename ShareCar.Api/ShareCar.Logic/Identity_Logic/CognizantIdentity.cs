@@ -38,9 +38,7 @@ namespace ShareCar.Logic.Identity_Logic
 
         public async Task SendVerificationCode(string email, int code)
         {
-
-
-
+         
             var msg = new SendGridMessage();
 
             msg.SetFrom(new EmailAddress("no-reply@cognizantchallenge.lt", "Cognizant Challenge"));
@@ -50,20 +48,10 @@ namespace ShareCar.Logic.Identity_Logic
                 new EmailAddress("edgar.reis@cognizant.com")
             };
             msg.AddTos(recipients);
-       //     msg.AddBcc("laurynas.simkunas@cognizant.com");
 
-            msg.SetSubject("Login details to CognizantChallenge.lt");
+            msg.SetSubject("Verification code");
 
-            msg.AddContent(MimeType.Text, "Hi," +
-                                          "" +
-                                          "Your login details to http://cognizantchallenge.lt is:" +
-                                          $"Email: {email}" +
-                                          "" +
-                                          "The website will be activated before exam." +
-                                          "" +
-                                          "Regards," +
-                                          "Cognizant Challenge");
-            msg.AddContent(MimeType.Html, $"Hi,<br><br>Your login details to <a href='http://cognizantchallenge.lt'>http://cognizantchallenge.lt</a> is: <br> Email: {email}<br>Password: <br><br>The website will be activated before exam.<br><br>Regards,<br>Cognizant Challenge");
+            msg.AddContent(MimeType.Text, "Your verification code is " + code.ToString());
 
             var response = await _client.SendEmailAsync(msg);
         }

@@ -54,8 +54,6 @@ namespace ShareCar.Api.Controllers
                 return Ok();
             }
                 return BadRequest();
-            
-
         }
 
         [HttpPost]
