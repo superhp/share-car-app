@@ -14,7 +14,7 @@ export const UserProfileFormField = (props) => (
             className="form-control form-header"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            defaultValue={props.value}
+            value={props.value}
             onChange={e => props.onChange(e)}
         />
     </div>

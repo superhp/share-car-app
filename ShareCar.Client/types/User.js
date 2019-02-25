@@ -14,8 +14,8 @@ user: {
   email: string,
   licensePlate: string,
   phone: string
-},
-pointCount: number
+};
+pointCount: number;
 
 type MyProfileState = {
   loading: boolean,
