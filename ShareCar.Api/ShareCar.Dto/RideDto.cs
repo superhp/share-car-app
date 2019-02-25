@@ -21,7 +21,7 @@ namespace ShareCar.Dto
         public string DriverFirstName { get; set; }
         public string DriverLastName { get; set; }
         public string DriverPhone { get; set; }
-        public List<PassengerDto> Passengers { get; set; }
+       // public List<PassengerDto> Passengers { get; set; }
         public DateTime RideDateTime { get; set; }
         public List<RideRequestDto> Requests { get; set; }
         public int NumberOfSeats { get; set; }

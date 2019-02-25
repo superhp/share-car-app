@@ -116,8 +116,7 @@ namespace ShareCar.Logic.Ride_Logic
         public bool AddRide(RideDto ride, string email)
         {
             ride.DriverEmail = email;
-
-            ride.Passengers = new List<PassengerDto>();
+            
             ride.Requests = new List<RideRequestDto>();
             
             AddRouteIdToRide(ride);
