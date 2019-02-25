@@ -13,7 +13,8 @@ namespace ShareCar.Logic.User_Logic
         int CountPoints(string email);
         Dictionary<UserDto, int> GetWinnerBoard();
         IEnumerable<UserDto> GetAllUsers();
-        Task SubmitCognizantEmailAsync(CognizantData cogzniantData);
-        string SubmitVerificationCode();
+        UnauthorizedUserDto GetUnauthorizedUser(string email);
+        Task CreateUser(UserDto userDto);
+        void CreateUnauthorizedUser(UnauthorizedUserDto user);
     }
 }

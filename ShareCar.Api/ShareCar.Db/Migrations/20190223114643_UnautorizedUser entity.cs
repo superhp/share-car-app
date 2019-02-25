@@ -15,7 +15,7 @@ namespace ShareCar.Db.Migrations
                 {
                     UnauthorizedUserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Email = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
                     VerificationCode = table.Column<long>(nullable: false)
                 },
                 constraints: table =>

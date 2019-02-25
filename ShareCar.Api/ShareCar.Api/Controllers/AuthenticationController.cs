@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
+using ShareCar.Dto.Identity.Facebook;
 using ShareCar.Dto.Identity.Google;
+using ShareCar.Logic.Identity_Logic;
 using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
@@ -14,28 +16,32 @@ namespace ShareCar.Api.Controllers
     {
         private readonly IFacebookIdentity _facebookIdentity;
         private readonly IGoogleIdentity _googleIdentity;
+        private readonly ICognizantIdentity _cognizantIdentity;
         private readonly IUserLogic _userLogic;
 
-        public AuthenticationController(IFacebookIdentity facebookIdentity, IGoogleIdentity googleIdentity, IUserLogic userLogic)
+        public AuthenticationController(IFacebookIdentity facebookIdentity, IGoogleIdentity googleIdentity, ICognizantIdentity cognizantIdentity, IUserLogic userLogic)
         {
             _facebookIdentity = facebookIdentity;
             _googleIdentity = googleIdentity;
             _userLogic = userLogic;
+            _cognizantIdentity = cognizantIdentity;
         }
 
         [HttpPost]
-        public IActionResult VerificationCode([FromBody] )
+        public IActionResult VerificationCode([FromBody] VerificationCodeSubmitData data)
         {
             try
             {
-                _userLogic.SubmitCognizantEmailAsync(cogzniantData);
+                if (_cognizantIdentity.SubmitVerificationCode(data))
+                {
+                    return Ok();
+                }
+                return Unauthorized();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
-            return Ok();
         }
 
         [HttpPost]
@@ -43,7 +49,7 @@ namespace ShareCar.Api.Controllers
         {
             try
             {
-                _userLogic.SubmitCognizantEmailAsync(cogzniantData);
+                _cognizantIdentity.SubmitCognizantEmailAsync(cogzniantData);
             }
             catch (Exception ex)
             {
@@ -54,16 +60,13 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Facebook([FromBody] AccessTokenDto facebookAccessToken)
+        public async Task<IActionResult> Facebook([FromBody] FacebookLoginDataDto facebookLoginData)
         {
             try
             {
-                var jwt = await _facebookIdentity.Login(facebookAccessToken);
+                var jwt = await _facebookIdentity.Login(facebookLoginData);
 
-                if (jwt == "")
-                {
-                    return Unauthorized();
-                }
+
 
                 AddJwtToCookie(jwt);
             }
@@ -81,6 +84,10 @@ namespace ShareCar.Api.Controllers
             try
             {
                 var jwt = await _googleIdentity.Login(userData);
+                if (jwt == "")
+                {
+                    return Unauthorized();
+                }
                 AddJwtToCookie(jwt);
             }
             catch (Exception ex)

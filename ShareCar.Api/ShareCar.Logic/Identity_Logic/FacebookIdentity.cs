@@ -9,59 +9,24 @@ using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
+using ShareCar.Logic.User_Logic;
 
-namespace ShareCar.Logic.User_Logic
+namespace ShareCar.Logic.Identity_Logic
 {
     public class FacebookIdentity : IFacebookIdentity
     {
         private readonly UserManager<User> _userManager;
         private readonly FacebookAuthSettings _fbAuthSettings;
         private readonly IJwtFactory _jwtFactory;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserLogic _userLogic;
         private static readonly HttpClient Client = new HttpClient();
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
         {
             _fbAuthSettings = fbAuthSettings.Value;
             _userManager = userManager;
             _jwtFactory = jwtFactory;
-            _userRepository = userRepository;
-        }
-
-        public async Task<string> Login(FacebookLoginDataDto facebookLoginData)
-        {
-            var userInfo = await GetUserFromFacebook(facebookLoginData.AccessToken);
-
-            // ready to create the local user account (if necessary) and jwt
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
-            if (user == null)
-            {
-                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
-                await _userRepository.CreateUser(new User
-                {
-                    FirstName = userInfo.FirstName,
-                    LastName = userInfo.LastName,
-                    Email = userInfo.Email,
-                    PictureUrl = userInfo.Picture.Data.Url,
-                    FacebookVerified = false,
-                    GoogleVerified = false,
-                    FacebookEmail = userInfo.Email,
-                    GoogleEmail = ""
-                });
-                return "";
-            }
-
-            // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
-
-            if (localUser == null)
-            {
-                throw new ArgumentException("Local user account could not be found.");
-            }
-
-            var jwt = await GenerateJwt(localUser);
-
-            return jwt;
+            _userLogic = userLogic;
         }
 
         private async Task<FacebookUserDataDto> GetUserFromFacebook(AccessTokenDto facebookAccessToken)
@@ -103,6 +68,42 @@ namespace ShareCar.Logic.User_Logic
         {
             var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
             var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
+
+            return jwt;
+        }
+
+        public async Task<string> Login(FacebookLoginDataDto facebookLoginData)
+        {
+            var userInfo = await GetUserFromFacebook(facebookLoginData.AccessToken);
+
+            // ready to create the local user account (if necessary) and jwt
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+            if (user == null)
+            {
+                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+                await _userLogic.CreateUser(new UserDto
+                {
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    Email = userInfo.Email,
+                    PictureUrl = userInfo.Picture.Data.Url,
+                    FacebookVerified = false,
+                    GoogleVerified = false,
+                    FacebookEmail = userInfo.Email,
+                    GoogleEmail = ""
+                });
+                return "";
+            }
+
+            // generate the jwt for the local user
+            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+
+            if (localUser == null)
+            {
+                throw new ArgumentException("Local user account could not be found.");
+            }
+
+            var jwt = await GenerateJwt(localUser);
 
             return jwt;
         }

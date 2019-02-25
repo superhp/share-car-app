@@ -5,26 +5,27 @@ using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using ShareCar.Dto.Identity.Google;
+using ShareCar.Logic.User_Logic;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.User_Logic
+namespace ShareCar.Logic.Identity_Logic
 {
     public class GoogleIdentity : IGoogleIdentity
     {
         private readonly UserManager<User> _userManager;
         private readonly IJwtFactory _jwtFactory;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserLogic _userLogic;
         private static readonly HttpClient Client = new HttpClient();
 
-       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
+       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
-            _userRepository = userRepository;
+            _userLogic = userLogic;
         }
         
         public async Task<string> Login(GoogleUserDataDto userInfo)
@@ -34,12 +35,19 @@ namespace ShareCar.Logic.User_Logic
 
             if (user == null)
             {
-                await _userRepository.CreateUser(new UserDto {
+                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+                await _userLogic.CreateUser(new UserDto
+                {
                     FirstName = userInfo.GivenName,
                     LastName = userInfo.FamilyName,
                     Email = userInfo.Email,
-                    PictureUrl = userInfo.ImageUrl
+                    PictureUrl = userInfo.ImageUrl,
+                    FacebookVerified = false,
+                    GoogleVerified = false,
+                    FacebookEmail = userInfo.Email,
+                    GoogleEmail = ""
                 });
+                return "";
             }
 
             // generate the jwt for the local user

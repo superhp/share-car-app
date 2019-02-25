@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ShareCar.Dto.Identity.Cognizant
 {
-    public class CognizantData
+    public class VerificationCodeSubmitData
     {
-        public string CogniznatEmail { get; set; }
+        public int VerificationCode { get; set; }
         public string FacebookEmail { get; set; }
         public string GoogleEmail { get; set; }
     }

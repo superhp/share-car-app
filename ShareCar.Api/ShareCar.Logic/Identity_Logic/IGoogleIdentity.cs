@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.User_Logic
+namespace ShareCar.Logic.Identity_Logic
 {
     public interface IGoogleIdentity
     {

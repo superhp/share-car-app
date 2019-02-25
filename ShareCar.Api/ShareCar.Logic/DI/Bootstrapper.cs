@@ -14,6 +14,7 @@ using ShareCar.Db.Repositories.Passenger_Repository;
 using ShareCar.Db.Repositories.Route_Repository;
 using ShareCar.Db.Repositories.Ride_Repository;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Logic.Identity_Logic;
 
 namespace ShareCar.Logic.DI
 {
@@ -41,6 +42,7 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IUserLogic, UserLogic>();
             services.AddScoped<IAddressLogic, AddressLogic>();
             services.AddScoped<IPassengerLogic, PassengerLogic>();
+            services.AddScoped<ICognizantIdentity, CognizantIdentity>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

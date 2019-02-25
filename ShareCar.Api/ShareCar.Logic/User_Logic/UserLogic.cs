@@ -66,6 +66,7 @@ namespace ShareCar.Logic.User_Logic
             int points = _passengerLogic.GetUsersPoints(email);
             return points;
         }
+
         public Dictionary<UserDto, int> GetWinnerBoard()
         {
             Dictionary<UserDto, int> userWithPoints = new Dictionary<UserDto, int>();
@@ -98,42 +99,20 @@ namespace ShareCar.Logic.User_Logic
             return userWithPoints;
         }
 
-
-        async Task SubmitCognizantEmailAsync(CognizantData cogzniantData)
+        public UnauthorizedUserDto GetUnauthorizedUser(string email)
         {
-            UnauthorizedUser unauthorizedUser = _userRepository.GetUnauthorizedUser(cogzniantData.FacebookEmail == null ? cogzniantData.GoogleEmail : cogzniantData.FacebookEmail);
-
-            var smtpClient = new SmtpClient
-            {
-                Host = "smtp.gmail.com", // set your SMTP server name here
-                Port = 587, // Port 
-                EnableSsl = true,
-                Credentials = new NetworkCredential("from@gmail.com", "password")
-            };
-
-            using (var message = new MailMessage("from@gmail.com", "to@mail.com")
-            {
-                Subject = "Subject",
-                Body = unauthorizedUser.VerificationCode.ToString()
-            })
-            {
-                await smtpClient.SendMailAsync(message);
-            }
+           var user = _userRepository.GetUnauthorizedUser(email);
+            return _mapper.Map<UnauthorizedUser, UnauthorizedUserDto>(user);
         }
 
-        public string SubmitVerificationCode()
+        public Task CreateUser(UserDto userDto)
         {
-            // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+            return _userRepository.CreateUser(_mapper.Map<UserDto, User>(userDto));
+        }
 
-            if (localUser == null)
-            {
-                throw new ArgumentException("Local user account could not be found.");
-            }
-
-            var jwt = await GenerateJwt(localUser);
-
-            return jwt;
+        public void CreateUnauthorizedUser(UnauthorizedUserDto userDto)
+        {
+            _userRepository.CreateUnauthorizedUser(_mapper.Map<UnauthorizedUserDto, UnauthorizedUser>(userDto));
         }
     }
 }
