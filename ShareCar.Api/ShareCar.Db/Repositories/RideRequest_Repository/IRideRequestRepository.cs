@@ -8,15 +8,15 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 {
     public interface IRideRequestRepository
     {
-        IEnumerable<Request> GetAcceptedRequests(string passengerEmail);
-        bool AddRequest(Request request);
-        Request GetRequestById(int id);
-        IEnumerable<Request> GetPassengerRequests(string email);
-        IEnumerable<Request> GetDriverRequests(string email);
-        bool UpdateRequest(Request request);
+        IEnumerable<RideRequest> GetAcceptedRequests(string passengerEmail);
+        bool AddRequest(RideRequest request);
+        RideRequest GetRequestById(int id);
+        IEnumerable<RideRequest> GetPassengerRequests(string email);
+        IEnumerable<RideRequest> GetDriverRequests(string email);
+        bool UpdateRequest(RideRequest request);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
-        bool DeletedRide(IEnumerable<Request> requests);
-        IEnumerable<Request> GetRequestsByRideId(int rideId);
+        bool DeletedRide(IEnumerable<RideRequest> requests);
+        IEnumerable<RideRequest> GetRequestsByRideId(int rideId);
     }
 }
