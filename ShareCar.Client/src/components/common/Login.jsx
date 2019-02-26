@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from "react";
 import FacebookLogin from "react-facebook-login";
-import GoogleLogin from 'react-google-login';
-import history from "../helpers/history";
-import AuthenticationService from "../services/authenticationService";
-import "../styles/login.css";
-import logo from '../images/shareCarLogo.png';
+import GoogleLogin from "react-google-login";
+import history from "../../helpers/history";
+import AuthenticationService from "../../services/authenticationService";
+import "../../styles/login.css";
+import logo from '../../images/shareCarLogo.png';
 
 class Login extends Component<{}> {
   authService: AuthenticationService = new AuthenticationService();
