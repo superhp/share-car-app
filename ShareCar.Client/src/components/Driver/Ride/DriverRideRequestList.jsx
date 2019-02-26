@@ -1,23 +1,12 @@
 import * as React from "react";
-import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Badge from "@material-ui/core/Badge";
 import "typeface-roboto";
-import Snackbar from "@material-ui/core/Snackbar";
 
 import api from "../../../helpers/axiosHelper";
 import MapComponent from "../../Maps/MapComponent";
+import { PendingRequests } from "./PendingRequests";
 
 import "../../../styles/riderequests.css";
 import "../../../styles/genericStyles.css";
-
-const fontColor = {
-  color: "#007BFF"
-};
 
 export class DriverRideRequestsList extends React.Component {
   state = {
@@ -72,31 +61,6 @@ export class DriverRideRequestsList extends React.Component {
   //this.setState({coordinates : [req.longtitude,req.latitude], show : true})}>Show on map</button>
 
   render() {
-    let passengersList =
-      this.state.passengers != null ? (
-        <Grid container justify="center">
-          <Grid item xs={12}>
-            <Typography style={fontColor} variant="title">
-              Passengers
-            </Typography>
-          </Grid>
-          {this.state.passengers.length !== 0
-            ? this.state.passengers.map((pas, index) => (
-                <Grid item xs={12}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="title">
-                        #1 {pas.firstName + " " + pas.lastName}
-                      </Typography>
-                      <Typography variant="p">Phone {pas.phone}</Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))
-            : "No Passengers For This Drive"}
-        </Grid>
-      ) : null;
-
     return (
       <div>
         {this.state.show ? (
@@ -111,92 +75,19 @@ export class DriverRideRequestsList extends React.Component {
         ) : (
           ""
         )}
-        <Grid container justify="center">
-          <Grid item xs={12}>
-            <Typography style={fontColor} variant="title">
-              Pending Requests
-            </Typography>
-          </Grid>
-          <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center"
-            }}
-            open={this.state.clickedRequest}
-            onClose={this.handleClose}
-            autoHideDuration={3000}
-            message={<span id="message-id">Request accepted</span>}
-          />
-          {this.props.rideRequests.filter(
-            x => x.rideId === this.props.selectedRide
-          ).length !== 0
-            ? this.props.rideRequests
-                .filter(x => x.rideId === this.props.selectedRide)
-                .map((req, index) => (
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Card className="rides-card">
-                        <Grid container justify="center">
-                          <Grid item xs={12} zeroMinWidth>
-                            <Grid container justify="center">
-                              {!req.seenByDriver ? (
-                                <Badge
-                                  className="new-badge"
-                                  badgeContent={"new"}
-                                  color="primary"
-                                />
-                              ) : null}
-                              <Typography className="name-para" component="p">
-                                #{index + 1} {req.passengerFirstName}{" "}
-                                {req.passengerLastName}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12} zeroMinWidth>
-                            <CardActions>
-                              <Button
-                                onClick={() => {
-                                  this.setState({ show: !this.state.show });
-                                  this.setState({
-                                    coordinates: [req.longtitude, req.latitude]
-                                  });
-                                  window.scrollTo(0, 0);
-                                }}
-                              >
-                                Show on map
-                              </Button>
-                              <Button
-                                color="primary"
-                                onClick={() => {
-                                  this.sendRequestResponse("Accept", 1, req.requestId, req.rideId, req.driverEmail);
-                                }}
-                              >
-                                Accept
-                              </Button>
-                              <Button
-                                color="secondary"
-                                onClick={() => {
-                                  this.sendRequestResponse(
-                                    "Deny",
-                                    2,
-                                    req.requestId,
-                                    req.rideId
-                                  );
-                                  window.location.reload();
-                                }}
-                              >
-                                Deny
-                              </Button>
-                            </CardActions>
-                          </Grid>
-                        </Grid>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                ))
-            : "No requests"}
-          {passengersList}
-        </Grid>
+        <PendingRequests 
+          clickedRequest={this.state.clickedRequest}
+          handleClose={() => this.handleClose()}
+          rideRequests={this.props.rideRequests}
+          selectedRide={this.props.selectedRide}
+          onShowClick={(longtitude, latitude) => {
+            this.setState({ show: !this.state.show });
+            this.setState({ coordinates: [longtitude, latitude]});
+          }}
+          sendRequestResponse={(button, response, requestId, rideId, driverEmail) => 
+            this.sendRequestResponse(button, response, requestId, rideId, driverEmail)}
+          passengers={this.state.passengers}
+        />
       </div>
     );
   }
