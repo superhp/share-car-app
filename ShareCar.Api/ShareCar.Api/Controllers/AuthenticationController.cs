@@ -47,7 +47,6 @@ namespace ShareCar.Api.Controllers
         [HttpPost]
         public IActionResult Cognizant([FromBody] CognizantData data)
         {
-
                var result = _userLogic.SetUsersCognizantEmail(data.CogniznatEmail, data.LoginEmail);
             if (result)
             {
@@ -69,7 +68,8 @@ namespace ShareCar.Api.Controllers
                 }
                 else
                 {
-                    return Unauthorized();
+                    //return Ok();
+                   return Unauthorized();
                 }
 
 

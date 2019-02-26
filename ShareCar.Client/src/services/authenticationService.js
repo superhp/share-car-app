@@ -3,27 +3,35 @@ import api from '../helpers/axiosHelper';
 
 class AuthenticationService {
 
-    loginWithFacebook = (accessToken: AccessToken, callback: () => void) => {
+    loginWithFacebook = (accessToken: AccessToken, success: () => void, unauthorized: () => void) => {
         api.post('authentication/facebook', {
             accessToken: accessToken
         })
         .then((response) => {
             if (response.status === 200)
-                callback();
+            success();
         })
-        .catch(function (error) {
-            console.error(error);
+        .catch((error) => {
+            if(error.response.status === 401){
+                unauthorized();
+            } else{
+                console.error(error);
+            }
         });
     }
 
-    loginWithGoogle = (profileObj: ProfileObj, callback: () => void) => {
+    loginWithGoogle = (profileObj: ProfileObj, success: () => void, unauthorized: () => void) => {
         api.post('authentication/google', profileObj)
         .then((response) => {
             if (response.status === 200)
-                callback();
+            success();
         })
-        .catch(function (error) {
+        .catch((error) => {
+        if(error.response.status === 401){
+            unauthorized();
+        } else{
             console.error(error);
+        }
         });
     }
 
