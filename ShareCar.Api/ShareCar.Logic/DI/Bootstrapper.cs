@@ -32,7 +32,8 @@ namespace ShareCar.Logic.DI
         private static void RegisterLogic(IServiceCollection services)
         {
             services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddScoped<IIdentity, FacebookIdentity>();
+            services.AddScoped<IFacebookIdentity, FacebookIdentity>();
+            services.AddScoped<IGoogleIdentity, GoogleIdentity>();
             services.AddScoped<IRideLogic, RideLogic>();
             services.AddScoped<IRouteLogic, RouteLogic>();
             services.AddScoped<IRideRequestLogic, RideRequestLogic>();

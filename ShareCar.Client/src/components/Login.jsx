@@ -8,14 +8,22 @@ import "../styles/login.css";
 import logo from '../images/shareCarLogo.png';
 
 class Login extends Component<{}> {
+
+  constructor(props){
+    super(props)
+    this.facebookLogin = React.createRef()
+    this.googleLogin = React.createRef()
+  }
+
   authService: AuthenticationService = new AuthenticationService();
+  
+  email: string = "";
 
   responseFacebook = (response: any) => {
-    console.log(response);
-
     this.authService.loginWithFacebook(
       response.accessToken,
-      this.userAuthenticated
+      this.userAuthenticated,
+      this.userNotAuthenticated
     );
   };
   responseGoogle = (response: any) => {
@@ -30,20 +38,31 @@ var profileObj = {email: response.profileObj.email, givenName : response.profile
   userAuthenticated = () => {
     history.push("/");
   };
+  userNotAuthenticated = () => {
+    history.push("/");
+  };
 
+changeGoogleLoginSize =() => {
+  //(this.facebookLogin.current.offsetWidth)
+
+}
+componentDidMount() {
+}
   render() {
     return (
       <div className="login-container">
       <img className="login-image" src={logo} />
         <h1>ShareCar Login</h1>
         <FacebookLogin
+          ref={this.facebookLogin}
           appId="599580833757975"
           fields="name,email,picture"
           callback={this.responseFacebook}
         />
           <GoogleLogin
+
     clientId="875441727934-b39rfvblph43cr5u9blmp4cafbnqcr9k.apps.googleusercontent.com"
-    buttonText="Login"
+    buttonText="Login with google"
     onSuccess={this.responseGoogle}
  //   onFailure={ Generic error message }
   />

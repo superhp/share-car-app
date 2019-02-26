@@ -16,6 +16,17 @@ class AuthenticationService {
         });
     }
 
+    loginWithGoogle = (profileObj: ProfileObj, callback: () => void) => {
+        api.post('authentication/google', profileObj)
+        .then((response) => {
+            if (response.status === 200)
+                callback();
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    }
+
     logout = (callback: () => void) => {
         api.post('authentication/logout')
         .then((response) => {

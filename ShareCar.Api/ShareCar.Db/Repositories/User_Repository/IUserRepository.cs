@@ -10,7 +10,7 @@ namespace ShareCar.Db.Repositories.User_Repository
 {
     public interface IUserRepository
     {
-        Task CreateFacebookUser(FacebookUserDataDto userDto);
+        Task CreateUser(UserDto userDto);
         Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal);
         Task<IdentityResult> UpdateUserAsync(User user, ClaimsPrincipal principal);
         IEnumerable<User> GetAllUsers();
