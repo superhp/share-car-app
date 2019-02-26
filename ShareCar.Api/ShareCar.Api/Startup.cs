@@ -16,6 +16,7 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using AutoMapper;
+using ShareCar.Dto;
 
 namespace ShareCar.Api
 {
@@ -92,6 +93,8 @@ namespace ShareCar.Api
         {
             // Register the ConfigurationBuilder instance of FacebookAuthSettings
             services.Configure<FacebookAuthSettings>(Configuration.GetSection(nameof(FacebookAuthSettings)));
+
+            services.Configure<SendGridSettings>(Configuration.GetSection(nameof(SendGridSettings)));
 
             // jwt wire up
             // Get options from app settings

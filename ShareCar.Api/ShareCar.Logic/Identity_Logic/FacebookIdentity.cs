@@ -83,7 +83,6 @@ namespace ShareCar.Logic.Identity_Logic
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
             if (user == null)
             {
-                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
                 await _userLogic.CreateUser(new UserDto
                 {
                     FirstName = userInfo.FirstName,
@@ -95,13 +94,16 @@ namespace ShareCar.Logic.Identity_Logic
                     FacebookEmail = userInfo.Email,
                     GoogleEmail = ""
                 });
+                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+
                 response.WaitingForCode = false;
                 return response;
             }
             if (!user.FacebookVerified)
             {
                 var unauthorizedUser = _userLogic.GetUnauthorizedUser(userInfo.Email);
-                _cognizantIdentity.SendVerificationCode(user.CognizantEmail, unauthorizedUser.VerificationCode); response.WaitingForCode = true;
+                await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, unauthorizedUser.VerificationCode);
+                response.WaitingForCode = true;
                 return response;
             }
 

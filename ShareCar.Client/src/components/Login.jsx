@@ -10,6 +10,8 @@ import logo from '../images/shareCarLogo.png';
 class Login extends Component<{}> {
   authService: AuthenticationService = new AuthenticationService();
 
+  state: any = {unauthorized : false, verificationCodeSent : false, facebookEmail: null, googleEmail: null}
+
   responseFacebook = (response: any) => {
     console.log(response);
 
@@ -26,7 +28,17 @@ var profileObj = {email: response.profileObj.email, givenName : response.profile
       profileObj,
       this.userAuthenticated
     );
-  }
+  };
+
+  loginCallback = (response: any) => {
+    console.log(response);
+
+    this.authService.loginWithFacebook(
+      response.accessToken,
+      this.userAuthenticated
+    );
+  };
+
   userAuthenticated = () => {
     history.push("/");
   };

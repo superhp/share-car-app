@@ -1,7 +1,9 @@
 ﻿using AutoMapper.Configuration;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using ShareCar.Db.Entities;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.User_Logic;
@@ -16,15 +18,14 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public class CognizantIdentity : ICognizantIdentity
     {
-        public IConfiguration Configuration { get; }
         private readonly IUserLogic _userlogic;
         private readonly SendGridClient _client;
+        private readonly SendGridSettings  _sgSettings;
 
-        public CognizantIdentity(IUserLogic userlogic, IConfiguration configuration)
+        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings)
         {
-            Configuration = configuration;
-            var apiKey = "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";
-            _client = new SendGridClient(apiKey);
+            _sgSettings = sgSettings.Value;
+            _client = new SendGridClient(_sgSettings.APIKey);
             _userlogic = userlogic;
         }
 
@@ -41,7 +42,7 @@ namespace ShareCar.Logic.Identity_Logic
          
             var msg = new SendGridMessage();
 
-            msg.SetFrom(new EmailAddress("no-reply@cognizantchallenge.lt", "Cognizant Challenge"));
+            msg.SetFrom(new EmailAddress("no-reply@cognizant.com", "Share car"));
 
             var recipients = new List<EmailAddress>
             {

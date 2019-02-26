@@ -26,9 +26,7 @@ namespace ShareCar.Db.Repositories.User_Repository
             Random random = new Random();
             user.VerificationCode = random.Next();
             var result = _databaseContext.UnauthorizedUsers.Add(user);
-
-            if (result.State != Microsoft.EntityFrameworkCore.EntityState.Added)
-                throw new ArgumentException("Failed to create unauthorized user.");
+            _databaseContext.SaveChanges();
         }
 
         public async Task CreateUser(User user)

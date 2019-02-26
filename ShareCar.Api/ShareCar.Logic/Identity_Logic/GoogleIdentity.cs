@@ -38,7 +38,6 @@ namespace ShareCar.Logic.Identity_Logic
             var response = new LoginResponseModel();
             if (user == null)
             {
-                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
                 await _userLogic.CreateUser(new UserDto
                 {
                     FirstName = userInfo.GivenName,
@@ -50,6 +49,8 @@ namespace ShareCar.Logic.Identity_Logic
                     FacebookEmail = userInfo.Email,
                     GoogleEmail = ""
                 });
+                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+
                 response.WaitingForCode = false;
                 return response;
             }
