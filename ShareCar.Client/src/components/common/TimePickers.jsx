@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 
+import "../../styles/newRideForm.css";
+
 const styles = theme => ({
   container: {
     display: "flex",
