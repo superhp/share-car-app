@@ -14,33 +14,28 @@ class RideCompletedNotification extends React.Component {
         return (
             <div>
                 <h1>Have you participated in these Rides ? </h1>
-
                 <table>
                     {
                         this.props.rides.map(ride =>
                             <tr key={ride.id}>
                                 <td>Driver {ride.driverFirstName} {ride.driverLastName}</td>
                                 <td>When {ride.rideDateTime} </td>
-
                                 <td>
                                     <button
                                         onClick={() => this.sendResponse(true, ride.rideId)}
                                     >
                                         Yes
-                  </button>
+                                    </button>
                                     <button
                                         onClick={() => this.sendResponse(false, ride.rideId)}
                                     >
                                         No
-                  </button>
+                                     </button>
                                 </td>
                             </tr>
-
-
                         )
                     }
                 </table>
-
             </div>
         );
     }

@@ -61,7 +61,6 @@ export class DriversRidesList extends React.Component {
                   </CardContent>
                   </Grid>
                   <Grid item xs={4}>
-
                         <Button
                           onClick={() => {
                             this.props.onRideClick(req.rideId);

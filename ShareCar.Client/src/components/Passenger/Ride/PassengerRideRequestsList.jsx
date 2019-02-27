@@ -20,7 +20,6 @@ state={
     render() {
         return (
             <div className="request-card-container"> 
-
                 <Card className="request-card">
                     {this.props.requests.map(req =>
                         <tr  key={req.id}>
@@ -46,8 +45,6 @@ state={
                         >
                           Show on map
                         </Button>
-                        
-
                             </CardContent>
                         </tr>
                     )}
