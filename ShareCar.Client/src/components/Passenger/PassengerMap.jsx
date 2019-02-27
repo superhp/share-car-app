@@ -286,6 +286,7 @@ export class PassengerMap extends React.Component {
     });
   }
 
+  //sitoj funkcijoj problema
   showRidesOfDriver(driver) {
     if (this.state.showRides) {
       if (driver.email === this.state.driverEmail) {
@@ -388,11 +389,11 @@ export class PassengerMap extends React.Component {
               showRidesOfDriver={driver => this.showRidesOfDriver(driver)}
             />
           ) : (
-              <div />
+              <div></div>
             )}
-          <div />
+          <div></div>
         </div>
-        <div id="map" />
+        <div id="map" ></div>
         <PassengerNavigationButton 
           onClick={() => this.selectRoute(-1)}
           text="View Previous Route"

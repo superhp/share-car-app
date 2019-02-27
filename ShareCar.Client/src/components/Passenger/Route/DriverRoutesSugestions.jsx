@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import RidesOfDriver from "../Ride/RidesOfDriver";
 
 import "./../../../styles/genericStyles.css";
+import "./../../../styles/driversRidesList.css";
 
 export const DriverRoutesSugestions = (props) => (
     <Grid container justify="center" item xs={10}>
@@ -42,7 +43,7 @@ export const DriverRoutesSugestions = (props) => (
                 <Button
                     color="primary"
                     variant="contained"
-                    style={{ "background-color": "#007bff" }}
+                    style={{ "backgroundColor": "#007bff" }}
                     onClick={() => props.showRidesOfDriver(driver)}
                 >
                     View Time

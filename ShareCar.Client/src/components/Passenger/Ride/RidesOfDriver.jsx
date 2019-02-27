@@ -7,6 +7,8 @@ import api from "../../../helpers/axiosHelper";
 import SnackBars from "../../common/Snackbars";
 
 import "../../../styles/riderequests.css";
+import "../../../styles/driversRidesList.css";
+import "../../../styles/genericStyles.css";
 
 let moment = require("moment");
 
@@ -43,36 +45,32 @@ export class RidesOfDriver extends React.Component {
   render() {
     return (
       <Grid container justify="center">
-        <tbody>
-          {this.props.rides.map(ride => (
-            <Grid item key={ride.id}>
-              {ride.driverEmail === this.props.driver ? (
-                <div>
-                  <Typography variant="body1">
-                    {" "}
-                    Date:{" "}
-                    {moment(ride.rideDateTime).format(
-                      "YYYY-MM-DD HH:MM:SS"
-                    )}{" "}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    style={{ "background-color": "#007bff" }}
-                    color="primary"
-                    onClick={() => {
-                      this.sendrequest(ride.rideId, ride.driverEmail);
-                    }}
-                  >
-                    {" "}
-                    Request
-                  </Button>
-                </div>
-              ) : (
-                <td />
-              )}
-            </Grid>
-          ))}
-        </tbody>
+            {this.props.rides.map(ride => (
+              <Grid item key={ride.id}>
+                {ride.driverEmail === this.props.driver.email ? (
+                  <div>
+                    <Typography variant="body1">
+                      {" "}
+                      Date:{" "}
+                      {moment(ride.rideDateTime).format("YYYY-MM-DD HH:MM:SS")}{" "}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      style={{ "background-color": "#007bff" }}
+                      color="primary"
+                      onClick={() => {
+                        this.sendrequest(ride.rideId, ride.driverEmail);
+                      }}
+                    >
+                      {" "}
+                      Request
+                    </Button>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </Grid>
+            ))}
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}
