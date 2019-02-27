@@ -21,8 +21,8 @@ state={
         return (
             <div className="request-card-container"> 
                 <Card className="request-card">
-                    {this.props.requests.map(req =>
-                        <tr  key={req.id}>
+                    {this.props.requests.map((req, i) =>
+                        <tr key={i}>
                             <CardContent >
                                 <Typography variant="headline">
                                     {req.seenByPassenger ? "" : "NEW  "}

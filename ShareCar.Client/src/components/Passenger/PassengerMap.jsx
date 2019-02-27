@@ -1,5 +1,4 @@
 import * as React from "react";
-import axios from "axios";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";

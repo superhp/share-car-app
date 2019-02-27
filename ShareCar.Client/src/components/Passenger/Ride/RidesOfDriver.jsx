@@ -45,8 +45,8 @@ export class RidesOfDriver extends React.Component {
   render() {
     return (
       <Grid container justify="center">
-            {this.props.rides.map(ride => (
-              <Grid item key={ride.id}>
+            {this.props.rides.map((ride,i) => (
+              <Grid item key={i}>
                 {ride.driverEmail === this.props.driver.email ? (
                   <div>
                     <Typography variant="body1">
@@ -56,7 +56,7 @@ export class RidesOfDriver extends React.Component {
                     </Typography>
                     <Button
                       variant="contained"
-                      style={{ "background-color": "#007bff" }}
+                      style={{ "backgroundColor": "#007bff" }}
                       color="primary"
                       onClick={() => {
                         this.sendrequest(ride.rideId, ride.driverEmail);

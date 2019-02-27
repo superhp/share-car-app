@@ -13,12 +13,11 @@ import "./../../../styles/driversRidesList.css";
 export const DriverRoutesSugestions = (props) => (
     <Grid container justify="center" item xs={10}>
         <Card>
-            {props.driversOfRoute.map(driver => (
+            {props.driversOfRoute.map((driver, i) => (
             <Grid
                 className="driver-button-container"
-                justify="center"
                 item xs={12}
-                key={driver.id}
+                key={i}
             >
                 <Grid 
                     container 
