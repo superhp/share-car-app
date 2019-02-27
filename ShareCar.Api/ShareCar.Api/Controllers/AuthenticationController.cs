@@ -28,12 +28,16 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult VerificationCode([FromBody] VerificationCodeSubmitData data)
+        public async Task<IActionResult> VerificationCode([FromBody] VerificationCodeSubmitData data)
         {
             try
             {
-                if (_cognizantIdentity.SubmitVerificationCode(data))
+
+                var jwt = await _cognizantIdentity.SubmitVerificationCodeAsync(data);
+
+                if (jwt != null)
                 {
+                    AddJwtToCookie(jwt);
                     return Ok();
                 }
                 return Unauthorized();
@@ -47,7 +51,9 @@ namespace ShareCar.Api.Controllers
         [HttpPost]
         public IActionResult Cognizant([FromBody] CognizantData data)
         {
-               var result = _userLogic.SetUsersCognizantEmail(data.CogniznatEmail, data.LoginEmail);
+            
+               var result = _userLogic.SetUsersCognizantEmail(data.CognizantEmail, data.LoginEmail);
+            _cognizantIdentity.SendVerificationCode(data.CognizantEmail, data.LoginEmail);
             if (result)
             {
                 return Ok();

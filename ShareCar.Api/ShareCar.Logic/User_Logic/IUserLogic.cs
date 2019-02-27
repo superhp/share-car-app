@@ -17,6 +17,6 @@ namespace ShareCar.Logic.User_Logic
         Task CreateUser(UserDto userDto);
         void CreateUnauthorizedUser(UnauthorizedUserDto user);
         bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail);
-      
+        bool UserVerified(bool faceBookVerified, string loginEmail);
     }
 }

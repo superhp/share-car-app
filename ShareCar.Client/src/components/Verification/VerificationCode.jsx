@@ -1,24 +1,26 @@
 // @flow
 import React, { Component } from "react";
 import api from "../../helpers/axiosHelper";
+import history from "../../helpers/history";
 
 class VerificationCode extends Component {
 
 
 submitCode() {
-  let code = document.querySelector("#verification-code");
+  let code = document.getElementById("verification-code").value;
   console.log(code);
-api.post("Cognizant/VerificationCode", 
+api.post("authentication/VerificationCode", 
 {VerificationCode : code, 
-  FacebookEmail: this.props.FacebookEmail,
-   GoogleEmail: this.props.GoogleEmail
+  FacebookEmail: this.props.facebookEmail,
+   GoogleEmail: this.props.googleEmail
   }).then((response) => {
+    console.log(response.status)
 if(response.status === 200){
-  // success message
-}else if(response.status === 401){
-  // unauthorized message
+  console.log("IIIIIII");
+  history.push("/");
 }
-  }).catch(() => {
+  }).catch((error) => {
+    console.log(error);
     // error message
   })
 }
@@ -28,7 +30,7 @@ if(response.status === 200){
       <div>
              <h1>Submit your verification code</h1>
      <input id="verification-code" placeholder="Your verification code..."></input>
-     <button onC> Submit</button>
+     <button onClick={this.submitCode.bind(this)}> Submit code</button>
      </div>
     );
   }

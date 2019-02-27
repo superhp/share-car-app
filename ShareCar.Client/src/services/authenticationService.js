@@ -27,13 +27,14 @@ class AuthenticationService {
             success();
         })
         .catch((error) => {
-        if(error.response.status === 401){
-            unauthorized();
-        } else{
-            console.error(error);
-        }
+            if(error.response.status === 401){
+                unauthorized();
+            } else{
+                console.error(error);
+            }
         });
     }
+
 
     logout = (callback: () => void) => {
         api.post('authentication/logout')

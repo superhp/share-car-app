@@ -79,6 +79,7 @@ namespace ShareCar.Logic.Identity_Logic
         {
             var userInfo = await GetUserFromFacebook(accessToken);
             var response = new LoginResponseModel();
+            response.WaitingForCode = false;
             // ready to create the local user account (if necessary) and jwt
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
             if (user == null)
@@ -101,9 +102,12 @@ namespace ShareCar.Logic.Identity_Logic
             }
             if (!user.FacebookVerified)
             {
-                var unauthorizedUser = _userLogic.GetUnauthorizedUser(userInfo.Email);
-                await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, unauthorizedUser.VerificationCode);
-                response.WaitingForCode = true;
+                if (user.CognizantEmail != null)
+                {
+                    await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, user.Email);
+                    response.WaitingForCode = true;
+                }
+
                 return response;
             }
 

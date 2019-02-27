@@ -1,4 +1,5 @@
 ﻿using AutoMapper.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -21,28 +22,41 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IUserLogic _userlogic;
         private readonly SendGridClient _client;
         private readonly SendGridSettings  _sgSettings;
+        private readonly UserManager<User> _userManager;
+        private readonly IJwtFactory _jwtFactory;
 
-        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings)
+        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, UserManager<User> userManager, IJwtFactory jwtFactory)
         {
             _sgSettings = sgSettings.Value;
             _client = new SendGridClient(_sgSettings.APIKey);
             _userlogic = userlogic;
+            _userManager = userManager;
+            _jwtFactory = jwtFactory;
         }
 
-        public bool SubmitVerificationCode(VerificationCodeSubmitData data)
+        public async Task<string> SubmitVerificationCodeAsync(VerificationCodeSubmitData data)
         {
-            UnauthorizedUserDto user = _userlogic.GetUnauthorizedUser(data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail);
+            string loginEmail = data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail;
+            UnauthorizedUserDto user = _userlogic.GetUnauthorizedUser(loginEmail);
+            bool verified = _userlogic.UserVerified(data.FacebookEmail != null, loginEmail);
+            string jwt = null;
+            if (verified)
+            {
+                var localUser = await _userManager.FindByNameAsync(loginEmail);
+                var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
+                jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
+            }
 
-            return data.VerificationCode == user.VerificationCode;
+            return jwt;
         }
 
 
-        public async Task SendVerificationCode(string email, int code)
+        public async Task SendVerificationCode(string cognizantEmail, string loginEmail)
         {
-         
+            int code = _userlogic.GetUnauthorizedUser(loginEmail).VerificationCode;
             var msg = new SendGridMessage();
 
-            msg.SetFrom(new EmailAddress("no-reply@cognizant.com", "Share car"));
+            msg.SetFrom(new EmailAddress("edgar.reis447@gmail.com", "Share car"));
 
             var recipients = new List<EmailAddress>
             {

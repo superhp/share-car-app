@@ -20,8 +20,7 @@ class Login extends Component<{}> {
   responseFacebook = (response: any) => {
     this.authService.loginWithFacebook(
       response.accessToken,
-      this.userAuthenticated.bind(this),
-      this.unauthorizedUser.bind(this)
+      this.userAuthenticated,
     );
   };
 
@@ -45,6 +44,7 @@ this.setState({submitCode: true});
 };
 
   userAuthenticated = () => {
+    console.log("11111");
     history.push("/");
   };
 
@@ -52,7 +52,7 @@ this.setState({submitCode: true});
     return (
       <div className="login-container">
       <img className="login-image" src={logo} />
-        <h1>ShareCar Login</h1>
+        <h1>ShareCar fffff Login</h1>
         <FacebookLogin
           appId="599580833757975"
           fields="name,email,picture"

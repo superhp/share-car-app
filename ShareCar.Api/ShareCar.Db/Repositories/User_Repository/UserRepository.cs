@@ -85,8 +85,9 @@ namespace ShareCar.Db.Repositories.User_Repository
         public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
         {
             try {
-                var user = _databaseContext.UnauthorizedUsers.Single(x => x.Email == loginEmail);
-                
+                var user = _databaseContext.User.Single(x => x.Email == loginEmail);
+                user.CognizantEmail = cognizantEmail;
+                _databaseContext.SaveChanges();
                     return true;
         }
             catch (Exception ex)
@@ -95,5 +96,26 @@ namespace ShareCar.Db.Repositories.User_Repository
             }
             }
 
+        public bool UserVerified(bool faceBookVerified, string loginEmail)
+        {
+            try
+            {
+                var user = _databaseContext.User.Single(x => x.Email == loginEmail);
+                if (faceBookVerified)
+                {
+                    user.FacebookVerified = true;
+                }
+                else
+                {
+                    user.GoogleVerified = true;
+                }
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

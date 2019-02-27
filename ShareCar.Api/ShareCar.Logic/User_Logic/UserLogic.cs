@@ -119,5 +119,10 @@ namespace ShareCar.Logic.User_Logic
         {
             return _userRepository.SetUsersCognizantEmail(cognizantEmail, loginEmail);
         }
+
+        public bool UserVerified(bool faceBookVerified, string loginEmail)
+        {
+            return _userRepository.UserVerified(faceBookVerified, loginEmail);
+        }
     }
 }
