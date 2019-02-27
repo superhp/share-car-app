@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Db.Entities;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
@@ -116,6 +117,67 @@ namespace ShareCar.Db.Repositories.User_Repository
             {
                 return false;
             }
+        }
+
+       // public User GetUsersByCognizantEmail(string cognizantEmail)
+      //  {
+      //      return _databaseContext.User.FirstOrDefault(x => x.CognizantEmail == cognizantEmail);
+      //  }
+
+        public bool UpdateUser(User user)
+        {
+            try {
+                var toUpdate = _databaseContext.User.Single(x => x.Email == user.Email);
+
+                toUpdate.FacebookEmail = user.FacebookEmail;
+                toUpdate.GoogleEmail = user.GoogleEmail;
+                toUpdate.FacebookVerified = user.FacebookVerified;
+                toUpdate.GoogleVerified = user.GoogleVerified;
+                toUpdate.CognizantEmail = user.CognizantEmail;
+                _databaseContext.SaveChanges();
+
+                    return true;
+        }catch(Exception ex)
+            {
+                return false;
+            }
+            }
+
+      //  public User GetUsersByLoginEmail(string loginEmail)
+     //   {
+     //       return _databaseContext.User.Single(x => x.Email == loginEmail);
+    //    }
+
+        public void DeleteUser(string email)
+        {
+            var user = _databaseContext.User.Single(x => x.Email == email);
+            var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
+            _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
+            _databaseContext.SaveChanges();
+
+            _databaseContext.User.Remove(user);
+            _databaseContext.SaveChanges();
+        }
+
+        public User GetUserByEmail(EmailType type, string email)
+        {
+            if (type == EmailType.COGNIZANT)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.CognizantEmail == email);
+            }
+            if (type == EmailType.FACEBOOK)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.FacebookEmail == email);
+            }
+            if (type == EmailType.GOOGLE)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.GoogleEmail == email);
+            }
+            if (type == EmailType.LOGIN)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.Email == email);
+            }
+            return null;
         }
     }
 }

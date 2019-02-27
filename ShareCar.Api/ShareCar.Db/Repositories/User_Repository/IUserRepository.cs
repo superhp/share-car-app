@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Db.Entities;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
@@ -16,7 +17,12 @@ namespace ShareCar.Db.Repositories.User_Repository
         IEnumerable<User> GetAllUsers();
         UnauthorizedUser GetUnauthorizedUser(string email);
         void CreateUnauthorizedUser(UnauthorizedUser user);
-        bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail);
-        bool UserVerified(bool faceBookVerified, string loginEmail);
+        bool UpdateUser(User user);
+        //    bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail);
+        //    bool UserVerified(bool faceBookVerified, string loginEmail);
+      //  User GetUsersByCognizantEmail(string cognizantEmail);
+      //  User GetUsersByLoginEmail(string loginEmail);
+        User GetUserByEmail(EmailType type, string email);
+        void DeleteUser(string email);
     }
 }

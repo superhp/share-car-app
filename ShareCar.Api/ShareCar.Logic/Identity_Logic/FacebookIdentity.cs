@@ -75,13 +75,11 @@ namespace ShareCar.Logic.Identity_Logic
             return jwt;
         }
 
-        public async Task<LoginResponseModel> Login(AccessTokenDto accessToken)
+        public async Task<string> Login(AccessTokenDto accessToken)
         {
             var userInfo = await GetUserFromFacebook(accessToken);
-            var response = new LoginResponseModel();
-            response.WaitingForCode = false;
             // ready to create the local user account (if necessary) and jwt
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+            var user = _userLogic.GetUserByEmail(Dto.EmailType.FACEBOOK, userInfo.Email);
             if (user == null)
             {
                 await _userLogic.CreateUser(new UserDto
@@ -97,31 +95,22 @@ namespace ShareCar.Logic.Identity_Logic
                 });
                 _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
 
-                response.WaitingForCode = false;
-                return response;
+                return null;
             }
             if (!user.FacebookVerified)
             {
-                if (user.CognizantEmail != null)
-                {
-                    await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, user.Email);
-                    response.WaitingForCode = true;
-                }
-
-                return response;
+                return null;
             }
 
             // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+            var localUser = await _userManager.FindByNameAsync(user.Email);
 
             if (localUser == null)
             {
                 throw new ArgumentException("Local user account could not be found.");
             }
 
-            var jwt = await GenerateJwt(localUser);
-            response.JwtToken = jwt;
-            return response;
+            return await GenerateJwt(localUser);
         }
     }
 }

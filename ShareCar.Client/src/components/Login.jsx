@@ -74,7 +74,7 @@ this.setState({googleEmail: response.profileObj.email, facebookEmail : null});
     this.state.submitEmail ?(
 this.state.submitCode 
 ?<VerificationCode facebookEmail = {this.state.facebookEmail} googleEmail = {this.state.googleEmail}/>
-:<CognizantEmail loginEmail = {this.state.facebookEmail === null ? this.state.googleEmail : this.state.facebookEmail  } emailSubmited = {this.displayVerificationCodeComponent}/>  
+:<CognizantEmail facebookEmail = {this.state.facebookEmail} googleEmail ={this.state.googleEmail} emailSubmited = {this.displayVerificationCodeComponent}/>  
     )
 :
 <div></div>

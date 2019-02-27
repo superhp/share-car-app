@@ -1,4 +1,5 @@
-﻿using ShareCar.Dto.Identity;
+﻿using ShareCar.Dto;
+using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -16,7 +17,10 @@ namespace ShareCar.Logic.User_Logic
         UnauthorizedUserDto GetUnauthorizedUser(string email);
         Task CreateUser(UserDto userDto);
         void CreateUnauthorizedUser(UnauthorizedUserDto user);
-        bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail);
-        bool UserVerified(bool faceBookVerified, string loginEmail);
+        bool SetUsersCognizantEmail(CognizantData data);
+        //temporaryLoginEmail => email of acc which has FK to UnauthorizedUser
+        // originalLoginEMail => email of acc which will be used in application
+        bool VerifyUser(bool faceBookVerified, string temporaryLoginEmail); 
+        UserDto GetUserByEmail(EmailType type, string email);
     }
 }

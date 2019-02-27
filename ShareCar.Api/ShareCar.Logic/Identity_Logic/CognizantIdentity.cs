@@ -10,6 +10,7 @@ using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.User_Logic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -36,20 +37,43 @@ namespace ShareCar.Logic.Identity_Logic
 
         public async Task<string> SubmitVerificationCodeAsync(VerificationCodeSubmitData data)
         {
-            string loginEmail = data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail;
+            var isFacebookcEmail = data.FacebookEmail != null;
+            string loginEmail = isFacebookcEmail ? data.FacebookEmail : data.GoogleEmail;
             UnauthorizedUserDto user = _userlogic.GetUnauthorizedUser(loginEmail);
-            bool verified = _userlogic.UserVerified(data.FacebookEmail != null, loginEmail);
-            string jwt = null;
-            if (verified)
-            {
-                var localUser = await _userManager.FindByNameAsync(loginEmail);
-                var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
-                jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
-            }
 
+            if (user.VerificationCode != data.VerificationCode)
+                return null;
+            string originalLoginEmail = GetOriginalLoginEmail(loginEmail);
+
+            _userlogic.VerifyUser(data.FacebookEmail != null, originalLoginEmail);
+  
+                var localUser = await _userManager.FindByNameAsync(originalLoginEmail);
+                var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
+                var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
+            
             return jwt;
         }
 
+        // When user logs in with second email for the first time, he temporarely has two accounts, although only one should be used.
+        // The one which will be left has all types of emails set.
+        private string GetOriginalLoginEmail(string loginEmail)
+        {
+            var facebookAcc = _userlogic.GetUserByEmail(EmailType.FACEBOOK, loginEmail);
+            if (facebookAcc != null && facebookAcc.CognizantEmail != null)
+                {
+                    return facebookAcc.Email;
+                }
+
+                var googleAcc = _userlogic.GetUserByEmail(EmailType.GOOGLE, loginEmail);                
+
+                if (googleAcc != null && googleAcc.CognizantEmail != null)
+                {
+                    return googleAcc.Email;
+                }
+            
+            throw new ArgumentException("User not found.");
+
+        }
 
         public async Task SendVerificationCode(string cognizantEmail, string loginEmail)
         {

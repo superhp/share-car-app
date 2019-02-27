@@ -10,6 +10,7 @@ using AutoMapper;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.ObjectMapping;
@@ -115,14 +116,73 @@ namespace ShareCar.Logic.User_Logic
             _userRepository.CreateUnauthorizedUser(_mapper.Map<UnauthorizedUserDto, UnauthorizedUser>(userDto));
         }
 
-        public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
+        // data parameter has either Facebbok email, either Google, but never both.
+        public bool SetUsersCognizantEmail(CognizantData data)
         {
-            return _userRepository.SetUsersCognizantEmail(cognizantEmail, loginEmail);
+            var user = _userRepository.GetUserByEmail(EmailType.COGNIZANT, data.CognizantEmail);
+                bool facebookEmail = data.FacebookEmail != null;
+                var loginEmail = facebookEmail ? data.FacebookEmail : data.GoogleEmail;
+
+            if (user == null)
+            {
+                user = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail);
+
+                if (facebookEmail)
+                {
+                    user.FacebookEmail = loginEmail;
+                }
+                else
+                {
+                    user.GoogleEmail = loginEmail;
+                }
+                user.CognizantEmail = data.CognizantEmail;
+            }
+            else 
+            {
+
+                var tempUser = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail); // acc which is created when user logs in with second
+                // email for the first time. After verification, it is unused.
+                if (tempUser.CognizantEmail == null)
+                {
+                    tempUser.GoogleEmail = null;
+                    tempUser.FacebookEmail = null;
+                    _userRepository.UpdateUser(tempUser);
+                }
+
+                if (!user.FacebookVerified && data.FacebookEmail != null)
+                {
+                    user.FacebookEmail = data.FacebookEmail;
+
+                }
+                else if (!user.GoogleVerified && data.GoogleEmail != null)
+                {
+                    user.GoogleEmail = data.GoogleEmail;
+
+                }
+            }
+            return _userRepository.UpdateUser(user);
+
         }
 
-        public bool UserVerified(bool faceBookVerified, string loginEmail)
+        public bool VerifyUser(bool faceBookVerified, string loginEmail)
         {
-            return _userRepository.UserVerified(faceBookVerified, loginEmail);
+            var user = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail);
+
+            if (faceBookVerified)
+            {
+                user.FacebookVerified = true;
+            }
+            else
+            {
+                user.GoogleVerified = true;
+            }
+            
+            return _userRepository.UpdateUser(user);
+        }
+
+        public UserDto GetUserByEmail(EmailType type, string email)
+        {
+            return _mapper.Map<User, UserDto>(_userRepository.GetUserByEmail(type, email));
         }
     }
 }

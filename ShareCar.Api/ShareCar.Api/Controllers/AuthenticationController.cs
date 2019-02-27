@@ -52,8 +52,9 @@ namespace ShareCar.Api.Controllers
         public IActionResult Cognizant([FromBody] CognizantData data)
         {
             
-               var result = _userLogic.SetUsersCognizantEmail(data.CognizantEmail, data.LoginEmail);
-            _cognizantIdentity.SendVerificationCode(data.CognizantEmail, data.LoginEmail);
+            var result = _userLogic.SetUsersCognizantEmail(data);
+            var loginEmail = data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail;
+            _cognizantIdentity.SendVerificationCode(data.CognizantEmail, loginEmail);
             if (result)
             {
                 return Ok();
@@ -66,15 +67,14 @@ namespace ShareCar.Api.Controllers
         {
             try
             {
-                var response = await _facebookIdentity.Login(accessToken);
-                if(response.JwtToken != null)
+                var jwt = await _facebookIdentity.Login(accessToken);
+                if(jwt != null)
                 {
-                    AddJwtToCookie(response.JwtToken);
+                    AddJwtToCookie(jwt);
                     return Ok();
                 }
                 else
                 {
-                    //return Ok();
                    return Unauthorized();
                 }
 
@@ -91,10 +91,10 @@ namespace ShareCar.Api.Controllers
         {
             try
             {
-                var response = await _googleIdentity.Login(userData);
-                if (response.JwtToken != null)
+                var jwt = await _googleIdentity.Login(userData);
+                if (jwt != null)
                 {
-                    AddJwtToCookie(response.JwtToken);
+                    AddJwtToCookie(jwt);
                     return Ok();
                 }
                 else

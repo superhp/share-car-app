@@ -32,7 +32,10 @@ namespace ShareCar.Db
                 .Property(x => x.isActive)
                 .HasDefaultValue(true);
 
-        
+
+
+
+
 
 
         }

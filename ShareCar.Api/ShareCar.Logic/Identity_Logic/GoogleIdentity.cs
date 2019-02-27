@@ -31,12 +31,10 @@ namespace ShareCar.Logic.Identity_Logic
             _cognizantIdentity = cognizantIdentity;
         }
         
-        public async Task<LoginResponseModel> Login(GoogleUserDataDto userInfo)
+        public async Task<string> Login(GoogleUserDataDto userInfo)
         {
             // ready to create the local user account (if necessary) and jwt
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
-            var response = new LoginResponseModel();
-            response.WaitingForCode = false;
+            var user =  _userLogic.GetUserByEmail(Dto.EmailType.GOOGLE, userInfo.Email);
             if (user == null)
             {
                 await _userLogic.CreateUser(new UserDto
@@ -47,36 +45,28 @@ namespace ShareCar.Logic.Identity_Logic
                     PictureUrl = userInfo.ImageUrl,
                     FacebookVerified = false,
                     GoogleVerified = false,
-                    FacebookEmail = userInfo.Email,
-                    GoogleEmail = ""
+                    GoogleEmail = userInfo.Email,
+                    FacebookEmail = ""
                 });
                 _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
 
-                response.WaitingForCode = false;
-                return response;
+                return null;
             }
 
             if (!user.GoogleVerified)
             {
-                if (user.CognizantEmail != null)
-                {
-                    await _cognizantIdentity.SendVerificationCode(user.CognizantEmail, user.Email);
-                    response.WaitingForCode = true;
-                }
-                return response;
+                return null;
             }
 
             // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+            var localUser = await _userManager.FindByNameAsync(user.Email);
 
             if (localUser == null)
             {
                 throw new ArgumentException("Local user account could not be found.");
             }
 
-            var jwt = await GenerateJwt(localUser);
-            response.JwtToken = jwt;
-            return response;
+            return await GenerateJwt(localUser);
         }
 
         private async Task<string> GenerateJwt(User localUser)

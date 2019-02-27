@@ -9,6 +9,6 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public interface IGoogleIdentity
     {
-        Task<LoginResponseModel> Login(GoogleUserDataDto googleData);
+        Task<string> Login(GoogleUserDataDto googleData);
     }
 }
