@@ -12,7 +12,7 @@ export const OfficeSelection = (props) => (
         alignItems="flex-start"
         justify="center"
         container
-        style={{ zIndex: 999999 }}
+        style={{ zIndex: 999 }}
     >
         <Grid item xs={10}>
             <Card className="paper-background">
@@ -20,14 +20,14 @@ export const OfficeSelection = (props) => (
                 <OfficeSelectionRadiobutton 
                     office="Savanoriu pr. 16"
                     checked={props.isChecked}
-                    onRadioButtonClick={() => console.log("paspaude 1")}
-                    onChange={() => console.log("pasikeite 1")}
+                    onRadioButtonClick={() => props.onRadioButtonClick()}
+                    onChange={() => props.onSelectionChange()}
                 />
                 <OfficeSelectionRadiobutton 
                     office="Savanoriu pr. 28"
                     checked={!props.isChecked}
-                    onRadioButtonClick={() => console.log("paspaude 2")}
-                    onChange={() => console.log("pasikeite 2")}
+                    onRadioButtonClick={() => props.onRadioButtonClick()}
+                    onChange={() => props.onSelectionChange()}
                 />
                 </Grid>
             </Card>

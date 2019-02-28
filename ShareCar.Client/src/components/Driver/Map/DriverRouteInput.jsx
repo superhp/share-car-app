@@ -20,20 +20,28 @@ export const DriverRouteInput = (props) => (
                 direction="from"
             />
             <Button 
-                style={{ zIndex: 999999 }} 
+                style={{ zIndex: 999 }} 
                 size="large" 
                 color="primary"
                 onClick={() => props.handleDirection()}
             >
                 <ImportExport fontSize="large"/>
             </Button>
-            <OfficeSelection isChecked={props.isChecked}/>
+            <OfficeSelection 
+                isChecked={props.isChecked}
+                onRadioButtonClick={() => props.onRadioButtonClick()}
+                onSelectionChange={() => props.onSelectionChange()}
+            />
         </div>)
         :
         (<div className="map-input-selection">
-            <OfficeSelection isChecked={props.isChecked}/>
+            <OfficeSelection 
+                isChecked={props.isChecked}
+                onRadioButtonClick={() => props.onRadioButtonClick()}
+                onSelectionChange={() => props.onSelectionChange()}
+            />
             <Button
-                style={{ zIndex: 999999 }}
+                style={{ zIndex: 999 }}
                 size="large"
                 color="primary"
                 onClick={() => props.handleDirection()}

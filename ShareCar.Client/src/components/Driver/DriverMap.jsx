@@ -153,22 +153,24 @@ export class DriverMap extends React.Component {
 
   driverAddressInputSuggestion() {
     let places = require("places.js");
-    let placesAutocompleteFrom = places({
-      container: document.querySelector("#driver-address-input-from")
-    });
-    let placesAutocompleteTo = places({
-      container: document.querySelector("#driver-address-input-to")
-    });
-
-    placesAutocompleteFrom.on("change", e => {
-      this.setState({ startPointInput: true });
-      this.handleRouteCreation(e, "from");
-    });
-
-    placesAutocompleteTo.on("change", e => {
-      this.setState({ startPointInput: false });
-      this.handleRouteCreation(e, "to");
-    });
+    if(this.state.directionFrom){
+      let placesAutocompleteFrom = places({
+        container: document.querySelector("#driver-address-input-from")
+      });
+      placesAutocompleteFrom.on("change", e => {
+        this.setState({ startPointInput: true });
+        this.handleRouteCreation(e, "from");
+      });
+    }
+    else {
+      let placesAutocompleteTo = places({
+        container: document.querySelector("#driver-address-input-to")
+      });
+      placesAutocompleteTo.on("change", e => {
+        this.setState({ startPointInput: false });
+        this.handleRouteCreation(e, "to");
+      });
+    }
   }
 
   handleRouteCreation(e, addressType) {
@@ -340,7 +342,7 @@ export class DriverMap extends React.Component {
 
     this.setState({ map, vectorSource }, function() {
       centerMap(25.279652, 54.687157, this.state.map);
-      //this.driverAddressInputSuggestion();
+      this.driverAddressInputSuggestion();
     });
 
     map.on("click", evt => {
@@ -361,7 +363,9 @@ export class DriverMap extends React.Component {
               handleOfficeSelection={(e, indexas, button) => this.handleOfficeSelection(e, indexas, button)}
               isChecked={this.state.isChecked}
               direction={this.state.directionFrom}
-              handleDirection={() => this.setState({ directionFrom: !this.state.directionFrom})}
+              handleDirection={() => this.setState({ directionFrom: !this.state.directionFrom })}
+              onRadioButtonClick={() => this.setState({ isChecked: !this.state.isChecked })}
+              onSelectionChange={() => console.log("soon to be implementation")}
             />
         </div>
         <div id="map" />
