@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
 
-import "./../../styles/genericStyles.css";
+import "../../../styles/genericStyles.css";
 
 export const OfficeSelectionRadiobutton = (props) => (
     <Grid 
