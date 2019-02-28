@@ -43,6 +43,8 @@
     "flow": "flow"
   },
   "devDependencies": {
+    "babel-eslint": "^8.1.1",
+    "eslint": "^5.4.0",
     "flow-bin": "^0.75.0",
     "flow-typed": "^2.5.1",
     "history": "^4.7.2"

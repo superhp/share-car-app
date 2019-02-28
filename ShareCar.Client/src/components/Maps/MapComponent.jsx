@@ -84,14 +84,6 @@ export default class MapComponent extends React.Component<{}> {
 
   }
 
-<<<<<<< HEAD
-  CenterMap(long, lat, map) {
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(19);
-  }
-
-=======
->>>>>>> master
   render() {
     return (
       <div>

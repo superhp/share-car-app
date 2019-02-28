@@ -136,8 +136,6 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("City");
 
-                    b.Property<string>("Country");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longtitude");
@@ -223,7 +221,7 @@ namespace ShareCar.Db.Migrations
 
                     b.HasIndex("RideId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("RideRequests");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Route", b =>

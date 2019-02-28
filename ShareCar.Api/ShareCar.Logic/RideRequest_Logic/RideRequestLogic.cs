@@ -134,7 +134,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             int count = 0;
             foreach (var request in entityRequests)
             {
-                dtoRequests.Add(_mapper.Map<RideRequest,RideRequestDto>(request));
+                dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
 
              
                     if (isDriver)

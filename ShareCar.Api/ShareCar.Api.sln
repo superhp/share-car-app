@@ -5,13 +5,11 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareCar.Api", "ShareCar.Api\ShareCar.Api.csproj", "{CBF72A49-D33E-4567-8DCF-924BEC0F6E7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareCar.Dto", "ShareCar.Dto\ShareCar.Dto.csproj", "{8176DC1C-B548-42DA-88BB-ADE12F0CAF51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareCar.Dto", "ShareCar.Dto\ShareCar.Dto.csproj", "{8176DC1C-B548-42DA-88BB-ADE12F0CAF51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareCar.Db", "ShareCar.Db\ShareCar.Db.csproj", "{873D0235-E5E7-45E4-B2E6-223D41FF0F71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareCar.Db", "ShareCar.Db\ShareCar.Db.csproj", "{873D0235-E5E7-45E4-B2E6-223D41FF0F71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareCar.Logic", "ShareCar.Logic\ShareCar.Logic.csproj", "{D272F19C-D565-44B6-8CFA-5C09B149735C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareCar.Tests", "ShareCar.Tests\ShareCar.Tests.csproj", "{6EFC2D19-2405-4FAB-AE7B-27C83975CF48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareCar.Logic", "ShareCar.Logic\ShareCar.Logic.csproj", "{D272F19C-D565-44B6-8CFA-5C09B149735C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{D272F19C-D565-44B6-8CFA-5C09B149735C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D272F19C-D565-44B6-8CFA-5C09B149735C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D272F19C-D565-44B6-8CFA-5C09B149735C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EFC2D19-2405-4FAB-AE7B-27C83975CF48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EFC2D19-2405-4FAB-AE7B-27C83975CF48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EFC2D19-2405-4FAB-AE7B-27C83975CF48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EFC2D19-2405-4FAB-AE7B-27C83975CF48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
