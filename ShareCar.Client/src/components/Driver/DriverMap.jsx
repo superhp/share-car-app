@@ -11,8 +11,6 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import { fromLonLat } from "ol/proj";
 import Button from "@material-ui/core/Button";
-import ImportExport from "@material-ui/icons/ImportExport";
-import IconButton from "@material-ui/core/IconButton";
 
 import { OfficeAddresses } from "../../utils/AddressData";
 import addressParser from "./../../helpers/addressParser";
@@ -20,9 +18,9 @@ import RidesScheduler from "./Ride/RidesScheduler";
 import map from "./../Maps/Map";
 import { getNearest, coordinatesToLocation, centerMap } from "./../../utils/mapUtils";
 import { routeStyles } from "./../../utils/mapStyles";
-import { DriverInput } from "./DriverInput";
 
 import "./../../styles/testmap.css";
+import { DriverRouteInput } from "./Map/DriverRouteInput";
 
 export class DriverMap extends React.Component {
   state = {
@@ -31,6 +29,7 @@ export class DriverMap extends React.Component {
       firstPoint: [],
       lastPoint: []
     },
+    isChecked: false,
     isContinueClicked: false,
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
@@ -357,33 +356,10 @@ export class DriverMap extends React.Component {
     return (
       <div>
         <div className="displayRoutes">
-          <div>
-            <div className="map-input-selection">
-              <DriverInput 
-                inputId="driver-address-input-from"
-                placeholder="Select From Location..."
-                handleOfficeSelection={(e, indexas, button) =>
-                  this.handleOfficeSelection(e, indexas, button)
-                }
-                direction="from"
-              />
-              {/* <DriverInput 
-                inputId="driver-address-input-to"
-                placeholder="Select To Location..."
-                handleOfficeSelection={(e, indexas, button) =>
-                  this.handleOfficeSelection(e, indexas, button)
-                }
-                direction="to"
-              /> */}
-              {/* <IconButton color="primary" variant="contained" style={{ zIndex: 999999 }}>
-                <Icon class="material-icons">star</Icon>
-              </IconButton> */}
-              <Button color="secondary" style={{ zIndex: 999999 }} size="large">
-                <ImportExport fontSize="large"/>
-              </Button>
-              
-            </div>
-          </div>
+            <DriverRouteInput 
+              handleOfficeSelection={(e, indexas, button) => this.handleOfficeSelection(e, indexas, button)}
+              isChecked={this.state.isChecked}
+            />
         </div>
         <div id="map" />
         {this.state.isContinueClicked ? (
@@ -395,7 +371,6 @@ export class DriverMap extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
-          
             this.setState({ isContinueClicked: !this.state.isContinueClicked });
           }}
         >
