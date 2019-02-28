@@ -25,7 +25,6 @@ class Login extends Component<{}> {
     );
   };
   responseGoogle = (response: any) => {
-
 var profileObj = {email: response.profileObj.email, givenName : response.profileObj.givenName, familyName: response.profileObj.familyName, imageUrl : response.profileObj.imageUrl}
 this.setState({googleEmail: response.profileObj.email, facebookEmail : null});
 
@@ -36,29 +35,27 @@ this.setState({googleEmail: response.profileObj.email, facebookEmail : null});
   };
 
   loginCallback = (response: any) => {
-    console.log(response);
-
     this.authService.loginWithFacebook(
       response.accessToken,
       this.userAuthenticated
     );
   };
   displayVerificationCodeComponent = () => {
-    console.log("YYYYYYY")
     this.setState({submitCode: true});
-    console.log(this.state)
     };
+
   userAuthenticated = () => {
     history.push("/");
   };
+
   userUnauthorized = () => {
-    this.setState({submitEmail : true});
+    this.setState({submitEmail : true, submitCode: false});
   };
   render() {
     return (
       <div className="login-container">
       <img className="login-image" src={logo} />
-        <h1>ShareCar ff  Login</h1>
+        <h1>ShareCar Login</h1>
         <FacebookLogin
           appId="599580833757975"
           fields="name,email,picture"

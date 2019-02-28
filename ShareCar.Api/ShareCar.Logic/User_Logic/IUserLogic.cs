@@ -18,9 +18,7 @@ namespace ShareCar.Logic.User_Logic
         Task CreateUser(UserDto userDto);
         void CreateUnauthorizedUser(UnauthorizedUserDto user);
         bool SetUsersCognizantEmail(CognizantData data);
-        //temporaryLoginEmail => email of acc which has FK to UnauthorizedUser
-        // originalLoginEMail => email of acc which will be used in application
-        bool VerifyUser(bool faceBookVerified, string temporaryLoginEmail); 
+        bool VerifyUser(bool faceBookVerified, string loginEmail); 
         UserDto GetUserByEmail(EmailType type, string email);
     }
 }

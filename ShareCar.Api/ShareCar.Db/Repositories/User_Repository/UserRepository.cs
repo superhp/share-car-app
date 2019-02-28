@@ -37,7 +37,7 @@ namespace ShareCar.Db.Repositories.User_Repository
 
             if (!result.Succeeded)
                 throw new ArgumentException("Failed to create local user account.");
-         
+
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -85,17 +85,18 @@ namespace ShareCar.Db.Repositories.User_Repository
 
         public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
         {
-            try {
+            try
+            {
                 var user = _databaseContext.User.Single(x => x.Email == loginEmail);
                 user.CognizantEmail = cognizantEmail;
                 _databaseContext.SaveChanges();
-                    return true;
-        }
+                return true;
+            }
             catch (Exception ex)
             {
                 return false;
             }
-            }
+        }
 
         public bool UserVerified(bool faceBookVerified, string loginEmail)
         {
@@ -113,20 +114,16 @@ namespace ShareCar.Db.Repositories.User_Repository
                 _databaseContext.SaveChanges();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
         }
 
-       // public User GetUsersByCognizantEmail(string cognizantEmail)
-      //  {
-      //      return _databaseContext.User.FirstOrDefault(x => x.CognizantEmail == cognizantEmail);
-      //  }
-
         public bool UpdateUser(User user)
         {
-            try {
+            try
+            {
                 var toUpdate = _databaseContext.User.Single(x => x.Email == user.Email);
 
                 toUpdate.FacebookEmail = user.FacebookEmail;
@@ -136,17 +133,13 @@ namespace ShareCar.Db.Repositories.User_Repository
                 toUpdate.CognizantEmail = user.CognizantEmail;
                 _databaseContext.SaveChanges();
 
-                    return true;
-        }catch(Exception ex)
+                return true;
+            }
+            catch (Exception ex)
             {
                 return false;
             }
-            }
-
-      //  public User GetUsersByLoginEmail(string loginEmail)
-     //   {
-     //       return _databaseContext.User.Single(x => x.Email == loginEmail);
-    //    }
+        }
 
         public void DeleteUser(string email)
         {

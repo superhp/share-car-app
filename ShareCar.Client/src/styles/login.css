@@ -14,3 +14,9 @@
     height: 50%;
     width: auto;
 }
+.email-submit, .email-input, .code-submit, .code-input {
+    align-self:center;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}

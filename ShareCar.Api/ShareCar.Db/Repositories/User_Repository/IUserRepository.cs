@@ -18,10 +18,6 @@ namespace ShareCar.Db.Repositories.User_Repository
         UnauthorizedUser GetUnauthorizedUser(string email);
         void CreateUnauthorizedUser(UnauthorizedUser user);
         bool UpdateUser(User user);
-        //    bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail);
-        //    bool UserVerified(bool faceBookVerified, string loginEmail);
-      //  User GetUsersByCognizantEmail(string cognizantEmail);
-      //  User GetUsersByLoginEmail(string loginEmail);
         User GetUserByEmail(EmailType type, string email);
         void DeleteUser(string email);
     }
