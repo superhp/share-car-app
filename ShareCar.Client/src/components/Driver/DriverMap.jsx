@@ -31,6 +31,7 @@ export class DriverMap extends React.Component {
     },
     isChecked: false,
     isContinueClicked: false,
+    directionFrom: true,
     map: "",
     accessToken: "ad45b0b60450a4", // required for reverse geocoding api
     vectorSource: "",
@@ -359,6 +360,8 @@ export class DriverMap extends React.Component {
             <DriverRouteInput 
               handleOfficeSelection={(e, indexas, button) => this.handleOfficeSelection(e, indexas, button)}
               isChecked={this.state.isChecked}
+              direction={this.state.directionFrom}
+              handleDirection={() => this.setState({ directionFrom: !this.state.directionFrom})}
             />
         </div>
         <div id="map" />

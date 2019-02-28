@@ -8,7 +8,7 @@ import "../../../styles/testmap.css";
 import { OfficeSelection } from "./OfficeSelection";
 
 export const DriverRouteInput = (props) => (
-    props.direction === "from" 
+    props.direction 
         ?
         (<div className="map-input-selection">
             <DriverInput 
@@ -17,21 +17,27 @@ export const DriverRouteInput = (props) => (
                 handleOfficeSelection={(e, indexas, button) =>
                     props.handleOfficeSelection(e, indexas, button)
                 }
-                direction={props.direction}
+                direction="from"
             />
-            <Button style={{ zIndex: 999999 }} size="large" color="primary">
+            <Button 
+                style={{ zIndex: 999999 }} 
+                size="large" 
+                color="primary"
+                onClick={() => props.handleDirection()}
+            >
                 <ImportExport fontSize="large"/>
             </Button>
-            <OfficeSelection 
-                isChecked={props.isChecked}
-            />
+            <OfficeSelection isChecked={props.isChecked}/>
         </div>)
         :
         (<div className="map-input-selection">
-            <OfficeSelection 
-                isChecked={props.isChecked}
-            />
-            <Button style={{ zIndex: 999999 }} size="large" color="primary">
+            <OfficeSelection isChecked={props.isChecked}/>
+            <Button
+                style={{ zIndex: 999999 }}
+                size="large"
+                color="primary"
+                onClick={() => props.handleDirection()}
+            >
                 <ImportExport fontSize="large"/>
             </Button>
             <DriverInput 
@@ -40,7 +46,7 @@ export const DriverRouteInput = (props) => (
                 handleOfficeSelection={(e, indexas, button) =>
                     props.handleOfficeSelection(e, indexas, button)
                 }
-                direction={props.direction}
+                direction="to"
             />
         </div>)
 );
