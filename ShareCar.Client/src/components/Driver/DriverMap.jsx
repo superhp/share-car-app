@@ -11,6 +11,8 @@ import OSM from "ol/source/OSM";
 import Polyline from "ol/format/Polyline";
 import { fromLonLat } from "ol/proj";
 import Button from "@material-ui/core/Button";
+import ImportExport from "@material-ui/icons/ImportExport";
+import IconButton from "@material-ui/core/IconButton";
 
 import { OfficeAddresses } from "../../utils/AddressData";
 import addressParser from "./../../helpers/addressParser";
@@ -338,7 +340,7 @@ export class DriverMap extends React.Component {
 
     this.setState({ map, vectorSource }, function() {
       centerMap(25.279652, 54.687157, this.state.map);
-      this.driverAddressInputSuggestion();
+      //this.driverAddressInputSuggestion();
     });
 
     map.on("click", evt => {
@@ -365,14 +367,21 @@ export class DriverMap extends React.Component {
                 }
                 direction="from"
               />
-              <DriverInput 
+              {/* <DriverInput 
                 inputId="driver-address-input-to"
                 placeholder="Select To Location..."
                 handleOfficeSelection={(e, indexas, button) =>
                   this.handleOfficeSelection(e, indexas, button)
                 }
                 direction="to"
-              />
+              /> */}
+              {/* <IconButton color="primary" variant="contained" style={{ zIndex: 999999 }}>
+                <Icon class="material-icons">star</Icon>
+              </IconButton> */}
+              <Button color="secondary" style={{ zIndex: 999999 }} size="large">
+                <ImportExport fontSize="large"/>
+              </Button>
+              
             </div>
           </div>
         </div>

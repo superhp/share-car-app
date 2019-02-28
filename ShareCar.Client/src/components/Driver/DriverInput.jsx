@@ -11,11 +11,11 @@ export const DriverInput = (props) => (
             id={props.inputId}
             placeholder={props.placeholder}
         />
-        <SimpleMenu
+        {/* <SimpleMenu
             handleSelection={(e, indexas, button) =>
                 props.handleOfficeSelection(e, indexas, button)
             }
             whichButton={props.direction}
-        />
+        /> */}
     </div>
 );
