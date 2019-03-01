@@ -152,25 +152,25 @@ export class DriverMap extends React.Component {
   }
 
   driverAddressInputSuggestion() {
-    // let places = require("places.js");
-    // if(this.state.directionFrom){
-    //   let placesAutocompleteFrom = places({
-    //     container: document.querySelector("#driver-address-input-from")
-    //   });
-    //   placesAutocompleteFrom.on("change", e => {
-    //     this.setState({ startPointInput: true });
-    //     this.handleRouteCreation(e, "from");
-    //   });
-    // }
-    // else {
-    //   let placesAutocompleteTo = places({
-    //     container: document.querySelector("#driver-address-input-to")
-    //   });
-    //   placesAutocompleteTo.on("change", e => {
-    //     this.setState({ startPointInput: false });
-    //     this.handleRouteCreation(e, "to");
-    //   });
-    // }
+    let places = require("places.js");
+    if(this.state.directionFrom){
+      let placesAutocompleteFrom = places({
+        container: document.querySelector("#driver-address-input-from")
+      });
+      placesAutocompleteFrom.on("change", e => {
+        this.setState({ startPointInput: true });
+        this.handleRouteCreation(e, "from");
+      });
+    }
+    else {
+      let placesAutocompleteTo = places({
+        container: document.querySelector("#driver-address-input-to")
+      });
+      placesAutocompleteTo.on("change", e => {
+        this.setState({ startPointInput: false });
+        this.handleRouteCreation(e, "to");
+      });
+    }
   }
 
   handleRouteCreation(e, addressType) {
