@@ -7,7 +7,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 {
     public interface IRideRequestLogic
     {
-        Task<IEnumerable<RideRequestDto>> GetUsersRequests(bool driver, string email);
+        IEnumerable<RideRequestDto> GetUsersRequests(bool driver, string email);
         bool UpdateRequest(RideRequestDto request);
         bool AddRequest(RideRequestDto request, string driverEmail);
         void SeenByPassenger(int[] requests);

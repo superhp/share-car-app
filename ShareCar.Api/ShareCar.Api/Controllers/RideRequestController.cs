@@ -36,7 +36,7 @@ namespace ShareCar.Api.Controllers
 
             bool isDriver = Boolean.Parse(driver); 
 
-            IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
+            IEnumerable<RideRequestDto> request = _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
             return Ok(request);
         }

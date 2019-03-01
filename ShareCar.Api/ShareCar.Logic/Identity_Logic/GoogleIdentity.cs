@@ -16,28 +16,24 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public class GoogleIdentity : IGoogleIdentity
     {
-        private readonly UserManager<User> _userManager;
         private readonly IJwtFactory _jwtFactory;
-        private readonly IUserLogic _userLogic;
-        private readonly ICognizantIdentity _cognizantIdentity;
+        private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
 
-       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic, ICognizantIdentity cognizantIdentity)
+       public GoogleIdentity(IJwtFactory jwtFactory, IUserRepository userRepository)
         {
 
-            _userManager = userManager;
             _jwtFactory = jwtFactory;
-            _userLogic = userLogic;
-            _cognizantIdentity = cognizantIdentity;
+            _userRepository = userRepository;
         }
         
         public async Task<string> Login(GoogleUserDataDto userInfo)
         {
             // ready to create the local user account (if necessary) and jwt
-            var user =  _userLogic.GetUserByEmail(Dto.EmailType.GOOGLE, userInfo.Email);
+            var user =  _userRepository.GetUserByEmail(Dto.EmailType.GOOGLE, userInfo.Email);
             if (user == null)
             {
-                await _userLogic.CreateUser(new UserDto
+                await _userRepository.CreateUser(new User
                 {
                     FirstName = userInfo.GivenName,
                     LastName = userInfo.FamilyName,
@@ -48,7 +44,7 @@ namespace ShareCar.Logic.Identity_Logic
                     GoogleEmail = userInfo.Email,
                     FacebookEmail = ""
                 });
-                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
 
                 return null;
             }
@@ -59,7 +55,7 @@ namespace ShareCar.Logic.Identity_Logic
             }
 
             // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(user.Email);
+            var localUser = _userRepository.GetUserByEmail(Dto.EmailType.LOGIN, user.Email);
 
             if (localUser == null)
             {

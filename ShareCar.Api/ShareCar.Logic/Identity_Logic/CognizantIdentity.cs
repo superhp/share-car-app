@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using ShareCar.Db.Entities;
+using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
@@ -23,15 +24,15 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IUserLogic _userlogic;
         private readonly SendGridClient _client;
         private readonly SendGridSettings  _sgSettings;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtFactory _jwtFactory;
 
-        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, UserManager<User> userManager, IJwtFactory jwtFactory)
+        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, IUserRepository userRepository, IJwtFactory jwtFactory)
         {
             _sgSettings = sgSettings.Value;
             _client = new SendGridClient(_sgSettings.APIKey);
             _userlogic = userlogic;
-            _userManager = userManager;
+            _userRepository = userRepository;
             _jwtFactory = jwtFactory;
         }
 
@@ -46,8 +47,8 @@ namespace ShareCar.Logic.Identity_Logic
             string originalLoginEmail = GetOriginalLoginEmail(loginEmail);
 
             _userlogic.VerifyUser(data.FacebookEmail != null, originalLoginEmail);
-  
-                var localUser = await _userManager.FindByNameAsync(originalLoginEmail);
+
+                var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, originalLoginEmail);
                 var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
                 var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
             

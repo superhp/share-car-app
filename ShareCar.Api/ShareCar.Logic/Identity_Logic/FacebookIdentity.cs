@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using ShareCar.Logic.User_Logic;
@@ -15,19 +16,17 @@ namespace ShareCar.Logic.Identity_Logic
 {
     public class FacebookIdentity : IFacebookIdentity
     {
-        private readonly UserManager<User> _userManager;
         private readonly FacebookAuthSettings _fbAuthSettings;
         private readonly IJwtFactory _jwtFactory;
-        private readonly IUserLogic _userLogic;
+        private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
         private readonly ICognizantIdentity _cognizantIdentity;
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, ICognizantIdentity cognizantIdentity, UserManager<User> userManager, IJwtFactory jwtFactory, IUserLogic userLogic)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, ICognizantIdentity cognizantIdentity, IJwtFactory jwtFactory, IUserRepository userRepository)
         {
             _fbAuthSettings = fbAuthSettings.Value;
-            _userManager = userManager;
             _jwtFactory = jwtFactory;
-            _userLogic = userLogic;
+            _userRepository = userRepository;
             _cognizantIdentity = cognizantIdentity;
 
         }
@@ -79,10 +78,10 @@ namespace ShareCar.Logic.Identity_Logic
         {
             var userInfo = await GetUserFromFacebook(accessToken);
             // ready to create the local user account (if necessary) and jwt
-            var user = _userLogic.GetUserByEmail(Dto.EmailType.FACEBOOK, userInfo.Email);
+            var user = _userRepository.GetUserByEmail(Dto.EmailType.FACEBOOK, userInfo.Email);
             if (user == null)
             {
-                await _userLogic.CreateUser(new UserDto
+                await _userRepository.CreateUser(new User
                 {
                     FirstName = userInfo.FirstName,
                     LastName = userInfo.LastName,
@@ -93,7 +92,7 @@ namespace ShareCar.Logic.Identity_Logic
                     FacebookEmail = userInfo.Email,
                     GoogleEmail = ""
                 });
-                _userLogic.CreateUnauthorizedUser(new UnauthorizedUserDto { Email = userInfo.Email });
+                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
 
                 return null;
             }
@@ -103,7 +102,7 @@ namespace ShareCar.Logic.Identity_Logic
             }
 
             // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(user.Email);
+            var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, user.Email);
 
             if (localUser == null)
             {

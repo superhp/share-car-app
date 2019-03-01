@@ -39,7 +39,7 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IRideLogic, RideLogic>();
             services.AddScoped<IRouteLogic, RouteLogic>();
             services.AddScoped<IRideRequestLogic, RideRequestLogic>();
-            services.AddScoped<IUserLogic, UserLogic>();
+            services.AddScoped<User_Logic.IUserLogic, UserLogic>();
             services.AddScoped<IAddressLogic, AddressLogic>();
             services.AddScoped<IPassengerLogic, PassengerLogic>();
             services.AddScoped<ICognizantIdentity, CognizantIdentity>();
@@ -55,7 +55,7 @@ namespace ShareCar.Logic.DI
 
             services.AddScoped<IPassengerRepository, PassengerRepository>();
 
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<Db.Repositories.User_Repository.IUserRepository, UserRepository>();
         }
 
 

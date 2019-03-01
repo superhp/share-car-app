@@ -71,7 +71,7 @@ namespace ShareCar.Api.Controllers
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            List<RideDto> rides = await _rideLogic.GetFinishedPassengerRidesAsync(userDto.Email);
+            List<RideDto> rides = _rideLogic.GetFinishedPassengerRides(userDto.Email);
             return Ok(rides);
         }
 
@@ -118,7 +118,7 @@ namespace ShareCar.Api.Controllers
         [HttpGet("ridesByRoute={routeGeometry}")]
         public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
         {
-            IEnumerable<RideDto> rides = await _rideLogic.GetRidesByRouteAsync(routeGeometry);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
             return Ok(rides);
         }
 
@@ -129,7 +129,7 @@ namespace ShareCar.Api.Controllers
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
                 return BadRequest();
             var userDto = await _userRepository.GetLoggedInUser(User);
-            IEnumerable<RouteDto> routes = await _rideLogic.GetRoutesAsync(routeDto, userDto.Email);
+            IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto, userDto.Email);
             
             return Ok(routes);
         }
