@@ -61,6 +61,7 @@ namespace ShareCar.Test
         [Test]
         public async Task Login_VerifiedUser_ReturnsNotNull()
         {
+            string token = "token";
             User user = new User
             {
                 Id = "1",
@@ -71,11 +72,11 @@ namespace ShareCar.Test
 
             userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.GOOGLE, loginData.Email)).Returns(user);
             userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.LOGIN, loginData.Email)).Returns(user);
-            jwtFactory.Setup(x => x.GenerateEncodedToken(loginData.Email, It.IsAny<ClaimsIdentity>())).Returns(Task.FromResult("string"));
+            jwtFactory.Setup(x => x.GenerateEncodedToken(loginData.Email, It.IsAny<ClaimsIdentity>())).Returns(Task.FromResult(token));
 
             var googleIdentity = new GoogleIdentity(jwtFactory.Object, userRepository.Object);
 
-            Assert.NotNull(await googleIdentity.Login(loginData));
+            Assert.AreEqual(await googleIdentity.Login(loginData), token);
         }
     }
 }

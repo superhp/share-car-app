@@ -38,17 +38,17 @@ namespace ShareCar.Logic.Identity_Logic
 
         public async Task<string> SubmitVerificationCodeAsync(VerificationCodeSubmitData data)
         {
-            var isFacebookcEmail = data.FacebookEmail != null;
-            string loginEmail = isFacebookcEmail ? data.FacebookEmail : data.GoogleEmail;
+            string loginEmail = data.FacebookEmail != null ? data.FacebookEmail : data.GoogleEmail;
             UnauthorizedUserDto user = _userlogic.GetUnauthorizedUser(loginEmail);
 
             if (user.VerificationCode != data.VerificationCode)
                 return null;
+
             string originalLoginEmail = GetOriginalLoginEmail(loginEmail);
 
             _userlogic.VerifyUser(data.FacebookEmail != null, originalLoginEmail);
-  
-                var localUser = _userRepository.Get
+
+            var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, originalLoginEmail);
                 var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
                 var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
             
