@@ -15,4 +15,6 @@ export const OfficeAddresses = [
         latitude:54.67574723192748,
         longtitude:25.252798705321993
     }
-]
+];
+
+export const toReadableName = address => `${address.street} ${address.number}`;

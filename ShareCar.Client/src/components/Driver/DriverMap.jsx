@@ -360,12 +360,8 @@ export class DriverMap extends React.Component {
       <div>
         <div className="displayRoutes">
             <DriverRouteInput 
-              handleOfficeSelection={(e, indexas, button) => this.handleOfficeSelection(e, indexas, button)}
-              isChecked={this.state.isChecked}
-              direction={this.state.directionFrom}
-              handleDirection={() => this.setState({ directionFrom: !this.state.directionFrom })}
-              onRadioButtonClick={() => this.setState({ isChecked: !this.state.isChecked })}
-              onSelectionChange={() => console.log("soon to be implementation")}
+              onFromAddressChange={address => console.log("From", address)}
+              onToAddressChange={address => console.log("To", address)}
             />
         </div>
         <div id="map" />

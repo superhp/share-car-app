@@ -6,10 +6,33 @@ import { DriverInput } from "../DriverInput";
 
 import "../../../styles/testmap.css";
 import { OfficeSelection } from "./OfficeSelection";
+import { OfficeAddresses } from "../../../utils/AddressData";
+
+const fromAlgoliaAddress = address => {
+    if(!address) return null;
+    let streetNumber = "";
+    let street = address.name;
+    const firstDigit = address.name.match(/\d/);
+    if (firstDigit !== null) {
+        const indexOfFirstDigit = address.name.indexOf(firstDigit);
+        const indexOfFirstSpace = address.name.indexOf(" ");
+        streetNumber = address.name.substring(indexOfFirstDigit, indexOfFirstSpace);
+        street = address.name.substring(indexOfFirstSpace + 1);
+    }
+    return {
+        number: streetNumber,
+        street: street,
+        city: address.city,
+        country: address.country,
+        latitude: address.latlng.lat,
+        longtitude: address.latlng.lng
+    };
+};
 
 export class DriverRouteInput extends React.Component {
     state = {
-        direction: true
+        direction: true,
+        checkedOffice: OfficeAddresses[0]
     }
     render() {
         return (
@@ -18,38 +41,50 @@ export class DriverRouteInput extends React.Component {
             (<div className="map-input-selection">
                 <DriverInput 
                     placeholder="Select From Location"
-                    onChange={(suggestion) => console.log(suggestion)}
+                    onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
                 />
                 <Button 
                     size="large" 
                     color="primary"
-                    onClick={() => this.setState({direction: !this.state.direction})}
+                    onClick={() => {
+                        this.setState({direction: !this.state.direction});
+                        this.props.onFromAddressChange(this.state.checkedOffice);
+                        this.props.onToAddressChange(null);
+                    }}
                 >
                     <ImportExport fontSize="large"/>
                 </Button>
                 <OfficeSelection 
-                    isChecked={this.props.isChecked}
-                    onRadioButtonClick={() => this.props.onRadioButtonClick()}
-                    onSelectionChange={() => this.props.onSelectionChange()}
+                    checkedOffice={this.state.checkedOffice}
+                    onChange={office => {
+                        this.props.onToAddressChange(office);
+                        this.setState({checkedOffice: office});
+                    }}
                 />
             </div>)
             :
             (<div className="map-input-selection">
                 <OfficeSelection 
-                    isChecked={this.props.isChecked}
-                    onRadioButtonClick={() => this.props.onRadioButtonClick()}
-                    onSelectionChange={() => this.props.onSelectionChange()}
+                    checkedOffice={this.state.checkedOffice}
+                    onChange={office => {
+                        this.props.onFromAddressChange(office);
+                        this.setState({checkedOffice: office});
+                    }}
                 />
                 <Button
                     size="large"
                     color="primary"
-                    onClick={() => this.setState({direction: !this.state.direction})}
+                    onClick={() => {
+                        this.setState({direction: !this.state.direction});
+                        this.props.onFromAddressChange(null);
+                        this.props.onToAddressChange(this.state.checkedOffice);
+                    }}
                 >
                     <ImportExport fontSize="large"/>
                 </Button>
                 <DriverInput 
                     placeholder="Select To Location"
-                    onChange={(suggestion) => console.log(suggestion)}
+                    onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
                 />
             </div>)
         );

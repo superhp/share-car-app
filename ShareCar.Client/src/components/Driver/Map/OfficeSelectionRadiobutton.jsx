@@ -20,10 +20,8 @@ export const OfficeSelectionRadiobutton = (props) => (
             <Radio
                 color="primary"
                 checked={props.checked}
-                onClick={() => props.onRadioButtonClick()}
                 onChange={() => props.onChange()}
-                value={props.office}
-                name="radio-button-demo"
+                // value={props.office}
                 aria-label="A"
             />
         </Grid>
