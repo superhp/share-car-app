@@ -20,15 +20,12 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
-        private readonly ICognizantIdentity _cognizantIdentity;
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, ICognizantIdentity cognizantIdentity, IJwtFactory jwtFactory, IUserRepository userRepository)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, IJwtFactory jwtFactory, IUserRepository userRepository)
         {
             _fbAuthSettings = fbAuthSettings.Value;
             _jwtFactory = jwtFactory;
             _userRepository = userRepository;
-            _cognizantIdentity = cognizantIdentity;
-
         }
 
         private async Task<FacebookUserDataDto> GetUserFromFacebook(AccessTokenDto facebookAccessToken)
@@ -78,7 +75,7 @@ namespace ShareCar.Logic.Identity_Logic
         {
             var userInfo = await GetUserFromFacebook(accessToken);
             // ready to create the local user account (if necessary) and jwt
-            var user = _userRepository.GetUserByEmail(Dto.EmailType.FACEBOOK, userInfo.Email);
+            var user = _userRepository.GetUserByEmail(EmailType.FACEBOOK, userInfo.Email);
             if (user == null)
             {
                 await _userRepository.CreateUser(new User

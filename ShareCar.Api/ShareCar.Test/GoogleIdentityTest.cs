@@ -14,14 +14,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace ShareCar.Test
 {
     public class GoogleIdentityTest
     {
-
-        //  Mock<UserManager<User>> userManager = new Mock<UserManager<User>(new Mock<IUserStore <User>>().Object, new Mock<IOptions <IdentityOptions>>().Object, new Mock<IPasswordHasher<User>>().Object, new Mock<IEnumerable <IUserValidator<User>>>().Object, new Mock<IEnumerable <IPasswordValidator<User>>>().Object, new Mock<ILookupNormalizer>().Object, new Mock<IdentityErrorDescriber>().Object, new Mock<IServiceProvider>().Object, new Mock<ILogger<UserManager<User>>>().Object)>();
-
-        //  Mock<UserManager<User>> userManager = new Mock<UserManager<User>>(MockBehavior.Strict, new object[] );
         Mock<IUserRepository> userRepository = new Mock<IUserRepository>();
         Mock<IJwtFactory> jwtFactory = new Mock<IJwtFactory>();
         GoogleUserDataDto loginData = new GoogleUserDataDto
@@ -33,19 +29,13 @@ namespace Tests
             ImageUrl = "..."
         };
 
-    [SetUp]
-        public void Setup()
-        {
-
-        }
-
         [Test]
         public async Task Login_NewUser_ReturnsNull()
         {
 
             User user = null;
 
-            userRepository.Setup(x => x.GetUserByEmail(ShareCar.Dto.EmailType.GOOGLE, "test@test.com")).Returns(user);
+            userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.GOOGLE, loginData.Email)).Returns(user);
 
            var googleIdentity = new GoogleIdentity(jwtFactory.Object, userRepository.Object);
 
@@ -61,7 +51,7 @@ namespace Tests
                 GoogleVerified = false
             };
 
-            userRepository.Setup(x => x.GetUserByEmail(ShareCar.Dto.EmailType.GOOGLE, "test@test.com")).Returns(user);
+            userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.GOOGLE, loginData.Email)).Returns(user);
 
             var googleIdentity = new GoogleIdentity(jwtFactory.Object, userRepository.Object);
 
@@ -69,7 +59,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task Login_VerifiedUser_ReturnsString()
+        public async Task Login_VerifiedUser_ReturnsNotNull()
         {
             User user = new User
             {
@@ -79,8 +69,8 @@ namespace Tests
                 GoogleVerified = true
             };
 
-            userRepository.Setup(x => x.GetUserByEmail(ShareCar.Dto.EmailType.GOOGLE, loginData.Email)).Returns(user);
-            userRepository.Setup(x => x.GetUserByEmail(ShareCar.Dto.EmailType.LOGIN, loginData.Email)).Returns(user);
+            userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.GOOGLE, loginData.Email)).Returns(user);
+            userRepository.Setup(x => x.GetUserByEmail(Dto.EmailType.LOGIN, loginData.Email)).Returns(user);
             jwtFactory.Setup(x => x.GenerateEncodedToken(loginData.Email, It.IsAny<ClaimsIdentity>())).Returns(Task.FromResult("string"));
 
             var googleIdentity = new GoogleIdentity(jwtFactory.Object, userRepository.Object);

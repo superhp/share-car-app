@@ -47,8 +47,8 @@ namespace ShareCar.Logic.Identity_Logic
             string originalLoginEmail = GetOriginalLoginEmail(loginEmail);
 
             _userlogic.VerifyUser(data.FacebookEmail != null, originalLoginEmail);
-
-                var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, originalLoginEmail);
+  
+                var localUser = _userRepository.Get
                 var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
                 var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
             
