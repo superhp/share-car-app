@@ -362,6 +362,13 @@ export class DriverMap extends React.Component {
             <DriverRouteInput 
               onFromAddressChange={address => console.log("From", address)}
               onToAddressChange={address => console.log("To", address)}
+              ref={e => {
+                if (e) {
+                  //this.autocompleteInput = e.autocompleteElem;
+                  //when updating this.autocompleteInput.value = .......
+                  e.autocompleteElem.value = "Test";
+                }
+              }}
             />
         </div>
         <div id="map" />

@@ -29,7 +29,7 @@ const fromAlgoliaAddress = address => {
     };
 };
 
-export class DriverRouteInput extends React.Component {
+class DriverRouteInputInner extends React.Component {
     state = {
         direction: true,
         checkedOffice: OfficeAddresses[0]
@@ -42,6 +42,7 @@ export class DriverRouteInput extends React.Component {
                 <DriverInput 
                     placeholder="Select From Location"
                     onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
+                    ref={this.props.innerRef}
                 />
                 <Button 
                     size="large" 
@@ -85,8 +86,11 @@ export class DriverRouteInput extends React.Component {
                 <DriverInput 
                     placeholder="Select To Location"
                     onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
+                    ref={this.props.innerRef}
                 />
             </div>)
         );
     }
 }
+
+export const DriverRouteInput = React.forwardRef((props, ref) => <DriverRouteInputInner {...props} innerRef={ref} />);
