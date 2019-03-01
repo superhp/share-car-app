@@ -64,8 +64,7 @@ namespace ShareCar.Logic.User_Logic
 
         public int CountPoints(string email)
         {
-            int points = _passengerLogic.GetUsersPoints(email);
-            return points;
+            return _passengerLogic.GetUsersPoints(email);
         }
 
         public Dictionary<UserDto, int> GetWinnerBoard()
@@ -88,10 +87,6 @@ namespace ShareCar.Logic.User_Logic
                     {
                         userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
                         userWithPoints.Remove(userWithPoints.FirstOrDefault(x => x.Value == lowestPoints).Key);
-                    }
-                    else if (userWithPoints.Values.Min() == userPoints)
-                    {
-                        userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
                     }
                 }
                 i++;
