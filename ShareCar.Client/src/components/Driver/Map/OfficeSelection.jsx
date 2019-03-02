@@ -3,7 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 
 import { OfficeSelectionRadiobutton } from "./OfficeSelectionRadiobutton";
-import { OfficeAddresses, toReadableName } from "../../../utils/AddressData";
+import { OfficeAddresses } from "../../../utils/AddressData";
+import { toReadableName } from "../../../utils/addressUtils";
 
 import "../../../styles/testmap.css";
 
