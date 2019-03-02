@@ -9,6 +9,7 @@ import { OfficeSelection } from "./OfficeSelection";
 import { OfficeAddresses } from "../../../utils/AddressData";
 
 const fromAlgoliaAddress = address => {
+    console.log("Original address", address);
     if(!address) return null;
     let streetNumber = "";
     let street = address.name;
@@ -25,7 +26,7 @@ const fromAlgoliaAddress = address => {
         city: address.city,
         country: address.country,
         latitude: address.latlng.lat,
-        longtitude: address.latlng.lng
+        longitude: address.latlng.lng
     };
 };
 

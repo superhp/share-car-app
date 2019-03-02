@@ -162,7 +162,7 @@ export class PassengerMap extends React.Component {
       this.setState(
         {
           pickUpPoints: [
-            this.state.filteredRoute.office.longtitude,
+            this.state.filteredRoute.office.longitude,
             this.state.filteredRoute.office.latitude
           ]
         }
@@ -173,7 +173,7 @@ export class PassengerMap extends React.Component {
   showRoutes() {
     this.state.vectorSource.clear();
     centerMap(
-      this.state.filteredRoute.office.longtitude,
+      this.state.filteredRoute.office.longitude,
       this.state.filteredRoute.office.latitude,
       this.state.map
     );
@@ -252,13 +252,13 @@ export class PassengerMap extends React.Component {
     );
   }
 
-  coordinatesToLocation(latitude, longtitude) {
+  coordinatesToLocation(latitude, longitude) {
     return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
         latitude +
         "&lon=" +
-        longtitude +
+        longitude +
         "&format=json"
       )
         .then(function (response) {

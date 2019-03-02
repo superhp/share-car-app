@@ -5,7 +5,7 @@ export const OfficeAddresses = [
         city: "Vilnius",
         country: "Lietuva",
         latitude:54.67696306999445,
-        longtitude:25.254938670209185
+        longitude:25.254938670209185
     },
     {
         number: "28",
@@ -13,8 +13,6 @@ export const OfficeAddresses = [
         city: "Vilnius",
         country: "Lietuva",
         latitude:54.67574723192748,
-        longtitude:25.252798705321993
+        longitude:25.252798705321993
     }
 ];
-
-export const toReadableName = address => `${address.street} ${address.number}`;

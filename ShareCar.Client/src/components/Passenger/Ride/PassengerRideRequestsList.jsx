@@ -38,7 +38,7 @@ state={
                           onClick={() => {
                             this.setState({ show: !this.state.show });
                             this.setState({
-                              coordinates: [req.longtitude, req.latitude]
+                              coordinates: [req.longitude, req.latitude]
                             });
 
                           }}
