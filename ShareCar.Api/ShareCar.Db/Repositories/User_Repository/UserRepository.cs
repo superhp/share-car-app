@@ -44,6 +44,7 @@ namespace ShareCar.Db.Repositories.User_Repository
         {
             return _databaseContext.Users;
         }
+
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
@@ -80,21 +81,6 @@ namespace ShareCar.Db.Repositories.User_Repository
             catch (Exception e)
             {
                 return null;
-            }
-        }
-
-        public bool SetUsersCognizantEmail(string cognizantEmail, string loginEmail)
-        {
-            try
-            {
-                var user = _databaseContext.User.Single(x => x.Email == loginEmail);
-                user.CognizantEmail = cognizantEmail;
-                _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
             }
         }
 
