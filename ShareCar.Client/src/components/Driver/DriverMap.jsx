@@ -15,7 +15,6 @@ import Button from "@material-ui/core/Button";
 import { OfficeAddresses } from "../../utils/AddressData";
 import addressParser from "./../../helpers/addressParser";
 import RidesScheduler from "./Ride/RidesScheduler";
-import map from "./../Maps/Map";
 import { getNearest, coordinatesToLocation, centerMap } from "./../../utils/mapUtils";
 import { routeStyles } from "./../../utils/mapStyles";
 import { DriverInput } from "./DriverInput";
@@ -172,7 +171,6 @@ export class DriverMap extends React.Component {
   handleRouteCreation(e, addressType) {
     const address = addressParser.parseAlgolioAddress(e.suggestion.name);
     const city = e.suggestion.city;
-    const route = this.state.route;
 
     if(addressType === "from"){
       this.setState({route: 

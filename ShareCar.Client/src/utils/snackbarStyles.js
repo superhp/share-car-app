@@ -1,6 +1,5 @@
 import InfoIcon from "@material-ui/icons/Info";
 import ErrorIcon from "@material-ui/icons/Error";
-import CloseIcon from "@material-ui/icons/Close";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import green from "@material-ui/core/colors/green";

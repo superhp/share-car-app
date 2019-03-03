@@ -48,7 +48,7 @@ this.setState({googleEmail: response.profileObj.email, facebookEmail : null});
   render() {
     return (
       <div className="login-container">
-      <img className="login-image" src={logo} />
+      <img className="login-image" src={logo} alt=""/>
         <h1>ShareCar Login</h1>
         <FacebookLogin
           appId="599580833757975"

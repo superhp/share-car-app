@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import Snackbar from "@material-ui/core/Snackbar";
-import WarningIcon from "@material-ui/icons/Warning";
 import { withStyles } from "@material-ui/core/styles";
 
 import SnackbarsContent from "./SnackbarContent";

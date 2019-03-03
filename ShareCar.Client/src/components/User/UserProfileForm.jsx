@@ -16,7 +16,7 @@ export const UserProfileForm = (props) => (
             Logout
           </button>
           <form className="profile-form col-sm-6">
-            <img className="thumbnail" src={props.user.pictureUrl} />
+            <img className="thumbnail" src={props.user.pictureUrl} alt="" />
             <UserProfileFormField 
                 displayName="Your Email"
                 disabled="true"

@@ -75,12 +75,12 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
           {({ role, changeRole }) => (
             <div className="role-container">
               <Link to="/driver/rides" onClick={changeRole("driver")}>
-                <img className="role-image" src={driverLogo} />
+                <img className="role-image" src={driverLogo} alt=""/>
               </Link>
               <h2 className="role-selection">Driver</h2>
 
               <Link to="/passenger/Requests" onClick={changeRole("passenger")}>
-                <img className="role-image" src={passengerLogo} />
+                <img className="role-image" src={passengerLogo} alt=""/>
               </Link>
               <h2 className="role-selection">Passenger</h2>
             </div>
