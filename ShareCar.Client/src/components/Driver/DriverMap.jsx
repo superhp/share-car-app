@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 
 import { OfficeAddresses } from "../../utils/AddressData";
 import RidesScheduler from "./Ride/RidesScheduler";
+import { DriverRouteInput } from "./Map/DriverRouteInput";
 import {
   fromLonLatToMapCoords, fromMapCoordsToLonLat,
   getNearest, coordinatesToLocation,
@@ -17,7 +18,6 @@ import {
 import { routeStyles } from "./../../utils/mapStyles";
 import {addressToString, fromLocationIqResponse} from "../../utils/addressUtils";
 
-import { DriverRouteInput } from "./Map/DriverRouteInput";
 import "./../../styles/testmap.css";
 
 export class DriverMap extends React.Component {
@@ -139,9 +139,7 @@ export class DriverMap extends React.Component {
           className="continue-button"
           variant="contained"
           color="primary"
-          onClick={() => {
-            this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible });
-          }}
+          onClick={() => this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible })}
         >
           Continue
         </Button>

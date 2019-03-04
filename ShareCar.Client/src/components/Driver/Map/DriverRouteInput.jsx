@@ -3,10 +3,10 @@ import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
 import { DriverInput } from "../DriverInput";
-
-import "../../../styles/testmap.css";
 import { OfficeSelection } from "./OfficeSelection";
 import { OfficeAddresses } from "../../../utils/AddressData";
+
+import "../../../styles/testmap.css";
 
 const fromAlgoliaAddress = address => {
     console.log("Original address", address);
