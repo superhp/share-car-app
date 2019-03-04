@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
-import Grid from "@material-ui/core/Grid";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
 
 import api from "../../../helpers/axiosHelper";
