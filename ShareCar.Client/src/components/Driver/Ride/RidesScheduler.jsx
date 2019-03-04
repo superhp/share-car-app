@@ -36,10 +36,6 @@ class RidesScheduler extends React.Component {
     this.setState({ open: true });
   };
 
-  componentDidMount() {
-      addressParser.parseCustomAddress(this.props.routeInfo.fromAddress);
-  }
-
   handleSelect(e) {
     if (this.state.selectedDates.length > 0) {
       if (this.checkForDateDuplicate(e, this.state.selectedDates)) {
@@ -72,15 +68,10 @@ class RidesScheduler extends React.Component {
 
   handleCreate = () => {
     let ridesToPost = [];
-    const fromAddressParsed = addressParser.parseCustomAddress(
-      this.props.routeInfo.fromAddress
-    );
-    const toAddressParsed = addressParser.parseCustomAddress(
-      this.props.routeInfo.toAddress
-    );
+    const {fromAddress, toAddress} = this.props.routeInfo;
 
     this.state.selectedDates.forEach(element => {
-      ridesToPost.push(this.createRide(fromAddressParsed, toAddressParsed, element));
+      ridesToPost.push(this.createRide(fromAddress, toAddress, element));
     });
     
     this.postRides(ridesToPost);

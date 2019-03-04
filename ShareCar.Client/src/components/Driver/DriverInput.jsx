@@ -1,21 +1,16 @@
 import * as React from "react";
 import SimpleMenu from "../common/SimpleMenu";
+import AlgoliaPlaces from "algolia-places-react";
 
 import "../../styles/genericStyles.css";
 
-export const DriverInput = (props) => (
+export const DriverInput = React.forwardRef((props, ref) => (
     <div className="form-group">
-        <input
-            type="search"
-            className="form-group location-select"
-            id={props.inputId}
+        <AlgoliaPlaces
             placeholder={props.placeholder}
-        />
-        <SimpleMenu
-            handleSelection={(e, indexas, button) =>
-                props.handleOfficeSelection(e, indexas, button)
-            }
-            whichButton={props.direction}
+            onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => props.onChange(suggestion)}
+            onClear={() => props.onChange(null)}
+            ref={ref}
         />
     </div>
-);
+));
