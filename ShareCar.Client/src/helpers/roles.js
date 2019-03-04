@@ -1,10 +1,10 @@
 import * as React from "react";
 
-this.role = "";
+let role = "";
 
 export const RoleContext = React.createContext({
-    role: this.role,
+    role: role,
     changeRole: (newRole) => {
-        this.role = newRole;
+        role = newRole;
     }
 });
