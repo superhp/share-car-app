@@ -75,38 +75,54 @@ namespace ShareCar.Logic.Identity_Logic
         {
             var userInfo = await GetUserFromFacebook(accessToken);
             // ready to create the local user account (if necessary) and jwt
-            var user = _userRepository.GetUserByEmail(EmailType.FACEBOOK, userInfo.Email);
-            if (user == null)
+
+            var user = _userRepository.GetUserByEmail(EmailType.LOGIN, userInfo.Email);
+
+            if (user != null)
             {
-                await _userRepository.CreateUser(new User
+                if (!user.FacebookVerified)
                 {
-                    FirstName = userInfo.FirstName,
-                    LastName = userInfo.LastName,
-                    Email = userInfo.Email,
-                    PictureUrl = userInfo.Picture.Data.Url,
-                    FacebookVerified = false,
-                    GoogleVerified = false,
-                    FacebookEmail = userInfo.Email,
-                    GoogleEmail = ""
-                });
-                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
+                    user.GoogleEmail = userInfo.Email;
 
-                return null;
+                    if (user.GoogleVerified)
+                    {
+                        user.FacebookVerified = true;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
             }
-            if (!user.FacebookVerified)
+            else
             {
-                return null;
+
+                user = _userRepository.GetUserByEmail(EmailType.FACEBOOK, userInfo.Email);
+                if (user == null)
+                {
+                    await _userRepository.CreateUser(new User
+                    {
+                        FirstName = userInfo.FirstName,
+                        LastName = userInfo.LastName,
+                        Email = userInfo.Email,
+                        PictureUrl = userInfo.Picture.Data.Url,
+                        FacebookVerified = false,
+                        GoogleVerified = false,
+                        FacebookEmail = userInfo.Email,
+                        GoogleEmail = ""
+                    });
+                    _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
+
+                    return null;
+                }
+                if (!user.FacebookVerified)
+                {
+                    return null;
+                }
             }
 
-            // generate the jwt for the local user
-            var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, user.Email);
 
-            if (localUser == null)
-            {
-                throw new ArgumentException("Local user account could not be found.");
-            }
-
-            return await GenerateJwt(localUser);
+            return await GenerateJwt(user);
         }
     }
 }

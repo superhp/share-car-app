@@ -32,6 +32,9 @@ namespace ShareCar.Db.Repositories.User_Repository
 
         public async Task CreateUser(User user)
         {
+
+            var isFacebook = user.FacebookEmail != null;
+
             user.UserName = user.Email;
             var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 

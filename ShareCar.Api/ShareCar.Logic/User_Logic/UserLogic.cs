@@ -203,12 +203,18 @@ namespace ShareCar.Logic.User_Logic
 
         public bool DoesUserExist(EmailType type, string cognizantEmail)
         {
-            var cognizantUser = _userRepository.GetUserByEmail(EmailType.COGNIZANT, cognizantEmail);
-
-            if(cognizantEmail == null)
+            if (cognizantEmail == null)
             {
                 return false;
             }
+
+            var cognizantUser = _userRepository.GetUserByEmail(EmailType.COGNIZANT, cognizantEmail);
+
+            if(cognizantUser == null)
+            {
+                return false;
+            }
+
             else
             {
                 if(type == EmailType.FACEBOOK && cognizantUser.FacebookEmail != null)
