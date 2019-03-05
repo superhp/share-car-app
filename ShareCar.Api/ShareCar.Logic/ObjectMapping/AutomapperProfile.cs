@@ -22,7 +22,8 @@ namespace ShareCar.Logic.ObjectMapping
             CreateMap<RouteDto, Route>();
             CreateMap<UnauthorizedUser, UnauthorizedUserDto>();
             CreateMap<UnauthorizedUserDto, UnauthorizedUser>();
-
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
         }
     }
 }

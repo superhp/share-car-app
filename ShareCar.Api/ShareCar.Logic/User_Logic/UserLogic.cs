@@ -181,6 +181,11 @@ namespace ShareCar.Logic.User_Logic
         {
             User user = _userRepository.GetUserByEmail(type, email);
 
+            if (user == null)
+            {
+                return null;
+            }
+
             return new UserDto
             {
                 FirstName = user.FirstName,
@@ -194,6 +199,35 @@ namespace ShareCar.Logic.User_Logic
                 LicensePlate = user.LicensePlate,
                 Phone = user.Phone
             };
+        }
+
+        public bool DoesUserExist(EmailType type, string cognizantEmail)
+        {
+            if (cognizantEmail == null)
+            {
+                return false;
+            }
+
+            var cognizantUser = _userRepository.GetUserByEmail(EmailType.COGNIZANT, cognizantEmail);
+
+            if(cognizantUser == null)
+            {
+                return false;
+            }
+
+            else
+            {
+                if(type == EmailType.FACEBOOK && cognizantUser.FacebookEmail != null)
+                {
+                    return true;
+                }
+                if (type == EmailType.GOOGLE && cognizantUser.GoogleEmail != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+
         }
     }
 }
