@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
-using ShareCar.Dto.Identity.Facebook;
 using ShareCar.Dto.Identity.Google;
 using ShareCar.Logic.Identity_Logic;
 using ShareCar.Logic.User_Logic;
+using System;
+using System.Threading.Tasks;
 
 namespace ShareCar.Api.Controllers
 {
@@ -28,7 +27,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerificationCode([FromBody] VerificationCodeSubmitData data)
+        public async Task<IActionResult> VerificationCodeSubmit([FromBody] VerificationCodeSubmitData data)
         {
             try
             {
@@ -49,7 +48,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cognizant([FromBody] CognizantData data)
+        public IActionResult CognizantEmailSubmit([FromBody] CognizantData data)
         {
             
             var result = _userLogic.SetUsersCognizantEmail(data);
@@ -63,7 +62,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Facebook([FromBody] AccessTokenDto accessToken)
+        public async Task<IActionResult> FacebookLogin([FromBody] AccessTokenDto accessToken)
         {
             try
             {
@@ -87,7 +86,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Google([FromBody] GoogleUserDataDto userData)
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleUserDataDto userData)
         {
             try
             {
