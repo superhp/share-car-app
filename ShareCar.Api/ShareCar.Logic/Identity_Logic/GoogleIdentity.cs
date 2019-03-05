@@ -63,7 +63,7 @@ namespace ShareCar.Logic.Identity_Logic
                         FacebookVerified = false,
                         GoogleVerified = false,
                         GoogleEmail = userInfo.Email,
-                        FacebookEmail = ""
+                        FacebookEmail = null
                     });
                     _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
 
