@@ -8,6 +8,12 @@ class CognizantEmail extends Component {
   submitEmail() {
     const email = document.getElementById("email").value;
 
+    //if (email.substring(email.length - 14) != "@cognizant.com")
+    if(false)
+    {
+       alert("Only Cognizant emails are allowed");
+    }else{
+
     const objectToSend = {
       FacebookEmail: this.props.facebookEmail,
       GoogleEmail: this.props.googleEmail,
@@ -21,11 +27,12 @@ class CognizantEmail extends Component {
         }
       }).catch((error) => {
         if (error.response.status === 401) {
-          // unauthorized message
+          alert("Only Cognizant emails are allowed");
         } else {
-          // error message
+          alert("Something went wrong, try again later.");
         }
       })
+    }
   }
 
   render() {
