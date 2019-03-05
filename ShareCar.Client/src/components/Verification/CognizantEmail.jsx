@@ -8,24 +8,33 @@ class CognizantEmail extends Component {
   submitEmail() {
     const email = document.getElementById("email").value;
 
-    const objectToSend = {
-      FacebookEmail: this.props.facebookEmail,
-      GoogleEmail: this.props.googleEmail,
-      CognizantEmail: email,
-    };
+    if (!email ||
+      email.length <= 14 ||
+      email.substring(email.length - 14) != "@cognizant.com") {
 
-    api.post("authentication/CognizantEmailSubmit", objectToSend)
-      .then((response) => {
-        if (response.status === 200) {
-          this.props.emailSubmited();
-        }
-      }).catch((error) => {
-        if (error.response.status === 401) {
-          // unauthorized message
-        } else {
-          // error message
-        }
-      })
+      alert("Only Cognizant emails are allowed");
+
+    } else {
+
+      const objectToSend = {
+        FacebookEmail: this.props.facebookEmail,
+        GoogleEmail: this.props.googleEmail,
+        CognizantEmail: email,
+      };
+
+      api.post("authentication/CognizantEmailSubmit", objectToSend)
+        .then((response) => {
+          if (response.status === 200) {
+            this.props.emailSubmited();
+          }
+        }).catch((error) => {
+          if (error.response.status === 401) {
+            alert("Only Cognizant emails are allowed");
+          } else {
+            alert("Something went wrong, try again later.");
+          }
+        })
+    }
   }
 
   render() {
