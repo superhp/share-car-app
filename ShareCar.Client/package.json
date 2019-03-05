@@ -49,5 +49,11 @@
     "flow-bin": "^0.75.0",
     "flow-typed": "^2.5.1",
     "history": "^4.7.2"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
