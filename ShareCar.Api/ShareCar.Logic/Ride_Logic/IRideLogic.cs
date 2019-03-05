@@ -15,12 +15,12 @@ namespace ShareCar.Logic.Ride_Logic
         IEnumerable<RideDto> GetRidesByStartPoint(int adressFromId);
         IEnumerable<PassengerDto> GetPassengersByRideId(int rideId);
         bool DoesUserBelongsToRide(string email, int rideId);
-        Task<List<RideDto>> GetFinishedPassengerRidesAsync(string passengerEmail);
+        List<RideDto> GetFinishedPassengerRides(string passengerEmail);
         bool SetRideAsInactive(RideDto ride);
         bool AddRide(RideDto ride, string email);
         bool UpdateRide(RideDto ride);
         IEnumerable<RideDto> GetSimilarRides(RideDto ride);
-        Task<IEnumerable<RouteDto>> GetRoutesAsync(RouteDto routeDto, string email);
-        Task<IEnumerable<RideDto>> GetRidesByRouteAsync(string routeGeometry);
+        IEnumerable<RouteDto> GetRoutes(RouteDto routeDto, string email);
+        IEnumerable<RideDto> GetRidesByRoute(string routeGeometry);
     }
 }

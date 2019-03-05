@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ShareCar.Db.Entities;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 
@@ -20,33 +22,32 @@ namespace ShareCar.Db.Repositories.User_Repository
             _databaseContext = context;
         }
 
-        public async Task CreateUser(UserDto userDto)
+        public void CreateUnauthorizedUser(UnauthorizedUser user)
         {
-            var appUser = new User
-            {
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Email = userDto.Email,
-                UserName = userDto.Email,
-                PictureUrl = userDto.PictureUrl
-            };
+            Random random = new Random();
+            user.VerificationCode = random.Next();
+            var result = _databaseContext.UnauthorizedUsers.Add(user);
+            _databaseContext.SaveChanges();
+        }
 
-
-            var result = await _userManager.CreateAsync(appUser, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
+        public async Task CreateUser(User user)
+        {
+            user.UserName = user.Email;
+            var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
             if (!result.Succeeded)
                 throw new ArgumentException("Failed to create local user account.");
-         
+
         }
 
         public IEnumerable<User> GetAllUsers()
         {
             return _databaseContext.Users;
         }
+
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
-            
             var userDto = new UserDto
             {
                 Email = user.Email,
@@ -69,6 +70,93 @@ namespace ShareCar.Db.Repositories.User_Repository
             _user.LicensePlate = user.LicensePlate;
             var userAsync = await _userManager.UpdateAsync(_user);
             return userAsync;
+        }
+
+        public UnauthorizedUser GetUnauthorizedUser(string email)
+        {
+            try
+            {
+                return _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public bool UserVerified(bool faceBookVerified, string loginEmail)
+        {
+            try
+            {
+                var user = _databaseContext.User.Single(x => x.Email == loginEmail);
+                if (faceBookVerified)
+                {
+                    user.FacebookVerified = true;
+                }
+                else
+                {
+                    user.GoogleVerified = true;
+                }
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateUser(User user)
+        {
+            try
+            {
+                var toUpdate = _databaseContext.User.Single(x => x.Email == user.Email);
+
+                toUpdate.FacebookEmail = user.FacebookEmail;
+                toUpdate.GoogleEmail = user.GoogleEmail;
+                toUpdate.FacebookVerified = user.FacebookVerified;
+                toUpdate.GoogleVerified = user.GoogleVerified;
+                toUpdate.CognizantEmail = user.CognizantEmail;
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public void DeleteUser(string email)
+        {
+            var user = _databaseContext.User.Single(x => x.Email == email);
+            var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
+            _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
+            _databaseContext.SaveChanges();
+
+            _databaseContext.User.Remove(user);
+            _databaseContext.SaveChanges();
+        }
+
+        public User GetUserByEmail(EmailType type, string email)
+        {
+            if (type == EmailType.COGNIZANT)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.CognizantEmail == email);
+            }
+            if (type == EmailType.FACEBOOK)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.FacebookEmail == email);
+            }
+            if (type == EmailType.GOOGLE)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.GoogleEmail == email);
+            }
+            if (type == EmailType.LOGIN)
+            {
+                return _databaseContext.User.FirstOrDefault(x => x.Email == email);
+            }
+            return null;
         }
     }
 }
