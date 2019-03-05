@@ -4,7 +4,7 @@ import api from '../helpers/axiosHelper';
 class AuthenticationService {
 
     loginWithFacebook = (accessToken: AccessToken, success: () => void, unauthorized: () => void) => {
-        api.post('authentication/facebook', {
+        api.post('authentication/FacebookLogin', {
             accessToken: accessToken
         })
         .then((response) => {
@@ -21,7 +21,7 @@ class AuthenticationService {
     }
 
     loginWithGoogle = (profileObj: ProfileObj, success: () => void, unauthorized: () => void) => {
-        api.post('authentication/google', profileObj)
+        api.post('authentication/GoogleLogin', profileObj)
         .then((response) => {
             if (response.status === 200)
             success();
