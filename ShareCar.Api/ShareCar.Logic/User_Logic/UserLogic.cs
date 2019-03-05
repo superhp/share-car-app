@@ -154,6 +154,8 @@ namespace ShareCar.Logic.User_Logic
                     user.GoogleEmail = data.GoogleEmail;
 
                 }
+                user.CognizantEmail = data.CognizantEmail;
+
             }
             return _userRepository.UpdateUser(user);
 
@@ -177,7 +179,21 @@ namespace ShareCar.Logic.User_Logic
 
         public UserDto GetUserByEmail(EmailType type, string email)
         {
-            return _mapper.Map<User, UserDto>(_userRepository.GetUserByEmail(type, email));
+            User user = _userRepository.GetUserByEmail(type, email);
+
+            return new UserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FacebookEmail = user.FacebookEmail,
+                FacebookVerified = user.FacebookVerified,
+                GoogleEmail = user.GoogleEmail,
+                GoogleVerified = user.GoogleVerified,
+                CognizantEmail = user.CognizantEmail,
+                Email = user.Email,
+                LicensePlate = user.LicensePlate,
+                Phone = user.Phone
+            };
         }
     }
 }
