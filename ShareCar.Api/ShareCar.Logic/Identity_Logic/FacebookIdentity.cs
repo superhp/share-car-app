@@ -82,7 +82,7 @@ namespace ShareCar.Logic.Identity_Logic
             {
                 if (!user.FacebookVerified)
                 {
-                    user.GoogleEmail = userInfo.Email;
+                    user.FacebookEmail = userInfo.Email;
 
                     if (user.GoogleVerified)
                     {
