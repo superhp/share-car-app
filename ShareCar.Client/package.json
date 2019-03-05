@@ -14,6 +14,7 @@
     "bootstrap": "^4.1.3",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.10.0",
+    "jest-fetch-mock": "^2.1.1",
     "moment": "^2.22.2",
     "ol": "^5.1.3",
     "osm": "^1.0.0",

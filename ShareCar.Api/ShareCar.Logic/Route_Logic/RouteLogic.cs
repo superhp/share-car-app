@@ -57,7 +57,6 @@ namespace ShareCar.Logic.Route_Logic
                 isFromOffice = true;                
             }
 
-
             IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
             List<RouteDto> dtoRoutes = new List<RouteDto>();
             foreach(var route in entityRoutes)

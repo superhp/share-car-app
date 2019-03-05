@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +10,9 @@ using AutoMapper;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
+using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.ObjectMapping;
 using ShareCar.Logic.Passenger_Logic;
 
@@ -32,6 +36,7 @@ namespace ShareCar.Logic.User_Logic
         {
             var user = await _userRepository.GetLoggedInUser(principal);
             return user;
+            
         }
 
         public IEnumerable<UserDto> GetAllUsers()
@@ -59,9 +64,9 @@ namespace ShareCar.Logic.User_Logic
 
         public int CountPoints(string email)
         {
-            int points = _passengerLogic.GetUsersPoints(email);
-            return points;
+            return _passengerLogic.GetUsersPoints(email);
         }
+
         public Dictionary<UserDto, int> GetWinnerBoard()
         {
             Dictionary<UserDto, int> userWithPoints = new Dictionary<UserDto, int>();
@@ -83,15 +88,96 @@ namespace ShareCar.Logic.User_Logic
                         userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
                         userWithPoints.Remove(userWithPoints.FirstOrDefault(x => x.Value == lowestPoints).Key);
                     }
-                    else if (userWithPoints.Values.Min() == userPoints)
-                    {
-                        userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
-                    }
                 }
                 i++;
             }
             userWithPoints = userWithPoints.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             return userWithPoints;
+        }
+
+        public UnauthorizedUserDto GetUnauthorizedUser(string email)
+        {
+           var user = _userRepository.GetUnauthorizedUser(email);
+            return _mapper.Map<UnauthorizedUser, UnauthorizedUserDto>(user);
+        }
+
+        public Task CreateUser(UserDto userDto)
+        {
+            return _userRepository.CreateUser(_mapper.Map<UserDto, User>(userDto));
+        }
+
+        public void CreateUnauthorizedUser(UnauthorizedUserDto userDto)
+        {
+            _userRepository.CreateUnauthorizedUser(_mapper.Map<UnauthorizedUserDto, UnauthorizedUser>(userDto));
+        }
+
+        // data parameter has either Facebbok email, either Google, but never both.
+        public bool SetUsersCognizantEmail(CognizantData data)
+        {
+            var user = _userRepository.GetUserByEmail(EmailType.COGNIZANT, data.CognizantEmail);
+                bool facebookEmail = data.FacebookEmail != null;
+                var loginEmail = facebookEmail ? data.FacebookEmail : data.GoogleEmail;
+
+            if (user == null)
+            {
+                user = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail);
+
+                if (facebookEmail)
+                {
+                    user.FacebookEmail = loginEmail;
+                }
+                else
+                {
+                    user.GoogleEmail = loginEmail;
+                }
+                user.CognizantEmail = data.CognizantEmail;
+            }
+            else 
+            {
+
+                var tempUser = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail); // acc which is created when user logs in with second
+                // email for the first time. After verification, it is unused.
+                if (tempUser.CognizantEmail == null)
+                {
+                    tempUser.GoogleEmail = null;
+                    tempUser.FacebookEmail = null;
+                    _userRepository.UpdateUser(tempUser);
+                }
+
+                if (!user.FacebookVerified && data.FacebookEmail != null)
+                {
+                    user.FacebookEmail = data.FacebookEmail;
+
+                }
+                else if (!user.GoogleVerified && data.GoogleEmail != null)
+                {
+                    user.GoogleEmail = data.GoogleEmail;
+
+                }
+            }
+            return _userRepository.UpdateUser(user);
+
+        }
+
+        public bool VerifyUser(bool faceBookVerified, string loginEmail)
+        {
+            var user = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail);
+
+            if (faceBookVerified)
+            {
+                user.FacebookVerified = true;
+            }
+            else
+            {
+                user.GoogleVerified = true;
+            }
+            
+            return _userRepository.UpdateUser(user);
+        }
+
+        public UserDto GetUserByEmail(EmailType type, string email)
+        {
+            return _mapper.Map<User, UserDto>(_userRepository.GetUserByEmail(type, email));
         }
     }
 }

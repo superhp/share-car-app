@@ -5,24 +5,24 @@ using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using ShareCar.Dto.Identity.Google;
+using ShareCar.Logic.User_Logic;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShareCar.Logic.User_Logic
+namespace ShareCar.Logic.Identity_Logic
 {
     public class GoogleIdentity : IGoogleIdentity
     {
-        private readonly UserManager<User> _userManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
 
-       public GoogleIdentity(UserManager<User> userManager, IJwtFactory jwtFactory, IUserRepository userRepository)
+       public GoogleIdentity(IJwtFactory jwtFactory, IUserRepository userRepository)
         {
-            _userManager = userManager;
+
             _jwtFactory = jwtFactory;
             _userRepository = userRepository;
         }
@@ -30,29 +30,39 @@ namespace ShareCar.Logic.User_Logic
         public async Task<string> Login(GoogleUserDataDto userInfo)
         {
             // ready to create the local user account (if necessary) and jwt
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
-
+            var user =  _userRepository.GetUserByEmail(Dto.EmailType.GOOGLE, userInfo.Email);
             if (user == null)
             {
-                await _userRepository.CreateUser(new UserDto {
+                await _userRepository.CreateUser(new User
+                {
                     FirstName = userInfo.GivenName,
                     LastName = userInfo.FamilyName,
                     Email = userInfo.Email,
-                    PictureUrl = userInfo.ImageUrl
+                    PictureUrl = userInfo.ImageUrl,
+                    FacebookVerified = false,
+                    GoogleVerified = false,
+                    GoogleEmail = userInfo.Email,
+                    FacebookEmail = ""
                 });
+                _userRepository.CreateUnauthorizedUser(new UnauthorizedUser { Email = userInfo.Email });
+
+                return null;
+            }
+
+            if (!user.GoogleVerified)
+            {
+                return null;
             }
 
             // generate the jwt for the local user
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+            var localUser = _userRepository.GetUserByEmail(Dto.EmailType.LOGIN, user.Email);
 
             if (localUser == null)
             {
                 throw new ArgumentException("Local user account could not be found.");
             }
 
-            var jwt = await GenerateJwt(localUser);
-
-            return jwt;
+            return await GenerateJwt(localUser);
         }
 
         private async Task<string> GenerateJwt(User localUser)
