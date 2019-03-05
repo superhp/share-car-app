@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Dto.Identity.Google;
@@ -55,6 +56,14 @@ namespace ShareCar.Api.Controllers
                 data.CognizantEmail.Substring(data.CognizantEmail.Length - 14) != "@cognizant.com")
             {
                 return Unauthorized();
+            }
+
+            bool isFacebookEmail = data.FacebookEmail != null;
+            EmailType type = isFacebookEmail ? EmailType.FACEBOOK : EmailType.GOOGLE;
+
+            if(_userLogic.DoesUserExist(type, data.CognizantEmail))
+            {
+                return BadRequest("There is already registered user with such cognizant email");
             }
 
             var result = _userLogic.SetUsersCognizantEmail(data);

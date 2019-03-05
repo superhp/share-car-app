@@ -31,7 +31,11 @@ class CognizantEmail extends Component {
           if (error.response.status === 401) {
             alert("Only Cognizant emails are allowed");
           } else {
-            alert("Something went wrong, try again later.");
+            if (error.response.status === 400 && error.response.data) {
+              alert(error.response.data);
+            } else {
+              alert("Something went wrong, try again later.");
+            }
           }
         })
     }
