@@ -8,14 +8,14 @@ class CognizantEmail extends Component {
   submitEmail() {
     const email = document.getElementById("email").value;
 
-    if (email ||
+    if (!email ||
       email.length <= 14 ||
       email.substring(email.length - 14) != "@cognizant.com") {
 
       alert("Only Cognizant emails are allowed");
 
     } else {
-      
+
       const objectToSend = {
         FacebookEmail: this.props.facebookEmail,
         GoogleEmail: this.props.googleEmail,
