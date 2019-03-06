@@ -58,9 +58,7 @@ export class DriverMap extends React.Component {
     return getNearest(longitude, latitude)
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
-        console.log(response);
         const address = fromLocationIqResponse(response);
-        console.log(address);
         this.autocompleteInput.value = response.display_name;
         if(this.state.isFromAddressEditable) {
           this.setState({fromAddress: address}, this.updateMap);
@@ -84,6 +82,7 @@ export class DriverMap extends React.Component {
     if (fromAddress && toAddress) {
       createRoute(fromAddress, toAddress)
         .then(geometry => {
+          console.log("geometry", geometry);
           this.vectorSource.addFeature(createRouteFeature(geometry));
           this.setState({routeGeometry: geometry})
         });

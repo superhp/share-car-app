@@ -88,3 +88,18 @@ it("directly handle map click when direction is to", () => {
         expect(driverWrapper.state("toAddress")).toBe(mapClickAddress);
     });
 });
+
+it("directly update map", () => {
+    const driverWrapper = shallow(<DriverMap />); 
+    const createRouteResponse = "";
+    const geometry = "";
+
+    driverWrapper.setState({fromAddress: address});
+    driverWrapper.setState({toAddress: mapClickAddress});
+    fetch.mockResponse(JSON.stringify(createRouteResponse));
+
+    driverWrapper.instance().updateMap().then(() => {
+        expect(fetch).toBeCalled();
+        expect(driverWrapper.state("routeGeometry")).toBe(geometry);
+    });
+});
