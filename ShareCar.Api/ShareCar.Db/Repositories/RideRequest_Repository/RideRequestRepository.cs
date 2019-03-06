@@ -6,7 +6,7 @@ using System;
 
 namespace ShareCar.Db.Repositories.RideRequest_Repository
 {
-   public class RideRequestRepository : IRideRequestRepository
+    public class RideRequestRepository : IRideRequestRepository
     {
 
         private readonly ApplicationDbContext _databaseContext;
@@ -26,7 +26,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
                 _databaseContext.SaveChanges();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }
@@ -35,7 +35,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         public IEnumerable<RideRequest> GetDriverRequests(string email)
         {
 
-                return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).ToList();
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.Status == Status.WAITING).ToList();
 
         }
 
@@ -46,18 +46,18 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public bool DeletedRide(IEnumerable<RideRequest> requests)
         {
-                foreach (RideRequest request in requests)
+            foreach (RideRequest request in requests)
+            {
+                RideRequest toUpdate = _databaseContext.Requests.Find(request.RequestId);
+                if (toUpdate == null)
                 {
-                    RideRequest toUpdate = _databaseContext.Requests.Find(request.RequestId);
-                    if (toUpdate == null)
-                    {
-                        return false;
-                    }
-                    toUpdate.SeenByPassenger = false;
-                    toUpdate.Status = Status.DELETED;
+                    return false;
                 }
-                _databaseContext.SaveChanges();
-                return true;
+                toUpdate.SeenByPassenger = false;
+                toUpdate.Status = Status.DELETED;
+            }
+            _databaseContext.SaveChanges();
+            return true;
         }
 
         public IEnumerable<RideRequest> GetPassengerRequests(string email)
@@ -67,7 +67,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public RideRequest GetRequestById(int id)
         {
-                return _databaseContext.Requests.Find(id);
+            return _databaseContext.Requests.Find(id);
         }
 
         public IEnumerable<RideRequest> GetAcceptedRequests(string passengerEmail)
@@ -78,14 +78,14 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         public void SeenByDriver(int[] requests)
         {
 
-                foreach (int id in requests)
-                {
-                    RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
-                    toUpdate.SeenByDriver = true;
-                }
-
-                _databaseContext.SaveChanges();
+            foreach (int id in requests)
+            {
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                toUpdate.SeenByDriver = true;
             }
+
+            _databaseContext.SaveChanges();
+        }
 
         public void SeenByPassenger(int[] requests)
         {
@@ -109,12 +109,25 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
                 _databaseContext.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
         }
 
-        
+        public void DeleteOldRequests(DateTime date)
+        {
+            var requests = _databaseContext.Requests
+             .Join(_databaseContext.Rides.Where(x => ((x.RideDateTime.Ticks < date.Ticks))),
+               x => x.RideId,
+               y => y.RideId,
+              (x, y) => x);
+            
+            foreach(var request in requests)
+            {
+                _databaseContext.Remove(request);
+            }
+            _databaseContext.SaveChanges();
+        }
     }
 }

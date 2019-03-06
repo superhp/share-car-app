@@ -130,15 +130,18 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
         }
 
-        public void DeleteRide(int id)
+        public void DeleteOldRequests(DateTime date)
         {
-            throw new NotImplementedException();
+            var rides = _databaseContext.Rides.Where(x => x.RideDateTime.Ticks < date.Ticks);
+
+            foreach(var ride in rides)
+            {
+                _databaseContext.Remove(ride);
+            }
+            _databaseContext.SaveChanges();
         }
 
-        public IEnumerable<Ride> GetOldRides(DateTime date)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
     

@@ -11,6 +11,7 @@ using AutoMapper;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
+using System;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -187,6 +188,13 @@ namespace ShareCar.Logic.RideRequest_Logic
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
             }
             return dtoRequests;
+        }
+
+        public void DeleteOldRequests()
+        {
+            DateTime startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+
+            _rideRequestRepository.DeleteOldRequests(startOfMonth);
         }
     }
 }

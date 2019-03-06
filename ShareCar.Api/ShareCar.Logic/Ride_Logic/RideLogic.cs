@@ -303,5 +303,11 @@ namespace ShareCar.Logic.Ride_Logic
         {
            return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
         }
+
+        public void DeleteOldRides()
+        {
+            DateTime startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1,0,0,0);
+            _rideRepository.DeleteOldRequests(startOfMonth);
+        }
     }
 }

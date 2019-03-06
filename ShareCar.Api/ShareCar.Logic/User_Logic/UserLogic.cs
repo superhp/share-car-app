@@ -237,9 +237,10 @@ namespace ShareCar.Logic.User_Logic
 
         public void DeleteUnusedUsers()
         {
-            DateTime today = DateTime.Now;
-            today += new TimeSpan(0, 0, 0);
-            _userRepository.DeleteUnusedUsers(today);
+            DateTime twoDaysAgo = DateTime.Now;
+            twoDaysAgo = twoDaysAgo.AddDays(-2);
+            twoDaysAgo += new TimeSpan(0, 0, 0);
+            _userRepository.DeleteUnusedUsers(twoDaysAgo);
 
 
         }

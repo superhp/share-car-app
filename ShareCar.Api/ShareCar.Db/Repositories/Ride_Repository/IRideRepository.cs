@@ -20,8 +20,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId);
         IEnumerable<Ride> GetRidesByPassenger(Passenger passenger);
         IEnumerable<Ride> GetRidesByRoute(string routeGeometry);
-        void DeleteRide(int id);
-        IEnumerable<Ride> GetOldRides(DateTime date);
+        void DeleteOldRequests(DateTime date);
 
     }
 }
