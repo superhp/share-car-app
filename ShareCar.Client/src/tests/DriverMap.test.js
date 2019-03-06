@@ -22,6 +22,16 @@ const mapClickAddress = {
     longitude: 25.29783
 }
 
+const officeAddress = {
+    number: "28",
+    street: "Savanorių pr.",
+    city: "Vilnius",
+    country: "Lietuva",
+    latitude:54.67574723192748,
+    longitude:25.252798705321993
+}
+
+
 const inputField = "10, J. Kubiliaus g., \u017dirm\u016bn\u0173 seni\u016bnija, Vilnius, Vilnius city municipality, Vilnius County, 08239, Lithuania";
 const longitude = 25.29739379882812;
 const latitude = 54.709598364813246;
@@ -92,10 +102,10 @@ it("directly handle map click when direction is to", () => {
 it("directly update map", () => {
     const driverWrapper = shallow(<DriverMap />); 
     const createRouteResponse = "";
-    const geometry = "";
+    const geometry = "{}_mIkphyCfIs@j@tGfP|P{@pf@mE`Cx`@}Hxa@`Bnw@zYdOvSrm@iFr_@nIhTV|EbJTrT|Eri@nHpIdPbGdGkCdPi[}AZkAsC";
 
     driverWrapper.setState({fromAddress: address});
-    driverWrapper.setState({toAddress: mapClickAddress});
+    driverWrapper.setState({toAddress: officeAddress});
     fetch.mockResponse(JSON.stringify(createRouteResponse));
 
     driverWrapper.instance().updateMap().then(() => {

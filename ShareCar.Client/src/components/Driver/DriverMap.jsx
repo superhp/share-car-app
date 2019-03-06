@@ -80,9 +80,8 @@ export class DriverMap extends React.Component {
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
     if (fromAddress && toAddress) {
-      createRoute(fromAddress, toAddress)
+      return createRoute(fromAddress, toAddress)
         .then(geometry => {
-          console.log("geometry", geometry);
           this.vectorSource.addFeature(createRouteFeature(geometry));
           this.setState({routeGeometry: geometry})
         });
