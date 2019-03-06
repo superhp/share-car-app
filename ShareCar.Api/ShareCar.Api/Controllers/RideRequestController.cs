@@ -29,6 +29,8 @@ namespace ShareCar.Api.Controllers
             _rideLogic = rideLogic;
         }
 
+
+
         [HttpGet("{driver}")]
         public async Task<IActionResult> GetUserRequestsAsync(string driver)
         {
@@ -99,6 +101,13 @@ namespace ShareCar.Api.Controllers
                 return BadRequest("Operation failed");
             }
 
+        }
+
+        [HttpGet("{deleteOld}")]
+        public IActionResult DeleteOldRequests()
+        {
+            _requestLogic.DeleteOldRequests();
+            return Ok();
         }
     }
 }

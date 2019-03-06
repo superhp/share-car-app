@@ -140,5 +140,12 @@ namespace ShareCar.Api.Controllers
             };
             Response.Cookies.Append("token", jwt, options);
         }
+
+        [HttpGet]
+        public IActionResult Temp()
+        {
+            return Ok();
+        }
+
     }
 }

@@ -15,7 +15,7 @@ using ShareCar.Logic.RideRequest_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{   
+{
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
@@ -42,7 +42,7 @@ namespace ShareCar.Api.Controllers
         {
             RideDto ride = _rideLogic.GetRideById(rideId);
 
-            if(ride == null)
+            if (ride == null)
             {
                 return BadRequest("Invalid parameter");
             }
@@ -50,12 +50,12 @@ namespace ShareCar.Api.Controllers
             IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(ride);
             return Ok(rides);
         }
-        
+
         [HttpPost("passengerResponse")]
         public async Task<IActionResult> PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-           bool result = _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
+            bool result = _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
             if (result)
             {
                 return Ok();
@@ -81,9 +81,9 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
 
-            foreach(var ride in rides)
+            foreach (var ride in rides)
             {
-                foreach(var req in ride.Requests)
+                foreach (var req in ride.Requests)
                 {
                     AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
                     req.Longtitude = adr.Longtitude;
@@ -95,23 +95,23 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("ridedate={rideDate}")]
-        public  IActionResult GetRidesByDate(DateTime rideDate)
+        public IActionResult GetRidesByDate(DateTime rideDate)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDate(rideDate);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByDate(rideDate);
             return Ok(rides);
         }
 
         [HttpGet("addressFromId={addressFromId}")]
-        public  IActionResult GetRidesByStartPoint(int addressFromId)
+        public IActionResult GetRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByStartPoint(addressFromId);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByStartPoint(addressFromId);
             return Ok(rides);
         }
 
         [HttpGet("addressToId={addressToId}")]
-        public  IActionResult GetRidesByDestination(int addressToId)
+        public IActionResult GetRidesByDestination(int addressToId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDestination(addressToId);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByDestination(addressToId);
             return Ok(rides);
         }
 
@@ -130,7 +130,7 @@ namespace ShareCar.Api.Controllers
                 return BadRequest();
             var userDto = await _userRepository.GetLoggedInUser(User);
             IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto, userDto.Email);
-            
+
             return Ok(routes);
         }
 
@@ -143,11 +143,11 @@ namespace ShareCar.Api.Controllers
                 BadRequest("You don't belong to this ride");
             }
 
-            IEnumerable<PassengerDto> passengers =  _rideLogic.GetPassengersByRideId(rideId);
-                return Ok(passengers);
+            IEnumerable<PassengerDto> passengers = _rideLogic.GetPassengersByRideId(rideId);
+            return Ok(passengers);
 
         }
-        
+
         [HttpPut("disactivate")]
         public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
@@ -181,7 +181,7 @@ namespace ShareCar.Api.Controllers
             int count = 0;
             foreach (var ride in rides)
             {
-                bool result =  _rideLogic.AddRide(ride, userDto.Email);
+                bool result = _rideLogic.AddRide(ride, userDto.Email);
                 if (result)
                 {
                     count++;
@@ -199,7 +199,14 @@ namespace ShareCar.Api.Controllers
             }
 
         }
+
+        [HttpGet("{deleteOld}")]
+        public IActionResult DeleteOldRide()
+        {
+            _rideLogic.DeleteOldRides();
+
+            return Ok();
+        }
+
     }
-
-
-}
+    }
