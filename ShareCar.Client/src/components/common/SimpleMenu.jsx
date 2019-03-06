@@ -35,7 +35,7 @@ class SimpleMenu extends React.Component {
     }
 
     this.setState({ open: false });
-    this.props.handleSelection(event, index, this.props.whichButton);
+    this.props.handleSelection(OfficeAddresses[index]);
   };
 
   render() {

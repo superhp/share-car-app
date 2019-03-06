@@ -3,10 +3,10 @@ import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
 import { DriverInput } from "../DriverInput";
-import { OfficeSelection } from "./OfficeSelection";
 import { OfficeAddresses } from "../../../utils/AddressData";
 
 import "../../../styles/testmap.css";
+import SimpleMenu from "../../common/SimpleMenu";
 
 const fromAlgoliaAddress = address => {
     console.log("Original address", address);
@@ -56,22 +56,21 @@ class DriverRouteInputInner extends React.Component {
                 >
                     <ImportExport fontSize="large"/>
                 </Button>
-                <OfficeSelection 
-                    checkedOffice={this.state.checkedOffice}
-                    onChange={office => {
+                <SimpleMenu
+                    buttonText="Select Office"
+                    handleSelection={office => {
+                        console.log(office);
                         this.props.onToAddressChange(office);
-                        this.setState({checkedOffice: office});
                     }}
                 />
             </div>)
             :
             (<div className="map-input-selection">
-                <OfficeSelection 
-                    checkedOffice={this.state.checkedOffice}
-                    onChange={office => {
-                        this.props.onFromAddressChange(office);
-                        this.setState({checkedOffice: office});
-                    }}
+                <SimpleMenu
+                    buttonText="Select Office"
+                    handleSelection={office =>
+                        this.props.onFromAddressChange(office)
+                    }
                 />
                 <Button
                     size="large"
