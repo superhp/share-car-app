@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -20,5 +21,8 @@ namespace ShareCar.Db.Repositories.User_Repository
         bool UpdateUser(User user);
         User GetUserByEmail(EmailType type, string email);
         void DeleteUser(string email);
+        void DeleteUnauthorizedUser(string email);
+        IEnumerable<User> GetUnusedUsers(DateTime date);
+        IEnumerable<UnauthorizedUser> GetUnusedUnauthorizedUsers();
     }
 }

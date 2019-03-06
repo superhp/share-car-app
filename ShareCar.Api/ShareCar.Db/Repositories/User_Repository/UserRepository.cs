@@ -36,6 +36,7 @@ namespace ShareCar.Db.Repositories.User_Repository
             var isFacebook = user.FacebookEmail != null;
 
             user.UserName = user.Email;
+            user.CreationDate = DateTime.Now;
             var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
             if (!result.Succeeded)
@@ -132,10 +133,8 @@ namespace ShareCar.Db.Repositories.User_Repository
 
         public void DeleteUser(string email)
         {
-            var user = _databaseContext.User.Single(x => x.Email == email);
-            var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
-            _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
-            _databaseContext.SaveChanges();
+            DeleteUnauthorizedUser(email);
+            var user = _databaseContext.User.Single(x => x.Email == email); 
 
             _databaseContext.User.Remove(user);
             _databaseContext.SaveChanges();
@@ -161,5 +160,26 @@ namespace ShareCar.Db.Repositories.User_Repository
             }
             return null;
         }
+
+        public IEnumerable<UnauthorizedUser> GetUnusedUnauthorizedUsers() {
+           return _databaseContext.UnauthorizedUsers
+                .Join(_databaseContext.User.Where(x => (x.FacebookVerified || x.GoogleVerified)),
+                x => x.Email,
+                y => y.Email,
+                (x, y) => x);
+}
+
+        public IEnumerable<User> GetUnusedUsers(DateTime date)
+        {
+return _databaseContext.Users.Where(x => !x.GoogleVerified && !x.FacebookVerified && x.CreationDate.Ticks <= date.Ticks);
+        }
+
+        public void DeleteUnauthorizedUser(string email)
+        {
+            var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
+            _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
+            _databaseContext.SaveChanges();
+        }
+        
     }
 }

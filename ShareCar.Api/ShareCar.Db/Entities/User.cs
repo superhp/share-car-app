@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace ShareCar.Db.Entities
 {
@@ -16,5 +17,6 @@ namespace ShareCar.Db.Entities
         public string PictureUrl { get; set; }
         public string LicensePlate { get; set; }
         public string Phone { get; set; }
+        public DateTime CreationDate {get;set;}
     }
 }

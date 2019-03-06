@@ -229,5 +229,25 @@ namespace ShareCar.Logic.User_Logic
             return false;
 
         }
+
+        public void DeleteOldUnauthorizedUsers()
+        {
+            var oldUsers = _userRepository.GetUnusedUnauthorizedUsers();
+            foreach (var user in oldUsers)
+            {
+                _userRepository.DeleteUnauthorizedUser(user.Email);
+            }
+        }
+
+        public void DeleteUnusedUsers()
+        {
+            DateTime today = DateTime.Now;
+            today += new TimeSpan(0, 0, 0);
+            var oldUsers = _userRepository.GetUnusedUsers(today);
+            foreach(var user in oldUsers){
+                _userRepository.DeleteUser(user.Email);
+            }
+
+        }
     }
 }
