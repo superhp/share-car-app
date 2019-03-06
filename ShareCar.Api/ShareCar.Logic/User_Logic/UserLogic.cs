@@ -232,21 +232,15 @@ namespace ShareCar.Logic.User_Logic
 
         public void DeleteOldUnauthorizedUsers()
         {
-            var oldUsers = _userRepository.GetUnusedUnauthorizedUsers();
-            foreach (var user in oldUsers)
-            {
-                _userRepository.DeleteUnauthorizedUser(user.Email);
-            }
+            _userRepository.DeleteUnusedUnauthorizedUsers();
         }
 
         public void DeleteUnusedUsers()
         {
             DateTime today = DateTime.Now;
             today += new TimeSpan(0, 0, 0);
-            var oldUsers = _userRepository.GetUnusedUsers(today);
-            foreach(var user in oldUsers){
-                _userRepository.DeleteUser(user.Email);
-            }
+            _userRepository.DeleteUnusedUsers(today);
+
 
         }
     }

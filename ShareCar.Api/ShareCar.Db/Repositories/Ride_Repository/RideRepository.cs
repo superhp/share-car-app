@@ -129,6 +129,16 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         {
             return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
         }
+
+        public void DeleteRide(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Ride> GetOldRides(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
     

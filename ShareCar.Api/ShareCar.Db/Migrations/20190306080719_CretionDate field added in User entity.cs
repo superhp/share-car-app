@@ -8,6 +8,10 @@ namespace ShareCar.Db.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
+            // Code commented bellow is not required and was generated because of unknow reasons. Only CreationDate column addition was expected to be generated
+
+
         /*    migrationBuilder.DropForeignKey(
                 name: "FK_RideRequests_Addresses_AddressId",
                 table: "RideRequests");

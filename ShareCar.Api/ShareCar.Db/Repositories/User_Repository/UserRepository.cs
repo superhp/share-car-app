@@ -131,15 +131,6 @@ namespace ShareCar.Db.Repositories.User_Repository
             }
         }
 
-        public void DeleteUser(string email)
-        {
-            DeleteUnauthorizedUser(email);
-            var user = _databaseContext.User.Single(x => x.Email == email); 
-
-            _databaseContext.User.Remove(user);
-            _databaseContext.SaveChanges();
-        }
-
         public User GetUserByEmail(EmailType type, string email)
         {
             if (type == EmailType.COGNIZANT)
@@ -161,25 +152,35 @@ namespace ShareCar.Db.Repositories.User_Repository
             return null;
         }
 
-        public IEnumerable<UnauthorizedUser> GetUnusedUnauthorizedUsers() {
-           return _databaseContext.UnauthorizedUsers
-                .Join(_databaseContext.User.Where(x => (x.FacebookVerified || x.GoogleVerified)),
-                x => x.Email,
-                y => y.Email,
-                (x, y) => x);
-}
-
-        public IEnumerable<User> GetUnusedUsers(DateTime date)
+        public void DeleteUnusedUsers(DateTime date)
         {
-return _databaseContext.Users.Where(x => !x.GoogleVerified && !x.FacebookVerified && x.CreationDate.Ticks <= date.Ticks);
+            var users = _databaseContext.Users.Where(x => !x.GoogleVerified && !x.FacebookVerified && x.CreationDate.Ticks <= date.Ticks).ToList();
+
+            foreach(var user in users)
+            {
+                var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == user.Email);
+                _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
+                _databaseContext.SaveChanges();
+
+                _databaseContext.Users.Remove(user);
+                _databaseContext.SaveChanges();
+            }
+
         }
 
-        public void DeleteUnauthorizedUser(string email)
+        public void DeleteUnusedUnauthorizedUsers()
         {
-            var unauthorizedUser = _databaseContext.UnauthorizedUsers.Single(x => x.Email == email);
-            _databaseContext.UnauthorizedUsers.Remove(unauthorizedUser);
-            _databaseContext.SaveChanges();
+            var users = _databaseContext.UnauthorizedUsers
+                 .Join(_databaseContext.User.Where(x => (x.FacebookVerified || x.GoogleVerified)),
+                 x => x.Email,
+                 y => y.Email,
+                 (x, y) => x);
+
+            foreach (var user in users)
+            {
+                _databaseContext.UnauthorizedUsers.Remove(user);
+                _databaseContext.SaveChanges();
+            }
         }
-        
     }
 }

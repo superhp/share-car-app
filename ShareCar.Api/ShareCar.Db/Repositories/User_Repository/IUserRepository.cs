@@ -20,9 +20,7 @@ namespace ShareCar.Db.Repositories.User_Repository
         void CreateUnauthorizedUser(UnauthorizedUser user);
         bool UpdateUser(User user);
         User GetUserByEmail(EmailType type, string email);
-        void DeleteUser(string email);
-        void DeleteUnauthorizedUser(string email);
-        IEnumerable<User> GetUnusedUsers(DateTime date);
-        IEnumerable<UnauthorizedUser> GetUnusedUnauthorizedUsers();
+        void DeleteUnusedUsers(DateTime date);
+        void DeleteUnusedUnauthorizedUsers();
     }
 }
