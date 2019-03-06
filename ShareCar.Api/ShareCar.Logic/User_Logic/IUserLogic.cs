@@ -20,5 +20,6 @@ namespace ShareCar.Logic.User_Logic
         bool SetUsersCognizantEmail(CognizantData data);
         bool VerifyUser(bool faceBookVerified, string loginEmail); 
         UserDto GetUserByEmail(EmailType type, string email);
+        bool DoesUserExist(EmailType type, string cognizantEmail);
     }
 }

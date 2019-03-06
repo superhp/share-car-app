@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Dto.Identity.Google;
@@ -50,15 +51,31 @@ namespace ShareCar.Api.Controllers
         [HttpPost]
         public IActionResult CognizantEmailSubmit([FromBody] CognizantData data)
         {
-            
+            if (data.CognizantEmail == null ||
+                data.CognizantEmail.Length <= 14 ||
+                data.CognizantEmail.Substring(data.CognizantEmail.Length - 14) != "@cognizant.com")
+            {
+                return Unauthorized();
+            }
+
+            bool isFacebookEmail = data.FacebookEmail != null;
+            EmailType type = isFacebookEmail ? EmailType.FACEBOOK : EmailType.GOOGLE;
+
+            if(_userLogic.DoesUserExist(type, data.CognizantEmail))
+            {
+                return BadRequest("There is already registered user with such cognizant email");
+            }
+
             var result = _userLogic.SetUsersCognizantEmail(data);
             var loginEmail = data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail;
             _cognizantIdentity.SendVerificationCode(data.CognizantEmail, loginEmail);
+
             if (result)
             {
                 return Ok();
             }
-                return BadRequest();
+
+            return BadRequest();
         }
 
         [HttpPost]
@@ -67,14 +84,14 @@ namespace ShareCar.Api.Controllers
             try
             {
                 var jwt = await _facebookIdentity.Login(accessToken);
-                if(jwt != null)
+                if (jwt != null)
                 {
                     AddJwtToCookie(jwt);
                     return Ok();
                 }
                 else
                 {
-                   return Unauthorized();
+                    return Unauthorized();
                 }
 
 

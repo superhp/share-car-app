@@ -154,6 +154,8 @@ namespace ShareCar.Logic.User_Logic
                     user.GoogleEmail = data.GoogleEmail;
 
                 }
+                user.CognizantEmail = data.CognizantEmail;
+
             }
             return _userRepository.UpdateUser(user);
 
@@ -177,7 +179,55 @@ namespace ShareCar.Logic.User_Logic
 
         public UserDto GetUserByEmail(EmailType type, string email)
         {
-            return _mapper.Map<User, UserDto>(_userRepository.GetUserByEmail(type, email));
+            User user = _userRepository.GetUserByEmail(type, email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FacebookEmail = user.FacebookEmail,
+                FacebookVerified = user.FacebookVerified,
+                GoogleEmail = user.GoogleEmail,
+                GoogleVerified = user.GoogleVerified,
+                CognizantEmail = user.CognizantEmail,
+                Email = user.Email,
+                LicensePlate = user.LicensePlate,
+                Phone = user.Phone
+            };
+        }
+
+        public bool DoesUserExist(EmailType type, string cognizantEmail)
+        {
+            if (cognizantEmail == null)
+            {
+                return false;
+            }
+
+            var cognizantUser = _userRepository.GetUserByEmail(EmailType.COGNIZANT, cognizantEmail);
+
+            if(cognizantUser == null)
+            {
+                return false;
+            }
+
+            else
+            {
+                if(type == EmailType.FACEBOOK && cognizantUser.FacebookEmail != null)
+                {
+                    return true;
+                }
+                if (type == EmailType.GOOGLE && cognizantUser.GoogleEmail != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+
         }
     }
 }

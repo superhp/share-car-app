@@ -85,7 +85,7 @@ namespace ShareCar.Logic.Identity_Logic
 
             var recipients = new List<EmailAddress>
             {
-                new EmailAddress("edgar.reis@cognizant.com")
+                new EmailAddress(cognizantEmail)
             };
             msg.AddTos(recipients);
 
