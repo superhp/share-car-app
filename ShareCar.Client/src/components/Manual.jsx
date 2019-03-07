@@ -3,11 +3,9 @@ import { Route, Link } from "react-router-dom";
 
 import "../styles/genericStyles.css";
 
-class Manual extends React.Component {
-    render(){
+  const Manual = props =>{
         return (
             <div> MMMMMMMMMMM</div>
            );
-    }
 };
 export default Manual;
