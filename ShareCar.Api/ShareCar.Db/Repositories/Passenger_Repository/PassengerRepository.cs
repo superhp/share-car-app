@@ -24,39 +24,25 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return points;
         }
 
-        public bool AddNewPassenger(Passenger passenger)
+        public void AddNewPassenger(Passenger passenger)
         {
-            try
-            {
                 var p = _databaseContext.Passengers.FirstOrDefault(x => x.Email == passenger.Email && x.RideId == passenger.RideId);
 
                 if(p != null)
                 {
-                    return false;
+                throw new ArgumentException("Passenger has already registered to ride.");
                 }
 
                 _databaseContext.Passengers.Add(passenger);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
+
         }
 
-        public bool RemovePassenger(Passenger passenger)
+        public void RemovePassenger(Passenger passenger)
         {
-            try
-            {
                 _databaseContext.Passengers.Remove(passenger);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+
         }
 
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
@@ -70,7 +56,7 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return _databaseContext.Passengers.Where(x => x.RideId == rideId);
         }
 
-        public bool RespondToRide(bool response, int rideId, string passengerEmail)
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
             try {
                 Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
