@@ -15,7 +15,7 @@ using ShareCar.Logic.RideRequest_Logic;
 using ShareCar.Logic.Route_Logic;
 
 namespace ShareCar.Api.Controllers
-{   
+{
     [Authorize]
     [Produces("application/json")]
     [Route("api/Ride")]
@@ -42,28 +42,17 @@ namespace ShareCar.Api.Controllers
         {
             RideDto ride = _rideLogic.GetRideById(rideId);
 
-            if(ride == null)
-            {
-                return BadRequest("Invalid parameter");
-            }
-
             IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(ride);
             return Ok(rides);
         }
-        
+
         [HttpPost("passengerResponse")]
         public async Task<IActionResult> PassengerResponseAsync([FromBody]PassengerResponseDto response)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
-           bool result = _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            _passengerLogic.RespondToRide(response.Response, response.RideId, userDto.Email);
+
+            return Ok();
         }
 
         [HttpGet("checkFinished")]
@@ -81,9 +70,9 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
 
-            foreach(var ride in rides)
+            foreach (var ride in rides)
             {
-                foreach(var req in ride.Requests)
+                foreach (var req in ride.Requests)
                 {
                     AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
                     req.Longtitude = adr.Longtitude;
@@ -95,28 +84,28 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("ridedate={rideDate}")]
-        public  IActionResult GetRidesByDate(DateTime rideDate)
+        public IActionResult GetRidesByDate(DateTime rideDate)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDate(rideDate);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByDate(rideDate);
             return Ok(rides);
         }
 
         [HttpGet("addressFromId={addressFromId}")]
-        public  IActionResult GetRidesByStartPoint(int addressFromId)
+        public IActionResult GetRidesByStartPoint(int addressFromId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByStartPoint(addressFromId);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByStartPoint(addressFromId);
             return Ok(rides);
         }
 
         [HttpGet("addressToId={addressToId}")]
-        public  IActionResult GetRidesByDestination(int addressToId)
+        public IActionResult GetRidesByDestination(int addressToId)
         {
-            IEnumerable<RideDto> rides =  _rideLogic.GetRidesByDestination(addressToId);
+            IEnumerable<RideDto> rides = _rideLogic.GetRidesByDestination(addressToId);
             return Ok(rides);
         }
 
         [HttpGet("ridesByRoute={routeGeometry}")]
-        public async Task<IActionResult> GetRidesRouteAsync(string routeGeometry)
+        public IActionResult GetRidesRouteAsync(string routeGeometry)
         {
             IEnumerable<RideDto> rides = _rideLogic.GetRidesByRoute(routeGeometry);
             return Ok(rides);
@@ -127,10 +116,12 @@ namespace ShareCar.Api.Controllers
         {
 
             if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
-                return BadRequest();
+            { 
+            return BadRequest();
+        }
             var userDto = await _userRepository.GetLoggedInUser(User);
             IEnumerable<RouteDto> routes = _rideLogic.GetRoutes(routeDto, userDto.Email);
-            
+
             return Ok(routes);
         }
 
@@ -140,14 +131,14 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (!_rideLogic.DoesUserBelongsToRide(userDto.Email, rideId))
             {
-                BadRequest("You don't belong to this ride");
+                return Unauthorized();
             }
 
-            IEnumerable<PassengerDto> passengers =  _rideLogic.GetPassengersByRideId(rideId);
-                return Ok(passengers);
+            IEnumerable<PassengerDto> passengers = _rideLogic.GetPassengersByRideId(rideId);
+            return Ok(passengers);
 
         }
-        
+
         [HttpPut("disactivate")]
         public async Task<IActionResult> SetRideAsInactive([FromBody] RideDto rideDto)
         {
@@ -155,48 +146,27 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (rideDto == null)
             {
-                return BadRequest("invalid parameter");
-
+                return BadRequest();
             }
+
             _rideRequestLogic.DeletedRide(rideDto.RideId);
-            bool result = _rideLogic.SetRideAsInactive(rideDto);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
-
+            _rideLogic.SetRideAsInactive(rideDto);
+            return Ok();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddRides([FromBody] IEnumerable<RideDto> rides)
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
             if (rides == null)
             {
-                return BadRequest("Invalid parameter");
+                return BadRequest();
             }
-            int count = 0;
             foreach (var ride in rides)
             {
-                bool result =  _rideLogic.AddRide(ride, userDto.Email);
-                if (result)
-                {
-                    count++;
-                }
-                else break;
+                _rideLogic.AddRide(ride, userDto.Email);
             }
-            if (count == rides.Count())
-            {
-                return Ok();
-            }
-            else
-            {
-
-                return BadRequest("Operation failed");
-            }
+            return Ok();
 
         }
     }

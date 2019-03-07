@@ -62,7 +62,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 }
                 else
                 {
-                    throw new ArgumentException("selected ride deosn't have empty seats");
+                    throw new ArgumentException("Selected ride deosn't have empty seats");
                 } 
             }
         }

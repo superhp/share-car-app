@@ -51,6 +51,10 @@ namespace ShareCar.Db.Repositories.User_Repository
         public async Task<UserDto> GetLoggedInUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
+            if(user == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
             var userDto = new UserDto
             {
                 Email = user.Email,

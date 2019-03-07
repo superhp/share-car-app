@@ -30,22 +30,15 @@ namespace ShareCar.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> VerificationCodeSubmit([FromBody] VerificationCodeSubmitData data)
         {
-            try
-            {
 
-                var jwt = await _cognizantIdentity.SubmitVerificationCodeAsync(data);
+            var jwt = await _cognizantIdentity.SubmitVerificationCodeAsync(data);
 
-                if (jwt != null)
-                {
-                    AddJwtToCookie(jwt);
-                    return Ok();
-                }
-                return Unauthorized();
-            }
-            catch (Exception ex)
+            if (jwt != null)
             {
-                return BadRequest(ex.Message);
+                AddJwtToCookie(jwt);
+                return Ok();
             }
+            return Unauthorized();
         }
 
         [HttpPost]
@@ -61,67 +54,48 @@ namespace ShareCar.Api.Controllers
             bool isFacebookEmail = data.FacebookEmail != null;
             EmailType type = isFacebookEmail ? EmailType.FACEBOOK : EmailType.GOOGLE;
 
-            if(_userLogic.DoesUserExist(type, data.CognizantEmail))
+            if (_userLogic.DoesUserExist(type, data.CognizantEmail))
             {
-                return BadRequest("There is already registered user with such cognizant email");
+                return BadRequest(); // There is already registered user with such cognizant email
             }
 
-            var result = _userLogic.SetUsersCognizantEmail(data);
+            _userLogic.SetUsersCognizantEmail(data);
             var loginEmail = data.FacebookEmail == null ? data.GoogleEmail : data.FacebookEmail;
             _cognizantIdentity.SendVerificationCode(data.CognizantEmail, loginEmail);
 
-            if (result)
-            {
-                return Ok();
-            }
+            return Ok();
 
-            return BadRequest();
         }
 
         [HttpPost]
         public async Task<IActionResult> FacebookLogin([FromBody] AccessTokenDto accessToken)
         {
-            try
+            var jwt = await _facebookIdentity.Login(accessToken);
+            if (jwt != null)
             {
-                var jwt = await _facebookIdentity.Login(accessToken);
-                if (jwt != null)
-                {
-                    AddJwtToCookie(jwt);
-                    return Ok();
-                }
-                else
-                {
-                    return Unauthorized();
-                }
-
-
+                AddJwtToCookie(jwt);
+                return Ok();
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                return Unauthorized();
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleUserDataDto userData)
         {
-            try
+            var jwt = await _googleIdentity.Login(userData);
+            if (jwt != null)
             {
-                var jwt = await _googleIdentity.Login(userData);
-                if (jwt != null)
-                {
-                    AddJwtToCookie(jwt);
-                    return Ok();
-                }
-                else
-                {
-                    return Unauthorized();
-                }
+                AddJwtToCookie(jwt);
+                return Ok();
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                return Unauthorized();
             }
+
         }
 
         [HttpPost]

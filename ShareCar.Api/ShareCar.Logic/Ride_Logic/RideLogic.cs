@@ -123,7 +123,6 @@ namespace ShareCar.Logic.Ride_Logic
             AddRouteIdToRide(ride);
 
             _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-
         }
 
         public void SetRideAsInactive(RideDto rideDto)
