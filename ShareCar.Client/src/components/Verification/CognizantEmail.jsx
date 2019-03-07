@@ -1,10 +1,17 @@
 // @flow
 import React, { Component } from "react";
 import api from "../../helpers/axiosHelper";
+import GDPRAgreement from "../GDPRAgreement";
 import "../../styles/login.css";
 
 class CognizantEmail extends Component {
 
+state={
+  disabled : true
+}
+onCheckBoxClick = () =>{
+  this.setState({disabled : !this.state.disabled})
+}
   submitEmail() {
     const email = document.getElementById("email").value;
 
@@ -47,7 +54,8 @@ class CognizantEmail extends Component {
         <h1>Submit your cognizant email to receive verification code</h1>
         <div className="email-input">
           <input id="email" placeholder="Your email..."></input>
-          <button onClick={this.submitEmail.bind(this)} > Get code</button>
+          <button disabled = {this.state.disabled} onClick={this.submitEmail.bind(this)} > Get code</button>
+          <GDPRAgreement checkBoxClick = {this.onCheckBoxClick}/>
         </div>
       </div>
     );

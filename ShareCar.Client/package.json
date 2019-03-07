@@ -29,6 +29,7 @@
     "react-infinite-calendar": "^2.3.1",
     "react-moment": "^0.7.9",
     "react-popup": "^0.9.3",
+    "react-responsive-modal": "^3.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
