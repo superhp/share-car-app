@@ -19,7 +19,8 @@ import { PassengerNavigationButton } from "./PassengerNavigationButton";
 import { OfficeAddresses } from "../../utils/AddressData";
 import api from "./../../helpers/axiosHelper";
 import { fromLonLatToMapCoords, fromMapCoordsToLonLat, 
-  getNearest, coordinatesToLocation, createPointFeature } from "../../utils/mapUtils";
+  getNearest, coordinatesToLocation, createPointFeature, 
+  createRouteFeature } from "../../utils/mapUtils";
 import { fromLocationIqResponse, addressToString } from "../../utils/addressUtils";
 
 import "./../../styles/genericStyles.css";
@@ -71,6 +72,11 @@ export class PassengerMap extends React.Component {
       const {longitude, latitude} = passengerAddress;
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
+    if(this.state.routes !== []) {
+      this.state.routes.map(route => {
+        this.vectorSource.addFeature(createRouteFeature(route.geometry));
+      });
+    }
   }
 
   handleMapClick(longitude, latitude) {
@@ -89,17 +95,17 @@ export class PassengerMap extends React.Component {
     if(newAddress) centerMap(newAddress.longitude, newAddress.latitude, this.map);
   }
 
-  getAllRoutes() {
+  getAllRoutes(address) {
+    this.setState({officeAddress: address});
     let routeDto;
     if(this.state.direction === "to")
-      routeDto = {AddressTo: this.state.officeAddress};
+      routeDto = {AddressTo: address};
     else 
-      routeDto = {AddressFrom: this.state.officeAddress};
+      routeDto = {AddressFrom: address};
     this.fetchRoutes(routeDto);
   }
 
   fetchRoutes(routeDto) {
-    console.log("route dto", routeDto);
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
       if (res.status === 200 && res.data !== "") {
         this.setState({ routes: res.data});
@@ -113,10 +119,7 @@ export class PassengerMap extends React.Component {
         <div className="passengerForm">
           <PassengerRouteSelection 
               direction={this.state.direction}
-              handleOfficeSelection={address => {
-                this.setState({officeAddress: address});
-                this.getAllRoutes();
-              }}
+              handleOfficeSelection={address => this.getAllRoutes(address)}
               onDirectionChanged={(direction) => this.setState({direction: direction})}
               onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
               ref={e => {
