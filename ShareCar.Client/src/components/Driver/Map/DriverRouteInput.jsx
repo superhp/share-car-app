@@ -2,33 +2,12 @@ import * as React from "react";
 import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
-import { DriverInput } from "../DriverInput";
+import { AddressInput } from "../../common/AddressInput";
 import { OfficeAddresses } from "../../../utils/AddressData";
+import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "../../../styles/testmap.css";
 import SimpleMenu from "../../common/SimpleMenu";
-
-const fromAlgoliaAddress = address => {
-    console.log("Original address", address);
-    if(!address) return null;
-    let streetNumber = "";
-    let street = address.name;
-    const firstDigit = address.name.match(/\d/);
-    if (firstDigit !== null) {
-        const indexOfFirstDigit = address.name.indexOf(firstDigit);
-        const indexOfFirstSpace = address.name.indexOf(" ");
-        streetNumber = address.name.substring(indexOfFirstDigit, indexOfFirstSpace);
-        street = address.name.substring(indexOfFirstSpace + 1);
-    }
-    return {
-        number: streetNumber,
-        street: street,
-        city: address.city,
-        country: address.country,
-        latitude: address.latlng.lat,
-        longitude: address.latlng.lng
-    };
-};
 
 class DriverRouteInputInner extends React.Component {
     state = {
@@ -40,7 +19,7 @@ class DriverRouteInputInner extends React.Component {
             this.state.direction 
             ?
             (<div className="map-input-selection">
-                <DriverInput 
+                <AddressInput 
                     placeholder="Select From Location"
                     onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
                     ref={this.props.innerRef}
@@ -83,7 +62,7 @@ class DriverRouteInputInner extends React.Component {
                 >
                     <ImportExport fontSize="large"/>
                 </Button>
-                <DriverInput 
+                <AddressInput 
                     placeholder="Select To Location"
                     onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
                     ref={this.props.innerRef}
