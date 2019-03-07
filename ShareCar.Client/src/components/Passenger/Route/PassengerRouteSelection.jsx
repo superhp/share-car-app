@@ -5,7 +5,6 @@ import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
 
 import SimpleMenu from "../../common/SimpleMenu";
-import { PassengerRouteRadioButton } from "./PassengerRouteRadioButton";
 import { AddressInput } from "../../common/AddressInput";
 import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 

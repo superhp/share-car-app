@@ -32,7 +32,9 @@ export class PassengerMap extends React.Component {
     direction: "from",
     officeAddress: null,
     routes: [],
-    currentRouteIndex: 0
+    currentRouteIndex: 0,
+    showDriver: false,
+    driverEmail: null
   }
 
   componentDidMount() {
@@ -67,6 +69,8 @@ export class PassengerMap extends React.Component {
   }
 
   updateMap() {
+    console.log(this.state.routes[this.state.currentRouteIndex].rides);
+    this.setState({showDriver: true});
     this.vectorSource.clear();
     const {passengerAddress} = this.state;
     if (passengerAddress) {
@@ -127,6 +131,21 @@ export class PassengerMap extends React.Component {
                 }
               }}
           />
+          {/* {this.state.showDriver ? (
+            <DriverRoutesSugestions 
+              rides={this.state.routes[this.state.currentRouteIndex].rides}
+              showRides={this.state.showRides}
+              handleCloseDriver={() => this.setState({ showDriver: false })}
+              showRidesOfDriver={driver => {
+                this.showRidesOfDriver(driver);
+                this.setState({driverEmail: driver});
+              }}
+              driverEmail={this.state.driverEmail}
+              pickUpPoints={this.state.passengerAddress}
+            />
+          ) : (
+            <div></div>
+          )} */}
         </div>
         <div id="map"></div>
         {this.state.routes.length > 1 

@@ -13,7 +13,7 @@ import "./../../../styles/driversRidesList.css";
 export const DriverRoutesSugestions = (props) => (
     <Grid container justify="center" item xs={10}>
         <Card>
-            {props.rides.map((driver, i) => (
+            {props.driversOfRoute.map((driver, i) => (
             <Grid
                 className="driver-button-container"
                 item xs={12}
@@ -29,7 +29,7 @@ export const DriverRoutesSugestions = (props) => (
                     <Grid container className="driver-name" item xs={12}>
                         <Typography variant="caption">Driver </Typography>
                         <Typography variant="body1">
-                            {driver.driverFirstName} {driver.driverLastName}
+                            {driver.firstName} {driver.lastName}
                         </Typography>
                     </Grid>
                     <Grid className="call" item xs={12}>
@@ -43,7 +43,7 @@ export const DriverRoutesSugestions = (props) => (
                     color="primary"
                     variant="contained"
                     style={{ "backgroundColor": "#007bff" }}
-                    onClick={driver => props.showRidesOfDriver(driver)}
+                    onClick={() => props.showRidesOfDriver(driver)}
                 >
                     View Time
                 </Button>{" "}
@@ -58,7 +58,7 @@ export const DriverRoutesSugestions = (props) => (
             ))}
             {props.showRides ? (
                 <RidesOfDriver
-                    rides={props.rides}
+                    rides={props.ridesOfRoute}
                     driver={props.driverEmail}
                     pickUpPoints={props.pickUpPoints}
                     className="date-display"
