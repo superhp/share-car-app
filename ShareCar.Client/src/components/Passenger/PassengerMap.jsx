@@ -31,7 +31,8 @@ export class PassengerMap extends React.Component {
     passengerAddress: null,
     direction: "from",
     officeAddress: null,
-    routes: []
+    routes: [],
+    currentRouteIndex: 0
   }
 
   componentDidMount() {
@@ -72,10 +73,8 @@ export class PassengerMap extends React.Component {
       const {longitude, latitude} = passengerAddress;
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
-    if(this.state.routes !== []) {
-      this.state.routes.map(route => {
-        this.vectorSource.addFeature(createRouteFeature(route.geometry));
-      });
+    if(this.state.routes.length > 0) {
+      this.vectorSource.addFeature(createRouteFeature(this.state.routes[this.state.currentRouteIndex].geometry));
     }
   }
 
@@ -108,7 +107,7 @@ export class PassengerMap extends React.Component {
   fetchRoutes(routeDto) {
     api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
       if (res.status === 200 && res.data !== "") {
-        this.setState({ routes: res.data});
+        this.setState({routes: res.data}, this.updateMap);
       }
     });
   }
@@ -130,6 +129,25 @@ export class PassengerMap extends React.Component {
           />
         </div>
         <div id="map"></div>
+        {this.state.routes.length > 1 
+        ? <div>
+          <PassengerNavigationButton 
+            onClick={() => this.setState({
+              currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length}, 
+              this.updateMap
+            )}
+            text="View Previous Route"
+          />
+          <PassengerNavigationButton 
+            onClick={() => this.setState({
+              currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length}, 
+              this.updateMap
+            )}
+            text="View Next Route"
+          />
+        </div>
+        : <div />
+        }
       </div>
     );
   }
