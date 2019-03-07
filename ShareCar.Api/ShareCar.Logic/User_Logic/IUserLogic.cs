@@ -17,8 +17,8 @@ namespace ShareCar.Logic.User_Logic
         UnauthorizedUserDto GetUnauthorizedUser(string email);
         Task CreateUser(UserDto userDto);
         void CreateUnauthorizedUser(UnauthorizedUserDto user);
-        bool SetUsersCognizantEmail(CognizantData data);
-        bool VerifyUser(bool faceBookVerified, string loginEmail); 
+        void SetUsersCognizantEmail(CognizantData data);
+        void VerifyUser(bool faceBookVerified, string loginEmail); 
         UserDto GetUserByEmail(EmailType type, string email);
         bool DoesUserExist(EmailType type, string cognizantEmail);
     }

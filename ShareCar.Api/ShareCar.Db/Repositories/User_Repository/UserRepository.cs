@@ -87,32 +87,8 @@ namespace ShareCar.Db.Repositories.User_Repository
             }
         }
 
-        public bool UserVerified(bool faceBookVerified, string loginEmail)
+        public void UpdateUser(User user)
         {
-            try
-            {
-                var user = _databaseContext.User.Single(x => x.Email == loginEmail);
-                if (faceBookVerified)
-                {
-                    user.FacebookVerified = true;
-                }
-                else
-                {
-                    user.GoogleVerified = true;
-                }
-                _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public bool UpdateUser(User user)
-        {
-            try
-            {
                 var toUpdate = _databaseContext.User.Single(x => x.Email == user.Email);
 
                 toUpdate.FacebookEmail = user.FacebookEmail;
@@ -122,12 +98,6 @@ namespace ShareCar.Db.Repositories.User_Repository
                 toUpdate.CognizantEmail = user.CognizantEmail;
                 _databaseContext.SaveChanges();
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
 
         public void DeleteUser(string email)

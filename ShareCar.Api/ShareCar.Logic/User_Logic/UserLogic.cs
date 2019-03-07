@@ -112,7 +112,7 @@ namespace ShareCar.Logic.User_Logic
         }
 
         // data parameter has either Facebbok email, either Google, but never both.
-        public bool SetUsersCognizantEmail(CognizantData data)
+        public void SetUsersCognizantEmail(CognizantData data)
         {
             var user = _userRepository.GetUserByEmail(EmailType.COGNIZANT, data.CognizantEmail);
                 bool facebookEmail = data.FacebookEmail != null;
@@ -157,11 +157,11 @@ namespace ShareCar.Logic.User_Logic
                 user.CognizantEmail = data.CognizantEmail;
 
             }
-            return _userRepository.UpdateUser(user);
+             _userRepository.UpdateUser(user);
 
         }
 
-        public bool VerifyUser(bool faceBookVerified, string loginEmail)
+        public void VerifyUser(bool faceBookVerified, string loginEmail)
         {
             var user = _userRepository.GetUserByEmail(EmailType.LOGIN, loginEmail);
 
@@ -174,7 +174,7 @@ namespace ShareCar.Logic.User_Logic
                 user.GoogleVerified = true;
             }
             
-            return _userRepository.UpdateUser(user);
+             _userRepository.UpdateUser(user);
         }
 
         public UserDto GetUserByEmail(EmailType type, string email)
