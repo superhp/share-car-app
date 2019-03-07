@@ -18,9 +18,8 @@ export const PassengerRouteRadioButton = (props) => (
         <Grid container item xs={6} justify="center">
             <Radio
                 color="primary"
-                checked={props.filteredRouteToOffice === props.toOffice}
+                checked={props.checked}
                 onClick={() => props.onRadioButtonClick()}
-                onChange={() => props.showRoutes()}
                 value={props.direction}
                 name="radio-button-demo"
                 aria-label="A"

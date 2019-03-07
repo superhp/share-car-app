@@ -27,7 +27,9 @@ import "../../styles/testmap.css";
 
 export class PassengerMap extends React.Component {
   state = {
-    passengerAddress: null
+    passengerAddress: null,
+    direction: "from",
+    officeAddress: null
   }
 
   componentDidMount() {
@@ -75,7 +77,6 @@ export class PassengerMap extends React.Component {
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         const address = fromLocationIqResponse(response);
-        console.log("adresas", address);
         this.setState({passengerAddress: address}, this.updateMap);
       });
   }
@@ -83,6 +84,13 @@ export class PassengerMap extends React.Component {
   render() {
     return (
       <div>
+        <div className="passengerForm">
+          <PassengerRouteSelection 
+              direction={this.state.direction}
+              handleOfficeSelection={indexas => this.setState({officeAddress: OfficeAddresses[indexas]})}
+              onDirectionChanged={(direction) => this.setState({direction: direction})}
+          />
+        </div>
         <div id="map"></div>
       </div>
     );
