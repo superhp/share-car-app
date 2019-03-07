@@ -11,6 +11,7 @@ namespace ShareCar.Api.Middleware
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -26,6 +27,8 @@ namespace ShareCar.Api.Middleware
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
+
                 if (ex is UnauthorizedAccessException)
                 {
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
