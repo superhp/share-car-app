@@ -21,6 +21,17 @@ class PassengerRouteSelectionInner extends React.Component {
                 container
             >
                 <Grid item xs={10}>
+                    <Grid
+                        container
+                        alignItems="center"
+                        justify="center"
+                    >
+                        <AddressInput 
+                            placeholder="Type in meetup point or click on the map"
+                            onChange={(suggestion) => this.props.onMeetupAddressChange(fromAlgoliaAddress(suggestion))}
+                            ref={this.props.innerRef}
+                        />
+                    </Grid>
                     <Card className="paper-background">
                         <Grid container justify="center">
                             <Grid 
@@ -30,7 +41,7 @@ class PassengerRouteSelectionInner extends React.Component {
                                 item xs={6}
                             >
                                 <Grid container item xs={6} justify="center">
-                                    <Typography variant="body1">To office</Typography>
+                                    <Typography variant="body1">From office</Typography>
                                 </Grid>
                                 <Grid container item xs={6} justify="center">
                                     <Radio
@@ -50,7 +61,7 @@ class PassengerRouteSelectionInner extends React.Component {
                                 item xs={6}
                             >
                                 <Grid container item xs={6} justify="center">
-                                    <Typography variant="body1">From office</Typography>
+                                    <Typography variant="body1">To office</Typography>
                                 </Grid>
                                 <Grid container item xs={6} justify="center">
                                     <Radio
@@ -69,17 +80,6 @@ class PassengerRouteSelectionInner extends React.Component {
                             />
                         </Grid>
                     </Card>
-                    <Grid
-                        container
-                        alignItems="center"
-                        justify="center"
-                    >
-                        <AddressInput 
-                            placeholder="Type in meetup point or click on the map"
-                            onChange={(suggestion) => this.props.onMeetupAddressChange(fromAlgoliaAddress(suggestion))}
-                            ref={this.props.innerRef}
-                        />
-                    </Grid>
                 </Grid>
             </Grid>
         );

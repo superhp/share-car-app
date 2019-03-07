@@ -29,7 +29,8 @@ export class PassengerMap extends React.Component {
   state = {
     passengerAddress: null,
     direction: "from",
-    officeAddress: null
+    officeAddress: null,
+    routes: []
   }
 
   componentDidMount() {
@@ -83,11 +84,27 @@ export class PassengerMap extends React.Component {
   }
 
   onMeetupAddressChange(newAddress) {
-    if (!OfficeAddresses.some(a => a == newAddress)) {
-      this.autocompleteInput.value = addressToString(newAddress);
-    }
+    this.autocompleteInput.value = addressToString(newAddress);
     this.setState({passengerAddress: newAddress}, this.updateMap);
     if(newAddress) centerMap(newAddress.longitude, newAddress.latitude, this.map);
+  }
+
+  getAllRoutes() {
+    let routeDto;
+    if(this.state.direction === "to")
+      routeDto = {AddressTo: this.state.officeAddress};
+    else 
+      routeDto = {AddressFrom: this.state.officeAddress};
+    this.fetchRoutes(routeDto);
+  }
+
+  fetchRoutes(routeDto) {
+    console.log("route dto", routeDto);
+    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
+      if (res.status === 200 && res.data !== "") {
+        this.setState({ routes: res.data});
+      }
+    });
   }
 
   render() {
@@ -96,7 +113,10 @@ export class PassengerMap extends React.Component {
         <div className="passengerForm">
           <PassengerRouteSelection 
               direction={this.state.direction}
-              handleOfficeSelection={indexas => this.setState({officeAddress: OfficeAddresses[indexas]})}
+              handleOfficeSelection={address => {
+                this.setState({officeAddress: address});
+                this.getAllRoutes();
+              }}
               onDirectionChanged={(direction) => this.setState({direction: direction})}
               onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
               ref={e => {
