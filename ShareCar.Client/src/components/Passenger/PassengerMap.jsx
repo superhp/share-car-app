@@ -20,7 +20,7 @@ import { OfficeAddresses } from "../../utils/AddressData";
 import api from "./../../helpers/axiosHelper";
 import { fromLonLatToMapCoords, fromMapCoordsToLonLat, 
   getNearest, coordinatesToLocation, createPointFeature } from "../../utils/mapUtils";
-import { fromLocationIqResponse } from "../../utils/addressUtils";
+import { fromLocationIqResponse, addressToString } from "../../utils/addressUtils";
 
 import "./../../styles/genericStyles.css";
 import "../../styles/testmap.css";
@@ -77,8 +77,17 @@ export class PassengerMap extends React.Component {
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         const address = fromLocationIqResponse(response);
+        this.autocompleteInput.value = response.display_name;
         this.setState({passengerAddress: address}, this.updateMap);
       });
+  }
+
+  onMeetupAddressChange(newAddress) {
+    if (!OfficeAddresses.some(a => a == newAddress)) {
+      this.autocompleteInput.value = addressToString(newAddress);
+    }
+    this.setState({passengerAddress: newAddress}, this.updateMap);
+    if(newAddress) centerMap(newAddress.longitude, newAddress.latitude, this.map);
   }
 
   render() {
@@ -89,6 +98,12 @@ export class PassengerMap extends React.Component {
               direction={this.state.direction}
               handleOfficeSelection={indexas => this.setState({officeAddress: OfficeAddresses[indexas]})}
               onDirectionChanged={(direction) => this.setState({direction: direction})}
+              onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
+              ref={e => {
+                if (e) {
+                  this.autocompleteInput = e.autocompleteElem;
+                }
+              }}
           />
         </div>
         <div id="map"></div>
