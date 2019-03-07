@@ -7,10 +7,10 @@ namespace ShareCar.Logic.Passenger_Logic
 {
     public interface IPassengerLogic
     {
-        bool AddPassenger(PassengerDto passenger);
+        void AddPassenger(PassengerDto passenger);
         int GetUsersPoints(string email);
         List<PassengerDto> GetUnrepondedPassengersByEmail(string email);
         List<PassengerDto> GetPassengersByRideId(int rideId);
-        bool RespondToRide(bool response, int rideId, string passengerEmail);
+        void RespondToRide(bool response, int rideId, string passengerEmail);
     }
 }
