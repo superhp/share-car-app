@@ -8,10 +8,16 @@ class AuthenticationService {
             accessToken: accessToken
         })
         .then((response) => {
+            console.log("_________________________");
+            console.log(response);
             if (response.status === 200)
             success();
         })
         .catch((error) => {
+            console.log("_________________________");
+            console.log(error);     
+                  console.log("_________________________");
+            console.log(error.response);
             if(error.response.status === 401){
                 unauthorized();
             } else{

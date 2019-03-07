@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using ShareCar.Logic.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,22 @@ namespace ShareCar.Api.Middleware
         {
             try
             {
+                
                 await _next(httpContext);
             }
             catch (Exception ex)
             {
+                if (ex is UnauthorizedAccessException)
+                {
+                    httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                }
+                else if (ex is NoSeatsInRideException)
+                {
+                    httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+                }else
+                {
+                    httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                }
             }
         }
 

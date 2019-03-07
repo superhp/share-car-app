@@ -58,17 +58,11 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            try {
                 Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
                 passenger.PassengerResponded = true;
                 passenger.Completed = response;
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
+
             }
 
     }

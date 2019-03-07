@@ -73,6 +73,7 @@ namespace ShareCar.Logic.Identity_Logic
 
         public async Task<string> Login(AccessTokenDto accessToken)
         {
+            throw new ArgumentException();
             var userInfo = await GetUserFromFacebook(accessToken);
             // ready to create the local user account (if necessary) and jwt
 
