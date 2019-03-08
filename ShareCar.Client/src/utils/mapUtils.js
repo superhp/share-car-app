@@ -57,6 +57,8 @@ export const createPointFeature = (long, lat) => {
 }
 
 export const createRouteFeature = (geometry) => {
+  console.log("FFFFFFFFFFFFFFFFF");
+  console.log(geometry);
   const route = new Polyline({
     factor: 1e5
   }).readGeometry(geometry, {
@@ -71,13 +73,23 @@ export const createRouteFeature = (geometry) => {
   return feature;
 }
 
-export const createRoute = (from, to) => {
+  export const createRoute = (routePoints) => {
   const URL_OSMR_ROUTE = "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/";
-  const point1 = [from.longitude, from.latitude];
-  const point2 = [to.longitude, to.latitude];
 
-  return fetch(URL_OSMR_ROUTE + point1 + ";" + point2)
-    .then(r => {
+var coordinates = "";
+
+for(var i = 0; i < routePoints.length; i++){
+  const point = [routePoints[i].longitude, routePoints[i].latitude];
+
+  coordinates += point;
+  if(i < routePoints.length -1){
+    coordinates += ";";
+  }
+}
+
+ return fetch(URL_OSMR_ROUTE + coordinates)
+ 
+ .then(r => {
       return r.json();
     })
     .then(json => {

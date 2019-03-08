@@ -27,7 +27,10 @@ export class DriverMap extends React.Component {
     isFromAddressEditable: true, // can the fromAddress be changed by clicking on the map?
     fromAddress: null,
     toAddress: OfficeAddresses[0],
-    routeGeometry: null // only needed to prevent duplicate calls for RidesScheduler
+    initialFromAddress: null,
+    initialToAddress: OfficeAddresses[0],
+    routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
+    routePoints: [OfficeAddresses[0]]
   };
 
   componentDidMount() {
@@ -61,6 +64,7 @@ export class DriverMap extends React.Component {
       .then(response => {
         const address = fromLocationIqResponse(response);
         this.autocompleteInput.value = response.display_name;
+        this.state.routePoints.push(address);
         if (this.state.isFromAddressEditable) {
           if (!this.state.fromAddress) {
             this.setState({ fromAddress: address }, this.updateMap);
@@ -86,7 +90,6 @@ export class DriverMap extends React.Component {
   }
 
   updateMap() {
-    //  this.vectorSource.clear();
     const { fromAddress, toAddress } = this.state;
     if (fromAddress) {
       const { longitude, latitude } = fromAddress;
@@ -97,10 +100,10 @@ export class DriverMap extends React.Component {
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
     if (fromAddress && toAddress) {
-      createRoute(fromAddress, toAddress)
+      createRoute(this.state.routePoints)
         .then(geometry => {
           this.vectorSource.addFeature(createRouteFeature(geometry));
-          this.setState({ routeGeometry: geometry })
+          this.setState({ routeGeometry: geometry})
         });
     }
   }
@@ -136,7 +139,10 @@ export class DriverMap extends React.Component {
           <DriverRouteInput
             onFromAddressChange={address => this.handleFromAddressChange(address)}
             onToAddressChange={address => this.handleToAddressChange(address)}
-            clearVectorSource={() => {this.vectorSource.clear()}}
+            clearVectorSource={() => { this.vectorSource.clear() }}
+            clearRoutePoints={address => { this.setState({routePoints:[address]}) }}
+            setInitialFromAddress={address => this.setState({ initialFromAddress: address, initialToAddress: null })}
+            setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
             ref={e => {
               if (e) {
                 this.autocompleteInput = e.autocompleteElem;
@@ -147,8 +153,8 @@ export class DriverMap extends React.Component {
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
           <RidesScheduler routeInfo={{
-            fromAddress: this.state.fromAddress,
-            toAddress: this.state.toAddress,
+            fromAddress: this.state.isFromAddressEditable ? this.state.fromAddress : this.state.initialFromAddress,
+            toAddress: this.state.isFromAddressEditable ? this.state.initialToAddress : this.state.toAddress,
             routeGeometry: this.state.routeGeometry
           }} />
         ) : null}
@@ -157,7 +163,7 @@ export class DriverMap extends React.Component {
           className="continue-button"
           variant="contained"
           color="primary"
-          onClick={() => this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible })}
+          onClick={() => this.setState({ f: !this.state.isRideSchedulerVisible })}
         >
           Continue
         </Button>
