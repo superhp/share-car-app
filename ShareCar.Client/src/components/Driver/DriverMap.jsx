@@ -14,9 +14,10 @@ import {
   fromLonLatToMapCoords, fromMapCoordsToLonLat,
   getNearest, coordinatesToLocation,
   createPointFeature, createRouteFeature,
-  createRoute, centerMap } from "./../../utils/mapUtils";
+  createRoute, centerMap
+} from "./../../utils/mapUtils";
 import { routeStyles } from "./../../utils/mapStyles";
-import {addressToString, fromLocationIqResponse} from "../../utils/addressUtils";
+import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
 
@@ -28,9 +29,9 @@ export class DriverMap extends React.Component {
     toAddress: OfficeAddresses[0],
     routeGeometry: null // only needed to prevent duplicate calls for RidesScheduler
   };
-  
+
   componentDidMount() {
-    const {map, vectorSource} = this.initializeMap();
+    const { map, vectorSource } = this.initializeMap();
     this.map = map;
     this.vectorSource = vectorSource;
     this.updateMap();
@@ -39,19 +40,19 @@ export class DriverMap extends React.Component {
   handleFromAddressChange(newFromAddress) {
     if (!OfficeAddresses.some(a => a == newFromAddress)) {
       this.autocompleteInput.value = addressToString(newFromAddress);
-      this.setState({isFromAddressEditable: true});
+      this.setState({ isFromAddressEditable: true });
     }
-    this.setState({fromAddress: newFromAddress}, this.updateMap);
-    if(newFromAddress) centerMap(newFromAddress.longitude, newFromAddress.latitude, this.map);
+    this.setState({ fromAddress: newFromAddress }, this.updateMap);
+    if (newFromAddress) centerMap(newFromAddress.longitude, newFromAddress.latitude, this.map);
   }
 
   handleToAddressChange(newToAddress) {
     if (!OfficeAddresses.some(a => a == newToAddress)) {
       this.autocompleteInput.value = addressToString(newToAddress);
-      this.setState({isFromAddressEditable: false});
+      this.setState({ isFromAddressEditable: false });
     }
-    this.setState({toAddress: newToAddress}, this.updateMap);
-    if(newToAddress) centerMap(newToAddress.longitude, newToAddress.latitude, this.map);
+    this.setState({ toAddress: newToAddress }, this.updateMap);
+    if (newToAddress) centerMap(newToAddress.longitude, newToAddress.latitude, this.map);
   }
 
   handleMapClick(longitude, latitude) {
@@ -60,37 +61,53 @@ export class DriverMap extends React.Component {
       .then(response => {
         const address = fromLocationIqResponse(response);
         this.autocompleteInput.value = response.display_name;
-        if(this.state.isFromAddressEditable) {
-          this.setState({fromAddress: address}, this.updateMap);
+        if (this.state.isFromAddressEditable) {
+          if (!this.state.fromAddress) {
+            this.setState({ fromAddress: address }, this.updateMap);
+          } else {
+            var newToAddress = this.state.fromAddress;
+            this.setState({ fromAddress: address, toAddress: newToAddress }, this.updateMap);
+
+          }
+
         } else {
-          this.setState({toAddress: address}, this.updateMap);
+
+          if (!this.state.toAddress) {
+
+            this.setState({ toAddress: address }, this.updateMap);
+          } else {
+            var newFromAddress = this.state.toAddress;
+            this.setState({ toAddress: address, fromAddress: newFromAddress }, this.updateMap);
+
+          }
+
         }
       });
   }
 
   updateMap() {
-    this.vectorSource.clear();
-    const {fromAddress, toAddress} = this.state;
+    //  this.vectorSource.clear();
+    const { fromAddress, toAddress } = this.state;
     if (fromAddress) {
-      const {longitude, latitude} = fromAddress;
+      const { longitude, latitude } = fromAddress;
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
     if (toAddress) {
-      const {longitude, latitude} = toAddress;
+      const { longitude, latitude } = toAddress;
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
     if (fromAddress && toAddress) {
       createRoute(fromAddress, toAddress)
         .then(geometry => {
           this.vectorSource.addFeature(createRouteFeature(geometry));
-          this.setState({routeGeometry: geometry})
+          this.setState({ routeGeometry: geometry })
         });
     }
   }
 
   initializeMap() {
     const vectorSource = new SourceVector();
-    const vectorLayer = new LayerVector({source: vectorSource});
+    const vectorLayer = new LayerVector({ source: vectorSource });
     const map = new Map({
       target: "map",
       controls: [],
@@ -109,22 +126,23 @@ export class DriverMap extends React.Component {
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
-    return {map, vectorSource};
+    return { map, vectorSource };
   }
 
   render() {
     return (
       <div>
         <div className="displayRoutes">
-            <DriverRouteInput 
-              onFromAddressChange={address => this.handleFromAddressChange(address)}
-              onToAddressChange={address => this.handleToAddressChange(address)}
-              ref={e => {
-                if (e) {
-                  this.autocompleteInput = e.autocompleteElem;
-                }
-              }}
-            />
+          <DriverRouteInput
+            onFromAddressChange={address => this.handleFromAddressChange(address)}
+            onToAddressChange={address => this.handleToAddressChange(address)}
+            clearVectorSource={() => {this.vectorSource.clear()}}
+            ref={e => {
+              if (e) {
+                this.autocompleteInput = e.autocompleteElem;
+              }
+            }}
+          />
         </div>
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (

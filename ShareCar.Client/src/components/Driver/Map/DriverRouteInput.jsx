@@ -50,6 +50,7 @@ class DriverRouteInputInner extends React.Component {
                     color="primary"
                     onClick={() => {
                         this.setState({direction: !this.state.direction});
+                        this.props.clearVectorSource();
                         this.props.onFromAddressChange(this.state.checkedOffice);
                         this.props.onToAddressChange(null);
                     }}
@@ -78,6 +79,7 @@ class DriverRouteInputInner extends React.Component {
                     color="primary"
                     onClick={() => {
                         this.setState({direction: !this.state.direction});
+                        this.props.clearVectorSource();
                         this.props.onFromAddressChange(null);
                         this.props.onToAddressChange(this.state.checkedOffice);
                     }}
