@@ -1,6 +1,7 @@
 import * as React from "react";
 import SimpleMenu from "../common/SimpleMenu";
 import AlgoliaPlaces from "algolia-places-react";
+import Close from "@material-ui/icons/Close";
 
 import "../../styles/genericStyles.css";
 
@@ -12,5 +13,6 @@ export const DriverInput = React.forwardRef((props, ref) => (
             onClear={() => props.onChange(null)}
             ref={ref}
         />
+<Close/>
     </div>
 ));

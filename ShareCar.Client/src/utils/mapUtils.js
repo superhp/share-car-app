@@ -57,8 +57,6 @@ export const createPointFeature = (long, lat) => {
 }
 
 export const createRouteFeature = (geometry) => {
-  console.log("FFFFFFFFFFFFFFFFF");
-  console.log(geometry);
   const route = new Polyline({
     factor: 1e5
   }).readGeometry(geometry, {
