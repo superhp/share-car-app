@@ -69,7 +69,8 @@ export class PassengerMap extends React.Component {
   }
 
   updateMap() {
-    console.log(this.state.routes[this.state.currentRouteIndex].rides);
+    // console.log(this.state.routes, this.state.currentRouteIndex);
+    // console.log(this.state.routes[this.state.currentRouteIndex].rides);
     this.setState({showDriver: true});
     this.vectorSource.clear();
     const {passengerAddress} = this.state;
@@ -131,7 +132,7 @@ export class PassengerMap extends React.Component {
                 }
               }}
           />
-          {/* {this.state.showDriver ? (
+          {this.state.showDriver && this.state.routes.length > 0 ? (
             <DriverRoutesSugestions 
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               showRides={this.state.showRides}
@@ -145,7 +146,7 @@ export class PassengerMap extends React.Component {
             />
           ) : (
             <div></div>
-          )} */}
+          )}
         </div>
         <div id="map"></div>
         {this.state.routes.length > 1 
