@@ -217,11 +217,11 @@ namespace ShareCar.Logic.User_Logic
 
             else
             {
-                if(type == EmailType.FACEBOOK && cognizantUser.FacebookEmail != null)
+                if(type == EmailType.FACEBOOK && cognizantUser.FacebookVerified)
                 {
                     return true;
                 }
-                if (type == EmailType.GOOGLE && cognizantUser.GoogleEmail != null)
+                if (type == EmailType.GOOGLE && cognizantUser.GoogleVerified)
                 {
                     return true;
                 }
