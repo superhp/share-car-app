@@ -2,21 +2,15 @@ import * as React from "react";
 import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
-import Feature from "ol/Feature";
 import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
-import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
-import Polyline from "ol/format/Polyline";
-import Grid from "@material-ui/core/Grid"
 
 import { centerMap } from "./../../utils/mapUtils";
-import { routeStyles, selectedRouteStyle } from "./../../utils/mapStyles";
 import { DriverRoutesSugestions } from "./Route/DriverRoutesSugestions";
 import { PassengerRouteSelection } from "./Route/PassengerRouteSelection";
 import { PassengerNavigationButton } from "./PassengerNavigationButton";
-import { OfficeAddresses } from "../../utils/AddressData";
 import api from "./../../helpers/axiosHelper";
 import { fromLonLatToMapCoords, fromMapCoordsToLonLat, 
   getNearest, coordinatesToLocation, createPointFeature, 
@@ -33,8 +27,7 @@ export class PassengerMap extends React.Component {
     officeAddress: null,
     routes: [],
     currentRouteIndex: 0,
-    showDriver: false,
-    driverEmail: null
+    showDriver: false
   }
 
   componentDidMount() {
@@ -69,8 +62,6 @@ export class PassengerMap extends React.Component {
   }
 
   updateMap() {
-    // console.log(this.state.routes, this.state.currentRouteIndex);
-    // console.log(this.state.routes[this.state.currentRouteIndex].rides);
     this.setState({showDriver: true});
     this.vectorSource.clear();
     const {passengerAddress} = this.state;
@@ -117,6 +108,19 @@ export class PassengerMap extends React.Component {
     });
   }
 
+  handleRegister(ride) {
+    const request = {
+      RideId: ride.rideId,
+      DriverEmail: ride.driverEmail,
+      Longtitude: this.state.passengerAddress.longitude,
+      Latitude: this.state.passengerAddress.latitude
+    };
+
+    api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
+      alert("ok");
+    });
+  }
+
   render() {
     return (
       <div>
@@ -135,14 +139,7 @@ export class PassengerMap extends React.Component {
           {this.state.showDriver && this.state.routes.length > 0 ? (
             <DriverRoutesSugestions 
               rides={this.state.routes[this.state.currentRouteIndex].rides}
-              showRides={this.state.showRides}
-              handleCloseDriver={() => this.setState({ showDriver: false })}
-              showRidesOfDriver={driver => {
-                this.showRidesOfDriver(driver);
-                this.setState({driverEmail: driver});
-              }}
-              driverEmail={this.state.driverEmail}
-              pickUpPoints={this.state.passengerAddress}
+              onRegister={ride => this.handleRegister(ride)}
             />
           ) : (
             <div></div>
