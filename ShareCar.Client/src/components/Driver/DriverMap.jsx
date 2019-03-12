@@ -55,7 +55,7 @@ export class DriverMap extends React.Component {
   }
 
   handleMapClick(longitude, latitude) {
-    getNearest(longitude, latitude)
+    return getNearest(longitude, latitude)
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         const address = fromLocationIqResponse(response);
@@ -80,7 +80,7 @@ export class DriverMap extends React.Component {
       this.vectorSource.addFeature(createPointFeature(longitude, latitude));
     }
     if (fromAddress && toAddress) {
-      createRoute(fromAddress, toAddress)
+      return createRoute(fromAddress, toAddress)
         .then(geometry => {
           this.vectorSource.addFeature(createRouteFeature(geometry));
           this.setState({routeGeometry: geometry})

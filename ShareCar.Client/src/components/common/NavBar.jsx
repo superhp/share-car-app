@@ -5,6 +5,7 @@ import Map from "@material-ui/icons/Map";
 import NoteAdd from "@material-ui/icons/NoteAdd";
 import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
 import Cached from "@material-ui/icons/Cached";
+import Book from "@material-ui/icons/Book";
 
 import "../../styles/navbar.css";
 
@@ -45,6 +46,12 @@ const NavBar = props => {
         <div className="button-container">
           <Cached />
           <div className="button-container">Change role</div>
+        </div>
+      </Link>
+      <Link className="navBar-button" role="button" to={status + "/Manual"}>
+        <div className="button-container">
+          <Book />
+          <div className="button-container">Manual</div>
         </div>
       </Link>
     </div>

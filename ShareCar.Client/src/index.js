@@ -9,6 +9,7 @@ import RoleSelection from "./components/User/RoleSelection";
 import Passenger from "./components/Passenger/Passenger";
 import UserProfile from "./components/User/UserProfile";
 import Rides from "./components/Driver/Ride/Rides";
+import Manual from "./components/Manual";
 import WinnerBoard from "./components/Winner/WinnerBoard";
 import Map from "./components/Maps/Map";
 import SnackBars from "./components/common/Snackbars";
@@ -29,6 +30,7 @@ ReactDOM.render(
           component={UserProfile}
         />
 
+        <Route path="/:role(driver|passenger)/Manual" component={Manual} />
 
         <Route path="/:role(driver|passenger)/Map" component={Map} />
         <Route path="/:role(driver|passenger)/rides" component={Rides} />
