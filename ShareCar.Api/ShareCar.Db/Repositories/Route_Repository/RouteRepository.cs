@@ -29,23 +29,13 @@ namespace ShareCar.Db.Repositories.Route_Repository
         {
                 return _databaseContext.Routes.Find(id); 
         }
-        public bool AddRoute(Route route)
+        public void AddRoute(Route route)
         {
-            try
-            {
                 _databaseContext.Routes.Add(route);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
-        public bool UpdateRoute(Route route)
+        public void UpdateRoute(Route route)
         {
-            try
-            {
                 Route routeToUpdate = GetRouteById(route.RouteId);
                 if (routeToUpdate.Rides == null)
                 {
@@ -58,12 +48,6 @@ namespace ShareCar.Db.Repositories.Route_Repository
 
                 _databaseContext.Routes.Update(routeToUpdate);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
 
         public IEnumerable<Route> GetRoutes(bool isFromOffice, Address address)

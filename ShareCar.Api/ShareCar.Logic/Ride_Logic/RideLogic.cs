@@ -62,13 +62,13 @@ namespace ShareCar.Logic.Ride_Logic
 
             List<RideDto> dtoRide = new List<RideDto>();
             int count = 0;
-            
+
 
 
             foreach (var ride in rides)
             {
 
-                RouteDto route = _routeLogic.GetRouteById(ride.RouteId); 
+                RouteDto route = _routeLogic.GetRouteById(ride.RouteId);
                 dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
                 AddressDto fromAddress = _addressLogic.GetAddressById(route.FromId);
                 dtoRide[count].FromCountry = fromAddress.Country;
@@ -104,39 +104,38 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(passengers);
         }
-      /*  
-        public IEnumerable<RideDto> FindRidesByPassenger(PassengerDto passenger)
-        {
+        /*  
+          public IEnumerable<RideDto> FindRidesByPassenger(PassengerDto passenger)
+          {
 
-            IEnumerable<Ride> rides =  _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passenger));
+              IEnumerable<Ride> rides =  _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passenger));
 
-            return MapToList(rides);
-        }*/
-        
+              return MapToList(rides);
+          }*/
 
-        public bool AddRide(RideDto ride, string email)
+
+        public void AddRide(RideDto ride, string email)
         {
             ride.DriverEmail = email;
-            
+
             ride.Requests = new List<RideRequestDto>();
-            
+
             AddRouteIdToRide(ride);
 
-            return _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-
+            _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
         }
 
-        public bool SetRideAsInactive(RideDto rideDto)
+        public void SetRideAsInactive(RideDto rideDto)
         {
-            
-            return _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
+
+            _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
         {
             Ride ride = _rideRepository.GetRideById(rideId);
 
-            if(ride == null)
+            if (ride == null)
             {
                 return false;
             }
@@ -299,9 +298,9 @@ namespace ShareCar.Logic.Ride_Logic
             return dtoRides;
         }
 
-        public bool UpdateRide(RideDto ride)
+        public void UpdateRide(RideDto ride)
         {
-           return _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
+            _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
         }
     }
 }

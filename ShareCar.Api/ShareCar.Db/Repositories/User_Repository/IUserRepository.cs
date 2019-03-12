@@ -17,7 +17,7 @@ namespace ShareCar.Db.Repositories.User_Repository
         IEnumerable<User> GetAllUsers();
         UnauthorizedUser GetUnauthorizedUser(string email);
         void CreateUnauthorizedUser(UnauthorizedUser user);
-        bool UpdateUser(User user);
+        void UpdateUser(User user);
         User GetUserByEmail(EmailType type, string email);
         void DeleteUser(string email);
     }

@@ -16,9 +16,9 @@ namespace ShareCar.Logic.Ride_Logic
         IEnumerable<PassengerDto> GetPassengersByRideId(int rideId);
         bool DoesUserBelongsToRide(string email, int rideId);
         List<RideDto> GetFinishedPassengerRides(string passengerEmail);
-        bool SetRideAsInactive(RideDto ride);
-        bool AddRide(RideDto ride, string email);
-        bool UpdateRide(RideDto ride);
+        void SetRideAsInactive(RideDto ride);
+        void AddRide(RideDto ride, string email);
+        void UpdateRide(RideDto ride);
         IEnumerable<RideDto> GetSimilarRides(RideDto ride);
         IEnumerable<RouteDto> GetRoutes(RouteDto routeDto, string email);
         IEnumerable<RideDto> GetRidesByRoute(string routeGeometry);

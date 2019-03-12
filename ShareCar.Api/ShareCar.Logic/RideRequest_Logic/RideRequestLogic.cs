@@ -11,6 +11,7 @@ using AutoMapper;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
+using System;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -34,7 +35,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _passengerLogic = passengerLogic;
         }
 
-        public bool AddRequest(RideRequestDto requestDto, string driverEmail)
+        public void AddRequest(RideRequestDto requestDto, string driverEmail)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
@@ -42,33 +43,28 @@ namespace ShareCar.Logic.RideRequest_Logic
             int addressId = _addressLogic.GetAddressId(new AddressDto {City=requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
-            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
-            return isCreated;
+            _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
 
-        public bool UpdateRequest(RideRequestDto request)
+        public void UpdateRequest(RideRequestDto request)
         {
             request.SeenByPassenger = false;
-            var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
-            if (isUpdated && request.Status == Dto.Status.ACCEPTED)
+            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
+            if (request.Status == Dto.Status.ACCEPTED)
             {
                 var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);      
                 var rideToUpdate = _rideLogic.GetRideById(request.RideId);
                 if (rideToUpdate.NumberOfSeats != 0)
                 {
-                    var added = _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                    if (added)
-                    {
+                     _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
                         rideToUpdate.NumberOfSeats--;
-                        var updatedSeats = _rideLogic.UpdateRide(rideToUpdate);
-                    }
-                    return true;
-                } else
-                {
-                    return false;
+                       _rideLogic.UpdateRide(rideToUpdate);
                 }
+                else
+                {
+                    throw new ArgumentException("Selected ride deosn't have empty seats");
+                } 
             }
-            return isUpdated;
         }
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)
@@ -172,10 +168,10 @@ namespace ShareCar.Logic.RideRequest_Logic
         }
 
         //Changes request status to deleted
-        public bool DeletedRide(int rideId)
+        public void DeletedRide(int rideId)
         {
             IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetRequestsByRideId(rideId);
-            return _rideRequestRepository.DeletedRide(entityRequests);
+            _rideRequestRepository.DeletedRide(entityRequests);
         }
         
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)

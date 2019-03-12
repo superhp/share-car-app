@@ -23,7 +23,7 @@ namespace ShareCar.Logic.Identity_Logic
     {
         private readonly IUserLogic _userlogic;
         private readonly SendGridClient _client;
-        private readonly SendGridSettings  _sgSettings;
+        private readonly SendGridSettings _sgSettings;
         private readonly IUserRepository _userRepository;
         private readonly IJwtFactory _jwtFactory;
 
@@ -49,9 +49,9 @@ namespace ShareCar.Logic.Identity_Logic
             _userlogic.VerifyUser(data.FacebookEmail != null, originalLoginEmail);
 
             var localUser = _userRepository.GetUserByEmail(EmailType.LOGIN, originalLoginEmail);
-                var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
-                var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
-            
+            var jwtIdentity = _jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id);
+            var jwt = await _jwtFactory.GenerateEncodedToken(localUser.UserName, jwtIdentity);
+
             return jwt;
         }
 
@@ -61,17 +61,17 @@ namespace ShareCar.Logic.Identity_Logic
         {
             var facebookAcc = _userlogic.GetUserByEmail(EmailType.FACEBOOK, loginEmail);
             if (facebookAcc != null && facebookAcc.CognizantEmail != null)
-                {
-                    return facebookAcc.Email;
-                }
+            {
+                return facebookAcc.Email;
+            }
 
-                var googleAcc = _userlogic.GetUserByEmail(EmailType.GOOGLE, loginEmail);                
+            var googleAcc = _userlogic.GetUserByEmail(EmailType.GOOGLE, loginEmail);
 
-                if (googleAcc != null && googleAcc.CognizantEmail != null)
-                {
-                    return googleAcc.Email;
-                }
-            
+            if (googleAcc != null && googleAcc.CognizantEmail != null)
+            {
+                return googleAcc.Email;
+            }
+
             throw new ArgumentException("User not found.");
 
         }

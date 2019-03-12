@@ -44,15 +44,12 @@ namespace ShareCar.Api.Controllers
         {
             if (user == null)
             {
-                return BadRequest("Invalid parameters");
+                return BadRequest();
             }
 
             await _userLogic.UpdateUserAsync(user, User);
             return Ok();
         }
-
-
-        
 
     }
 }

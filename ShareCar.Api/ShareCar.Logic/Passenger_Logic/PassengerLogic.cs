@@ -25,10 +25,10 @@ namespace ShareCar.Logic.Passenger_Logic
             _passengerRepository = passengerRepository;
         }
 
-        public bool AddPassenger(PassengerDto passenger)
+        public void AddPassenger(PassengerDto passenger)
         {
 
-            return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
+            _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
 
         }
 
@@ -53,9 +53,9 @@ namespace ShareCar.Logic.Passenger_Logic
             }
             return dtoPassengers;
         }
-        public bool RespondToRide(bool response, int rideId, string passengerEmail)
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            return _passengerRepository.RespondToRide(response, rideId, passengerEmail);
+            _passengerRepository.RespondToRide(response, rideId, passengerEmail);
 
         }
         public int GetUsersPoints(string email)
