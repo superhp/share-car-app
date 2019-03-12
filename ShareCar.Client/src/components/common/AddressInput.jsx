@@ -7,12 +7,14 @@ import "../../styles/genericStyles.css";
 
 export const AddressInput = React.forwardRef((props, ref) => (
     <div className="form-group">
+        {console.log(props.r.displayName)}
+{console.log(props.i)}
         <AlgoliaPlaces
             placeholder={props.placeholder}
             onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => props.onChange(suggestion)}
             onClear={() => props.onChange(null)}
             ref={ref}
         />
-<Close/>
+<Close onClick={() =>{props.removeRoutePoint(props.id)}} />
     </div>
 ));

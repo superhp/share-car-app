@@ -20,8 +20,17 @@ import { routeStyles } from "./../../utils/mapStyles";
 import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
+const initialId = 1;
+export class DriverMap extends React.Component {  
+  constructor(props) {
+    super(props);
+    this.child = React.createRef();
+  }
 
-export class DriverMap extends React.Component {
+  setAutocompleteFieldValue = (value) => {
+    this.child.setAutocomplete(value);
+  };
+
   state = {
     isRideSchedulerVisible: false,
     isFromAddressEditable: true, // can the fromAddress be changed by clicking on the map?
@@ -30,7 +39,7 @@ export class DriverMap extends React.Component {
     initialFromAddress: null,
     initialToAddress: OfficeAddresses[0],
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
-    routePoints: [{ address: OfficeAddresses[0], feature: null, id: 1 }],
+    routePoints: [{ address: OfficeAddresses[0], feature: null, id: initialId, displayName:"" }],
     routePolylineFeature: null
   };
 
@@ -42,8 +51,11 @@ export class DriverMap extends React.Component {
   }
 
   handleFromAddressChange(newFromAddress) {
+  
     if (!OfficeAddresses.some(a => a == newFromAddress)) {
-      this.autocompleteInput.value = addressToString(newFromAddress);
+     // this.autocompleteInput.value = addressToString(newFromAddress);
+     this.setAutocompleteFieldValue(addressToString(newFromAddress));
+
       this.setState({ isFromAddressEditable: true });
     }
     this.setState({ fromAddress: newFromAddress }, this.updateMap);
@@ -52,7 +64,8 @@ export class DriverMap extends React.Component {
 
   handleToAddressChange(newToAddress) {
     if (!OfficeAddresses.some(a => a == newToAddress)) {
-      this.autocompleteInput.value = addressToString(newToAddress);
+     // this.autocompleteInput.value = addressToString(newToAddress);
+     this.setAutocompleteFieldValue(addressToString(newToAddress));
       this.setState({ isFromAddressEditable: false });
     }
     this.setState({ toAddress: newToAddress }, this.updateMap);
@@ -64,11 +77,16 @@ export class DriverMap extends React.Component {
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         if (!response.address) {
+          console.log(response.error)
           return;
         } else {
           const address = fromLocationIqResponse(response);
-          this.autocompleteInput.value = response.display_name;
-          this.state.routePoints.push({ address: address, feature: null, id: this.state.routePoints[this.state.routePoints.length - 1].id + 1 });
+          this.setAutocompleteFieldValue(response.display_name);
+
+         // this.autocompleteInput.value = response.display_name;
+          var routePoints = this.state.routePoints;
+          routePoints.push({ address: address, feature: null, id: this.state.routePoints[this.state.routePoints.length - 1].id + 1, displayName:response.display_name });
+          this.setState({routePoints: routePoints});
           if (this.state.isFromAddressEditable) {
             if (!this.state.fromAddress) {
               this.setState({ fromAddress: address }, this.updateMap);
@@ -124,7 +142,7 @@ export class DriverMap extends React.Component {
       createRoute(points)
         .then(geometry => {
           if (this.state.routePolylineFeature) {
-            this.vectorSource.removeFeatures(this.state.routePolylineFeature);
+            this.vectorSource.removeFeature(this.state.routePolylineFeature);
           }
           const newRouteFeature = createRouteFeature(geometry)
           this.vectorSource.addFeature(newRouteFeature);
@@ -140,13 +158,19 @@ export class DriverMap extends React.Component {
     for (var i = 0; i < routePoints.length; i++) {
       if (routePoints[i].id == id) {
         index = i;
+        console.log(routePoints[i].displayName)
         break;
       }
     }
-    this.vectorSource.removeFeatures(this.state.routePoints[index].feature);
+
+    this.vectorSource.removeFeature(this.state.routePoints[index].feature);
+
     routePoints.splice(index, 1);
     this.setState({ routePoints: routePoints });
+
     this.updateMap();
+    this.child.assignNamesToInputs();
+
   }
 
 
@@ -180,6 +204,7 @@ export class DriverMap extends React.Component {
       <div>
         <div className="displayRoutes">
           <DriverRouteInput
+            onRef={ref => (this.child = ref)}
             onFromAddressChange={address => this.handleFromAddressChange(address)}
             onToAddressChange={address => this.handleToAddressChange(address)}
             clearVectorSource={() => { this.vectorSource.clear() }}
@@ -188,11 +213,7 @@ export class DriverMap extends React.Component {
             setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
             routePoints={this.state.routePoints}
             removeRoutePoint={id => this.removeRoutePoint(id)}
-            ref={e => {
-              if (e) {
-                this.autocompleteInput = e.autocompleteElem;
-              }
-            }}
+            initialId = {initialId}
           />
         </div>
         <div id="map"></div>
