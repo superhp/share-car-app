@@ -19,3 +19,24 @@ export const addressToString = (address) => {
 
 export const toReadableName = address =>
     `${address.street} ${address.number}`;
+
+export const fromAlgoliaAddress = address => {
+    if(!address) return null;
+    let streetNumber = "";
+    let street = address.name;
+    const firstDigit = address.name.match(/\d/);
+    if (firstDigit !== null) {
+        const indexOfFirstDigit = address.name.indexOf(firstDigit);
+        const indexOfFirstSpace = address.name.indexOf(" ");
+        streetNumber = address.name.substring(indexOfFirstDigit, indexOfFirstSpace);
+        street = address.name.substring(indexOfFirstSpace + 1);
+    }
+    return {
+        number: streetNumber,
+        street: street,
+        city: address.city,
+        country: address.country,
+        latitude: address.latlng.lat,
+        longitude: address.latlng.lng
+    };
+};
