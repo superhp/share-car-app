@@ -2,33 +2,12 @@ import * as React from "react";
 import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
-import { DriverInput } from "../DriverInput";
-import { OfficeSelection } from "./OfficeSelection";
+import { AddressInput } from "../../common/AddressInput";
 import { OfficeAddresses } from "../../../utils/AddressData";
+import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "../../../styles/testmap.css";
-
-const fromAlgoliaAddress = address => {
-    console.log("Original address", address);
-    if (!address) return null;
-    let streetNumber = "";
-    let street = address.name;
-    const firstDigit = address.name.match(/\d/);
-    if (firstDigit !== null) {
-        const indexOfFirstDigit = address.name.indexOf(firstDigit);
-        const indexOfFirstSpace = address.name.indexOf(" ");
-        streetNumber = address.name.substring(indexOfFirstDigit, indexOfFirstSpace);
-        street = address.name.substring(indexOfFirstSpace + 1);
-    }
-    return {
-        number: streetNumber,
-        street: street,
-        city: address.city,
-        country: address.country,
-        latitude: address.latlng.lat,
-        longitude: address.latlng.lng
-    };
-};
+import SimpleMenu from "../../common/SimpleMenu";
 
 class DriverRouteInputInner extends React.Component {
     state = {
@@ -37,77 +16,60 @@ class DriverRouteInputInner extends React.Component {
     }
     render() {
         return (
-            this.state.direction
-                ?
-                (<div className="map-input-selection">
-
-
-                    {this.props.routePoints.map((element, index) => (
-
-
-
-
-                            <DriverInput
-                                key={index}
-                                removeRoutePoint = {this.props.RemoveRoutePoint}
-                                placeholder="Select From Location"
-                                onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
-                                ref={this.props.innerRef}
-                            />
-                    ))}
-                            <Button
-                                size="large"
-                                color="primary"
-                                onClick={() => {
-                                    this.setState({ direction: !this.state.direction });
-                                    this.props.clearVectorSource();
-                                    this.props.clearRoutePoints(this.checkedOffice);
-                                    this.props.setInitialFromAddress(this.checkedOffice);
-                                    this.props.onFromAddressChange(this.state.checkedOffice);
-                                    this.props.onToAddressChange(null);
-                                }}
-                            >
-                                <ImportExport fontSize="large" />
-                            </Button>
-                            <OfficeSelection
-                                checkedOffice={this.state.checkedOffice}
-                                onChange={office => {
-                                    this.props.onToAddressChange(office);
-                                    this.setState({ checkedOffice: office });
-                                }}
-                            />
+            this.state.direction 
+            ?
+            (<div className="map-input-selection">
+                <AddressInput 
+                    placeholder="Select From Location"
+                    onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
+                    ref={this.props.innerRef}
+                />
+                <Button 
+                    size="large" 
+                    color="primary"
+                    onClick={() => {
+                        this.setState({direction: !this.state.direction});
+                        this.props.onFromAddressChange(this.state.checkedOffice);
+                        this.props.onToAddressChange(null);
+                    }}
+                >
+                    <ImportExport fontSize="large"/>
+                </Button>
+                <SimpleMenu
+                    buttonText="Select Office"
+                    handleSelection={office => {
+                        console.log(office);
+                        this.props.onToAddressChange(office);
+                    }}
+                />
             </div>)
             :
-                    (<div className="map-input-selection">
-                        <OfficeSelection
-                            checkedOffice={this.state.checkedOffice}
-                            onChange={office => {
-                                this.props.onFromAddressChange(office);
-                                this.setState({ checkedOffice: office });
-                            }}
-                        />
-                        <Button
-                            size="large"
-                            color="primary"
-                            onClick={() => {
-                                this.setState({ direction: !this.state.direction });
-                                this.props.clearVectorSource();
-                                this.props.clearRoutePoints(this.checkedOffice);
-                                this.props.setInitialToAddress(this.checkedOffice);
-                                this.props.onFromAddressChange(null);
-                                this.props.onToAddressChange(this.state.checkedOffice);
-                            }}
-                        >
-                            <ImportExport fontSize="large" />
-                        </Button>
-                        <DriverInput
-                            placeholder="Select To Location"
-                            onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
-                            ref={this.props.innerRef}
-                        />
-                    </div>)
-                );
-            }
-        }
-        
+            (<div className="map-input-selection">
+                <SimpleMenu
+                    buttonText="Select Office"
+                    handleSelection={office =>
+                        this.props.onFromAddressChange(office)
+                    }
+                />
+                <Button
+                    size="large"
+                    color="primary"
+                    onClick={() => {
+                        this.setState({direction: !this.state.direction});
+                        this.props.onFromAddressChange(null);
+                        this.props.onToAddressChange(this.state.checkedOffice);
+                    }}
+                >
+                    <ImportExport fontSize="large"/>
+                </Button>
+                <AddressInput 
+                    placeholder="Select To Location"
+                    onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
+                    ref={this.props.innerRef}
+                />
+            </div>)
+        );
+    }
+}
+
 export const DriverRouteInput = React.forwardRef((props, ref) => <DriverRouteInputInner {...props} innerRef={ref} />);

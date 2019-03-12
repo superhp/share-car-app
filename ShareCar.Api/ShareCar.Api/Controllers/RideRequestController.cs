@@ -32,9 +32,22 @@ namespace ShareCar.Api.Controllers
         [HttpGet("{driver}")]
         public async Task<IActionResult> GetUserRequestsAsync(string driver)
         {
+            if (driver == null)
+            {
+                return BadRequest();
+            }
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = Boolean.Parse(driver); 
+            bool isDriver = false;
+
+            try
+            {
+                isDriver = Boolean.Parse(driver);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
 
             IEnumerable<RideRequestDto> request = _requestLogic.GetUsersRequests(isDriver, userDto.Email);
 
@@ -46,27 +59,16 @@ namespace ShareCar.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Invalid parameter");
+                return BadRequest();
             }
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
             string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
 
-            if (email == null)
-            {
-                return BadRequest("Invalid parameter");
-            }
+            _requestLogic.AddRequest(request, email);
 
-            bool result = _requestLogic.AddRequest(request, email);
-            
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            return Ok();
+
         }
 
         [HttpPost("seenPassenger")]
@@ -86,18 +88,12 @@ namespace ShareCar.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Invalid parameter");
+                return BadRequest();
             }
 
-            bool result = _requestLogic.UpdateRequest(request);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            _requestLogic.UpdateRequest(request);
+
+            return Ok();
 
         }
     }

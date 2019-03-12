@@ -88,7 +88,7 @@ namespace ShareCar.Logic.Route_Logic
             return dtoRoutes;
         }
 
-        public bool AddRoute(RouteDto route)
+        public void AddRoute(RouteDto route)
         {
             Route entityRoute = new Route
             {
@@ -100,7 +100,7 @@ namespace ShareCar.Logic.Route_Logic
 
 
             };
-            return _routeRepository.AddRoute(entityRoute);
+             _routeRepository.AddRoute(entityRoute);
         }
     }
 }

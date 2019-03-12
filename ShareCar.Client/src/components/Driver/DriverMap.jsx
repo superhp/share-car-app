@@ -60,7 +60,7 @@ export class DriverMap extends React.Component {
   }
 
   handleMapClick(longitude, latitude) {
-    getNearest(longitude, latitude)
+    return getNearest(longitude, latitude)
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         if (!response.address) {
