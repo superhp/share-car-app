@@ -12,32 +12,25 @@ import SimpleMenu from "../../common/SimpleMenu";
 class DriverRouteInputInner extends React.Component {
     constructor(props) {
         super(props);
-        this.autocompleteInputs = [];
     }
     state = {
         direction: true,
         checkedOffice: OfficeAddresses[0],
-        r: this.props.routePoints
     }
     componentDidMount() {
-        this.props.onRef(this)
-        this.autocompleteInputs = [];
         console.log("mou-------------------nt");
 
     }
-    setAutocomplete(value) {
+    /*setAutocomplete(value) {
         console.log(this.autocompleteInputs);
-        this.autocompleteInputs[this.autocompleteInputs.length - 1].value = value
-    }
+        if (this.autocompleteInputs.length > 1) {
+            this.autocompleteInputs[this.autocompleteInputs.length - 2].value = value
 
-    assignNamesToInputs (){
-   //     console.log(this.autocompleteInputs);
-   //     console.log(this.props.routePoints);
-        for (var i = 0; i < this.autocompleteInputs.length - 2; i++) {
-            this.autocompleteInputs[i].value = this.props.routePoints[i].displayName;
         }
-        this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
-    }
+        else {
+            this.autocompleteInputs[0].value = value
+        }
+    }*/
 
     render() {
         return (
@@ -46,23 +39,26 @@ class DriverRouteInputInner extends React.Component {
                 ?
                 (<div className="map-input-selection">
                     {this.autocompleteInputs = []}
-                    {this.state.r.map((element, index) => (
+
+                    <Button onClick={() => { console.log(this.autocompleteInputs) }}>ffffffff</Button>
+                    <Button onClick={() => { console.log(this.props.routePoints) }}>eeeeee</Button>
+                    {this.props.routePoints.map((element, index) => (
                         <AddressInput
                             key={index}
                             id={element.id}
                             r={element}
                             i={index}
-                            undeletable={element.id === this.props.initialId}
-                            removeRoutePoint={id => {this.props.removeRoutePoint(id); this.setState({r: this.props.routePoints})}}
+                            deletable={true}
+                            // removeRoutePoint={id => {this.props.removeRoutePoint(id); this.setState({r: this.props.routePoints})}}
                             placeholder="Select From Location"
-                            // onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
-                            //   ref={this.props.innerRef}
-                            ref={e => {
-                                if (e) {
+                             onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
+                               ref={this.props.innerRef}
+                           // ref={e => {
+                           //     if (e) {
 
-                                    this.autocompleteInputs.push(e.autocompleteElem);
-                                }
-                            }}
+                          //          this.autocompleteInputs.push(e.autocompleteElem);
+                         //       }
+                         //   }}
                         />
                     ))}
 
@@ -88,6 +84,15 @@ class DriverRouteInputInner extends React.Component {
                             this.setState({ checkedOffice: office });
                         }}
                     />
+                                        {() => {
+                                            console.log("llllllll");
+                                                    console.log(this.autocompleteInputs);
+                                                    console.log(this.props.routePoints);
+                        for (var i = 0; i < this.autocompleteInputs.length - 1; i++) {
+                            this.autocompleteInputs[i].value = this.props.routePoints[i].displayName;
+                        }
+                        this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
+                    }}
                 </div>)
                 :
                 (<div className="map-input-selection">
