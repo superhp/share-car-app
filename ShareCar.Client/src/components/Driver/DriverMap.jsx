@@ -20,7 +20,6 @@ import { routeStyles } from "./../../utils/mapStyles";
 import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
-const initialId = 1;
 export class DriverMap extends React.Component {
   constructor(props) {
     super(props);
@@ -34,9 +33,8 @@ export class DriverMap extends React.Component {
     initialFromAddress: null,
     initialToAddress: OfficeAddresses[0],
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
-    routePoints: [{ address: OfficeAddresses[0], feature: null, id: initialId, displayName: "" }],
+    routePoints: [{ address: OfficeAddresses[0], feature: null, id: 1, displayName: "" }],
     routePolylineFeature: null,
-
   };
 
   componentDidMount() {
@@ -142,12 +140,12 @@ export class DriverMap extends React.Component {
           const newRouteFeature = createRouteFeature(geometry)
           this.vectorSource.addFeature(newRouteFeature);
           this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature }, () => {
-            console.log(this.autocompleteInputs);
-            console.log(this.state.routePoints);
+          //  console.log(this.autocompleteInputs);
+         //   console.log(this.state.routePoints);
             for (var i = 0; i < this.state.routePoints.length-1; i++) {
-              this.autocompleteInputs[i].value = this.state.routePoints[i + 1].displayName;
+           //   this.autocompleteInputs[i].value = this.state.routePoints[i + 1].displayName;
             }
-            this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
+          //  this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
           });
         });
     }
@@ -158,14 +156,7 @@ export class DriverMap extends React.Component {
     this.vectorSource.removeFeature(this.state.routePoints[index + 1].feature);
 
     routePoints.splice(index+1, 1);
-    this.setState({ routePoints: routePoints });
-    console.log("11111");
-
-    console.log(this.autocompleteInputs);
-    console.log(this.state.routePoints);
-
-    this.updateMap();
-
+    this.setState({ routePoints: routePoints }, this.updateMap());
   }
 
 
@@ -198,7 +189,7 @@ export class DriverMap extends React.Component {
     return (
       
       <div>
-      {this.autocompleteInputs = []}
+        {this.autocompleteInputs = []}
         <div className="displayRoutes">
           <DriverRouteInput
             onFromAddressChange={address => this.handleFromAddressChange(address)}
@@ -209,17 +200,20 @@ export class DriverMap extends React.Component {
             setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
             routePoints={this.state.routePoints}
             removeRoutePoint={index => this.removeRoutePoint(index)}
-            initialId={initialId}
             ref={e => {
               if (e) {
-                console.log("2222");
-
                 if (!this.autocompleteInputs.includes(e.autocompleteElem)) {
+
+                  if(this.autocompleteInputs.length >= 1 && this.autocompleteInputs.length < this.state.routePoints.length){
+                    this.autocompleteInputs[this.autocompleteInputs.length-1].value = this.state.routePoints[this.autocompleteInputs.length].displayName;
+                  }
                   this.autocompleteInputs.push(e.autocompleteElem);
+
                 }
               }
             }}
           />
+
         </div>
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
