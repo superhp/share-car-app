@@ -16,7 +16,7 @@ export const AddressInput = React.forwardRef((props, ref) => (
         />
         {
             props.deletable ?
-                <Close onClick={() => { props.removeRoutePoint(props.id) }} />
+                <Close onClick={() => { props.removeRoutePoint(props.index) }} />
                 :
                 <div></div>
         }

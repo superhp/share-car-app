@@ -25,7 +25,7 @@ export class DriverMap extends React.Component {
   constructor(props) {
     super(props);
     this.autocompleteInputs = [];
-}
+  }
   state = {
     isRideSchedulerVisible: false,
     isFromAddressEditable: true, // can the fromAddress be changed by clicking on the map?
@@ -77,8 +77,7 @@ export class DriverMap extends React.Component {
           return;
         } else {
           const address = fromLocationIqResponse(response);
-    //      this.setAutocompleteFieldValue(response.display_name);
-   // this.autocompleteInputs
+          //      this.setAutocompleteFieldValue(response.display_name);
           // this.autocompleteInput.value = response.display_name;
           var routePoints = this.state.routePoints;
           routePoints.push({ address: address, feature: null, id: this.state.routePoints[this.state.routePoints.length - 1].id + 1, displayName: response.display_name });
@@ -142,37 +141,30 @@ export class DriverMap extends React.Component {
           }
           const newRouteFeature = createRouteFeature(geometry)
           this.vectorSource.addFeature(newRouteFeature);
-          this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature },() =>{
-console.log(this.autocompleteInputs);
-console.log(this.state.routePoints);
-            for (var i = 0; i < this.autocompleteInputs.length - 1; i++) {
-              this.autocompleteInputs[i].value = this.state.routePoints[i].displayName;
-          }
-          this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
+          this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature }, () => {
+            console.log(this.autocompleteInputs);
+            console.log(this.state.routePoints);
+            for (var i = 0; i < this.state.routePoints.length-1; i++) {
+              this.autocompleteInputs[i].value = this.state.routePoints[i + 1].displayName;
+            }
+            this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
           });
         });
     }
   }
 
-  removeRoutePoint(id) {
-    var index = -1;
+  removeRoutePoint(index) {
     var routePoints = this.state.routePoints;
+    this.vectorSource.removeFeature(this.state.routePoints[index + 1].feature);
 
-    for (var i = 0; i < routePoints.length; i++) {
-      if (routePoints[i].id == id) {
-        index = i;
-        console.log(routePoints[i].displayName)
-        break;
-      }
-    }
-
-    this.vectorSource.removeFeature(this.state.routePoints[index].feature);
-
-    routePoints.splice(index, 1);
+    routePoints.splice(index+1, 1);
     this.setState({ routePoints: routePoints });
+    console.log("11111");
+
+    console.log(this.autocompleteInputs);
+    console.log(this.state.routePoints);
 
     this.updateMap();
-   // this.child.assignNamesToInputs();
 
   }
 
@@ -204,10 +196,11 @@ console.log(this.state.routePoints);
 
   render() {
     return (
+      
       <div>
+      {this.autocompleteInputs = []}
         <div className="displayRoutes">
           <DriverRouteInput
-          //  onRef={ref => (this.child = ref)}
             onFromAddressChange={address => this.handleFromAddressChange(address)}
             onToAddressChange={address => this.handleToAddressChange(address)}
             clearVectorSource={() => { this.vectorSource.clear() }}
@@ -215,13 +208,15 @@ console.log(this.state.routePoints);
             setInitialFromAddress={address => this.setState({ initialFromAddress: address, initialToAddress: null })}
             setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
             routePoints={this.state.routePoints}
-            removeRoutePoint={id => this.removeRoutePoint(id)}
+            removeRoutePoint={index => this.removeRoutePoint(index)}
             initialId={initialId}
             ref={e => {
               if (e) {
-if(!this.autocompleteInputs.includes(e.autocompleteElem)){
-                this.autocompleteInputs.push(e.autocompleteElem);
-}
+                console.log("2222");
+
+                if (!this.autocompleteInputs.includes(e.autocompleteElem)) {
+                  this.autocompleteInputs.push(e.autocompleteElem);
+                }
               }
             }}
           />

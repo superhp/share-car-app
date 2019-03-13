@@ -17,48 +17,24 @@ class DriverRouteInputInner extends React.Component {
         direction: true,
         checkedOffice: OfficeAddresses[0],
     }
-    componentDidMount() {
-        console.log("mou-------------------nt");
-
-    }
-    /*setAutocomplete(value) {
-        console.log(this.autocompleteInputs);
-        if (this.autocompleteInputs.length > 1) {
-            this.autocompleteInputs[this.autocompleteInputs.length - 2].value = value
-
-        }
-        else {
-            this.autocompleteInputs[0].value = value
-        }
-    }*/
-
+componentDidMount(){
+    console.log("FFFFF")
+}
     render() {
         return (
 
             this.state.direction
                 ?
                 (<div className="map-input-selection">
-                    {this.autocompleteInputs = []}
-
-                    <Button onClick={() => { console.log(this.autocompleteInputs) }}>ffffffff</Button>
-                    <Button onClick={() => { console.log(this.props.routePoints) }}>eeeeee</Button>
                     {this.props.routePoints.map((element, index) => (
                         <AddressInput
                             key={index}
-                            id={element.id}
-                            r={element}
-                            i={index}
-                            deletable={true}
-                            // removeRoutePoint={id => {this.props.removeRoutePoint(id); this.setState({r: this.props.routePoints})}}
+                            index={index}
+                            deletable={index !== this.props.routePoints.length - 1}
+                            removeRoutePoint={id => { this.props.removeRoutePoint(id); this.setState({ r: this.props.routePoints }) }}
                             placeholder="Select From Location"
-                             onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
-                               ref={this.props.innerRef}
-                           // ref={e => {
-                           //     if (e) {
-
-                          //          this.autocompleteInputs.push(e.autocompleteElem);
-                         //       }
-                         //   }}
+                            onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
+                            ref={this.props.innerRef}
                         />
                     ))}
 
@@ -84,10 +60,10 @@ class DriverRouteInputInner extends React.Component {
                             this.setState({ checkedOffice: office });
                         }}
                     />
-                                        {() => {
-                                            console.log("llllllll");
-                                                    console.log(this.autocompleteInputs);
-                                                    console.log(this.props.routePoints);
+                    {() => {
+                        console.log("llllllll");
+                        console.log(this.autocompleteInputs);
+                        console.log(this.props.routePoints);
                         for (var i = 0; i < this.autocompleteInputs.length - 1; i++) {
                             this.autocompleteInputs[i].value = this.props.routePoints[i].displayName;
                         }
