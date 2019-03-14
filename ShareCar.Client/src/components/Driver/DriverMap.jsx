@@ -33,7 +33,7 @@ export class DriverMap extends React.Component {
     initialFromAddress: null,
     initialToAddress: OfficeAddresses[0],
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
-    routePoints: [{ address: OfficeAddresses[0], feature: null, id: 1, displayName: "" }],
+    routePoints: [{ address: OfficeAddresses[0], feature: null, displayName: null }],
     routePolylineFeature: null,
   };
 
@@ -41,15 +41,13 @@ export class DriverMap extends React.Component {
     const { map, vectorSource } = this.initializeMap();
     this.map = map;
     this.vectorSource = vectorSource;
-    this.updateMap();
+    this.addNewRoutePoint(this.state.toAddress)
   }
 
   handleFromAddressChange(newFromAddress) {
 
     if (!OfficeAddresses.some(a => a == newFromAddress)) {
-      // this.autocompleteInput.value = addressToString(newFromAddress);
       this.setAutocompleteFieldValue(addressToString(newFromAddress));
-
       this.setState({ isFromAddressEditable: true });
     }
     this.setState({ fromAddress: newFromAddress }, this.updateMap);
@@ -58,7 +56,6 @@ export class DriverMap extends React.Component {
 
   handleToAddressChange(newToAddress) {
     if (!OfficeAddresses.some(a => a == newToAddress)) {
-      // this.autocompleteInput.value = addressToString(newToAddress);
       this.setAutocompleteFieldValue(addressToString(newToAddress));
       this.setState({ isFromAddressEditable: false });
     }
@@ -75,63 +72,32 @@ export class DriverMap extends React.Component {
           return;
         } else {
           const address = fromLocationIqResponse(response);
-          //      this.setAutocompleteFieldValue(response.display_name);
-          // this.autocompleteInput.value = response.display_name;
           var routePoints = this.state.routePoints;
-          routePoints.push({ address: address, feature: null, id: this.state.routePoints[this.state.routePoints.length - 1].id + 1, displayName: response.display_name });
+          routePoints.push({ address: address, feature: null, displayName: response.display_name });
           this.setState({ routePoints: routePoints });
           if (this.state.isFromAddressEditable) {
-            if (!this.state.fromAddress) {
-              this.setState({ fromAddress: address }, this.updateMap);
-            } else {
-              var newToAddress = this.state.fromAddress;
-              this.setState({ fromAddress: address, toAddress: newToAddress }, this.updateMap);
-
-            }
-
+            this.setState({ fromAddress: address }, this.updateMap(address));
           } else {
-
-            if (!this.state.toAddress) {
-
-              this.setState({ toAddress: address }, this.updateMap);
-            } else {
-              var newFromAddress = this.state.toAddress;
-              this.setState({ toAddress: address, fromAddress: newFromAddress }, this.updateMap);
-
-            }
-
+            this.setState({ toAddress: address }, this.updateMap(address));
           }
         }
       });
   }
+  addNewRoutePoint(address) {
+    const { longitude, latitude } = address;
+    const feature = createPointFeature(longitude, latitude);
+    this.vectorSource.addFeature(feature);
+    var routePoints = this.state.routePoints;
+    routePoints[routePoints.length - 1].feature = feature;
+    this.setState({ routePoints: routePoints });
+  }
 
-  updateMap() {
-    const { fromAddress, toAddress } = this.state;
-    if (fromAddress) {
-      const { longitude, latitude } = fromAddress;
-      const feature = createPointFeature(longitude, latitude);
-      this.vectorSource.addFeature(feature);
-
-      if (!this.state.isFromAddressEditable) {
-        var routePoints = this.state.routePoints;
-        routePoints[routePoints.length - 1].feature = feature;
-        this.setState({ routePoints: routePoints });
-      }
-    }
-    if (toAddress) {
-      const { longitude, latitude } = toAddress;
-      const feature = createPointFeature(longitude, latitude);
-      this.vectorSource.addFeature(feature);
-
-      if (this.state.isFromAddressEditable) {
-        var routePoints = this.state.routePoints;
-        routePoints[routePoints.length - 1].feature = feature;
-        this.setState({ routePoints: routePoints });
-      }
-    }
-    if (fromAddress && toAddress) {
-      let points = this.state.routePoints.map(a => a.address);
-
+  displayNewRoute() {
+    let points = this.state.routePoints.map(a => a.address);
+    if (points.length == 1 && this.state.routePolylineFeature) {
+      this.vectorSource.removeFeature(this.state.routePolylineFeature);
+      this.setState({ routePolylineFeature: null });
+    } else {
       createRoute(points)
         .then(geometry => {
           if (this.state.routePolylineFeature) {
@@ -139,27 +105,39 @@ export class DriverMap extends React.Component {
           }
           const newRouteFeature = createRouteFeature(geometry)
           this.vectorSource.addFeature(newRouteFeature);
-          this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature }, () => {
-          //  console.log(this.autocompleteInputs);
-         //   console.log(this.state.routePoints);
-            for (var i = 0; i < this.state.routePoints.length-1; i++) {
-           //   this.autocompleteInputs[i].value = this.state.routePoints[i + 1].displayName;
-            }
-          //  this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
-          });
+          this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature });
         });
     }
   }
 
-  removeRoutePoint(index) {
-    var routePoints = this.state.routePoints;
-    this.vectorSource.removeFeature(this.state.routePoints[index + 1].feature);
-
-    routePoints.splice(index+1, 1);
-    this.setState({ routePoints: routePoints }, this.updateMap());
+  updateMap(address) {
+    this.addNewRoutePoint(address);
+    this.displayNewRoute();
   }
 
+  removeRoutePoint(index) {
+    var routePoints = this.state.routePoints;
 
+    this.vectorSource.removeFeature(this.state.routePoints[index + 1].feature);
+
+    routePoints.splice(index + 1, 1);
+    this.setState({ routePoints: routePoints }, this.displayNewRoute);
+  }
+
+  manageRoutePointInputs(e) {
+    if (e) {
+      if (!this.autocompleteInputs.includes(e.autocompleteElem)) {
+        if (this.autocompleteInputs.length >= 1 && this.autocompleteInputs.length < this.state.routePoints.length) {
+            this.autocompleteInputs[this.autocompleteInputs.length - 1].value = this.state.routePoints[this.autocompleteInputs.length].displayName;
+        }
+          if (this.autocompleteInputs.length === this.state.routePoints.length - 1) {
+            e.autocompleteElem.value = "";
+          } 
+        
+        this.autocompleteInputs.push(e.autocompleteElem);
+        }
+      }
+    }
 
   initializeMap() {
     const vectorSource = new SourceVector();
@@ -187,7 +165,7 @@ export class DriverMap extends React.Component {
 
   render() {
     return (
-      
+
       <div>
         {this.autocompleteInputs = []}
         <div className="displayRoutes">
@@ -200,18 +178,7 @@ export class DriverMap extends React.Component {
             setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
             routePoints={this.state.routePoints}
             removeRoutePoint={index => this.removeRoutePoint(index)}
-            ref={e => {
-              if (e) {
-                if (!this.autocompleteInputs.includes(e.autocompleteElem)) {
-
-                  if(this.autocompleteInputs.length >= 1 && this.autocompleteInputs.length < this.state.routePoints.length){
-                    this.autocompleteInputs[this.autocompleteInputs.length-1].value = this.state.routePoints[this.autocompleteInputs.length].displayName;
-                  }
-                  this.autocompleteInputs.push(e.autocompleteElem);
-
-                }
-              }
-            }}
+            ref={e => this.manageRoutePointInputs(e)}
           />
 
         </div>
