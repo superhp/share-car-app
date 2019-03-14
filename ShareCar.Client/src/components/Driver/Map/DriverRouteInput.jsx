@@ -17,9 +17,7 @@ class DriverRouteInputInner extends React.Component {
         direction: true,
         checkedOffice: OfficeAddresses[0],
     }
-componentDidMount(){
-    console.log("FFFFF")
-}
+
     render() {
         return (
 
@@ -56,11 +54,11 @@ componentDidMount(){
                         buttonText="Select Office"
                         handleSelection={office => {
                             console.log(office);
-                            this.props.onToAddressChange(office);
+                            this.props.onOfficeChange(office);
                             this.setState({ checkedOffice: office });
                         }}
                     />
-                    {() => {
+                    {/*() => {
                         console.log("llllllll");
                         console.log(this.autocompleteInputs);
                         console.log(this.props.routePoints);
@@ -68,14 +66,14 @@ componentDidMount(){
                             this.autocompleteInputs[i].value = this.props.routePoints[i].displayName;
                         }
                         this.autocompleteInputs[this.autocompleteInputs.length - 1].value = "";
-                    }}
+                    }*/}
                 </div>)
                 :
                 (<div className="map-input-selection">
                     <SimpleMenu
                         buttonText="Select Office"
                         handleSelection={office => {
-                            this.props.onFromAddressChange(office);
+                            this.props.onOfficeChange(office);
                             this.setState({ checkedOffice: office });
                         }
                         }
