@@ -37,12 +37,12 @@ class DriverRouteInputInner extends React.Component {
                         size="large"
                         color="primary"
                         onClick={() => {
-                            this.setState({ direction: !this.state.direction });
-                            this.props.clearVectorSource();
-                            this.props.clearRoutePoints(this.checkedOffice);
-                            this.props.setInitialFromAddress(this.checkedOffice);
-                            this.props.onFromAddressChange(this.state.checkedOffice);
-                            this.props.onToAddressChange(null);
+                            this.props.changeDirection();
+                       //     this.props.clearVectorSource();
+                         //   this.props.clearRoutePoints(this.checkedOffice);
+                           // this.props.setInitialFromAddress(this.checkedOffice);
+                            //this.props.onFromAddressChange(this.state.checkedOffice);
+                            //this.props.onToAddressChange(null);
                         }}
                     >
                         <ImportExport fontSize="large" />

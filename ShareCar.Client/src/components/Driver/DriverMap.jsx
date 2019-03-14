@@ -35,6 +35,7 @@ export class DriverMap extends React.Component {
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
     routePoints: [],
     routePolylineFeature: null,
+    direction: true
   };
 
   componentDidMount() {
@@ -55,8 +56,7 @@ export class DriverMap extends React.Component {
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
     routePoints[index] = {address: address, feature: feature, displayName: addressToString(address)}
-    routePoints[index].feature = feature;
-    this.setState({ routePoints: routePoints }, this.displayNewRoute());
+    this.setState({ routePoints: routePoints }, () => {this.displayNewRoute()});
     }
   }
 
@@ -70,9 +70,9 @@ export class DriverMap extends React.Component {
         } else {
           const address = fromLocationIqResponse(response);
           if (this.state.isFromAddressEditable) {
-            this.setState({ fromAddress: address }, this.addNewRoutePoint(address));
+            this.setState({ fromAddress: address }, () => {this.addNewRoutePoint(address)});
           } else {
-            this.setState({ toAddress: address }, this.addNewRoutePoint(address));
+            this.setState({ toAddress: address }, () => {this.addNewRoutePoint(address)});
           }
         }
       });
@@ -96,7 +96,7 @@ export class DriverMap extends React.Component {
       this.vectorSource.removeFeature(this.state.routePolylineFeature);
       this.setState({ routePolylineFeature: null });
     } else {
-      createRoute(points)
+      createRoute(points, this.state.direction)
         .then(geometry => {
           if (this.state.routePolylineFeature) {
             this.vectorSource.removeFeature(this.state.routePolylineFeature);
@@ -131,6 +131,10 @@ export class DriverMap extends React.Component {
         this.autocompleteInputs.push(e.autocompleteElem);
       }
     }
+  }
+
+  handleDirectionChange(){
+    this.setState({direction: !this.state.direction}, this.displayNewRoute);
   }
 
   initializeMap() {
@@ -168,7 +172,8 @@ export class DriverMap extends React.Component {
           //  onFromAddressChange={address => this.handleFromAddressChange(address)}
            // onToAddressChange={address => this.handleToAddressChange(address)}
            // onOfficeChange={address => this.changeRoutePoint(address)}
-            clearVectorSource={() => { this.vectorSource.clear() }}
+           changeDirection={() => this.handleDirectionChange()}
+           clearVectorSource={() => { this.vectorSource.clear() }}
             clearRoutePoints={address => { this.setState({ routePoints: [address] }) }}
             setInitialFromAddress={address => this.setState({ initialFromAddress: address, initialToAddress: null })}
             setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}

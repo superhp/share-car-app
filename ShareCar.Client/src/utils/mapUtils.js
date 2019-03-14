@@ -10,41 +10,41 @@ const BEARINGS = "?number=3&bearings=0,20";
 const LOCATION_IQ = "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=";
 
 export const getNearest = (long, lat) => {
-    return new Promise((resolve, reject) => {
-        //make sure the coord is on street
-        fetch(URL_OSRM_NEAREST + long + "," + lat + BEARINGS)
-        .then(response => {
-            return response.json();
-        })
-        .then(function(json) {
-            if (json.code === "Ok") {
-            resolve(json.waypoints[0].location);
-            } else reject();
-        });
-    });
+  return new Promise((resolve, reject) => {
+    //make sure the coord is on street
+    fetch(URL_OSRM_NEAREST + long + "," + lat + BEARINGS)
+      .then(response => {
+        return response.json();
+      })
+      .then(function (json) {
+        if (json.code === "Ok") {
+          resolve(json.waypoints[0].location);
+        } else reject();
+      });
+  });
 }
 
 export const coordinatesToLocation = (latitude, longitude) => {
-    return new Promise(function(resolve, reject) {
-      fetch(
-        LOCATION_IQ +
-          latitude +
-          "&lon=" +
-          longitude +
-          "&format=json"
-      )
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(json) {
-          resolve(json);
-        });
-    });
+  return new Promise(function (resolve, reject) {
+    fetch(
+      LOCATION_IQ +
+      latitude +
+      "&lon=" +
+      longitude +
+      "&format=json"
+    )
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        resolve(json);
+      });
+  });
 }
 
 export const centerMap = (long, lat, map) => {
-    map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
-    map.getView().setZoom(13);
+  map.getView().setCenter(transform([long, lat], "EPSG:4326", "EPSG:3857"));
+  map.getView().setZoom(13);
 }
 
 export const createPointFeature = (long, lat) => {
@@ -71,23 +71,23 @@ export const createRouteFeature = (geometry) => {
   return feature;
 }
 
-  export const createRoute = (routePoints) => {
+export const createRoute = (routePoints, direction) => {
   const URL_OSMR_ROUTE = "//cts-maps.northeurope.cloudapp.azure.com/route/v1/driving/";
 
-var coordinates = "";
-
-for(var i = 0; i < routePoints.length; i++){
-  const point = [routePoints[i].longitude, routePoints[i].latitude];
-
-  coordinates += point;
-  if(i < routePoints.length -1){
-    coordinates += ";";
+  var coordinates = "";
+  if (direction) {
+    for (var i = 0; i < routePoints.length; i++) {
+      coordinates += appendCoordinates(routePoints, i)
+    }
+  } else {
+    for (var i = routePoints.length - 1; i >= 0; i--) {
+      coordinates += appendCoordinates(routePoints, i)
+    }
   }
-}
+  coordinates = coordinates.substring(0, coordinates.length-1);
+  return fetch(URL_OSMR_ROUTE + coordinates)
 
- return fetch(URL_OSMR_ROUTE + coordinates)
- 
- .then(r => {
+    .then(r => {
       return r.json();
     })
     .then(json => {
@@ -98,6 +98,14 @@ for(var i = 0; i < routePoints.length; i++){
     });
 }
 
+function appendCoordinates(routePoints, index){
+  const point = [routePoints[index].longitude, routePoints[index].latitude];
+
+  var coordinates = point;
+    coordinates += ";";
+  
+  return coordinates;
+}
 export const fromLonLatToMapCoords = (lon, lat) =>
   transform([parseFloat(lon), parseFloat(lat)], "EPSG:4326", "EPSG:3857");
 
