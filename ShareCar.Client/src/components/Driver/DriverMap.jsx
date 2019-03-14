@@ -33,7 +33,7 @@ export class DriverMap extends React.Component {
     initialFromAddress: null,
     initialToAddress: OfficeAddresses[0],
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
-    routePoints: [{ address: OfficeAddresses[0], feature: null, displayName: null }],
+    routePoints: [],
     routePolylineFeature: null,
   };
 
@@ -44,39 +44,20 @@ export class DriverMap extends React.Component {
     this.addNewRoutePoint(this.state.toAddress)
   }
 
-  handleFromAddressChange(newFromAddress) {
-
-    if (!OfficeAddresses.some(a => a == newFromAddress)) {
-      //  this.setAutocompleteFieldValue(addressToString(newFromAddress));
-      this.setState({ isFromAddressEditable: true });
-    }
-    this.setState({ fromAddress: newFromAddress }, this.updateMap(newFromAddress));
-    if (newFromAddress) {
-      centerMap(newFromAddress.longitude, newFromAddress.latitude, this.map);
-    }
-  }
-
-  handleToAddressChange(newToAddress) {
-    if (!OfficeAddresses.some(a => a == newToAddress)) {
-      //   this.setAutocompleteFieldValue(addressToString(newToAddress));
-      this.setState({ isFromAddressEditable: false });
-    }
-    this.setState({ toAddress: newToAddress }, this.updateMap(newToAddress));
-    if (newToAddress) {
-      centerMap(newToAddress.longitude, newToAddress.latitude, this.map);
-    }
-  }
-
-  handleOfficeChange(address) {
+  changeRoutePoint(address, index) {
+    index++;
     const { longitude, latitude } = address
     var routePoints = this.state.routePoints;
-    this.vectorSource.removeFeature(routePoints[0].feature);
+    if(index >= routePoints.length){
+      this.addNewRoutePoint(address);
+    }else{
+    this.vectorSource.removeFeature(routePoints[index].feature);
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
-    routePoints[0].address = address
-    routePoints[0].feature = feature;
-    this.setState({ routePoints: routePoints });
-    this.displayNewRoute();
+    routePoints[index] = {address: address, feature: feature, displayName: addressToString(address)}
+    routePoints[index].feature = feature;
+    this.setState({ routePoints: routePoints }, this.displayNewRoute());
+    }
   }
 
   handleMapClick(longitude, latitude) {
@@ -88,13 +69,10 @@ export class DriverMap extends React.Component {
           return;
         } else {
           const address = fromLocationIqResponse(response);
-          var routePoints = this.state.routePoints;
-          routePoints.push({ address: address, feature: null, displayName: response.display_name });
-          this.setState({ routePoints: routePoints });
           if (this.state.isFromAddressEditable) {
-            this.setState({ fromAddress: address }, this.updateMap(address));
+            this.setState({ fromAddress: address }, this.addNewRoutePoint(address));
           } else {
-            this.setState({ toAddress: address }, this.updateMap(address));
+            this.setState({ toAddress: address }, this.addNewRoutePoint(address));
           }
         }
       });
@@ -104,8 +82,12 @@ export class DriverMap extends React.Component {
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
     var routePoints = this.state.routePoints;
-    routePoints[routePoints.length - 1].feature = feature;
-    this.setState({ routePoints: routePoints });
+    routePoints.push({ address: address, feature: feature, displayName: addressToString(address) });
+    this.setState({ routePoints: routePoints }, () =>{
+      if(this.state.routePoints.length > 1){
+        this.displayNewRoute();
+      }
+    });
   }
 
   displayNewRoute() {
@@ -124,11 +106,6 @@ export class DriverMap extends React.Component {
           this.setState({ routeGeometry: geometry, routePolylineFeature: newRouteFeature });
         });
     }
-  }
-
-  updateMap(address) {
-    this.addNewRoutePoint(address);
-    this.displayNewRoute();
   }
 
   // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented
@@ -187,9 +164,10 @@ export class DriverMap extends React.Component {
         {this.autocompleteInputs = []}
         <div className="displayRoutes">
           <DriverRouteInput
-            onFromAddressChange={address => this.handleFromAddressChange(address)}
-            onToAddressChange={address => this.handleToAddressChange(address)}
-            onOfficeChange={address => this.handleOfficeChange(address)}
+            changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
+          //  onFromAddressChange={address => this.handleFromAddressChange(address)}
+           // onToAddressChange={address => this.handleToAddressChange(address)}
+           // onOfficeChange={address => this.changeRoutePoint(address)}
             clearVectorSource={() => { this.vectorSource.clear() }}
             clearRoutePoints={address => { this.setState({ routePoints: [address] }) }}
             setInitialFromAddress={address => this.setState({ initialFromAddress: address, initialToAddress: null })}
