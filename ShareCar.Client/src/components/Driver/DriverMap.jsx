@@ -27,36 +27,32 @@ export class DriverMap extends React.Component {
   }
   state = {
     isRideSchedulerVisible: false,
-    isFromAddressEditable: true, // can the fromAddress be changed by clicking on the map?
-    fromAddress: null,
-    toAddress: OfficeAddresses[0],
-    initialFromAddress: null,
-    initialToAddress: OfficeAddresses[0],
+    isRouteToOffice: true, // can the fromAddress be changed by clicking on the map?
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
     routePoints: [],
     routePolylineFeature: null,
-    direction: true
   };
 
   componentDidMount() {
     const { map, vectorSource } = this.initializeMap();
     this.map = map;
     this.vectorSource = vectorSource;
-    this.addNewRoutePoint(this.state.toAddress)
+    this.addNewRoutePoint(OfficeAddresses[0])
   }
 
+  // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented
   changeRoutePoint(address, index) {
     index++;
     const { longitude, latitude } = address
     var routePoints = this.state.routePoints;
-    if(index >= routePoints.length){
+    if (index >= routePoints.length) {
       this.addNewRoutePoint(address);
-    }else{
-    this.vectorSource.removeFeature(routePoints[index].feature);
-    const feature = createPointFeature(longitude, latitude);
-    this.vectorSource.addFeature(feature);
-    routePoints[index] = {address: address, feature: feature, displayName: addressToString(address)}
-    this.setState({ routePoints: routePoints }, () => {this.displayNewRoute()});
+    } else {
+      this.vectorSource.removeFeature(routePoints[index].feature);
+      const feature = createPointFeature(longitude, latitude);
+      this.vectorSource.addFeature(feature);
+      routePoints[index] = { address: address, feature: feature, displayName: addressToString(address) }
+      this.setState({ routePoints: routePoints }, this.displayNewRoute);
     }
   }
 
@@ -69,22 +65,23 @@ export class DriverMap extends React.Component {
           return;
         } else {
           const address = fromLocationIqResponse(response);
-          if (this.state.isFromAddressEditable) {
-            this.setState({ fromAddress: address }, () => {this.addNewRoutePoint(address)});
+          if (this.state.isRouteToOffice) {
+            this.addNewRoutePoint(address);
           } else {
-            this.setState({ toAddress: address }, () => {this.addNewRoutePoint(address)});
+            this.addNewRoutePoint(address);
           }
         }
       });
   }
+
   addNewRoutePoint(address) {
     const { longitude, latitude } = address;
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
     var routePoints = this.state.routePoints;
     routePoints.push({ address: address, feature: feature, displayName: addressToString(address) });
-    this.setState({ routePoints: routePoints }, () =>{
-      if(this.state.routePoints.length > 1){
+    this.setState({ routePoints: routePoints }, () => {
+      if (this.state.routePoints.length > 1) {
         this.displayNewRoute();
       }
     });
@@ -96,7 +93,7 @@ export class DriverMap extends React.Component {
       this.vectorSource.removeFeature(this.state.routePolylineFeature);
       this.setState({ routePolylineFeature: null });
     } else {
-      createRoute(points, this.state.direction)
+      createRoute(points, this.state.isRouteToOffice)
         .then(geometry => {
           if (this.state.routePolylineFeature) {
             this.vectorSource.removeFeature(this.state.routePolylineFeature);
@@ -133,8 +130,8 @@ export class DriverMap extends React.Component {
     }
   }
 
-  handleDirectionChange(){
-    this.setState({direction: !this.state.direction}, this.displayNewRoute);
+  handleDirectionChange() {
+    this.setState({ isRouteToOffice: !this.state.isRouteToOffice }, this.displayNewRoute);
   }
 
   initializeMap() {
@@ -169,14 +166,7 @@ export class DriverMap extends React.Component {
         <div className="displayRoutes">
           <DriverRouteInput
             changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
-          //  onFromAddressChange={address => this.handleFromAddressChange(address)}
-           // onToAddressChange={address => this.handleToAddressChange(address)}
-           // onOfficeChange={address => this.changeRoutePoint(address)}
-           changeDirection={() => this.handleDirectionChange()}
-           clearVectorSource={() => { this.vectorSource.clear() }}
-            clearRoutePoints={address => { this.setState({ routePoints: [address] }) }}
-            setInitialFromAddress={address => this.setState({ initialFromAddress: address, initialToAddress: null })}
-            setInitialToAddress={address => this.setState({ initialToAddress: address, initialFromAddress: null })}
+            changeDirection={() => this.handleDirectionChange()}
             routePoints={this.state.routePoints}
             removeRoutePoint={index => this.removeRoutePoint(index)}
             ref={e => this.manageRoutePointInputs(e)}
@@ -186,17 +176,17 @@ export class DriverMap extends React.Component {
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
           <RidesScheduler routeInfo={{
-            fromAddress: this.state.isFromAddressEditable ? this.state.fromAddress : this.state.initialFromAddress,
-            toAddress: this.state.isFromAddressEditable ? this.state.initialToAddress : this.state.toAddress,
+            fromAddress: this.state.isRouteToOffice ? this.state.routePoints[this.state.routePoints.length - 1] : this.state.routePoints[0],
+            toAddress: this.state.isRouteToOffice ? this.state.routePoints[0] : this.state.routePoints[this.state.routePoints.length - 1],
             routeGeometry: this.state.routeGeometry
           }} />
         ) : null}
         <Button
-          disabled={!this.state.fromAddress || !this.state.toAddress}
+          disabled={this.state.routePoints.length < 2}
           className="continue-button"
           variant="contained"
           color="primary"
-          onClick={() => this.setState({ f: !this.state.isRideSchedulerVisible })}
+          onClick={() => this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible })}
         >
           Continue
         </Button>
