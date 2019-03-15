@@ -37,7 +37,7 @@ class Snackbars extends React.Component {
         >
           <SnackbarsContent
             onClose={(e, r) => this.handleClose(e, r)}
-            variant="success"
+            variant={this.props.variant}
             message={this.props.message}
           />
         </Snackbar>
