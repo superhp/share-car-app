@@ -176,8 +176,8 @@ export class DriverMap extends React.Component {
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
           <RidesScheduler routeInfo={{
-            fromAddress: this.state.isRouteToOffice ? this.state.routePoints[this.state.routePoints.length - 1] : this.state.routePoints[0],
-            toAddress: this.state.isRouteToOffice ? this.state.routePoints[0] : this.state.routePoints[this.state.routePoints.length - 1],
+            fromAddress: this.state.isRouteToOffice ? this.state.routePoints[this.state.routePoints.length - 1].address : this.state.routePoints[0].address,
+            toAddress: this.state.isRouteToOffice ? this.state.routePoints[0].address : this.state.routePoints[this.state.routePoints.length - 1].address,
             routeGeometry: this.state.routeGeometry
           }} />
         ) : null}

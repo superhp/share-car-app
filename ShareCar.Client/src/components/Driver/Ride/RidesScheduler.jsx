@@ -78,6 +78,11 @@ class RidesScheduler extends React.Component {
   };
 
   createRide(from, to, element) {
+    console.log("----------")
+    console.log(from);
+    console.log(to);    
+    console.log(element);
+
     const ride = {
       fromNumber: from.number,
       fromStreet: from.street,
@@ -97,6 +102,8 @@ class RidesScheduler extends React.Component {
         "T" +
         this.state.time
     };
+    console.log(ride);
+
     return ride;
   }
 
