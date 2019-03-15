@@ -41,8 +41,16 @@ namespace ShareCar.Logic.User_Logic
 
         public IEnumerable<UserDto> GetAllUsers()
         {
-            var users = _userRepository.GetAllUsers();
-            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
+            var users = _userRepository.GetAllUsers().ToList();
+
+            var dtoUsers = new List<UserDto>();
+
+            foreach(var user in users)
+            {
+                dtoUsers.Add(MapToDto(user));
+            }
+
+            return dtoUsers;
         }
 
         public async Task UpdateUserAsync(UserDto updatedUser, ClaimsPrincipal User)
@@ -56,7 +64,7 @@ namespace ShareCar.Logic.User_Logic
                 _userToUpdate.Phone = updatedUser.Phone;
                 _userToUpdate.LicensePlate = updatedUser.LicensePlate;
 
-                var _user = _mapper.Map<UserDto, User>(_userToUpdate);
+                var _user = MapToEntity(_userToUpdate);
                 await _userRepository.UpdateUserAsync(_user, User);
             }
 
@@ -77,7 +85,7 @@ namespace ShareCar.Logic.User_Logic
                 int userPoints = CountPoints(user.Email);
                 if(i<5)
                 {
-                    userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
+                    userWithPoints.Add(MapToDto(user), userPoints);
                 }
                 else
                 {
@@ -85,7 +93,7 @@ namespace ShareCar.Logic.User_Logic
                     int count = userWithPoints.Where(x => x.Value == lowestPoints).Count();
                     if (lowestPoints < userPoints)
                     {
-                        userWithPoints.Add(_mapper.Map<User, UserDto>(user), userPoints);
+                        userWithPoints.Add(MapToDto(user), userPoints);
                         userWithPoints.Remove(userWithPoints.FirstOrDefault(x => x.Value == lowestPoints).Key);
                     }
                 }
@@ -103,7 +111,7 @@ namespace ShareCar.Logic.User_Logic
 
         public Task CreateUser(UserDto userDto)
         {
-            return _userRepository.CreateUser(_mapper.Map<UserDto, User>(userDto));
+            return _userRepository.CreateUser(MapToEntity(userDto));
         }
 
         public void CreateUnauthorizedUser(UnauthorizedUserDto userDto)
@@ -186,19 +194,7 @@ namespace ShareCar.Logic.User_Logic
                 return null;
             }
 
-            return new UserDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                FacebookEmail = user.FacebookEmail,
-                FacebookVerified = user.FacebookVerified,
-                GoogleEmail = user.GoogleEmail,
-                GoogleVerified = user.GoogleVerified,
-                CognizantEmail = user.CognizantEmail,
-                Email = user.Email,
-                LicensePlate = user.LicensePlate,
-                Phone = user.Phone
-            };
+            return MapToDto(user);
         }
 
         public bool DoesUserExist(EmailType type, string cognizantEmail)
@@ -228,6 +224,40 @@ namespace ShareCar.Logic.User_Logic
             }
             return false;
 
+        }
+
+        private UserDto MapToDto(User user)
+        {
+            return new UserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FacebookEmail = user.FacebookEmail,
+                FacebookVerified = user.FacebookVerified,
+                GoogleEmail = user.GoogleEmail,
+                GoogleVerified = user.GoogleVerified,
+                CognizantEmail = user.CognizantEmail,
+                Email = user.Email,
+                LicensePlate = user.LicensePlate,
+                Phone = user.Phone
+            };
+        }
+
+        private User MapToEntity(UserDto user)
+        {
+            return new User
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FacebookEmail = user.FacebookEmail,
+                FacebookVerified = user.FacebookVerified,
+                GoogleEmail = user.GoogleEmail,
+                GoogleVerified = user.GoogleVerified,
+                CognizantEmail = user.CognizantEmail,
+                Email = user.Email,
+                LicensePlate = user.LicensePlate,
+                Phone = user.Phone
+            };
         }
     }
 }
