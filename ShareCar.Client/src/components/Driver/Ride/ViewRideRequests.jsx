@@ -25,7 +25,7 @@ export class ViewRideRequests extends React.Component {
     }
   }
 
-coordinatesToLocation(latitude, longitude) {
+  coordinatesToLocation(latitude, longitude) {
     return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
@@ -43,14 +43,38 @@ coordinatesToLocation(latitude, longitude) {
     });
   }
 
+  cancelRequest(id) {
+
+    var requests = this.state.passengerRequests;
+    var index = requests.findIndex(x => x.id === id);
+    var request = requests[index];
+
+    let data = {
+      RequestId: request.requestID,
+      Status: "Canceled",
+      RideId: request.rideId,
+      DriverEmail: request.driverEmail
+    };
+    api.put("https://localhost:44360/api/RideRequest", data).then(res => {
+      if (res.status === 200) {
+        requests.splice(index, 1);
+        this.setState({ passengerRequests: requests });
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+
+  }
+
   showPassengerRequests() {
     api
       .get("RideRequest/false")
       .then(response => {
-        if(response.data !== ""){
-          this.setState({ passengerRequests: response.data }); 
+        if (response.data !== "") {
+          this.setState({ passengerRequests: response.data });
         }
-})
+      })
       .then(() => {
         const unseenRequests = [];
 
@@ -65,7 +89,7 @@ coordinatesToLocation(latitude, longitude) {
           });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
@@ -91,7 +115,7 @@ coordinatesToLocation(latitude, longitude) {
           });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
@@ -106,14 +130,17 @@ coordinatesToLocation(latitude, longitude) {
             rideRequests={
               this.props.selectedRide !== null && this.state.driverRequests !== []
                 ? this.state.driverRequests.filter(
-                    x => x.rideId === this.props.selectedRide
-                  )
+                  x => x.rideId === this.props.selectedRide
+                )
                 : []
             }
           />
         ) : (
-          <PassengerRideRequestsList requests={this.state.passengerRequests} />
-        )}
+            <PassengerRideRequestsList
+              requests={this.state.passengerRequests}
+              cancelRequest={id => { this.cancelRequest(id) }}
+            />
+          )}
       </div>
     );
   }

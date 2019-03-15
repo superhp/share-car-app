@@ -17,6 +17,7 @@ state={
     show:false,
     coordinates:[]
 }
+
     render() {
         return (
             <div className="request-card-container"> 
@@ -44,6 +45,11 @@ state={
                           }}
                         >
                           Show on map
+                        </Button>
+                        <Button
+                          onClick={() => {this.props.cancelRequest()}}
+                        >
+                          Cancel request
                         </Button>
                             </CardContent>
                         </tr>

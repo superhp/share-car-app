@@ -31,6 +31,7 @@ namespace ShareCar.Dto
         WAITING,
         ACCEPTED,
         DENIED,
-        DELETED
+        DELETED,
+        CANCELED
     }
 }
