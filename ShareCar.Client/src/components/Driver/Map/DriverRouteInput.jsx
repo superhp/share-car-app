@@ -10,64 +10,39 @@ import "../../../styles/testmap.css";
 import SimpleMenu from "../../common/SimpleMenu";
 
 class DriverRouteInputInner extends React.Component {
-    state = {
-        direction: true,
-        checkedOffice: OfficeAddresses[0]
-    }
+
     render() {
         return (
-            this.state.direction 
-            ?
-            (<div className="map-input-selection">
-                <AddressInput 
-                    placeholder="Select From Location"
-                    onChange={(suggestion) => this.props.onFromAddressChange(fromAlgoliaAddress(suggestion))}
-                    ref={this.props.innerRef}
-                />
-                <Button 
-                    size="large" 
-                    color="primary"
-                    onClick={() => {
-                        this.setState({direction: !this.state.direction});
-                        this.props.onFromAddressChange(this.state.checkedOffice);
-                        this.props.onToAddressChange(null);
-                    }}
-                >
-                    <ImportExport fontSize="large"/>
-                </Button>
-                <SimpleMenu
-                    buttonText="Select Office"
-                    handleSelection={office => {
-                        console.log(office);
-                        this.props.onToAddressChange(office);
-                    }}
-                />
-            </div>)
-            :
-            (<div className="map-input-selection">
-                <SimpleMenu
-                    buttonText="Select Office"
-                    handleSelection={office =>
-                        this.props.onFromAddressChange(office)
-                    }
-                />
+            <div className="map-input-selection">
+                {this.props.routePoints.map((element, index) => (
+                    <AddressInput
+                        key={index}
+                        index={index}
+                        deletable={index !== this.props.routePoints.length - 1}
+                        removeRoutePoint={id => { this.props.removeRoutePoint(id) }}
+                        placeholder="Select From Location"
+                        onChange={(suggestion, index) => this.props.changeRoutePoint(fromAlgoliaAddress(suggestion), index)}
+                        ref={this.props.innerRef}
+                    />
+                ))}
+
                 <Button
                     size="large"
                     color="primary"
                     onClick={() => {
-                        this.setState({direction: !this.state.direction});
-                        this.props.onFromAddressChange(null);
-                        this.props.onToAddressChange(this.state.checkedOffice);
+                        this.props.changeDirection();
                     }}
                 >
-                    <ImportExport fontSize="large"/>
+                    <ImportExport fontSize="large" />
                 </Button>
-                <AddressInput 
-                    placeholder="Select To Location"
-                    onChange={(suggestion) => this.props.onToAddressChange(fromAlgoliaAddress(suggestion))}
-                    ref={this.props.innerRef}
+                <SimpleMenu
+                    buttonText="Select Office"
+                    handleSelection={office => {
+                    this.props.changeRoutePoint(office, -1);
+                    }}
                 />
-            </div>)
+
+            </div>
         );
     }
 }
