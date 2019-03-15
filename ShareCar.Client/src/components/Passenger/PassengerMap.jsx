@@ -16,7 +16,7 @@ import { fromLonLatToMapCoords, fromMapCoordsToLonLat,
   getNearest, coordinatesToLocation, createPointFeature, 
   createRouteFeature } from "../../utils/mapUtils";
 import { fromLocationIqResponse, addressToString } from "../../utils/addressUtils";
-
+import { OfficeAddresses } from "../../utils/AddressData";
 import "./../../styles/genericStyles.css";
 import "../../styles/testmap.css";
 
@@ -24,7 +24,6 @@ export class PassengerMap extends React.Component {
   state = {
     passengerAddress: null,
     direction: "from",
-    officeAddress: null,
     routes: [],
     currentRouteIndex: 0,
     showDriver: false
@@ -34,7 +33,7 @@ export class PassengerMap extends React.Component {
     const {map, vectorSource} = this.initializeMap();
     this.map = map;
     this.vectorSource = vectorSource;
-    this.updateMap();
+    this.getAllRoutes(OfficeAddresses[0], this.state.direction);
   }
 
   initializeMap() {
@@ -90,22 +89,20 @@ export class PassengerMap extends React.Component {
     if(newAddress) centerMap(newAddress.longitude, newAddress.latitude, this.map);
   }
 
-  getAllRoutes(address) {
-    this.setState({officeAddress: address});
+  getAllRoutes(address,direction) {
+    console.log("GGGGGGGGGGGGGGGG")
     let routeDto;
-    if(this.state.direction === "to")
+    this.setState({direction: direction});
+    if(direction === "to")
       routeDto = {AddressTo: address};
     else 
       routeDto = {AddressFrom: address};
-    this.fetchRoutes(routeDto);
-  }
 
-  fetchRoutes(routeDto) {
-    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      if (res.status === 200 && res.data !== "") {
-        this.setState({routes: res.data}, this.updateMap);
-      }
-    });
+      api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
+        if (res.status === 200 && res.data !== "") {
+          this.setState({routes: res.data}, this.updateMap);
+        }
+      });
   }
 
   handleRegister(ride) {
@@ -126,9 +123,9 @@ export class PassengerMap extends React.Component {
       <div>
         <div className="passengerForm">
           <PassengerRouteSelection 
-              direction={this.state.direction}
-              handleOfficeSelection={address => this.getAllRoutes(address)}
-              onDirectionChanged={(direction) => this.setState({direction: direction})}
+              direction = {this.state.direction}
+              initialAddress = {OfficeAddresses[0]}
+              onChange ={(address, direction) => this.getAllRoutes(address, direction)}
               onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
               ref={e => {
                 if (e) {
