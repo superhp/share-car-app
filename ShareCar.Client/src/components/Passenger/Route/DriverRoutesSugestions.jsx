@@ -8,11 +8,12 @@ export const DriverRoutesSugestions = (props) => (
     <Grid container justify="center" item xs={10}>
         <Card>
             {props.rides.map((ride, i) => (
-                <DriverRouteSuggestionsItem 
+                <DriverRouteSuggestionsItem
+                    key={i}
                     ride={ride}
                     onRegister={() => props.onRegister(ride)}
                 />
             ))}
-            </Card>
+        </Card>
     </Grid>
 );

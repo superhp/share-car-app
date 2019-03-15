@@ -32,6 +32,7 @@ namespace ShareCar.Db.Entities
         WAITING,
         ACCEPTED,
         DENIED,
-        DELETED
+        DELETED,
+        CANCELED
     }
 }

@@ -4,6 +4,7 @@ import { withAlert } from "react-alert";
 import "typeface-roboto";
 
 import SnackBars from "../common/Snackbars";
+import {SnackbarVariants} from "../common/SnackbarVariants";
 import api from "../../helpers/axiosHelper";
 import AuthenticationService from "../../services/authenticationService";
 import history from "../../helpers/history";
@@ -16,7 +17,8 @@ type UserProfileState = {
   loading: boolean,
   user: UserProfileData | null,
   snackBarClicked: boolean,
-  snackBarMessage: string
+  snackBarMessage: string,
+  snackBarVariant: string
 };
 
 class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfileState> {
@@ -54,7 +56,8 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
       if (res.status === 200) {
         this.setState({
           snackBarClicked: true,
-          snackBarMessage: "Profile updated!"
+          snackBarMessage: "Profile updated!",
+          snackBarVariant: SnackbarVariants[0]
         });
       }
     });
@@ -97,6 +100,7 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
         />
         ;
       </div>
