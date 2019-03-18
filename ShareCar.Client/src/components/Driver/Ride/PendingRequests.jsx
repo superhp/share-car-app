@@ -5,7 +5,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
-
+import {Status} from "../../../utils/status"
 const fontColor = {
     color: "#007BFF"
 };
@@ -14,7 +14,7 @@ export const PendingRequests = (props) => (
     <Grid container justify="center">
         <Grid item xs={12}>
             <Typography style={fontColor} variant="title">
-                Pending Requests
+                Requests
             </Typography>
         </Grid>
         <Snackbar
@@ -40,9 +40,9 @@ export const PendingRequests = (props) => (
                                 props.onShowClick();
                                 window.scrollTo(0, 0);
                             }}
-                            onAcceptClick={() => props.sendRequestResponse("Accept", 1, req.requestId, req.rideId, req.driverEmail)}
+                            onAcceptClick={() => props.sendRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
                             onDenyClick={() => {
-                                props.sendRequestResponse("Deny", 2, req.requestId, req.rideId);
+                                props.sendRequestResponse(Status[2], 2, req.requestId, req.rideId);
                                 window.location.reload();
                             }}
                         />

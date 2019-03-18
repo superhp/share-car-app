@@ -29,7 +29,7 @@ export const RidePassengersList = (props) => (
                   </Card>
                 </Grid>
               ))
-            : "No Passengers For This Drive"}
+            : "Ride doesn't have any passengers"}
         </Grid>
       ) : null
 );

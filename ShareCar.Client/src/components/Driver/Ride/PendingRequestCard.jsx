@@ -11,9 +11,6 @@ import "../../../styles/riderequests.css";
 export const PendingRequestCard = (props) => (
     
     <Card className="rides-card">
-                 {console.log("-------------------------")}
-                    {console.log(props)}
-                    {console.log(props.req)}
         <Grid container justify="center">
             <Grid item xs={12} zeroMinWidth>
                 <Grid container justify="center">
