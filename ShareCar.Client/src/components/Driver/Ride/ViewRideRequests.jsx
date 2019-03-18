@@ -11,8 +11,9 @@ export class ViewRideRequests extends React.Component {
   };
 
   componentWillMount() {
+    console.log(this.props.selectedRide)
     this.props.driver
-      ? this.showDriverRequests()
+      ? this.showDriverRequests(this.props.selectedRide)
       : this.showPassengerRequests();
   }
   handleRequestClick(button, requestId) {
@@ -68,7 +69,7 @@ export class ViewRideRequests extends React.Component {
 
   showPassengerRequests() {
     api
-      .get("RideRequest/false")
+      .get("RideRequest")
       .then(response => {
         if (response.data !== "") {
           this.setState({ passengerRequests: response.data });
@@ -93,9 +94,9 @@ export class ViewRideRequests extends React.Component {
       });
   }
 
-  showDriverRequests() {
+  showDriverRequests(id) {
     api
-      .get("RideRequest/true")
+      .get("RideRequest/" + id)
       .then(response => {
         if (response.status === 200)
           this.setState({ driverRequests: response.data });
