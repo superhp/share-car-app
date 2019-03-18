@@ -11,7 +11,7 @@ using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Api.Controllers
 {
-    [Authorize]
+   [Authorize]
     [Produces("application/json")]
     [Route("api/Passenger")]
     public class PassengerController : Controller
@@ -40,7 +40,7 @@ namespace ShareCar.Api.Controllers
                 passenger.Phone = user.Phone;
             }
             return Ok(passengers);
-
         }
+
     }
 }

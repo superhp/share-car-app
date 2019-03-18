@@ -12,6 +12,7 @@ using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
 using System;
+using System.Linq;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -40,7 +41,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
             requestDto.DriverEmail = driverEmail;
-            int addressId = _addressLogic.GetAddressId(new AddressDto {City=requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
+            int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
 
             requestDto.AddressId = addressId;
             _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
@@ -48,22 +49,46 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public void UpdateRequest(RideRequestDto request)
         {
-            request.SeenByPassenger = false;
-            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
-            if (request.Status == Dto.Status.ACCEPTED)
+            var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);
+            var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
+
+            if(request.Status == previousStatus)
             {
-                var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);      
-                var rideToUpdate = _rideLogic.GetRideById(request.RideId);
+                return; // Should exception be thrown ? This is unexpected behavior, though returning prevents any undesired consequences
+            }
+
+            if (request.Status == Dto.Status.CANCELED)
+            {
+                request.SeenByDriver = false;
+                request.SeenByPassenger = true;
+
+            }
+            else
+            {
+                request.SeenByDriver = true;
+                request.SeenByPassenger = false;
+            }
+            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
+            var rideToUpdate = _rideLogic.GetRideById(request.RideId);
+
+            if (request.Status == Dto.Status.ACCEPTED && previousStatus == Dto.Status.WAITING)
+            {
                 if (rideToUpdate.NumberOfSeats != 0)
                 {
-                     _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                        rideToUpdate.NumberOfSeats--;
-                       _rideLogic.UpdateRide(rideToUpdate);
+                    _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
+                    rideToUpdate.NumberOfSeats--;
+                    _rideLogic.UpdateRide(rideToUpdate);
                 }
                 else
                 {
                     throw new ArgumentException("Selected ride deosn't have empty seats");
-                } 
+                }
+            }
+            else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)
+            {
+                _passengerLogic.RemovePassenger(entityRequest.PassengerEmail, request.RideId);
+                rideToUpdate.NumberOfSeats++;
+                _rideLogic.UpdateRide(rideToUpdate);
             }
         }
 
@@ -91,36 +116,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             }
 
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, driver);
-            return SortRequests(converted);
-        }
-
-        public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
-        {
-            List<RideRequestDto> sorted = new List<RideRequestDto>();
-
-            foreach(var request in requests)
-            {
-                if(!request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.WAITING)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.ACCEPTED && request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            return sorted;
-
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
 
         public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)
@@ -173,12 +169,12 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetRequestsByRideId(rideId);
             _rideRequestRepository.DeletedRide(entityRequests);
         }
-        
+
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
             IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-            foreach(RideRequest request in entityRequests)
+            foreach (RideRequest request in entityRequests)
             {
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
             }

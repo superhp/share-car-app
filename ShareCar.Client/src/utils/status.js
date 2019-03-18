@@ -1,1 +1,1 @@
-export const Status = ["WAITING", "ACCEPTED", "DENIED","DELETED"];
+export const Status = ["WAITING", "ACCEPTED", "DENIED","DELETED", "CANCELED"];

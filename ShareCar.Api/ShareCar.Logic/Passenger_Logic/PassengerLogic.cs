@@ -63,5 +63,10 @@ namespace ShareCar.Logic.Passenger_Logic
             int points = _passengerRepository.GetUsersPoints(email);
             return points;
         }
+
+        public void RemovePassenger(string email, int rideId)
+        {
+            _passengerRepository.RemovePassenger(email, rideId);
+        }
     }
 }

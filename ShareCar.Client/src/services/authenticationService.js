@@ -12,7 +12,7 @@ class AuthenticationService {
             success();
         })
         .catch((error) => {
-            if(error.response.status === 401){
+            if(error.response && error.response.status === 401){
                 unauthorized();
             } else{
                 console.error(error);
@@ -27,7 +27,7 @@ class AuthenticationService {
             success();
         })
         .catch((error) => {
-            if(error.response.status === 401){
+            if(error.response && error.response.status === 401){
                 unauthorized();
             } else{
                 console.error(error);

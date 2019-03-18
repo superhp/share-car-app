@@ -3,7 +3,7 @@ import * as React from "react";
 import api from "../../../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "../../Passenger/Ride/PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-
+import {Status} from "../../../utils/status"
 export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],
@@ -25,7 +25,7 @@ export class ViewRideRequests extends React.Component {
     }
   }
 
-coordinatesToLocation(latitude, longitude) {
+  coordinatesToLocation(latitude, longitude) {
     return new Promise(function (resolve, reject) {
       fetch(
         "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
@@ -43,14 +43,39 @@ coordinatesToLocation(latitude, longitude) {
     });
   }
 
+  cancelRequest(id) {
+console.log(id);
+    var requests = this.state.passengerRequests;
+    var index = requests.findIndex(x => x.requestId === id);
+    var request = requests[index];
+
+    let data = {
+      RequestId: request.requestId,
+      Status: Status[4],
+      RideId: request.rideId,
+      DriverEmail: request.driverEmail
+    };
+    console.log(data);
+    api.put("RideRequest", data).then(res => {
+      if (res.status === 200) {
+        requests[index].status = 4;
+        this.setState({ passengerRequests: requests });
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+
+  }
+
   showPassengerRequests() {
     api
       .get("RideRequest/false")
       .then(response => {
-        if(response.data !== ""){
-          this.setState({ passengerRequests: response.data }); 
+        if (response.data !== "") {
+          this.setState({ passengerRequests: response.data });
         }
-})
+      })
       .then(() => {
         const unseenRequests = [];
 
@@ -65,7 +90,7 @@ coordinatesToLocation(latitude, longitude) {
           });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
@@ -91,7 +116,7 @@ coordinatesToLocation(latitude, longitude) {
           });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
@@ -106,14 +131,17 @@ coordinatesToLocation(latitude, longitude) {
             rideRequests={
               this.props.selectedRide !== null && this.state.driverRequests !== []
                 ? this.state.driverRequests.filter(
-                    x => x.rideId === this.props.selectedRide
-                  )
+                  x => x.rideId === this.props.selectedRide
+                )
                 : []
             }
           />
         ) : (
-          <PassengerRideRequestsList requests={this.state.passengerRequests} />
-        )}
+            <PassengerRideRequestsList
+              requests={this.state.passengerRequests}
+              cancelRequest={id => { this.cancelRequest(id) }}
+            />
+          )}
       </div>
     );
   }

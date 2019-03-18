@@ -38,13 +38,6 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         }
 
-        public void RemovePassenger(Passenger passenger)
-        {
-                _databaseContext.Passengers.Remove(passenger);
-                _databaseContext.SaveChanges();
-
-        }
-
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
         {
                 return _databaseContext.Passengers.Where(x => x.Email == email && x.PassengerResponded == false);
@@ -65,5 +58,10 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
             }
 
+        public void RemovePassenger(string email, int rideId)
+        {
+            Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == email);
+            _databaseContext.Remove(passenger);
+        }
     }
 }

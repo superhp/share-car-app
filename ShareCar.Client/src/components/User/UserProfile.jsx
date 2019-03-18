@@ -52,7 +52,7 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
       licensePlate: this.state.user.user.licensePlate,
       phone: this.state.user.user.phone
     };
-    api.post(`https://localhost:44360/api/user`, data).then(res => {
+    api.post(`https://localhost:44347/api/user`, data).then(res => {
       if (res.status === 200) {
         this.setState({
           snackBarClicked: true,

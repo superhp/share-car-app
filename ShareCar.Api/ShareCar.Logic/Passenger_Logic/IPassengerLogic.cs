@@ -8,6 +8,7 @@ namespace ShareCar.Logic.Passenger_Logic
     public interface IPassengerLogic
     {
         void AddPassenger(PassengerDto passenger);
+        void RemovePassenger(string email, int rideId);
         int GetUsersPoints(string email);
         List<PassengerDto> GetUnrepondedPassengersByEmail(string email);
         List<PassengerDto> GetPassengersByRideId(int rideId);

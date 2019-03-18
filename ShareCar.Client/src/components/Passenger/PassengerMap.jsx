@@ -105,7 +105,7 @@ export class PassengerMap extends React.Component {
     else
       routeDto = { AddressFrom: address };
 
-    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
+    api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
       if (res.status === 200 && res.data !== "") {
         this.setState({ routes: res.data }, this.updateMap);
       }
@@ -134,7 +134,7 @@ export class PassengerMap extends React.Component {
         Latitude: this.state.passengerAddress.latitude
       };
 
-      api.post(`https://localhost:44360/api/RideRequest`, request).then(res => {
+      api.post(`https://localhost:44347/api/RideRequest`, request).then(res => {
         alert("ok");
       });
     }

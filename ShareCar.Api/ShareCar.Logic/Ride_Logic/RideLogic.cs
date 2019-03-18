@@ -85,7 +85,6 @@ namespace ShareCar.Logic.Ride_Logic
             return dtoRide;
         }
 
-
         public IEnumerable<RideDto> GetRidesByStartPoint(int addressFromId)
         {
             IEnumerable<Ride> rides = _rideRepository.GetRidesByStartPoint(addressFromId);
@@ -112,7 +111,6 @@ namespace ShareCar.Logic.Ride_Logic
 
               return MapToList(rides);
           }*/
-
 
         public void AddRide(RideDto ride, string email)
         {
@@ -146,7 +144,6 @@ namespace ShareCar.Logic.Ride_Logic
             }
             return false;
         }
-
 
         // Returns a list of mapped objects
         private IEnumerable<RideDto> MapToList(IEnumerable<Ride> rides)

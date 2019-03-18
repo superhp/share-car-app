@@ -48,7 +48,7 @@ export class DriverRideRequestsList extends React.Component {
       RideId: rideId,
       DriverEmail: driverEmail
     };
-    api.put("https://localhost:44360/api/RideRequest", data).then(res => {
+    api.put("https://localhost:44347/api/RideRequest", data).then(res => {
       if (res.status === 200) {
         this.setState({ clickedRequest: true });
       }
