@@ -44,7 +44,6 @@ export class ViewRideRequests extends React.Component {
   }
 
   cancelRequest(id) {
-console.log(id);
     var requests = this.state.passengerRequests;
     var index = requests.findIndex(x => x.requestId === id);
     var request = requests[index];
@@ -55,7 +54,6 @@ console.log(id);
       RideId: request.rideId,
       DriverEmail: request.driverEmail
     };
-    console.log(data);
     api.put("RideRequest", data).then(res => {
       if (res.status === 200) {
         requests[index].status = 4;
