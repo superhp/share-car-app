@@ -22,6 +22,7 @@ state={
         return (
             <div className="request-card-container"> 
                 <Card className="request-card">
+                {console.log(this.props.requests)}
                     {this.props.requests.map((req, i) =>
                         <tr key={i}>
                             <CardContent >
@@ -46,11 +47,16 @@ state={
                         >
                           Show on map
                         </Button>
+                        {
+                         req.status === 0 || req.status === 1 ?(
                         <Button
-                          onClick={() => {this.props.cancelRequest()}}
+                          onClick={() => {this.props.cancelRequest(req.requestId)}}
                         >
                           Cancel request
                         </Button>
+                         )
+                         :(<div> </div>)
+                        }
                             </CardContent>
                         </tr>
                     )}

@@ -12,6 +12,7 @@ using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
 using System;
+using System.Linq;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -88,7 +89,6 @@ namespace ShareCar.Logic.RideRequest_Logic
                 _passengerLogic.RemovePassenger(entityRequest.PassengerEmail, request.RideId);
                 rideToUpdate.NumberOfSeats++;
                 _rideLogic.UpdateRide(rideToUpdate);
-
             }
         }
 
@@ -116,36 +116,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             }
 
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, driver);
-            return SortRequests(converted);
-        }
-
-        public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
-        {
-            List<RideRequestDto> sorted = new List<RideRequestDto>();
-
-            foreach (var request in requests)
-            {
-                if (!request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.WAITING)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.ACCEPTED && request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            return sorted;
-
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
 
         public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)

@@ -3,7 +3,7 @@ import * as React from "react";
 import api from "../../../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "../../Passenger/Ride/PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-
+import {Status} from "../../../utils/status"
 export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],
@@ -44,21 +44,21 @@ export class ViewRideRequests extends React.Component {
   }
 
   cancelRequest(id) {
-
+console.log(id);
     var requests = this.state.passengerRequests;
-    console.log(this.state.passengerRequests)
-    var index = requests.findIndex(x => x.id === id);
+    var index = requests.findIndex(x => x.requestId === id);
     var request = requests[index];
 
     let data = {
       RequestId: request.requestId,
-      Status: "Canceled",
+      Status: Status[4],
       RideId: request.rideId,
       DriverEmail: request.driverEmail
     };
+    console.log(data);
     api.put("RideRequest", data).then(res => {
       if (res.status === 200) {
-        requests.splice(index, 1);
+        requests[index].status = 4;
         this.setState({ passengerRequests: requests });
       }
     })
