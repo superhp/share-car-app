@@ -92,7 +92,7 @@ export class NewRideForm extends React.Component {
     postRide(ride) {
         let rides = [];
         rides.push(ride);
-        api.post(`https://localhost:44360/api/Ride`, rides).then(res => {
+        api.post(`https://localhost:44347/api/Ride`, rides).then(res => {
             this.setState({ addedStatus: true });
         });
     }

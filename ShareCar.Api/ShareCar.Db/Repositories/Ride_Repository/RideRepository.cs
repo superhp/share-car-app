@@ -98,6 +98,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         {
             return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
         }
+
     }
 }
     

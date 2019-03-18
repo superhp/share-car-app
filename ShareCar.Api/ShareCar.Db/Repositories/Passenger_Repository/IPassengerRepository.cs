@@ -9,6 +9,7 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
     {
         int GetUsersPoints(string email);
         void AddNewPassenger(Passenger passenger);
+        void RemovePassenger(string email, int rideId);
         IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email);
         IEnumerable<Passenger> GetPassengersByRideId(int rideId);
         void RespondToRide(bool response, int rideId, string passengerEmail);
