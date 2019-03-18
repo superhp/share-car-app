@@ -48,16 +48,25 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public void UpdateRequest(RideRequestDto request)
         {
+            var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);
+            var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
+
+            if(request.Status == previousStatus)
+            {
+                return; // Should exception be thrown ? This is unexpected behavior, though returning prevents any undesired consequences
+            }
+
             if (request.Status == Dto.Status.CANCELED)
             {
                 request.SeenByDriver = false;
+                request.SeenByPassenger = true;
+
             }
             else
             {
+                request.SeenByDriver = true;
                 request.SeenByPassenger = false;
             }
-            var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);
-            var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
             _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
             var rideToUpdate = _rideLogic.GetRideById(request.RideId);
 
