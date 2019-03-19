@@ -6,18 +6,18 @@ import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import View from "ol/View";
 import Feature from "ol/Feature";
-import TileLayer from "ol/layer/Tile";
+import Tile from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 
-import { centerMap } from "../../utils/mapUtils";
+import { centerMap, fromLonLatToMapCoords, fromMapCoordsToLonLat } from "../../utils/mapUtils";
 
 import "../../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
   constructor(props) {
     super(props);
-
+console.log(props)
     this.state = {
       coordinates: [],
       map: null,
@@ -42,6 +42,30 @@ export default class MapComponent extends React.Component<{}> {
     vectorSource.addFeature(feature);
   }
 
+componentDidMount(){
+  const vectorSource = new SourceVector();
+  const vectorLayer = new LayerVector({ source: vectorSource });
+  const map = new Map({
+    target: "map",
+    controls: [],
+    layers: [
+      new Tile({
+        source: new OSM()
+      }),
+      vectorLayer
+    ],
+    view: new View({
+      center: fromLonLatToMapCoords(25.279652, 54.687157),
+      zoom: 13
+    })
+  });
+  map.on("click", e => {
+    const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
+    this.handleMapClick(longitude, latitude);
+  });
+}
+
+  /*
   componentDidMount() {
     const vectorSource = new SourceVector();
     const vectorLayer = new LayerVector({
@@ -83,7 +107,7 @@ export default class MapComponent extends React.Component<{}> {
     }
 
   }
-
+*/
   render() {
     return (
       <div>
