@@ -14,11 +14,11 @@ namespace ShareCar.Db.Repositories.Route_Repository
         {
             _databaseContext = databaseContext;
         }
-        public int GetRouteId(int fromId, int toId)
+        public int GetRouteId(string geometry)
         {
             try
             {
-                return _databaseContext.Routes.Single(x => x.FromId == fromId && x.ToId == toId).RouteId;
+                return _databaseContext.Routes.Single(x => x.Geometry == geometry).RouteId;
             }
             catch
             {
@@ -67,6 +67,17 @@ namespace ShareCar.Db.Repositories.Route_Repository
                     .Where(x => x.ToAddress.City == address.City && x.ToAddress.Street == address.Street && x.ToAddress.Number == address.Number);
             }
         }
-        
+
+        public Route GetRouteByRequest(int requestId)
+        {
+
+            var result = from route in _databaseContext.Routes.Include(x => x.ToAddress).Include(x => x.FromAddress)
+                         from rides in route.Rides
+                         from requests in rides.Requests
+                         where requests.RequestId == requestId
+                         select route;
+                    
+            return result.ToList()[0];
+        }
     }
 }

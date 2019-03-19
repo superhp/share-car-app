@@ -8,6 +8,10 @@ namespace ShareCar.Dto
     {
         public int RideId { get; set; }
         public int RouteId { get; set; }
+        public double FromLongitude { get; set; }
+        public double FromLatitude { get; set; }
+        public double ToLongitude { get; set; }
+        public double ToLatitude { get; set; }
         public string FromCountry { get; set; }
         public string FromCity { get; set; }
         public string FromStreet { get; set; }

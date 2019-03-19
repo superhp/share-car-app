@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
-
 import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
@@ -70,7 +69,6 @@ class RidesScheduler extends React.Component {
   handleCreate = () => {
     let ridesToPost = [];
     const {fromAddress, toAddress} = this.props.routeInfo;
-
     this.state.selectedDates.forEach(element => {
       ridesToPost.push(this.createRide(fromAddress, toAddress, element));
     });
@@ -90,13 +88,17 @@ class RidesScheduler extends React.Component {
       toCity: to.city,
       toCountry: "Lithuania",
       routeGeometry: this.props.routeInfo.routeGeometry,
+      fromLongitude:from.longitude,
+      fromLatitude:from.latitude,
+      toLongitude:to.longitude,
+      toLatitude:to.latitude,
       rideDateTime:
         element.getFullYear() +
         "-" +
         (element.getMonth() + 1) + 
         "-" +
         element.getDate() +
-        "T" +
+        "  " +
         this.state.time
     };
     return ride;

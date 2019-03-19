@@ -10,14 +10,13 @@ import Tile from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 
-import { centerMap, fromLonLatToMapCoords, fromMapCoordsToLonLat } from "../../utils/mapUtils";
+import { centerMap, fromLonLatToMapCoords, fromMapCoordsToLonLat, createPointFeature, createRouteFeature } from "../../utils/mapUtils";
 
 import "../../styles/mapComponent.css";
 
 export default class MapComponent extends React.Component<{}> {
   constructor(props) {
     super(props);
-console.log(props)
     this.state = {
       coordinates: [],
       map: null,
@@ -42,80 +41,48 @@ console.log(props)
     vectorSource.addFeature(feature);
   }
 
-componentDidMount(){
-  const vectorSource = new SourceVector();
-  const vectorLayer = new LayerVector({ source: vectorSource });
-  const map = new Map({
-    target: "map",
-    controls: [],
-    layers: [
-      new Tile({
-        source: new OSM()
-      }),
-      vectorLayer
-    ],
-    view: new View({
-      center: fromLonLatToMapCoords(25.279652, 54.687157),
-      zoom: 13
-    })
-  });
-  map.on("click", e => {
-    const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
-    this.handleMapClick(longitude, latitude);
-  });
-}
+  displayNewRoute(geometry) {
+    const newRouteFeature = createRouteFeature(geometry)
+    this.vectorSource.addFeature(newRouteFeature);
+  }
 
-  /*
   componentDidMount() {
     const vectorSource = new SourceVector();
-    const vectorLayer = new LayerVector({
-        source: vectorSource
-    });
-    let map = new Map({
-      view: new View({
-        center: [0, 0],
-        zoom: 19
-      }),
+    const vectorLayer = new LayerVector({ source: vectorSource });
+    const { pickUpPoint, route} = this.props;
+    const map = new Map({
+      target: "map",
+      controls: [],
       layers: [
-        new TileLayer({
+        new Tile({
           source: new OSM()
         }),
         vectorLayer
       ],
-      target: "map",
-      controls: []
+      view: new View({
+        center: fromLonLatToMapCoords(pickUpPoint.longitude, pickUpPoint.latitude),
+        zoom: 13
+      })
     });
-    this.setState({ map });
-    this.setState({ Vector: vectorSource }, () => {
-      this.setPassengersPickUpPoint(this.props.coordinates, map);
-    });
-    if (!this.props.driver) {
-      map.on("click", function(evt) {
-        // Allows passenger to set a single marker on a map
 
-        const feature = new Feature(new Point(evt.coordinate));
-        let lonlat = [];
-        lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-
-        this.setState({ coordinates: lonlat });
-
-        vectorSource.clear();
-        vectorSource.addFeature(
-          feature
-        ); 
-      });
-    }
-
+    const f1 = createPointFeature(pickUpPoint.longitude, pickUpPoint.latitude);
+    const f2 = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
+    const f3 = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
+    const f4 = createRouteFeature(route.geometry);
+    vectorSource.addFeature(f1);
+    vectorSource.addFeature(f2);
+    vectorSource.addFeature(f3);
+    vectorSource.addFeature(f4);
   }
-*/
+
   render() {
     return (
       <div>
         {this.props.driver ? (
-          <div id="map" />
+          <div id="map" className="mapComponent" />
         ) : (
-          <div onClick={this.updateCoordinates.bind(this)} id="map" />
-        )}
+            <div onClick={this.updateCoordinates.bind(this)} id="map" />
+          )}
       </div>
     );
   }

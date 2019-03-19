@@ -64,7 +64,10 @@ export class DriverMap extends React.Component {
           console.log(response.error)
           return;
         } else {
-          const address = fromLocationIqResponse(response);
+          var address = fromLocationIqResponse(response);
+          address.longitude = longitude;
+          address.latitude = latitude;
+
           if (this.state.isRouteToOffice) {
             this.addNewRoutePoint(address);
           } else {
@@ -90,9 +93,9 @@ export class DriverMap extends React.Component {
   displayNewRoute() {
     let points = this.state.routePoints.map(a => a.address);
     if (points.length == 1) {
-      if(this.state.routePolylineFeature){
-      this.vectorSource.removeFeature(this.state.routePolylineFeature);
-      this.setState({ routePolylineFeature: null });
+      if (this.state.routePolylineFeature) {
+        this.vectorSource.removeFeature(this.state.routePolylineFeature);
+        this.setState({ routePolylineFeature: null });
       }
     } else {
       createRoute(points, this.state.isRouteToOffice)

@@ -75,11 +75,16 @@ namespace ShareCar.Logic.Ride_Logic
                 dtoRide[count].FromCity = fromAddress.City;
                 dtoRide[count].FromStreet = fromAddress.Street;
                 dtoRide[count].FromNumber = fromAddress.Number;
+                dtoRide[count].FromLongitude = fromAddress.Longitude;
+                dtoRide[count].FromLatitude = fromAddress.Latitude;
+
                 AddressDto toAddress = _addressLogic.GetAddressById(route.ToId);
                 dtoRide[count].ToCountry = toAddress.Country;
                 dtoRide[count].ToCity = toAddress.City;
                 dtoRide[count].ToStreet = toAddress.Street;
                 dtoRide[count].ToNumber = toAddress.Number;
+                dtoRide[count].ToLongitude = toAddress.Longitude;
+                dtoRide[count].ToLatitude = toAddress.Latitude;
                 count++;
             }
             return dtoRide;
@@ -182,16 +187,20 @@ namespace ShareCar.Logic.Ride_Logic
             {
                 City = ride.FromCity,
                 Street = ride.FromStreet,
-                Number = ride.FromNumber
+                Number = ride.FromNumber,
+                Longitude = ride.FromLongitude,
+                Latitude = ride.FromLatitude
             };
             AddressDto toAddress = new AddressDto
             {
                 City = ride.ToCity,
                 Street = ride.ToStreet,
-                Number = ride.ToNumber
+                Number = ride.ToNumber,
+                Longitude = ride.ToLongitude,
+                Latitude = ride.ToLatitude
             };
 
-            if (fromAddress.Street != null && fromAddress.Number != null && toAddress.Street != null && toAddress.Number != null)
+            if (fromAddress.Longitude != 0 && fromAddress.Latitude != 0 && toAddress.Longitude != 0 && toAddress.Latitude != 0)
             {
                 RouteDto route = new RouteDto();
                 route.FromId = _addressLogic.GetAddressId(fromAddress);
@@ -200,19 +209,18 @@ namespace ShareCar.Logic.Ride_Logic
                 route.AddressFrom = fromAddress;
                 route.AddressTo = toAddress;
 
-                int routeId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                int routeId = _routeLogic.GetRouteId(route.Geometry);
                 if (routeId == -1)
                 {
                     route.Geometry = ride.RouteGeometry;
                     _routeLogic.AddRoute(route);
-                    ride.RouteId = _routeLogic.GetRouteId(route.FromId, route.ToId);
+                    ride.RouteId = _routeLogic.GetRouteId(route.Geometry);
                 }
                 else
                 {
                     ride.RouteId = routeId;
                 }
             }
-
         }
 
         public IEnumerable<RouteDto> GetRoutes(RouteDto routeDto, string email)

@@ -14,7 +14,7 @@ namespace ShareCar.Dto
         public string DriverLastName { get; set; }
         public string PassengerFirstName { get; set; }
         public string PassengerLastName { get; set; }
-        public double Longtitude { get; set; }
+        public double Longitude { get; set; }
         public double Latitude { get; set; }
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
@@ -24,6 +24,7 @@ namespace ShareCar.Dto
         public string HouseNumber { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }
+        public RouteDto Route { get; set; }
         public DateTime RideDate { get; set; }
     }
     public enum Status

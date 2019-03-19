@@ -15,14 +15,14 @@ import "../../../styles/genericStyles.css";
 export class PassengerRideRequestsList extends React.Component {
     state = {
         show: false,
-        coordinates: []
+        coordinates: null,
+        route: null
     }
 
     render() {
         return (
             <div className="request-card-container">
                 <Card className="request-card">
-                    {console.log(this.props.requests)}
                     {this.props.requests.map((req, i) =>
                         <tr key={i}>
                             <CardContent >
@@ -38,9 +38,10 @@ export class PassengerRideRequestsList extends React.Component {
                                 </Typography>
                                 <Button
                                     onClick={() => {
-                                        this.setState({ show: !this.state.show });
                                         this.setState({
-                                            coordinates: [req.longitude, req.latitude]
+                                            coordinates: { longitude: req.longitude, latitude: req.latitude },
+                                            route: req.route,
+                                            show: !this.state.show
                                         });
 
                                     }}
@@ -63,12 +64,14 @@ export class PassengerRideRequestsList extends React.Component {
                 </Card>
 
                 {this.state.show ? (
-                    <Card className="request-card">
+                    <Card className="request-card requestMap">
                         <MapComponent
                             id="map"
-                            className="requestMap"
-                            coordinates={this.state.coordinates}
+                         //   className="requestMap"
+                            pickUpPoint={this.state.coordinates}
+                            route={this.state.route}
                             show={this.state.show}
+
                         />
                     </Card>
 

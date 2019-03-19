@@ -11,7 +11,6 @@ export class ViewRideRequests extends React.Component {
   };
 
   componentWillMount() {
-    console.log(this.props.selectedRide)
     this.props.driver
       ? this.showDriverRequests(this.props.selectedRide)
       : this.showPassengerRequests();

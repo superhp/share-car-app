@@ -38,12 +38,12 @@ namespace ShareCar.Db.Repositories.Address_Repository
             }
 
 
-              else  if (address.Longtitude != 0 && address.Latitude != 0)
+              else  if (address.Longitude != 0 && address.Latitude != 0)
                 {
                     try
                     {
 
-                        return _databaseContext.Addresses.Single(x => x.Longtitude == address.Longtitude && x.Latitude == address.Latitude).AddressId;
+                        return _databaseContext.Addresses.Single(x => x.Longitude == address.Longitude && x.Latitude == address.Latitude).AddressId;
 
                     }
                     catch

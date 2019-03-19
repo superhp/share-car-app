@@ -18,7 +18,6 @@ class PassengerRouteSelectionInner extends React.Component {
     }
 
     handleFilterringChange(address, direction) {
-        console.log(address)
         this.setState({ address: address, direction: direction });
         this.props.onChange(address, direction);
     }

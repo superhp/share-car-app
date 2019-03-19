@@ -25,9 +25,9 @@ namespace ShareCar.Logic.Route_Logic
             _addressLogic = addressLogic;
         }
 
-        public int GetRouteId(int fromId, int toId)
+        public int GetRouteId(string geometry)
         {
-            int routeId = _routeRepository.GetRouteId(fromId, toId);
+            int routeId = _routeRepository.GetRouteId(geometry);
             return routeId;
         }
         
@@ -101,6 +101,18 @@ namespace ShareCar.Logic.Route_Logic
 
             };
              _routeRepository.AddRoute(entityRoute);
+        }
+
+        public RouteDto GetRouteByRequest(int requestId)
+        {
+            var entity = _routeRepository.GetRouteByRequest(requestId);
+            
+            var dto = _mapper.Map<Route, RouteDto>(entity);
+
+            dto.AddressTo = _mapper.Map<Address, AddressDto>(entity.ToAddress);
+            dto.AddressFrom = _mapper.Map<Address, AddressDto>(entity.FromAddress);
+
+            return dto;
         }
     }
 }

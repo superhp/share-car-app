@@ -75,7 +75,7 @@ namespace ShareCar.Api.Controllers
                 foreach (var req in ride.Requests)
                 {
                     AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
-                    req.Longtitude = adr.Longtitude;
+                    req.Longitude = adr.Longitude;
                     req.Latitude = adr.Latitude;
                 }
             }

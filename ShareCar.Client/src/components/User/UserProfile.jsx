@@ -64,7 +64,6 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 
   render() {
-    console.log("user", this.state.user);
     const content = this.state.loading ? (
       <p>
         <em>Loading...</em>
