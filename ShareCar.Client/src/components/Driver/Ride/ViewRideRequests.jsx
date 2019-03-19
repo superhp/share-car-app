@@ -16,14 +16,12 @@ export class ViewRideRequests extends React.Component {
       ? this.showDriverRequests(this.props.selectedRide)
       : this.showPassengerRequests();
   }
-  handleRequestClick(button, requestId) {
-    if (button === "Accept" || button === "Deny") {
+  handleRequestClick(requestId) {
       this.setState({
         driverRequests: this.state.driverRequests.filter(
           x => x.requestId !== requestId
         )
       });
-    }
   }
 
   coordinatesToLocation(latitude, longitude) {

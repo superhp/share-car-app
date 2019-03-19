@@ -6,6 +6,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
 import {Status} from "../../../utils/status"
+import {SnackbarVariants} from "../../common/SnackbarVariants"
 const fontColor = {
     color: "#007BFF"
 };
@@ -25,6 +26,7 @@ export const PendingRequests = (props) => (
             open={props.clickedRequest}
             onClose={() => props.handleClose()}
             autoHideDuration={3000}
+            variant = {SnackbarVariants[0]}
             message={<span id="message-id">Request accepted</span>}
         />
         {props.rideRequests.filter(x => x.rideId === props.selectedRide).length !== 0
@@ -41,10 +43,7 @@ export const PendingRequests = (props) => (
                                 window.scrollTo(0, 0);
                             }}
                             onAcceptClick={() => props.sendRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
-                            onDenyClick={() => {
-                                props.sendRequestResponse(Status[2], 2, req.requestId, req.rideId);
-                                window.location.reload();
-                            }}
+                            onDenyClick={() => {props.sendRequestResponse(Status[2], 2, req.requestId, req.rideId)}}
                         />
                     </Grid>
                 </Grid>

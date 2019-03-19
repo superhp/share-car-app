@@ -21,7 +21,9 @@ export class Rides extends React.Component {
     this.setState({
       driversRides: this.state.driversRides.filter(
         x => x.rideId !== rideToDelete.rideId
-      )
+      ),
+      clicked: false,
+      selectedRideId: null
     });
   }
   handleClick(id) {
@@ -41,7 +43,7 @@ export class Rides extends React.Component {
 
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error);
       });
   }
@@ -49,19 +51,19 @@ export class Rides extends React.Component {
 
     return (
       <Paper>
-      <DriversRidesList
-        onDelete={this.handleRideDelete.bind(this)}
-        selectedRide={this.state.selectedRideId}
-        rideClicked={this.state.clicked}
-        onRideClick={this.handleClick.bind(this)}
-        driversRides={this.state.driversRides.length !== 0 ?
-          this.state.clicked
-            ? this.state.driversRides.filter(
+        <DriversRidesList
+          onDelete={this.handleRideDelete.bind(this)}
+          selectedRide={this.state.selectedRideId}
+          rideClicked={this.state.clicked}
+          onRideClick={this.handleClick.bind(this)}
+          driversRides={this.state.driversRides.length !== 0 ?
+            this.state.clicked
+              ? this.state.driversRides.filter(
                 x => x.rideId === this.state.selectedRideId
               )
-            : this.state.driversRides
-        : []}
-      />
+              : this.state.driversRides
+            : []}
+        />
       </Paper>
     );
   }
