@@ -34,7 +34,7 @@ export class PassengerMap extends React.Component {
     showDriver: false,
     snackBarMessage: "",
     snackBarClick: false,
-    snackBarVariant: "",
+    snackBarVariant: null,
   }
 
   componentDidMount() {
@@ -111,22 +111,18 @@ export class PassengerMap extends React.Component {
       if (res.status === 200 && res.data !== "") {
         this.setState({ routes: res.data }, this.updateMap);
       }
+    }).catch((error) => {
+
+      this.showSnackBar("Failed to load routes...", 2)
+
     });
   }
 
   handleRegister(ride) {
     if (!this.state.passengerAddress) {
-      this.setState({
-        snackBarClicked: true,
-        snackBarMessage: "Choose your pick up point",
-        snackBarVariant: SnackbarVariants[2]
-      });
-      setTimeout(
-        function () {
-          this.setState({ snackBarClicked: false });
-        }.bind(this),
-        3000
-      );
+
+      this.showSnackBar("Choose your pick up point", 2)
+
     }
     else {
       const request = {
@@ -136,11 +132,30 @@ export class PassengerMap extends React.Component {
         Latitude: this.state.passengerAddress.latitude
       };
 
-      api.post(`https://localhost:44347/api/RideRequest`, request).then(res => {
-        alert("ok");
+      api.post(`https://localhost:44347/api/RideRequest`, request).then(response => {
+
+        this.showSnackBar("Ride requested!", 0)
+
+      })
+      .catch((error) => {
+        this.showSnackBar("Failed to request ride...", 2)
       });
     }
   }
+
+showSnackBar(message, variant){
+  this.setState({
+    snackBarClicked: true,
+    snackBarMessage: message,
+    snackBarVariant: SnackbarVariants[variant]
+  });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+  );
+}
 
   render() {
     return (

@@ -7,7 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoIcon from "@material-ui/icons/Info";
 import "typeface-roboto";
-
+import SnackBars from "../../common/Snackbars";
+import { SnackbarVariants } from "../../common/SnackbarVariants"
 import api from "../../../helpers/axiosHelper";
 import { ViewRideRequests } from "./ViewRideRequests";
 
@@ -25,13 +26,37 @@ const fontColor = {
   color: "#007BFF"
 }
 export class DriversRidesList extends React.Component {
+
+state = {
+  snackBarClicked: false,
+  snackBarMessage: null,
+  snackBarVariant: null
+}
+
   handleDeletion(rideToDisactivate) {
     api.put("Ride/disactivate", rideToDisactivate).then(res => {
       if (res.status === 200) {
         this.props.onDelete(rideToDisactivate);
       }
+    }).catch(() =>{
+      this.showSnackBar("Failed to delete ride", 2);
     });
   }
+
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
+  }
+
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
@@ -89,6 +114,11 @@ export class DriversRidesList extends React.Component {
           </Grid>
         )) : "You have no rides"}
         {detailedRideInfo}
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
+        />
       </Grid>
     );
   }

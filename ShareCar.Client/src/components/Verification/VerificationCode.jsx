@@ -21,10 +21,10 @@ class VerificationCode extends Component {
       }
     }).catch((error) => {
       if (error.response.status === 401) {
-        // incorrect code message
+        this.props.showSnackBar("Incorrect code.", 2);
       } else {
         console.log(error);
-        // error message
+        this.props.showSnackBar("Something went wrong", 2);
       }
     })
   }

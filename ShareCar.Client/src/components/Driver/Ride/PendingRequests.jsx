@@ -2,11 +2,10 @@ import * as React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Snackbar from "@material-ui/core/Snackbar";
-
+import {SnackbarVariants} from "../../common/SnackbarVariants"
 import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
 import {Status} from "../../../utils/status"
-import {SnackbarVariants} from "../../common/SnackbarVariants"
 const fontColor = {
     color: "#007BFF"
 };
