@@ -11,18 +11,17 @@ export class ViewRideRequests extends React.Component {
   };
 
   componentWillMount() {
+    console.log(this.props.selectedRide)
     this.props.driver
-      ? this.showDriverRequests()
+      ? this.showDriverRequests(this.props.selectedRide)
       : this.showPassengerRequests();
   }
-  handleRequestClick(button, requestId) {
-    if (button === "Accept" || button === "Deny") {
+  handleRequestClick(requestId) {
       this.setState({
         driverRequests: this.state.driverRequests.filter(
           x => x.requestId !== requestId
         )
       });
-    }
   }
 
   coordinatesToLocation(latitude, longitude) {
@@ -44,7 +43,6 @@ export class ViewRideRequests extends React.Component {
   }
 
   cancelRequest(id) {
-console.log(id);
     var requests = this.state.passengerRequests;
     var index = requests.findIndex(x => x.requestId === id);
     var request = requests[index];
@@ -55,7 +53,6 @@ console.log(id);
       RideId: request.rideId,
       DriverEmail: request.driverEmail
     };
-    console.log(data);
     api.put("RideRequest", data).then(res => {
       if (res.status === 200) {
         requests[index].status = 4;
@@ -70,7 +67,7 @@ console.log(id);
 
   showPassengerRequests() {
     api
-      .get("RideRequest/false")
+      .get("RideRequest")
       .then(response => {
         if (response.data !== "") {
           this.setState({ passengerRequests: response.data });
@@ -95,9 +92,9 @@ console.log(id);
       });
   }
 
-  showDriverRequests() {
+  showDriverRequests(id) {
     api
-      .get("RideRequest/true")
+      .get("RideRequest/" + id)
       .then(response => {
         if (response.status === 200)
           this.setState({ driverRequests: response.data });

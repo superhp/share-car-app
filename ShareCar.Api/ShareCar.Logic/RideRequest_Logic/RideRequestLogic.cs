@@ -102,23 +102,6 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public IEnumerable<RideRequestDto> GetUsersRequests(bool driver, string email)
-        {
-
-            IEnumerable<RideRequest> entityRequest;
-            if (driver)
-            {
-                entityRequest = _rideRequestRepository.GetDriverRequests(email);
-            }
-            else
-            {
-                entityRequest = _rideRequestRepository.GetPassengerRequests(email);
-            }
-
-            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, driver);
-            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
-        }
-
         public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
@@ -179,6 +162,26 @@ namespace ShareCar.Logic.RideRequest_Logic
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
             }
             return dtoRequests;
+        }
+
+        public IEnumerable<RideRequestDto> GetPassengerRequests(string email)
+        {
+            IEnumerable<RideRequest> entityRequest;
+
+            entityRequest = _rideRequestRepository.GetPassengerRequests(email);
+
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
+        }
+
+        public IEnumerable<RideRequestDto> GetDriverRequests(int rideId, string email)
+        {
+            IEnumerable<RideRequest> entityRequest;
+                entityRequest = _rideRequestRepository.GetDriverRequests(email, rideId);
+
+
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
     }
 }

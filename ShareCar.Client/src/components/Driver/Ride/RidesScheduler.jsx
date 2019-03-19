@@ -9,6 +9,7 @@ import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
+import {SnackbarVariants} from "../../common/SnackbarVariants";
 import { RideSchedulerHelper } from "./RideSchedulerHelper";
 
 const styles = {
@@ -78,10 +79,6 @@ class RidesScheduler extends React.Component {
   };
 
   createRide(from, to, element) {
-    console.log("----------")
-    console.log(from);
-    console.log(to);    
-    console.log(element);
 
     const ride = {
       fromNumber: from.number,
@@ -102,8 +99,6 @@ class RidesScheduler extends React.Component {
         "T" +
         this.state.time
     };
-    console.log(ride);
-
     return ride;
   }
 
@@ -113,7 +108,8 @@ class RidesScheduler extends React.Component {
         this.setState({
           open: false,
           snackBarClicked: true,
-          snackBarMessage: "Rides successfully created!"
+          snackBarMessage: "Rides successfully created!",
+          snackBarVariant: SnackbarVariants[0]
         });
         setTimeout(
           function() {
@@ -160,6 +156,8 @@ class RidesScheduler extends React.Component {
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
+
         />
       </div>
     );

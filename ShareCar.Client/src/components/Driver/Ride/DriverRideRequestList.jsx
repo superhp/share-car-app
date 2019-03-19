@@ -50,15 +50,19 @@ export class DriverRideRequestsList extends React.Component {
     };
     api.put("https://localhost:44347/api/RideRequest", data).then(res => {
       if (res.status === 200) {
+        if(response === 1){
+          var request = this.props.rideRequests.find(x => x.requestId === requestId);
+          this.setState(prevState => ({
+            passengers: [...prevState.passengers, {firstName : request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone}],
+            clickedRequest: true 
+          }));
+        }else{
         this.setState({ clickedRequest: true });
+        }
       }
     });
   }
 
-  componentDidMount() {
-    //  this.child.current.setPassengersPickUpPoint([1,1]);
-  }
-  //this.setState({coordinates : [req.longitude,req.latitude], show : true})}>Show on map</button>
 
   render() {
     return (

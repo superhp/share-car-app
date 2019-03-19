@@ -56,7 +56,7 @@ export class DriversRidesList extends React.Component {
                       To {req.toStreet} {req.toNumber}, {req.toCity}
                     </Typography>
                     <Typography  color="textSecondary">
-                      {moment(req.rideDateTime).format("dddd MMM DD YYYY")}
+                      {moment(req.rideDateTime).format("dddd MMM DD YYYY hh:mm")}
                     </Typography>
                   </CardContent>
                   </Grid>

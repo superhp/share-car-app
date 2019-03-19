@@ -28,28 +28,22 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
             _rideLogic = rideLogic;
         }
-
-        [HttpGet("{driver}")]
-        public async Task<IActionResult> GetUserRequestsAsync(string driver)
+        [HttpGet("{rideId}")]
+        public async Task<IActionResult> GetDriverRequests(int rideId)
         {
-            if (driver == null)
-            {
-                return BadRequest();
-            }
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = false;
+            IEnumerable<RideRequestDto> request = _requestLogic.GetDriverRequests(rideId, userDto.Email);
 
-            try
-            {
-                isDriver = Boolean.Parse(driver);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
+            return Ok(request);
+        }
 
-            IEnumerable<RideRequestDto> request = _requestLogic.GetUsersRequests(isDriver, userDto.Email);
+        [HttpGet]
+        public async Task<IActionResult> GetPassengerRequests()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+            IEnumerable<RideRequestDto> request = _requestLogic.GetPassengerRequests(userDto.Email);
 
             return Ok(request);
         }

@@ -24,10 +24,10 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             _databaseContext.SaveChanges();
         }
 
-        public IEnumerable<RideRequest> GetDriverRequests(string email)
+        public IEnumerable<RideRequest> GetDriverRequests(string email, int rideId)
         {
 
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.RideId == rideId && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
 
         }
 
@@ -53,7 +53,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public IEnumerable<RideRequest> GetPassengerRequests(string email)
         {
-            return _databaseContext.Requests.Where(x => x.PassengerEmail == email).ToList();
+            return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status == Status.ACCEPTED || x.Status == Status.WAITING)).ToList();
         }
 
         public RideRequest GetRequestById(int id)

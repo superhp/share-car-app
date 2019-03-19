@@ -20,7 +20,6 @@ class DriverRouteInputInner extends React.Component {
                         index={index}
                         deletable={index !== this.props.routePoints.length - 1}
                         removeRoutePoint={id => { this.props.removeRoutePoint(id) }}
-                        placeholder="Select From Location"
                         onChange={(suggestion, index) => this.props.changeRoutePoint(fromAlgoliaAddress(suggestion), index)}
                         ref={this.props.innerRef}
                     />

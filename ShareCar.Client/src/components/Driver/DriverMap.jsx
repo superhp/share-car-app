@@ -89,9 +89,11 @@ export class DriverMap extends React.Component {
 
   displayNewRoute() {
     let points = this.state.routePoints.map(a => a.address);
-    if (points.length == 1 && this.state.routePolylineFeature) {
+    if (points.length == 1) {
+      if(this.state.routePolylineFeature){
       this.vectorSource.removeFeature(this.state.routePolylineFeature);
       this.setState({ routePolylineFeature: null });
+      }
     } else {
       createRoute(points, this.state.isRouteToOffice)
         .then(geometry => {
@@ -123,6 +125,7 @@ export class DriverMap extends React.Component {
         }
         if (this.autocompleteInputs.length === this.state.routePoints.length - 1) {
           e.autocompleteElem.value = "";
+          e.autocompleteElem.placeholder = this.state.isRouteToOffice ? "Select from location" : "Select to location";
         }
 
         this.autocompleteInputs.push(e.autocompleteElem);

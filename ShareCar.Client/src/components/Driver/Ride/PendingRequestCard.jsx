@@ -9,6 +9,7 @@ import Badge from "@material-ui/core/Badge";
 import "../../../styles/riderequests.css";
 
 export const PendingRequestCard = (props) => (
+    
     <Card className="rides-card">
         <Grid container justify="center">
             <Grid item xs={12} zeroMinWidth>
@@ -33,6 +34,8 @@ export const PendingRequestCard = (props) => (
                     >
                         Show on map
                     </Button>
+                    {props.req.status !== 4 ? 
+                    <div>
                     <Button
                         color="primary"
                         onClick={() => props.onAcceptClick()}
@@ -45,6 +48,11 @@ export const PendingRequestCard = (props) => (
                     >
                         Deny
                     </Button>
+                    </div>
+                    :<p>
+                    Request was canceled
+                    </p>
+                }
                 </CardActions>
             </Grid>
         </Grid>
