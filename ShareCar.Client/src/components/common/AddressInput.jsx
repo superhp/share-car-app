@@ -9,7 +9,6 @@ export const AddressInput = React.forwardRef((props, ref) => (
     <div className="form-group">
         
         <AlgoliaPlaces
-            placeholder={props.placeholder}
             onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => props.onChange(suggestion, props.index)}
             onClear={() => props.onChange(null)}
             ref={ref}
