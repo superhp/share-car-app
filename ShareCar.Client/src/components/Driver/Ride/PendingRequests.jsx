@@ -39,7 +39,7 @@ export const PendingRequests = (props) => (
                             req={req}
                             index={index}
                             onShowClick={() => {
-                                props.onShowClick();
+                                props.onShowClick(index);
                                 window.scrollTo(0, 0);
                             }}
                             onAcceptClick={() => props.sendRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}

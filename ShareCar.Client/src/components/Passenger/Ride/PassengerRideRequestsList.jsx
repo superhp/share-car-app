@@ -67,11 +67,9 @@ export class PassengerRideRequestsList extends React.Component {
                     <Card className="request-card requestMap">
                         <MapComponent
                             id="map"
-                         //   className="requestMap"
                             pickUpPoint={this.state.coordinates}
                             route={this.state.route}
                             show={this.state.show}
-
                         />
                     </Card>
 
