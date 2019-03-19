@@ -87,6 +87,8 @@ export class PassengerMap extends React.Component {
       .then(response => {
         const address = fromLocationIqResponse(response);
         this.autocompleteInput.value = response.display_name;
+        address.longitude = longitude;
+        address.latitude = latitude;
         this.setState({ passengerAddress: address }, this.updateMap);
       });
   }
@@ -130,7 +132,7 @@ export class PassengerMap extends React.Component {
       const request = {
         RideId: ride.rideId,
         DriverEmail: ride.driverEmail,
-        Longtitude: this.state.passengerAddress.longitude,
+        Longitude: this.state.passengerAddress.longitude,
         Latitude: this.state.passengerAddress.latitude
       };
 

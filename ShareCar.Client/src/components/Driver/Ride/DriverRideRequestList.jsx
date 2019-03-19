@@ -13,7 +13,8 @@ export class DriverRideRequestsList extends React.Component {
     coordinates: [],
     passengers: [],
     show: false,
-    clickedRequest: false
+    clickedRequest: false,
+    route: null,
   };
 
   componentWillMount() {
@@ -71,7 +72,8 @@ export class DriverRideRequestsList extends React.Component {
           <MapComponent
             id="map"
             className="requestMap"
-            coordinates={this.state.coordinates}
+            pickUpPoint={this.state.coordinates}
+            route={this.state.route}
             show={this.state.show}
             ref={this.child}
             driver={true}
@@ -84,9 +86,9 @@ export class DriverRideRequestsList extends React.Component {
           handleClose={() => this.handleClose()}
           rideRequests={this.props.rideRequests}
           selectedRide={this.props.selectedRide}
-          onShowClick={(longitude, latitude) => {
-            this.setState({ show: !this.state.show });
-            this.setState({ coordinates: [longitude, latitude]});
+          onShowClick={(index) => {
+
+            this.setState({ coordinates: {longitude:this.props.rideRequests[index].longitude, latitude:this.props.rideRequests[index].latitude}, route: this.props.rideRequests[index].route, show: !this.state.show});
           }}
           sendRequestResponse={(button, response, requestId, rideId, driverEmail) => 
             this.sendRequestResponse(button, response, requestId, rideId, driverEmail)}

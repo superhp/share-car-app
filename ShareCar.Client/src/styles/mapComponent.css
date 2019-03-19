@@ -1,13 +1,11 @@
 body {
   height: 100vh;
 }
-/* #map .ol-viewport {
-  height: 100%;
-  width: 100%;
-  border: 2px solid black;
-  margin-bottom: 100px;
-} */
-#map1 {
+
+.requestMap {
   position: relative !important;
-  height: 200px !important;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 300px !important;
+
 }

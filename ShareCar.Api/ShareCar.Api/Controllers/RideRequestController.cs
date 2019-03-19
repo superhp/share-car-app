@@ -62,7 +62,6 @@ namespace ShareCar.Api.Controllers
             _requestLogic.AddRequest(request, email);
 
             return Ok();
-
         }
 
         [HttpPost("seenPassenger")]

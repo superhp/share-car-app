@@ -13,16 +13,16 @@ import "../../../styles/genericStyles.css";
 
 
 export class PassengerRideRequestsList extends React.Component {
-state={
-    show:false,
-    coordinates:[]
-}
+    state = {
+        show: false,
+        coordinates: null,
+        route: null
+    }
 
     render() {
         return (
-            <div className="request-card-container"> 
+            <div className="request-card-container">
                 <Card className="request-card">
-                {console.log(this.props.requests)}
                     {this.props.requests.map((req, i) =>
                         <tr key={i}>
                             <CardContent >
@@ -31,49 +31,53 @@ state={
                                     Name: {req.driverFirstName} {req.driverLastName}
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    Date: <Moment date={req.rideDate} format="MM-DD HH:mm"/>
+                                    Date: <Moment date={req.rideDate} format="MM-DD HH:mm" />
                                 </Typography>
                                 <Typography component="p">
                                     Status: {Status[parseInt(req.status)]}
                                 </Typography>
                                 <Button
-                          onClick={() => {
-                            this.setState({ show: !this.state.show });
-                            this.setState({
-                              coordinates: [req.longitude, req.latitude]
-                            });
+                                    onClick={() => {
+                                        this.setState({
+                                            coordinates: { longitude: req.longitude, latitude: req.latitude },
+                                            route: req.route,
+                                            show: !this.state.show
+                                        });
 
-                          }}
-                        >
-                          Show on map
+                                    }}
+                                >
+                                    Show on map
                         </Button>
-                        {
-                         req.status === 0 || req.status === 1 ?(
-                        <Button
-                          onClick={() => {this.props.cancelRequest(req.requestId)}}
-                        >
-                          Cancel request
+                                {
+                                    req.status === 0 || req.status === 1 ? (
+                                        <Button
+                                            onClick={() => { this.props.cancelRequest(req.requestId) }}
+                                        >
+                                            Cancel request
                         </Button>
-                         )
-                         :(<div> </div>)
-                        }
+                                    )
+                                        : (<div> </div>)
+                                }
                             </CardContent>
                         </tr>
                     )}
                 </Card>
-                {this.state.show ? (
 
-          <MapComponent
-          id="map"
-          className="requestMap"
-          coordinates={this.state.coordinates}
-          show={this.state.show}
-        />
-      ) : (
-        <div></div>
-      )} 
+                {this.state.show ? (
+                    <Card className="request-card requestMap">
+                        <MapComponent
+                            id="map"
+                            pickUpPoint={this.state.coordinates}
+                            route={this.state.route}
+                            show={this.state.show}
+                        />
+                    </Card>
+
+                ) : (
+                        <div></div>
+                    )}
             </div>
-                
+
 
         )
     }
