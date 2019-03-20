@@ -32,16 +32,20 @@ onCheckBoxClick = () =>{
       api.post("authentication/CognizantEmailSubmit", objectToSend)
         .then((response) => {
           if (response.status === 200) {
+            this.props.showSnackBar("Email submited", 0);
             this.props.emailSubmited();
           }
         }).catch((error) => {
           if (error.response.status === 401) {
             alert("Only Cognizant emails are allowed");
+            this.props.showSnackBar("Email submited", 0);
+
           } else {
             if (error.response.status === 400 && error.response.data) {
-              alert(error.response.data);
+              this.props.showSnackBar("Only Cognizant emails are allowed", 2);
+
             } else {
-              alert("Something went wrong, try again later.");
+              this.props.showSnackBar("Something went wrong", 2);
             }
           }
         })

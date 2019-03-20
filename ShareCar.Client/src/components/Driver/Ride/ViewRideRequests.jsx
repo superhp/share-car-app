@@ -3,11 +3,16 @@ import * as React from "react";
 import api from "../../../helpers/axiosHelper";
 import { PassengerRideRequestsList } from "../../Passenger/Ride/PassengerRideRequestsList";
 import { DriverRideRequestsList } from "./DriverRideRequestList";
-import {Status} from "../../../utils/status"
+import { Status } from "../../../utils/status"
+import SnackBars from "../../common/Snackbars";
+import { SnackbarVariants } from "../../common/SnackbarVariants"
 export class ViewRideRequests extends React.Component {
   state = {
     driverRequests: [],
-    passengerRequests: []
+    passengerRequests: [],
+    snackBarClicked: false,
+    snackBarMessage: null,
+    snackBarVariant: null
   };
 
   componentWillMount() {
@@ -16,11 +21,11 @@ export class ViewRideRequests extends React.Component {
       : this.showPassengerRequests();
   }
   handleRequestClick(requestId) {
-      this.setState({
-        driverRequests: this.state.driverRequests.filter(
-          x => x.requestId !== requestId
-        )
-      });
+    this.setState({
+      driverRequests: this.state.driverRequests.filter(
+        x => x.requestId !== requestId
+      )
+    });
   }
 
   coordinatesToLocation(latitude, longitude) {
@@ -37,6 +42,8 @@ export class ViewRideRequests extends React.Component {
         })
         .then(function (json) {
           resolve(json);
+        }).catch(function(error){
+          this.showSnackBar("Something went wrong", 2)
         });
     });
   }
@@ -59,7 +66,7 @@ export class ViewRideRequests extends React.Component {
       }
     })
       .catch(error => {
-        console.error(error);
+        this.showSnackBar("Failed to cancel request", 2)
       });
 
   }
@@ -87,7 +94,7 @@ export class ViewRideRequests extends React.Component {
         }
       })
       .catch(function (error) {
-        console.error(error);
+        this.showSnackBar("Failed to load requests", 2)
       });
   }
 
@@ -113,15 +120,29 @@ export class ViewRideRequests extends React.Component {
         }
       })
       .catch(function (error) {
-        console.error(error);
-      });
+        this.showSnackBar("Failed to load requests", 2)
+            });
   }
 
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
+  }
   render() {
     return (
       <div>
         {this.props.driver ? (
           <DriverRideRequestsList
+          showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
             onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
             rideRequests={
@@ -134,10 +155,16 @@ export class ViewRideRequests extends React.Component {
           />
         ) : (
             <PassengerRideRequestsList
+            showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
               requests={this.state.passengerRequests}
               cancelRequest={id => { this.cancelRequest(id) }}
             />
           )}
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
+        />
       </div>
     );
   }

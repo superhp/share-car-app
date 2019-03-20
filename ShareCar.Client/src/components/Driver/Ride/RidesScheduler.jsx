@@ -8,7 +8,7 @@ import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
-import {SnackbarVariants} from "../../common/SnackbarVariants";
+import { SnackbarVariants } from "../../common/SnackbarVariants";
 import { RideSchedulerHelper } from "./RideSchedulerHelper";
 
 const styles = {
@@ -68,11 +68,11 @@ class RidesScheduler extends React.Component {
 
   handleCreate = () => {
     let ridesToPost = [];
-    const {fromAddress, toAddress} = this.props.routeInfo;
+    const { fromAddress, toAddress } = this.props.routeInfo;
     this.state.selectedDates.forEach(element => {
       ridesToPost.push(this.createRide(fromAddress, toAddress, element));
     });
-    
+
     this.postRides(ridesToPost);
   };
 
@@ -88,14 +88,14 @@ class RidesScheduler extends React.Component {
       toCity: to.city,
       toCountry: "Lithuania",
       routeGeometry: this.props.routeInfo.routeGeometry,
-      fromLongitude:from.longitude,
-      fromLatitude:from.latitude,
-      toLongitude:to.longitude,
-      toLatitude:to.latitude,
+      fromLongitude: from.longitude,
+      fromLatitude: from.latitude,
+      toLongitude: to.longitude,
+      toLatitude: to.latitude,
       rideDateTime:
         element.getFullYear() +
         "-" +
-        (element.getMonth() + 1) + 
+        (element.getMonth() + 1) +
         "-" +
         element.getDate() +
         "  " +
@@ -107,27 +107,34 @@ class RidesScheduler extends React.Component {
   postRides(ridesToPost) {
     api.post("Ride", ridesToPost).then(res => {
       if (res.status === 200) {
-        this.setState({
-          open: false,
-          snackBarClicked: true,
-          snackBarMessage: "Rides successfully created!",
-          snackBarVariant: SnackbarVariants[0]
-        });
-        setTimeout(
-          function() {
-            this.setState({ snackBarClicked: false });
-          }.bind(this),
-          3000
-        );
+        this.showSnackBar("Rides successfully created!", 0);
       }
+    }).catch(() => {
+      this.showSnackBar("Failed to create rides", 2);
+
     });
+  }
+
+  showSnackBar(message, variant) {
+    this.setState({
+      open: false,
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
   }
 
   handleTime = value => {
     this.setState({ time: value });
   };
 
-  checkForDateDuplicate = function(needle, haystack) {
+  checkForDateDuplicate = function (needle, haystack) {
     for (let i = 0; i < haystack.length; i++) {
       if (needle.getTime() === haystack[i].getTime()) {
         return true;
@@ -145,7 +152,7 @@ class RidesScheduler extends React.Component {
           onClose={() => this.handleClose()}
           TransitionComponent={Transition}
         >
-          <RideSchedulerHelper 
+          <RideSchedulerHelper
             appBar={this.props.appBar}
             handleClose={() => this.handleClose()}
             flex={this.props.flex}
