@@ -54,15 +54,26 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
     };
     api.post(`https://localhost:44347/api/user`, data).then(res => {
       if (res.status === 200) {
-        this.setState({
-          snackBarClicked: true,
-          snackBarMessage: "Profile updated!",
-          snackBarVariant: SnackbarVariants[0]
-        });
+        this.showSnackBar("Profile updated", 0);
       }
+    }).catch((error) => {
+      this.showSnackBar("Failed to update profile", 2);
+
     });
   }
-
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
+  }
   render() {
     const content = this.state.loading ? (
       <p>

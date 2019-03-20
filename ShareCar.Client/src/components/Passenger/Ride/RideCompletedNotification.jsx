@@ -8,7 +8,9 @@ class RideCompletedNotification extends React.Component {
             Response: response,
             RideId: rideId
         }
-        api.post(`https://localhost:44347/api/Ride/passengerResponse`, passengerResponse);
+        api.post(`https://localhost:44347/api/Ride/passengerResponse`, passengerResponse).catch((error) => {
+            this.props.showSnackBar("Failed to send response", 2);
+        });
     }
     render() {
         return (

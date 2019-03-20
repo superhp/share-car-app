@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 
 import UserService from "../../services/userService";
-import AuthenticationService from "../../services/authenticationService";
+import AuthenticationService from "../../services/login";
 import NavBar from "./NavBar";
 import { LinksToHeadings } from "../LinkDictionary";
 

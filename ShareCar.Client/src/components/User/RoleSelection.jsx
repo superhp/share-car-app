@@ -24,7 +24,10 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     showNotification: false,
     roleSelection: {
       isDriver: null
-    }
+    },
+    message: null,
+    snackBarClicked: false,
+    variant: null,
   };
 
   componentDidMount() {
@@ -56,7 +59,19 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     currentState.isDriver = isDriver;
     this.setState({ roleSelection: currentState });
   }
-
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
+  }
   render() {
     const content = this.state.loading ? (
       <p>
@@ -67,7 +82,10 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     ) : (
       <div>
         {this.state.showNotification ? (
-          <RideCompletedNotification rides={this.state.rideNotifications} />
+          <RideCompletedNotification
+           rides={this.state.rideNotifications} 
+           showSnackBar={(message, variant) => this.showSnackBar(message, variant)}
+           />
         ) : (
           <div />
         )}
@@ -86,6 +104,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
             </div>
           )}
         </RoleContext.Consumer>
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
+        />
       </div>
     );
     return <div>{content}</div>;
