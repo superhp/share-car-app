@@ -13,6 +13,7 @@ export class DriverRideRequestsList extends React.Component {
     coordinates: [],
     passengers: [],
     show: false,
+    displayedRequestIndex: 0,
     clickedRequest: false,
     route: null,
   };
@@ -95,7 +96,7 @@ export class DriverRideRequestsList extends React.Component {
           selectedRide={this.props.selectedRide}
           onShowClick={(index) => {
 
-            this.setState({ coordinates: { longitude: this.props.rideRequests[index].longitude, latitude: this.props.rideRequests[index].latitude }, route: this.props.rideRequests[index].route, show: !this.state.show });
+            this.setState({ coordinates: { longitude: this.props.rideRequests[index].longitude, latitude: this.props.rideRequests[index].latitude }, route: this.props.rideRequests[index].route, displayedRequestIndex: index, show: this.state.displayedRequestIndex === index ? !this.state.show : true });
           }}
           sendRequestResponse={(button, response, requestId, rideId, driverEmail) =>
             this.sendRequestResponse(button, response, requestId, rideId, driverEmail)}
