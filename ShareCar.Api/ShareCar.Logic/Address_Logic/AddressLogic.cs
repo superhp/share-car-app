@@ -34,13 +34,10 @@ namespace ShareCar.Logic.Address_Logic
 
             if (id == -1)
             {
-                _addressRepository.AddNewAddress(entityAddress);
-
-                return _addressRepository.GetAddressId(entityAddress);
+                id = _addressRepository.AddNewAddress(entityAddress).AddressId;
+                return id;
             }
-
             return id;
-
         }
 
         public AddressDto GetAddressById(int id)

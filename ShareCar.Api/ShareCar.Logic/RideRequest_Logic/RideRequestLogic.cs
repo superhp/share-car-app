@@ -45,6 +45,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.DriverEmail = driverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longitude = requestDto.Longitude, Latitude = requestDto.Latitude });
 
+            if(addressId == -1)
+            {
+                throw new ArgumentException("Failed to get address id");
+            }
+
             requestDto.AddressId = addressId;
             _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
@@ -129,7 +134,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].DriverLastName = user.LastName;
                 }
 
-                AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+                 AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
                 dtoRequests[count].City = address.City;
                 dtoRequests[count].Street = address.Street;
