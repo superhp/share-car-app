@@ -1,8 +1,8 @@
-export const fromLocationIqResponse = (response) => ({
-    number: response.address.house_number,
-    street: response.address.road,
-    city: response.address.city,
-    country: response.address.country,
+export const fromLocationIqResponse = (response) => ({    
+    number: response.address ? response.address.house_number : "",
+    street: response.address ? response.address.road : "",
+    city: response.address ? response.address.city : "",
+    country: response.address ? response.address.country : "",
     latitude: parseFloat(response.lat),
     longitude: parseFloat(response.lon)
 });
