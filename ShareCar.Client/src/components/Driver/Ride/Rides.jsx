@@ -34,8 +34,7 @@ export class Rides extends React.Component {
   }
 
   showDriversRides() {
-    api
-      .get("Ride")
+    api.get("Ride")
       .then(response => {
         if (response.status === 200) {
           const d = response.data;
@@ -43,7 +42,7 @@ export class Rides extends React.Component {
 
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.error(error);
       });
   }

@@ -42,7 +42,7 @@ export class ViewRideRequests extends React.Component {
         })
         .then(function (json) {
           resolve(json);
-        }).catch(function(error){
+        }).catch((error) => {
           this.showSnackBar("Something went wrong", 2)
         });
     });
@@ -93,7 +93,7 @@ export class ViewRideRequests extends React.Component {
           });
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         this.showSnackBar("Failed to load requests", 2)
       });
   }
@@ -119,7 +119,7 @@ export class ViewRideRequests extends React.Component {
           });
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         this.showSnackBar("Failed to load requests", 2)
             });
   }

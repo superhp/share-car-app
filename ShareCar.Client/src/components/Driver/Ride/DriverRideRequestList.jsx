@@ -29,7 +29,7 @@ export class DriverRideRequestsList extends React.Component {
           this.setState({ passengers: response.data });
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         this.props.showSnackBar("Failed to load passengers", 2)
         console.error(error);
       });
@@ -75,15 +75,16 @@ export class DriverRideRequestsList extends React.Component {
     return (
       <div>
         {this.state.show ? (
+          <div className="requestMap">
           <MapComponent
             id="map"
-            className="requestMap"
             pickUpPoint={this.state.coordinates}
             route={this.state.route}
             show={this.state.show}
             ref={this.child}
             driver={true}
           />
+          </div>
         ) : (
             ""
           )}
