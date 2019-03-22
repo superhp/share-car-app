@@ -12,7 +12,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         void AddRequest(RideRequest request);
         RideRequest GetRequestById(int id);
         IEnumerable<RideRequest> GetPassengerRequests(string email);
-        IEnumerable<RideRequest> GetDriverRequests(string email, int rideId);
+        IEnumerable<RideRequest> GetDriverRequests(string email);
         void UpdateRequest(RideRequest request);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);

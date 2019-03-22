@@ -43,9 +43,9 @@ namespace ShareCar.Logic.Passenger_Logic
             return dtoPassengers;
         }
 
-        public List<PassengerDto> GetPassengersByRideId(int rideId)
+        public List<PassengerDto> GetPassengersByDriver(string email)
         {
-            IEnumerable<Passenger> passengers = _passengerRepository.GetPassengersByRideId(rideId);
+            IEnumerable<Passenger> passengers = _passengerRepository.GetPassengersByDriver(email);
             List<PassengerDto> dtoPassengers = new List<PassengerDto>();
             foreach (Passenger passenger in passengers)
             {

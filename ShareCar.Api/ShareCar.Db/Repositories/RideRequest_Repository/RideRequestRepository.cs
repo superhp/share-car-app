@@ -24,10 +24,10 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             _databaseContext.SaveChanges();
         }
 
-        public IEnumerable<RideRequest> GetDriverRequests(string email, int rideId)
+        public IEnumerable<RideRequest> GetDriverRequests(string email)
         {
 
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && x.RideId == rideId && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
 
         }
 

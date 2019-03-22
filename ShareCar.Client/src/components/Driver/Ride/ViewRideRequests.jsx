@@ -124,6 +124,34 @@ export class ViewRideRequests extends React.Component {
             });
   }
 
+  sendRequestResponse(button, response, requestId, rideId, driverEmail) {
+    this.props.onRequestClick(button, requestId);
+    let data = {
+      RequestId: requestId,
+      Status: response,
+      RideId: rideId,
+      DriverEmail: driverEmail
+    };
+    api.put("https://localhost:44347/api/RideRequest", data).then(res => {
+      if (res.status === 200) {
+        if (response === 1) {
+          this.props.showSnackBar("Request accepted", 0)
+          var request = this.props.rideRequests.find(x => x.requestId === requestId);
+          this.setState(prevState => ({
+            passengers: [...prevState.passengers, { firstName: request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone }],
+            clickedRequest: true
+          }));
+        } else {
+          this.showSnackBar("Request denied", 0)
+          this.setState({ clickedRequest: true });
+        }
+      }
+    }).catch((error)=>{
+      this.showSnackBar("Failed to respond to request", 2)
+      console.error(error);
+    });
+  }
+
   showSnackBar(message, variant) {
     this.setState({
       snackBarClicked: true,

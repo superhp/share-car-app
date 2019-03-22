@@ -9,92 +9,16 @@ import "../../../styles/riderequests.css";
 import "../../../styles/genericStyles.css";
 
 export class DriverRideRequestsList extends React.Component {
-  state = {
-    coordinates: [],
-    passengers: [],
-    show: false,
-    displayedRequestIndex: 0,
-    clickedRequest: false,
-  };
-
-  componentWillMount() {
-    this.getAllPassengers();
-  }
-
-  getAllPassengers() {
-    api
-      .get("Passenger/rideId=" + this.props.selectedRide)
-      .then(response => {
-        if (response.status === 200) {
-          this.setState({ passengers: response.data });
-        }
-      })
-      .catch((error) => {
-        this.props.showSnackBar("Failed to load passengers", 2)
-        console.error(error);
-      });
-  }
-  handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    this.setState({ clickedRequest: false });
-  };
-
-  sendRequestResponse(button, response, requestId, rideId, driverEmail) {
-    this.props.onRequestClick(button, requestId);
-    let data = {
-      RequestId: requestId,
-      Status: response,
-      RideId: rideId,
-      DriverEmail: driverEmail
-    };
-    api.put("https://localhost:44347/api/RideRequest", data).then(res => {
-      if (res.status === 200) {
-        if (response === 1) {
-          this.props.showSnackBar("Request accepted", 0)
-          var request = this.props.rideRequests.find(x => x.requestId === requestId);
-          this.setState(prevState => ({
-            passengers: [...prevState.passengers, { firstName: request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone }],
-            clickedRequest: true
-          }));
-        } else {
-          this.props.showSnackBar("Request denied", 0)
-          this.setState({ clickedRequest: true });
-        }
-      }
-    }).catch((error)=>{
-      this.props.showSnackBar("Failed to respond to request", 2)
-      console.error(error);
-    });
-  }
 
   render() {
     return (
       <div>
         <PendingRequests
-          clickedRequest={this.state.clickedRequest}
-          handleClose={() => this.handleClose()}
-          rideRequests={this.props.rideRequests}
+          rideRequests={this.props.requests}
           selectedRide={this.props.selectedRide}
-          onShowClick={(index) => {
-            this.setState({ 
-              coordinates: { 
-                longitude: this.props.rideRequests[index].longitude, 
-                latitude: this.props.rideRequests[index].latitude 
-              },             
-              route: this.props.rideRequests[index].route, 
-              displayedRequestIndex: index,
-               show: this.state.displayedRequestIndex === index ? !this.state.show : true },() =>{
-
-                this.forceUpdate();
-               });
-        
-          }}
-          sendRequestResponse={(button, response, requestId, rideId, driverEmail) =>
-            this.sendRequestResponse(button, response, requestId, rideId, driverEmail)}
-          passengers={this.state.passengers}
+          handleRequestResponse={(button, response, requestId, rideId, driverEmail) =>
+            this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
+          passengers={this.props.passengers}
         />
       </div>
     );

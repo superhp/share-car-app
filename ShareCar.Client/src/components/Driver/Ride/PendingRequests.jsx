@@ -18,17 +18,6 @@ export class PendingRequests extends React.Component {
                 Requests
             </Typography>
         </Grid>
-        <Snackbar
-            anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center"
-            }}
-            open={this.props.clickedRequest}
-            onClose={() => this.props.handleClose()}
-            autoHideDuration={3000}
-            variant = {SnackbarVariants[0]}
-            message={<span id="message-id">Request accepted</span>}
-        />
         {this.props.rideRequests.filter(x => x.rideId === this.props.selectedRide).length !== 0
         ? this.props.rideRequests
             .filter(x => x.rideId === this.props.selectedRide)
@@ -39,8 +28,8 @@ export class PendingRequests extends React.Component {
                             req={req}
                             index={index}
                             key={index}
-                            onAcceptClick={() => this.props.sendRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
-                            onDenyClick={() => {this.props.sendRequestResponse(Status[2], 2, req.requestId, req.rideId)}}
+                            onAcceptClick={() => this.props.handleRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
+                            onDenyClick={() => {this.props.handleRequestResponse(Status[2], 2, req.requestId, req.rideId)}}
                         />
                     </Grid>
                 </Grid>

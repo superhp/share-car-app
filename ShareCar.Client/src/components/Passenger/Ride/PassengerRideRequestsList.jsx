@@ -10,20 +10,73 @@ import { Status } from "../../../utils/status";
 
 import "../../../styles/riderequests.css";
 import "../../../styles/genericStyles.css";
+import api from "../../../helpers/axiosHelper";
 
 
 export class PassengerRideRequestsList extends React.Component {
     state = {
         show: false,
         coordinates: null,
-        route: null
+        route: null,
+        requests:[],
     }
+
+    cancelRequest(id) {
+        var requests = this.state.requests;
+        var index = requests.findIndex(x => x.requestId === id);
+        var request = requests[index];
+    
+        let data = {
+          RequestId: request.requestId,
+          Status: Status[4],
+          RideId: request.rideId,
+          DriverEmail: request.driverEmail
+        };
+        api.put("RideRequest", data).then(res => {
+          if (res.status === 200) {
+            requests[index].status = 4;
+            this.setState({ requests: requests });
+          }
+        })
+          .catch(error => {
+            this.showSnackBar("Failed to cancel request", 2)
+          });
+    
+      }
+    
+      showPassengerRequests() {
+        api
+          .get("RideRequest/passenger")
+          .then(response => {
+            if (response.data !== "") {
+              this.setState({ requests: response.data });
+            }
+          })
+          .then(() => {
+            const unseenRequests = [];
+    
+            for (let i = 0; i < this.state.requests.length; i++) {
+              if (!this.state.requests[i].seenByPassenger) {
+                unseenRequests.push(this.state.requests[i].requestId);
+              }
+            }
+    
+            if (unseenRequests.length !== 0) {
+              api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
+              });
+            }
+          })
+          .catch((error) => {
+            this.showSnackBar("Failed to load requests", 2)
+          });
+      }
+    
 
     render() {
         return (
             <div className="request-card-container">
                 <Card className="request-card">
-                    {this.props.requests.map((req, i) =>
+                    {this.state.requests.map((req, i) =>
                         <tr key={i}>
                             <CardContent >
                                 <Typography variant="headline">
@@ -51,7 +104,7 @@ export class PassengerRideRequestsList extends React.Component {
                                 {
                                     req.status === 0 || req.status === 1 ? (
                                         <Button
-                                            onClick={() => { this.props.cancelRequest(req.requestId) }}
+                                            onClick={() => { this.cancelRequest(req.requestId) }}
                                         >
                                             Cancel request
                         </Button>

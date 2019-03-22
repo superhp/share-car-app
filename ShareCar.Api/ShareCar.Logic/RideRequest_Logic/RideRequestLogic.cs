@@ -184,10 +184,10 @@ namespace ShareCar.Logic.RideRequest_Logic
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
 
-        public IEnumerable<RideRequestDto> GetDriverRequests(int rideId, string email)
+        public IEnumerable<RideRequestDto> GetDriverRequests(string email)
         {
             IEnumerable<RideRequest> entityRequest;
-            entityRequest = _rideRequestRepository.GetDriverRequests(email, rideId);
+            entityRequest = _rideRequestRepository.GetDriverRequests(email);
 
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
