@@ -51,7 +51,7 @@ export default class MapComponent extends React.Component<{}> {
     const vectorLayer = new LayerVector({ source: vectorSource });
     const { pickUpPoint, route} = this.props;
     const map = new Map({
-      target: "map",
+      target: "map" + this.props.index,
       controls: [],
       layers: [
         new Tile({
@@ -61,7 +61,7 @@ export default class MapComponent extends React.Component<{}> {
       ],
       view: new View({
         center: fromLonLatToMapCoords(pickUpPoint.longitude, pickUpPoint.latitude),
-        zoom: 13
+        zoom: 12
       })
     });
 
@@ -79,7 +79,7 @@ export default class MapComponent extends React.Component<{}> {
     return (
       <div>
         {this.props.driver ? (
-          <div id="map" className="mapComponent" />
+          <div id={"map" + this.props.index} className="map" />
         ) : (
             <div onClick={this.updateCoordinates.bind(this)} id="map" />
           )}

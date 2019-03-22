@@ -5,56 +5,82 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
+import MapComponent from "../../Maps/MapComponent";
 
 import "../../../styles/riderequests.css";
 
-export const PendingRequestCard = (props) => (
-    
-    <Card className="rides-card">
-        <Grid container justify="center">
-            <Grid item xs={12} zeroMinWidth>
-                <Grid container justify="center">
-                    {!props.req.seenByDriver ? (
-                    <Badge
-                        className="new-badge"
-                        badgeContent={"new"}
-                        color="primary"
-                    />
-                    ) : null}
-                    <Typography className="name-para" component="p">
-                        #{props.index + 1} {props.req.passengerFirstName}{" "}
-                        {props.req.passengerLastName}
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Grid item xs={12} zeroMinWidth>
-                <CardActions>
-                    <Button
-                        onClick={() => props.onShowClick()}
-                    >
-                        Show on map
+export class PendingRequestCard extends React.Component {
+    state = {
+        show: false
+    }
+    render() {
+        return (
+            <div>
+                <Card className="rides-card">
+                    <Grid container justify="center">
+                        <Grid item xs={12} zeroMinWidth>
+                            <Grid container justify="center">
+                                {!this.props.req.seenByDriver ? (
+                                    <Badge
+                                        className="new-badge"
+                                        badgeContent={"new"}
+                                        color="primary"
+                                    />
+                                ) : null}
+                                <Typography className="name-para" component="p">
+                                    #{this.props.index + 1} {this.props.req.passengerFirstName}{" "}
+                                    {this.props.req.passengerLastName}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} zeroMinWidth>
+                            <CardActions>
+                                <Button
+                                    // onClick={() => this.props.onShowClick()}
+                                    onClick={() => { this.setState({ show: !this.state.show }) }}
+                                >
+                                    Show on map
                     </Button>
-                    {props.req.status !== 4 ? 
-                    <div>
-                    <Button
-                        color="primary"
-                        onClick={() => props.onAcceptClick()}
-                    >
-                        Accept
+                                {this.props.req.status !== 4 ?
+                                    <div>
+                                        <Button
+                                            color="primary"
+                                            onClick={() => this.props.onAcceptClick()}
+                                        >
+                                            Accept
                     </Button>
-                    <Button
-                        color="secondary"
-                        onClick={() => props.onDenyClick()}
-                    >
-                        Deny
+                                        <Button
+                                            color="secondary"
+                                            onClick={() => this.props.onDenyClick()}
+                                        >
+                                            Deny
                     </Button>
-                    </div>
-                    :<p>
-                    Request was canceled
+                                    </div>
+                                    : <p>
+                                        Request was canceled
                     </p>
+                                }
+                            </CardActions>
+
+                        </Grid>
+                    </Grid>
+                </Card>
+                {this.state.show ?
+                    <Card className="requestMap rides-card">
+                        <Grid container justify="center">
+                            <Grid item xs={12} zeroMinWidth>
+                                <MapComponent
+                                    pickUpPoint={{ longitude: this.props.req.longitude, latitude: this.props.req.latitude }}
+                                    route={this.props.req.route}
+                                    index={this.props.index}
+                                    driver={true}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Card>
+                    : <div></div>
                 }
-                </CardActions>
-            </Grid>
-        </Grid>
-    </Card>
-);
+            </div>
+        );
+    }
+}
