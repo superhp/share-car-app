@@ -78,11 +78,7 @@ export default class MapComponent extends React.Component<{}> {
   render() {
     return (
       <div>
-        {this.props.driver ? (
           <div id={"map" + this.props.index} className="map" />
-        ) : (
-            <div onClick={this.updateCoordinates.bind(this)} id="map" />
-          )}
       </div>
     );
   }

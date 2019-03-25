@@ -3,6 +3,7 @@ import React, { Component } from "react";
 
 import UserService from "../../services/userService";
 import { ViewRideRequests } from "../Driver/Ride/ViewRideRequests";
+import { PassengerRideRequestsList } from "./Ride/PassengerRideRequestsList";
 
 export default class Driver extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -25,7 +26,7 @@ export default class Driver extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="role-container">
-        <ViewRideRequests driver={false} />
+        <PassengerRideRequestsList/>
       </div>
     );
     return <div>{content}</div>;

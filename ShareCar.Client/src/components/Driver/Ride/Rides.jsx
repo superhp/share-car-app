@@ -24,8 +24,6 @@ export class Rides extends React.Component {
     this.getDriversRides();
     this.getDriverPassengers();
     this.getDriverRequests();
-
-
   }
 
   showSnackBar(message, variant) {
@@ -41,17 +39,6 @@ export class Rides extends React.Component {
       3000
     );
   }
-
-  /*
-    handleRideDelete(rideToDelete) {
-      this.setState({
-        driversRides: this.state.driversRides.filter(
-          x => x.rideId !== rideToDelete.rideId
-        ),
-        clicked: false,
-        selectedRideId: null
-      });
-    }*/
 
   handleRideDelete(rideToDelete) {
     api.put("Ride/disactivate", rideToDelete).then(res => {
@@ -80,7 +67,7 @@ export class Rides extends React.Component {
     api.get("Ride")
       .then(response => {
         if (response.status === 200) {
-          this.setState({ rides: response.data },() =>{console.log("rwserwewrewr");console.log(this.state);console.log(response.data)});
+          this.setState({ rides: response.data });
         }
       })
       .catch((error) => {
