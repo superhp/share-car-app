@@ -17,6 +17,7 @@ using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using AutoMapper;
 using ShareCar.Dto;
+using System.Collections.Generic;
 
 namespace ShareCar.Api
 {
@@ -77,7 +78,13 @@ namespace ShareCar.Api
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}");
+            });
+
         }
 
         private void ConfigureAuthentication(IServiceCollection services)
