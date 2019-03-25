@@ -34,16 +34,17 @@ class RideCompletedNotification extends React.Component {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">{"Have you participated in these rides?"}</DialogTitle>
-            {this.props.rides.map(ride => 
+            {this.props.rides.map((ride, i) => 
                <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         Driver: {ride.driverFirstName} {ride.driverLastName}
+                        <br/>
                         Ride time: {ride.rideDateTime}
                     </DialogContentText>
                     <DialogActions>
                         <Button onClick={() => {
                                 this.handleClose();
-                                this.sendResponse(true, ride.rideId);
+                                if(this.props.rides.length === i+1) this.sendResponse(true, ride.rideId);
                             }} 
                             color="primary"
                             autoFocus
@@ -52,7 +53,7 @@ class RideCompletedNotification extends React.Component {
                         </Button>
                         <Button onClick={() => {
                                 this.handleClose();
-                                this.sendResponse(false, ride.rideId);
+                                if(this.props.rides.length === i+1) this.sendResponse(false, ride.rideId);
                             }} 
                             color="primary"
                         >
