@@ -1,4 +1,4 @@
-export const fromLocationIqResponse = (response) => ({    
+export const fromLocationIqResponse = (response) => ({     
     number: response.address ? response.address.house_number : "",
     street: response.address ? response.address.road : "",
     city: response.address ? response.address.city : "",
@@ -13,13 +13,14 @@ export const addressToString = (address) => {
     if (address.number) result += address.number + " ";
     if (address.street) result += address.street + ", ";
     if (address.city) result += address.city  + ", ";
-    result += address.country;
+    if (address.country) result += address.country;
     return result;
 };
 
-export const toReadableName = address =>
-    `${address.street} ${address.number}`;
-
+export const toReadableName = address =>{
+    if (!address) return "";
+    return `${address.street ?address.street : ""} ${address.number ? address.number : ""}`;
+}
 export const fromAlgoliaAddress = address => {
     if(!address) return null;
     let streetNumber = "";

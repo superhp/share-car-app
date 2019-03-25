@@ -45,6 +45,11 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.DriverEmail = driverEmail;
             int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longitude = requestDto.Longitude, Latitude = requestDto.Latitude });
 
+            if(addressId == -1)
+            {
+                throw new ArgumentException("Failed to get address id");
+            }
+
             requestDto.AddressId = addressId;
             _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
@@ -129,7 +134,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     dtoRequests[count].DriverLastName = user.LastName;
                 }
 
-                AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+                 AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
                 dtoRequests[count].City = address.City;
                 dtoRequests[count].Street = address.Street;
@@ -179,10 +184,10 @@ namespace ShareCar.Logic.RideRequest_Logic
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
 
-        public IEnumerable<RideRequestDto> GetDriverRequests(int rideId, string email)
+        public IEnumerable<RideRequestDto> GetDriverRequests(string email)
         {
             IEnumerable<RideRequest> entityRequest;
-            entityRequest = _rideRequestRepository.GetDriverRequests(email, rideId);
+            entityRequest = _rideRequestRepository.GetDriverRequests(email);
 
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();

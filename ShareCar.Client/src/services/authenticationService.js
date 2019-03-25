@@ -42,7 +42,7 @@ class AuthenticationService {
             if (response.status === 200)
                 callback();
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.error(error);
         });
     }

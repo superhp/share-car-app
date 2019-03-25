@@ -10,12 +10,11 @@ import "typeface-roboto";
 import SnackBars from "../../common/Snackbars";
 import { SnackbarVariants } from "../../common/SnackbarVariants"
 import api from "../../../helpers/axiosHelper";
-import { ViewRideRequests } from "./ViewRideRequests";
+import { DriverRideRequestsList } from "./DriverRideRequestList";
 
 import "../../../styles/driversRidesList.css";
 import "../../../styles/genericStyles.css";
 import "../../../styles/driversRidesList.css";
-
 
 let moment = require("moment");
 
@@ -27,48 +26,22 @@ const fontColor = {
 }
 export class DriversRidesList extends React.Component {
 
-state = {
-  snackBarClicked: false,
-  snackBarMessage: null,
-  snackBarVariant: null
-}
-
-  handleDeletion(rideToDisactivate) {
-    api.put("Ride/disactivate", rideToDisactivate).then(res => {
-      if (res.status === 200) {
-        this.props.onDelete(rideToDisactivate);
-      }
-    }).catch(() =>{
-      this.showSnackBar("Failed to delete ride", 2);
-    });
-  }
-
-  showSnackBar(message, variant) {
-    this.setState({
-      snackBarClicked: true,
-      snackBarMessage: message,
-      snackBarVariant: SnackbarVariants[variant]
-    });
-    setTimeout(
-      function () {
-        this.setState({ snackBarClicked: false });
-      }.bind(this),
-      3000
-    );
-  }
-
   render() {
     let detailedRideInfo = this.props.rideClicked ? (
       <div className="detailedInfoContainer">
-        <ViewRideRequests
-          driver={true}
+        <DriverRideRequestsList
+          requests={this.props.requests}
+          rides={this.props.rides}
+          passengers={this.props.passengers}
           selectedRide={this.props.selectedRide}
+          rideClicked={this.props.rideClicked}
+          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
         />
       </div>
     ) : null;
     return (
       <Grid container>
-        {this.props.driversRides.length !== 0 ? this.props.driversRides.map((req, index) => (
+        {this.props.rides.length !== 0 ? this.props.rides.map((req, index) => (
           <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card">
             <Grid container >
@@ -100,7 +73,7 @@ state = {
                         </Button>
                         <Button
                           size="small"
-                          onClick={() => this.handleDeletion(req)}
+                          onClick={() => this.props.onDelete(req)}
                           variant="contained"
                           color="secondary"
                           className="generic-button"
@@ -113,12 +86,7 @@ state = {
             </Card>
           </Grid>
         )) : "You have no rides"}
-        {detailedRideInfo}
-        <SnackBars
-          message={this.state.snackBarMessage}
-          snackBarClicked={this.state.snackBarClicked}
-          variant={this.state.snackBarVariant}
-        />
+{detailedRideInfo}
       </Grid>
     );
   }

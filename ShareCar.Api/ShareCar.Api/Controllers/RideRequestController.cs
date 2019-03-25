@@ -28,17 +28,17 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
             _rideLogic = rideLogic;
         }
-        [HttpGet("{rideId}")]
-        public async Task<IActionResult> GetDriverRequests(int rideId)
+        [HttpGet("driver")]
+        public async Task<IActionResult> GetDriverRequests()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            IEnumerable<RideRequestDto> request = _requestLogic.GetDriverRequests(rideId, userDto.Email);
+            IEnumerable<RideRequestDto> request = _requestLogic.GetDriverRequests(userDto.Email);
 
             return Ok(request);
         }
 
-        [HttpGet]
+        [HttpGet("passenger")]
         public async Task<IActionResult> GetPassengerRequests()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);

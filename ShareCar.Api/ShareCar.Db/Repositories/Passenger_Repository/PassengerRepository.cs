@@ -44,9 +44,9 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         }
 
-        public IEnumerable<Passenger> GetPassengersByRideId(int rideId)
+        public IEnumerable<Passenger> GetPassengersByDriver(string email)
         {
-            return _databaseContext.Passengers.Where(x => x.RideId == rideId);
+            return _databaseContext.Passengers.Where(x => x.Ride.DriverEmail == email);
         }
 
         public void RespondToRide(bool response, int rideId, string passengerEmail)

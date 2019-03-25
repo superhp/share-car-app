@@ -20,15 +20,13 @@ export class WinnerBoard extends React.Component {
     this.showWinnersBoard();
   }
   showWinnersBoard() {
-    api
-      .get("user/WinnerBoard")
+    api.get("user/WinnerBoard")
       .then(response => {
         if (response.status === 200) {
-          this.setState({ winners:  response.data.users });
-          this.setState({ points:  response.data.points });
+          this.setState({ winners:  response.data.users, points:  response.data.point });
         }
       })
-      .catch(function(error) {
+      .catch((error) => {
         console.error(error);
       });
   }
