@@ -14,6 +14,11 @@ import api from "../../../helpers/axiosHelper";
 import SnackBars from "../../common/Snackbars";
 import { SnackbarVariants } from "../../common/SnackbarVariants"
 import PassengerRideRequestCard from "../PassengerRideRequestCard"
+
+const style = {
+    margin: "1em 0",
+  }
+
 export class PassengerRideRequestsList extends React.Component {
     state = {
         show: false,
@@ -96,9 +101,9 @@ export class PassengerRideRequestsList extends React.Component {
 
     render() {
         return (
-            <Grid container justify="center">
-                <Grid item xs={12}>
-                </Grid>
+            <Grid container style={style} justify="center">
+                <Grid item xs={10} justify="center">
+               
                 {this.state.requests.map((req, i) =>
                     <PassengerRideRequestCard
                         request={req}
@@ -106,6 +111,7 @@ export class PassengerRideRequestsList extends React.Component {
                         index={i}
                     />
                 )}
+                 </Grid>
                 <SnackBars
                     message={this.state.snackBarMessage}
                     snackBarClicked={this.state.snackBarClicked}

@@ -49,6 +49,7 @@ namespace ShareCar.Logic.Passenger_Logic
             List<PassengerDto> dtoPassengers = new List<PassengerDto>();
             foreach (Passenger passenger in passengers)
             {
+                passenger.Ride.Requests = passenger.Ride.Requests.Where(x => x.PassengerEmail == passenger.Email && x.Status == Db.Entities.Status.ACCEPTED).ToList();
                 dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
             }
             return dtoPassengers;

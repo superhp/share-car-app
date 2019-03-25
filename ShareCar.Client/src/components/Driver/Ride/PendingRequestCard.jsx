@@ -8,6 +8,7 @@ import Badge from "@material-ui/core/Badge";
 import MapComponent from "../../Maps/MapComponent";
 
 import "../../../styles/riderequests.css";
+import "../../../styles/genericStyles.css";
 
 export class PendingRequestCard extends React.Component {
     state = {
@@ -16,7 +17,7 @@ export class PendingRequestCard extends React.Component {
     render() {
         return (
             <div>
-                <Card className="rides-card">
+                <Card className="rides-card generic-card">
                     <Grid container justify="center">
                         <Grid item xs={12} zeroMinWidth>
                             <Grid container justify="center">
@@ -36,7 +37,6 @@ export class PendingRequestCard extends React.Component {
                         <Grid item xs={12} zeroMinWidth>
                             <CardActions>
                                 <Button
-                                    // onClick={() => this.props.onShowClick()}
                                     onClick={() => { this.setState({ show: !this.state.show }) }}
                                 >
                                     Show on map
@@ -66,14 +66,13 @@ export class PendingRequestCard extends React.Component {
                     </Grid>
                 </Card>
                 {this.state.show ?
-                    <Card className="requestMap rides-card">
+                    <Card className="requestMap rides-card generic-card">
                         <Grid container justify="center">
                             <Grid item xs={12} zeroMinWidth>
                                 <MapComponent
                                     pickUpPoint={{ longitude: this.props.req.longitude, latitude: this.props.req.latitude }}
                                     route={this.props.req.route}
                                     index={this.props.index}
-                                    driver={true}
                                 />
                             </Grid>
                         </Grid>

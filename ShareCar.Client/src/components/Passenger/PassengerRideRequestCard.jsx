@@ -22,7 +22,7 @@ export default class PassengerRideRequestsCard extends React.Component {
         return (
             <div>
 
-                <Card className="request-card">
+                <Card className="request-card generic-card">
 
                     <CardContent >
                         <Typography variant="headline">
@@ -36,7 +36,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                         </Typography>
                         <Typography variant="headline">
 
-                            Name: {this.props.request.driverFirstName} {this.props.request.driverLastName}
+                            {this.props.request.driverFirstName} {this.props.request.driverLastName}
                         </Typography>
                         <Typography color="textSecondary">
                             Date: <Moment date={this.props.request.rideDate} format="MM-DD HH:mm" />
@@ -70,7 +70,7 @@ export default class PassengerRideRequestsCard extends React.Component {
 
 
                 {this.state.show ? (
-                    <Card className="request-card requestMap">
+                    <Card className="request-card requestMap generic-card">
                         <MapComponent
                             pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
                             route={this.props.request.route}
