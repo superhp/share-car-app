@@ -75,6 +75,7 @@ export class PassengerRideRequestsList extends React.Component {
         api
             .get("RideRequest/passenger")
             .then(response => {
+                console.log(response)
                 if (response.data !== "") {
                     this.setState({ requests: response.data });
                 }
@@ -102,15 +103,19 @@ export class PassengerRideRequestsList extends React.Component {
     render() {
         return (
             <Grid container style={style} justify="center">
-                <Grid item xs={10} justify="center">
-               
-                {this.state.requests.map((req, i) =>
+                <Grid item xs={12} >
+               {this.state.requests.length > 0 
+               ? <div>
+               {this.state.requests.map((req, i) =>
                     <PassengerRideRequestCard
                         request={req}
                         key={i}
                         index={i}
                     />
                 )}
+                </div>
+                : <h3>You have no requests</h3>
+               }
                  </Grid>
                 <SnackBars
                     message={this.state.snackBarMessage}

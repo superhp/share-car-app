@@ -13,16 +13,15 @@ export const RidePassengersList = (props) => (
     props.passengers != null ? (
       <Grid container justify="center">
             <Grid item xs={12}>
-            {console.log(props)}
-
             <Typography style={fontColor} variant="title">
               Passengers
             </Typography>
           </Grid>
           {props.passengers.length !== 0
-            ? props.passengers.map((pas, index) => (
+            ? props.passengers.map((passenger, index) => (
                   <RidePassengerCard 
-                  passenger = {pas}
+                  passenger = {passenger}
+                  index={index}
                   />
               ))
             : "Ride doesn't have any passengers"}

@@ -71,11 +71,15 @@ export default class PassengerRideRequestsCard extends React.Component {
 
                 {this.state.show ? (
                     <Card className="request-card requestMap generic-card">
-                        <MapComponent
-                            pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
-                            route={this.props.request.route}
-                            driver={false}
-                        />
+                        <Grid container justify="center">
+                            <Grid item xs={12} zeroMinWidth>
+                                <MapComponent
+                                    pickUpPoint={{ longitude: this.props.request.longitude, latitude: this.props.request.latitude }}
+                                    route={this.props.request.route}
+                                    driver={false}
+                                />
+                            </Grid>
+                        </Grid>
                     </Card>
                 ) : (
                         <div></div>

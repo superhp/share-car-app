@@ -17,12 +17,16 @@ namespace ShareCar.Logic.Passenger_Logic
     {
 
         private readonly IPassengerRepository _passengerRepository;
+        private readonly IAddressLogic _addressLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository)
+        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository, IAddressLogic addressLogic, IRouteLogic routeLogic)
         {
             _mapper = mapper;
             _passengerRepository = passengerRepository;
+            _addressLogic = addressLogic;
+            _routeLogic = routeLogic;
         }
 
         public void AddPassenger(PassengerDto passenger)
@@ -50,7 +54,14 @@ namespace ShareCar.Logic.Passenger_Logic
             foreach (Passenger passenger in passengers)
             {
                 passenger.Ride.Requests = passenger.Ride.Requests.Where(x => x.PassengerEmail == passenger.Email && x.Status == Db.Entities.Status.ACCEPTED).ToList();
-                dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
+                var dtoPassenger = _mapper.Map<Passenger, PassengerDto>(passenger);
+                var address = _addressLogic.GetAddressById(passenger.Ride.Requests[0].AddressId);
+                var route = _routeLogic.GetRouteByRequest(passenger.Ride.Requests[0].RequestId);
+                dtoPassenger.Longitude = address.Longitude;
+                dtoPassenger.Latitude = address.Latitude;
+                dtoPassenger.Route = route;
+                dtoPassenger.Ride = null;
+                dtoPassengers.Add(dtoPassenger);
             }
             return dtoPassengers;
         }

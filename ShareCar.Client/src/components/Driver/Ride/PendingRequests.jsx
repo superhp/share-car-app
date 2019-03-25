@@ -39,6 +39,7 @@ export class PendingRequests extends React.Component {
 
         <RidePassengersList 
             passengers={this.props.passengers}
+            rides={this.props.rides}
         />
     </Grid>
     </Grid>
