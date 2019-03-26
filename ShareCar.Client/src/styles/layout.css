@@ -25,6 +25,10 @@
   font-size: large;
 }
 
+.header-text {
+  padding-left: 33%;
+}
+
 .content {
   display: flex;
   flex-direction: column;

@@ -24,7 +24,6 @@ type UserProfileState = {
 class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfileState> {
   state: MyProfileState = { loading: true, user: null };
   userService = new UserService();
-  authService = new AuthenticationService();
 
   componentDidMount() {
     this.userService.getLoggedInUser(user => this.updateUserProfile(user));
@@ -32,14 +31,6 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
 
   updateUserProfile = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
-  };
-
-  logout = () => {
-    this.authService.logout(this.userLoggedOut);
-  };
-
-  userLoggedOut = () => {
-    history.push("/login");
   };
 
   handleSubmit(e) {
