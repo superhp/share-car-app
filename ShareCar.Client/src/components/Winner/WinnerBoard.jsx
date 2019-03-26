@@ -23,7 +23,7 @@ export class WinnerBoard extends React.Component {
     api.get("user/WinnerBoard")
       .then(response => {
         if (response.status === 200) {
-          this.setState({ winners:  response.data.users, points:  response.data.point });
+          this.setState({ winners:  response.data.users, points:  response.data.points });
         }
       })
       .catch((error) => {

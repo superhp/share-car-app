@@ -27,10 +27,11 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   authService = new AuthenticationService();
 
   componentDidMount() {
-    this.userService.getLoggedInUser(user => this.updateUserProfile(user));
+    this.userService.getLoggedInUser(user => this.updateUserProfile(user.user));
   }
 
   updateUserProfile = (user: UserProfileData) => {
+    console.log(user);
     this.setState({ loading: false, user: user });
   };
 
@@ -45,12 +46,12 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   handleSubmit(e) {
     e.preventDefault();
     let data = {
-      firstName: this.state.user.user.firstName,
-      lastName: this.state.user.user.lastName,
-      profilePicture: this.state.user.user.pictureUrl,
-      email: this.state.user.user.email,
-      licensePlate: this.state.user.user.licensePlate,
-      phone: this.state.user.user.phone
+      firstName: this.state.user.firstName,
+      lastName: this.state.user.lastName,
+      profilePicture: this.state.user.pictureUrl,
+      email: this.state.user.email,
+      licensePlate: this.state.user.licensePlate,
+      phone: this.state.user.phone
     };
     api.post(`https://localhost:44347/api/user`, data).then(res => {
       if (res.status === 200) {
@@ -73,10 +74,10 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
     ) : (
       <UserProfileForm 
         onClick={() => this.logout()}
-        onNameChange={e => this.setState({user: {...this.state.user.user, firstName: e.target.value}})}
-        onSurnameChange={e => this.setState({user: {...this.state.user.user, lastName: e.target.value}})}
-        onPhoneChange={e => this.setState({user: {...this.state.user.user, phone: e.target.value}})}
-        onLicenseChange={e => this.setState({user: {...this.state.user.user, licensePlate: e.target.value}})}
+        onNameChange={e => this.setState({user: {...this.state.user, firstName: e.target.value}})}
+        onSurnameChange={e => this.setState({user: {...this.state.user, lastName: e.target.value}})}
+        onPhoneChange={e => this.setState({user: {...this.state.user, phone: e.target.value}})}
+        onLicenseChange={e => this.setState({user: {...this.state.user, licensePlate: e.target.value}})}
         onButtonClick={e => {
           this.handleSubmit(e);
           setTimeout(
@@ -88,7 +89,7 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
             3000
           );
         }}
-        user={this.state.user.user}
+        user={this.state.user}
         role={this.props.match.params.role}
       />
     );
