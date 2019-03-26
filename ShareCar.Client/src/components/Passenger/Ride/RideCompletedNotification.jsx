@@ -9,7 +9,8 @@ import api from "../../../helpers/axiosHelper";
 
 class RideCompletedNotification extends React.Component {
     state = {
-      open: true
+      open: true,
+      ridesId: []
     };
   
     handleClose = () => {
@@ -34,7 +35,7 @@ class RideCompletedNotification extends React.Component {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">{"Have you participated in these rides?"}</DialogTitle>
-            {this.props.rides.map((ride, i) => 
+            {this.props.rides.filter(x => !this.state.ridesId.includes(x.rideId)).map((ride, i) => 
                <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         Driver: {ride.driverFirstName} {ride.driverLastName}
@@ -43,17 +44,18 @@ class RideCompletedNotification extends React.Component {
                     </DialogContentText>
                     <DialogActions>
                         <Button onClick={() => {
-                                this.handleClose();
-                                if(this.props.rides.length === i+1) this.sendResponse(true, ride.rideId);
+                                if(this.props.rides.length - 1 === this.state.ridesId.length) this.handleClose();
+                                this.sendResponse(true, ride.rideId);
+                                this.setState({ridesId: [...this.state.ridesId, ride.rideId]});
                             }} 
                             color="primary"
-                            autoFocus
                         >
                             Yes
                         </Button>
                         <Button onClick={() => {
-                                this.handleClose();
-                                if(this.props.rides.length === i+1) this.sendResponse(false, ride.rideId);
+                                if(this.props.rides.length - 1 === this.state.ridesId.length - 1) this.handleClose();
+                                this.sendResponse(false, ride.rideId);
+                                this.setState({ridesId: [...this.state.ridesId, ride.rideId]});
                             }} 
                             color="primary"
                         >
