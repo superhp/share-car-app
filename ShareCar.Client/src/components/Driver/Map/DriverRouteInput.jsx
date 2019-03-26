@@ -16,6 +16,7 @@ class DriverRouteInputInner extends React.Component {
             <div className="map-input-selection">
                 {this.props.routePoints.map((element, index) => (
                     <AddressInput
+                        className="driver-route-input"
                         key={index}
                         index={index}
                         deletable={index !== this.props.routePoints.length - 1}
@@ -26,17 +27,18 @@ class DriverRouteInputInner extends React.Component {
                 ))}
 
                 <Button
-                    size="large"
-                    color="primary"
+                    variant="contained"
+                    className="select-office-menu"
                     onClick={() => {
                         this.props.changeDirection();
                     }}
+                    aria-haspopup="true"
                 >
-                    <ImportExport fontSize="large" />
+                    <ImportExport fontSize="medium" />
                 </Button>
                 <SimpleMenu
-                                handleSelection={office => {
-                    this.props.changeRoutePoint(office, -1);
+                    handleSelection={office => {
+                        this.props.changeRoutePoint(office, -1);
                     }}
                 />
 

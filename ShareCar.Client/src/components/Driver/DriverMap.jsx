@@ -6,7 +6,8 @@ import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Button from "@material-ui/core/Button";
-
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
 import { OfficeAddresses } from "../../utils/AddressData";
 import RidesScheduler from "./Ride/RidesScheduler";
 import { DriverRouteInput } from "./Map/DriverRouteInput";
@@ -74,7 +75,7 @@ export class DriverMap extends React.Component {
             this.addNewRoutePoint(address);
           }
         }
-      }).catch(error =>{});
+      }).catch(error => { });
   }
 
   addNewRoutePoint(address) {
@@ -170,14 +171,13 @@ export class DriverMap extends React.Component {
       <div>
         {this.autocompleteInputs = []}
         <div className="displayRoutes">
-          <DriverRouteInput
-            changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
-            changeDirection={() => this.handleDirectionChange()}
-            routePoints={this.state.routePoints}
-            removeRoutePoint={index => this.removeRoutePoint(index)}
-            ref={e => this.manageRoutePointInputs(e)}
-          />
-
+              <DriverRouteInput
+                changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
+                changeDirection={() => this.handleDirectionChange()}
+                routePoints={this.state.routePoints}
+                removeRoutePoint={index => this.removeRoutePoint(index)}
+                ref={e => this.manageRoutePointInputs(e)}
+              />
         </div>
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
