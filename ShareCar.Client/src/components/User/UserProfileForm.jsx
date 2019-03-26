@@ -9,12 +9,6 @@ import "../../styles/userProfile.css";
 export const UserProfileForm = (props) => (
     <div className="container-fluid">
         <div className="container profile-container">
-          <button
-            className="logout-button logout-text"
-            onClick={() => props.onClick()}
-          >
-            Logout
-          </button>
           <form className="profile-form col-sm-6">
             <img className="thumbnail" src={props.user.pictureUrl} alt="" />
             <UserProfileFormField 
