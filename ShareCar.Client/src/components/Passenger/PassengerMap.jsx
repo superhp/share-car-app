@@ -23,6 +23,7 @@ import "./../../styles/genericStyles.css";
 import "../../styles/testmap.css";
 import SnackBars from "../common/Snackbars";
 import {SnackbarVariants} from "../common/SnackbarVariants";
+import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
 
 
 export class PassengerMap extends React.Component {
@@ -182,6 +183,7 @@ showSnackBar(message, variant){
             )}
         </div>
         <div id="map"></div>
+        <DriverRoutesSugestionsModal />
         {this.state.routes.length > 1
           ? <div>
             <PassengerNavigationButton
