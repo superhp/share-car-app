@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,10 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         public IEnumerable<Passenger> GetPassengersByDriver(string email)
         {
-            return _databaseContext.Passengers.Where(x => x.Ride.DriverEmail == email);
+
+         var query = _databaseContext.Passengers.Include(x => x.Ride.Requests).Where(x => x.Ride.DriverEmail == email);
+
+            return query;
         }
 
         public void RespondToRide(bool response, int rideId, string passengerEmail)

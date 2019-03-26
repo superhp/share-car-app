@@ -35,9 +35,13 @@ export class PendingRequests extends React.Component {
                 </Grid>
             ))
         : "No requests"}
+                        <Grid item xs={12}>
+
         <RidePassengersList 
             passengers={this.props.passengers}
+            rides={this.props.rides}
         />
+    </Grid>
     </Grid>
 );
     }}
