@@ -85,7 +85,6 @@ class PassengerRouteSelectionInner extends React.Component {
                                 </Grid>
                             </Grid>
                             <SimpleMenu
-                                buttonText="Select Office"
                                 handleSelection={(address) => {this.handleFilterringChange(address, this.state.direction)} }
                             />
                         </Grid>

@@ -35,8 +35,7 @@ class DriverRouteInputInner extends React.Component {
                     <ImportExport fontSize="large" />
                 </Button>
                 <SimpleMenu
-                    buttonText="Select Office"
-                    handleSelection={office => {
+                                handleSelection={office => {
                     this.props.changeRoutePoint(office, -1);
                     }}
                 />
