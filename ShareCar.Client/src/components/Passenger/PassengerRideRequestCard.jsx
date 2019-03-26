@@ -57,7 +57,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                         {
                             this.props.request.status === 0 || this.props.request.status === 1 ? (
                                 <Button
-                                    onClick={() => { this.cancelRequest(this.props.request.requestId) }}
+                                    onClick={() => { this.props.cancelRequest(this.props.request.requestId) }}
                                 >
                                     Cancel request
                         </Button>
@@ -74,7 +74,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                         <MapComponent
                             pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
                             route={this.props.request.route}
-                            driver={false}
+                            index={this.props.index}
                         />
                     </Card>
                 ) : (

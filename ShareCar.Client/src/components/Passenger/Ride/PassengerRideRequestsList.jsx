@@ -104,6 +104,7 @@ export class PassengerRideRequestsList extends React.Component {
                         request={req}
                         key={i}
                         index={i}
+                        cancelRequest ={id => {this.cancelRequest(id)}}
                     />
                 )}
                 <SnackBars
