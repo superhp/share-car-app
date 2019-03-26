@@ -9,6 +9,9 @@ namespace ShareCar.Dto
     {
         public string Email { get; set; }
         //public UserDto User { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+        public RouteDto Route { get; set; }
         public int RideId { get; set; }
         public RideDto Ride { get; set; }
         public bool Completed { get; set; }

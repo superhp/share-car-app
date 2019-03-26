@@ -17,7 +17,7 @@ export class WinnersList extends React.Component {
       {console.log(this.props)}
         {this.props.winnersList.map((winner, index) => (
           <Grid item xs={12}>
-            <Card className="rides-card">
+            <Card className="rides-card generic-card">
               <CardActions>
                 <Grid container>
                   <CardContent className="winner-mapping">

@@ -15,6 +15,7 @@ export class DriverRideRequestsList extends React.Component {
       <div>
         <PendingRequests
           rideRequests={this.props.requests}
+          rides={this.props.rides}
           selectedRide={this.props.selectedRide}
           handleRequestResponse={(button, response, requestId, rideId, driverEmail) =>
             this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
