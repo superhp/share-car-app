@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\ShareCar.Api"
+    "\\ShareCar.Api",
+    "\\ShareCar.Api\\ShareCar.Api"
   ],
-  "SelectedNode": "\\ShareCar.Api\\ShareCar.Api.sln",
+  "SelectedNode": "\\ShareCar.Api",
   "PreviewInSolutionExplorer": false
 }

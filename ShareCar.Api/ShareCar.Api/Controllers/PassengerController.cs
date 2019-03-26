@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Logic.User_Logic;
@@ -18,18 +19,21 @@ namespace ShareCar.Api.Controllers
     {
         private readonly IPassengerLogic _passengerLogic;
         private readonly IUserLogic _userLogic;
+        private readonly IUserRepository _userRepository;
 
 
-        public PassengerController(IPassengerLogic passengerLogic, IUserLogic userLogic)
+        public PassengerController(IPassengerLogic passengerLogic, IUserLogic userLogic, IUserRepository userRepository)
         {
             _passengerLogic = passengerLogic;
             _userLogic = userLogic;
+            _userRepository = userRepository;
         }
 
-        [HttpGet("rideId={rideId}")]
-        public IActionResult GetPassengersByRide(int rideId)
+        [HttpGet]
+        public async Task<IActionResult> GetPassengersByDriverAsync()
         {
-            var passengers = _passengerLogic.GetPassengersByRideId(rideId);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+            var passengers = _passengerLogic.GetPassengersByDriver(userDto.Email);
             var users = _userLogic.GetAllUsers();
 
             foreach (var passenger in passengers)

@@ -9,47 +9,35 @@ import {Status} from "../../../utils/status"
 const fontColor = {
     color: "#007BFF"
 };
-
-export const PendingRequests = (props) => (
+export class PendingRequests extends React.Component {
+    render() {
+        return (
     <Grid container justify="center">
         <Grid item xs={12}>
             <Typography style={fontColor} variant="title">
                 Requests
             </Typography>
         </Grid>
-        <Snackbar
-            anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center"
-            }}
-            open={props.clickedRequest}
-            onClose={() => props.handleClose()}
-            autoHideDuration={3000}
-            variant = {SnackbarVariants[0]}
-            message={<span id="message-id">Request accepted</span>}
-        />
-        {props.rideRequests.filter(x => x.rideId === props.selectedRide).length !== 0
-        ? props.rideRequests
-            .filter(x => x.rideId === props.selectedRide)
+        {this.props.rideRequests.filter(x => x.rideId === this.props.selectedRide).length !== 0
+        ? this.props.rideRequests
+            .filter(x => x.rideId === this.props.selectedRide)
             .map((req, index) => (
                 <Grid item xs={12}>
                     <Grid container>
                         <PendingRequestCard 
                             req={req}
                             index={index}
-                            onShowClick={() => {
-                                props.onShowClick(index);
-                                window.scrollTo(0, 0);
-                            }}
-                            onAcceptClick={() => props.sendRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
-                            onDenyClick={() => {props.sendRequestResponse(Status[2], 2, req.requestId, req.rideId)}}
+                            key={index}
+                            onAcceptClick={() => this.props.handleRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
+                            onDenyClick={() => {this.props.handleRequestResponse(Status[2], 2, req.requestId, req.rideId)}}
                         />
                     </Grid>
                 </Grid>
             ))
         : "No requests"}
         <RidePassengersList 
-            passengers={props.passengers}
+            passengers={this.props.passengers}
         />
     </Grid>
 );
+    }}
