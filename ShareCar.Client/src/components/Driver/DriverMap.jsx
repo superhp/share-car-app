@@ -74,7 +74,7 @@ export class DriverMap extends React.Component {
             this.addNewRoutePoint(address);
           }
         }
-      });
+      }).catch(error =>{});
   }
 
   addNewRoutePoint(address) {
