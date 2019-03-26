@@ -13,6 +13,7 @@ using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
 using System;
 using System.Linq;
+using ShareCar.Logic.Exceptions;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -48,6 +49,23 @@ namespace ShareCar.Logic.RideRequest_Logic
             if(addressId == -1)
             {
                 throw new ArgumentException("Failed to get address id");
+            }
+
+            var ride = _rideLogic.GetRideById(requestDto.RideId);
+
+            if (ride == null)
+            {
+                throw new RideNoLongerExistsException("Ride no longer exists");
+            }
+
+            if (ride.NumberOfSeats <= 0)
+            {
+                throw new NoSeatsInRideException("Ride doesn't have any seats left");
+            }
+
+            if (_rideLogic.IsRideRequested(requestDto.RideId, requestDto.PassengerEmail))
+            {
+                throw new AlreadyRequestedException("Ride is already requested");
             }
 
             requestDto.AddressId = addressId;
@@ -88,7 +106,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 }
                 else
                 {
-                    throw new ArgumentException("Selected ride deosn't have empty seats");
+                    throw new NoSeatsInRideException("Selected ride deosn't have empty seats");
                 }
             }
             else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)

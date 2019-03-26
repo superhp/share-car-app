@@ -4,10 +4,11 @@ using System.Text;
 
 namespace ShareCar.Logic.Exceptions
 {
-    public class NoSeatsInRideException : Exception
+    public class AlreadyRequestedException : Exception
     {
-        public NoSeatsInRideException(string message)
-    : base(message)
+
+        public AlreadyRequestedException(string message)
+            : base(message)
         {
 
         }

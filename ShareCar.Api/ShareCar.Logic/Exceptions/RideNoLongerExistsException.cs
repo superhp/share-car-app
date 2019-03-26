@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ShareCar.Logic.Exceptions
 {
-    public class NoSeatsInRideException : Exception
+    public class RideNoLongerExistsException: Exception
     {
-        public NoSeatsInRideException(string message)
+        public RideNoLongerExistsException(string message)
     : base(message)
         {
 

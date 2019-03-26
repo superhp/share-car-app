@@ -22,7 +22,7 @@ export const RidePassengersList = (props) => (
                   <Card>
                     <CardContent>
                       <Typography variant="title">
-                        #1 {pas.firstName + " " + pas.lastName}
+                         {pas.firstName + " " + pas.lastName}
                       </Typography>
                       <Typography variant="p">Phone {pas.phone}</Typography>
                     </CardContent>
