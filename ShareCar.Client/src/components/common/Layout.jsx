@@ -9,9 +9,11 @@ import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import NavBar from "./NavBar";
 import { LinksToHeadings } from "../LinkDictionary";
+import history from "../../helpers/history";
 
 import "../../styles/layout.css";
 import "../../styles/genericStyles.css";
+import { SecondaryHeader } from "./SecondaryHeader";
 
 type LayoutProps = {
   children?: React.Node
@@ -30,6 +32,14 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
     this.setState({ user: user });
   };
 
+  logout = () => {
+    this.authService.logout(this.userLoggedOut);
+  };
+
+  userLoggedOut = () => {
+    history.push("/login");
+  };
+
   render() {
     return (
       <div className="app">
@@ -41,11 +51,16 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
                 color="primary"
                 className="generic-container-color"
               >
-                <Toolbar>
-                  <Typography variant="title" color="inherit">
-                    {LinksToHeadings[this.props.location.pathname]}
-                  </Typography>
-                </Toolbar>
+                  <Toolbar>
+                      <Grid item xs={12} sm={8}>
+                        <Typography variant="title" color="inherit" className="header-text">
+                          {LinksToHeadings[this.props.location.pathname]}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <SecondaryHeader onClick={() => this.logout()}/>
+                      </Grid>
+                  </Toolbar>
               </AppBar>
             </Grid>
           </Grid>
