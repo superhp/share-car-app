@@ -93,20 +93,26 @@ namespace ShareCar.Logic.RideRequest_Logic
                 request.SeenByDriver = true;
                 request.SeenByPassenger = false;
             }
-            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
             var rideToUpdate = _rideLogic.GetRideById(request.RideId);
 
             if (request.Status == Dto.Status.ACCEPTED && previousStatus == Dto.Status.WAITING)
             {
                 if (rideToUpdate.NumberOfSeats != 0)
                 {
-                    _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                    rideToUpdate.NumberOfSeats--;
-                    _rideLogic.UpdateRide(rideToUpdate);
+                    if (_passengerLogic.IsUserAlreadyAPassenger(request.RideId, entityRequest.PassengerEmail))
+                    {
+                        throw new AlreadyAPassengerException("This user is already a passenger of the ride");
+                    }
+                    else
+                    {
+                        _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
+                        rideToUpdate.NumberOfSeats--;
+                        _rideLogic.UpdateRide(rideToUpdate);
+                    }
                 }
                 else
                 {
-                    throw new NoSeatsInRideException("Selected ride deosn't have empty seats");
+                    throw new NoSeatsInRideException("Ride doesn't have empty seats left");
                 }
             }
             else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)
@@ -115,6 +121,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 rideToUpdate.NumberOfSeats++;
                 _rideLogic.UpdateRide(rideToUpdate);
             }
+            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
         }
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)

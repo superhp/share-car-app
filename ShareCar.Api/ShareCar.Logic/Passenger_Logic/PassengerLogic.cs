@@ -68,5 +68,10 @@ namespace ShareCar.Logic.Passenger_Logic
         {
             _passengerRepository.RemovePassenger(email, rideId);
         }
+
+        public bool IsUserAlreadyAPassenger(int rideId, string email)
+        {
+            return _passengerRepository.IsUserAlreadyAPassenger(rideId, email);
+        }
     }
 }

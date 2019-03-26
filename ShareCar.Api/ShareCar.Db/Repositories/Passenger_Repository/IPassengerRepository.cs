@@ -13,5 +13,7 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
         IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email);
         IEnumerable<Passenger> GetPassengersByDriver(string email);
         void RespondToRide(bool response, int rideId, string passengerEmail);
+        bool IsUserAlreadyAPassenger(int rideId, string email);
+
     }
 }

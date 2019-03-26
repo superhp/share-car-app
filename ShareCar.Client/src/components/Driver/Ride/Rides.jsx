@@ -107,7 +107,7 @@ export class Rides extends React.Component {
       if (res.status === 200) {
         if (response === 1) {
           this.showSnackBar("Request accepted", 0)
-          var request = this.state.rideRequests.find(x => x.requestId === requestId);
+          var request = this.state.requests.find(x => x.requestId === requestId);
           this.setState(prevState => ({
             passengers: [...prevState.passengers, { firstName: request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone }],
             clickedRequest: true,
@@ -123,8 +123,12 @@ export class Rides extends React.Component {
 
       }
     }).catch((error) => {
+      if(error.response && error.response.status === 409){
+        this.showSnackBar(error.response.data, 2)
+      }
+      else{
       this.showSnackBar("Failed to respond to request", 2)
-      console.error(error);
+      }
     });
   }
 

@@ -4,12 +4,13 @@ using System.Text;
 
 namespace ShareCar.Logic.Exceptions
 {
-    public class AlreadyRequestedException : Exception
+    public class AlreadyAPassengerException : Exception
     {
-        public AlreadyRequestedException(string message)
-            : base(message)
+        public AlreadyAPassengerException(string message)
+    : base(message)
         {
 
         }
     }
 }
+

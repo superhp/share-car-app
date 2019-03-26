@@ -34,7 +34,7 @@ namespace ShareCar.Api.Middleware
                 {
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 }
-                else if (ex is AlreadyRequestedException || ex is RideNoLongerExistsException || ex is NoSeatsInRideException)
+                else if (ex is AlreadyRequestedException || ex is RideNoLongerExistsException || ex is NoSeatsInRideException || ex is AlreadyAPassengerException)
                 {
                     httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
                     await httpContext.Response.WriteAsync(ex.Message);

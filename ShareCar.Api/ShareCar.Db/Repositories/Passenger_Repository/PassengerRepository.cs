@@ -26,13 +26,6 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         public void AddNewPassenger(Passenger passenger)
         {
-                var p = _databaseContext.Passengers.FirstOrDefault(x => x.Email == passenger.Email && x.RideId == passenger.RideId);
-
-                if(p != null)
-                {
-                throw new ArgumentException("Passenger has already registered to ride.");
-                }
-
                 _databaseContext.Passengers.Add(passenger);
                 _databaseContext.SaveChanges();
 
@@ -62,6 +55,13 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
         {
             Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == email);
             _databaseContext.Remove(passenger);
+        }
+
+        public bool IsUserAlreadyAPassenger(int rideId, string email)
+        {
+            var passenger = _databaseContext.Passengers.FirstOrDefault(x => x.Email == email && x.RideId == rideId);
+
+            return passenger != null;
         }
     }
 }

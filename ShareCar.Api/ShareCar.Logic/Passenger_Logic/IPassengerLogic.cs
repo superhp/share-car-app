@@ -13,5 +13,6 @@ namespace ShareCar.Logic.Passenger_Logic
         List<PassengerDto> GetUnrepondedPassengersByEmail(string email);
         List<PassengerDto> GetPassengersByDriver(string email);
         void RespondToRide(bool response, int rideId, string passengerEmail);
+        bool IsUserAlreadyAPassenger(int rideId, string email);
     }
 }
