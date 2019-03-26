@@ -6,8 +6,8 @@ namespace ShareCar.Logic.Exceptions
 {
     public class RideNoLongerExistsException: Exception
     {
-        public RideNoLongerExistsException(string message)
-    : base(message)
+        public RideNoLongerExistsException()
+    : base("Ride no longer exists")
         {
 
         }

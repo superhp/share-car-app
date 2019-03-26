@@ -6,8 +6,8 @@ namespace ShareCar.Logic.Exceptions
 {
     public class NoSeatsInRideException : Exception
     {
-        public NoSeatsInRideException(string message)
-    : base(message)
+        public NoSeatsInRideException()
+    : base("Ride doesn't have any seats left")
         {
 
         }

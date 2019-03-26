@@ -55,17 +55,17 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             if (ride == null)
             {
-                throw new RideNoLongerExistsException("Ride no longer exists");
+                throw new RideNoLongerExistsException();
             }
 
             if (ride.NumberOfSeats <= 0)
             {
-                throw new NoSeatsInRideException("Ride doesn't have any seats left");
+                throw new NoSeatsInRideException();
             }
 
             if (_rideLogic.IsRideRequested(requestDto.RideId, requestDto.PassengerEmail))
             {
-                throw new AlreadyRequestedException("Ride is already requested");
+                throw new AlreadyRequestedException();
             }
 
             requestDto.AddressId = addressId;
@@ -101,7 +101,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 {
                     if (_passengerLogic.IsUserAlreadyAPassenger(request.RideId, entityRequest.PassengerEmail))
                     {
-                        throw new AlreadyAPassengerException("This user is already a passenger of the ride");
+                        throw new AlreadyAPassengerException();
                     }
                     else
                     {

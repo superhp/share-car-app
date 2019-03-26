@@ -62,7 +62,7 @@ namespace ShareCar.Api.Controllers
 
             if(ride == null)
             {
-                throw new RideNoLongerExistsException("Ride no longer exists");
+                throw new RideNoLongerExistsException();
             }
 
             _requestLogic.AddRequest(request, ride.DriverEmail);

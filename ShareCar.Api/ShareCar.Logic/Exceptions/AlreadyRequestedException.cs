@@ -6,8 +6,8 @@ namespace ShareCar.Logic.Exceptions
 {
     public class AlreadyRequestedException : Exception
     {
-        public AlreadyRequestedException(string message)
-            : base(message)
+        public AlreadyRequestedException()
+            : base("Ride is already requested")
         {
 
         }
