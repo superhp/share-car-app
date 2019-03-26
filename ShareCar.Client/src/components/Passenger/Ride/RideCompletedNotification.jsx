@@ -53,7 +53,7 @@ class RideCompletedNotification extends React.Component {
                             Yes
                         </Button>
                         <Button onClick={() => {
-                                if(this.props.rides.length - 1 === this.state.ridesId.length - 1) this.handleClose();
+                                if(this.props.rides.length - 1 === this.state.ridesId.length) this.handleClose();
                                 this.sendResponse(false, ride.rideId);
                                 this.setState({ridesId: [...this.state.ridesId, ride.rideId]});
                             }} 
