@@ -7,7 +7,7 @@ type User = {
 };
 
 type UserProfileData = 
-user: {
+ {
   firstName: string,
   lastName: string,
   profilePicture: string,

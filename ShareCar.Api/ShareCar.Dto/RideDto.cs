@@ -29,6 +29,8 @@ namespace ShareCar.Dto
         public DateTime RideDateTime { get; set; }
         public List<RideRequestDto> Requests { get; set; }
         public int NumberOfSeats { get; set; }
+        public bool isActive { get; set; }
+
 
     }
 }

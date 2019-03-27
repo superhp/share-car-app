@@ -121,7 +121,7 @@ export class ViewRideRequests extends React.Component {
       })
       .catch((error) => {
         this.showSnackBar("Failed to load requests", 2)
-            });
+      });
   }
 
   sendRequestResponse(button, response, requestId, rideId, driverEmail) {
@@ -146,9 +146,12 @@ export class ViewRideRequests extends React.Component {
           this.setState({ clickedRequest: true });
         }
       }
-    }).catch((error)=>{
-      this.showSnackBar("Failed to respond to request", 2)
-      console.error(error);
+    }).catch((error) => {
+      if (error.response && error.response.status === 409) {
+        this.showSnackBar(error.response.data, 2)
+      } else {
+        this.showSnackBar("Failed to request ride", 2)
+      }
     });
   }
 
@@ -170,7 +173,7 @@ export class ViewRideRequests extends React.Component {
       <div>
         {this.props.driver ? (
           <DriverRideRequestsList
-          showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
+            showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
             onRequestClick={this.handleRequestClick.bind(this)}
             selectedRide={this.props.selectedRide}
             rideRequests={
@@ -183,7 +186,7 @@ export class ViewRideRequests extends React.Component {
           />
         ) : (
             <PassengerRideRequestsList
-            showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
+              showSnackBar={(message, variant) => { this.showSnackBar(message, variant) }}
               requests={this.state.passengerRequests}
               cancelRequest={id => { this.cancelRequest(id) }}
             />

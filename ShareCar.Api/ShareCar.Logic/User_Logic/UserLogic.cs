@@ -85,7 +85,10 @@ namespace ShareCar.Logic.User_Logic
                 int userPoints = CountPoints(user.Email);
                 if(i<5)
                 {
-                    userWithPoints.Add(MapToDto(user), userPoints);
+                    if (userPoints > 0)
+                    {
+                        userWithPoints.Add(MapToDto(user), userPoints);
+                    }
                 }
                 else
                 {

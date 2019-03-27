@@ -99,6 +99,15 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
         }
 
+        public bool IsRideRequested(int rideId, string passengerEmail)
+        {
+            var ride = _databaseContext.Rides.Include(x => x.Requests).Single(x => x.RideId == rideId);
+            if(ride.Requests.Where(x => x.PassengerEmail == passengerEmail && (x.Status == Status.ACCEPTED || x.Status == Status.WAITING || x.Status == Status.DENIED)).Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
     

@@ -5,16 +5,16 @@ import Snackbar from "@material-ui/core/Snackbar";
 import {SnackbarVariants} from "../../common/SnackbarVariants"
 import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
-import {Status} from "../../../utils/status"
-const fontColor = {
-    color: "#007BFF"
-};
+import {Status} from "../../../utils/status";
+import "../../../styles/genericStyles.css";
+
 export class PendingRequests extends React.Component {
     render() {
         return (
+            
     <Grid container justify="center">
         <Grid item xs={12}>
-            <Typography style={fontColor} variant="title">
+            <Typography className="generic-color" variant="title">
                 Requests
             </Typography>
         </Grid>

@@ -23,7 +23,6 @@ class VerificationCode extends Component {
       if (error.response.status === 401) {
         this.props.showSnackBar("Incorrect code.", 2);
       } else {
-        console.log(error);
         this.props.showSnackBar("Something went wrong", 2);
       }
     })

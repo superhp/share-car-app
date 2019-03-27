@@ -7,7 +7,6 @@ import "../../styles/genericStyles.css";
 
 export const AddressInput = React.forwardRef((props, ref) => (
     <div className="form-group">
-        
         <AlgoliaPlaces
             onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => props.onChange(suggestion, props.index)}
             onClear={() => props.onChange(null)}
@@ -15,7 +14,11 @@ export const AddressInput = React.forwardRef((props, ref) => (
         />
         {
             props.deletable ?
-                <Close onClick={() => { props.removeRoutePoint(props.index) }} />
+                <Close 
+                className="remove-route-point"
+
+                onClick={() => { props.removeRoutePoint(props.index) }}
+                 />
                 :
                 <div></div>
         }

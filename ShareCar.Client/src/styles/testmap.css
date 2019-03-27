@@ -71,15 +71,17 @@ div.map-input-selection {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: center;
-  margin-top: 10%;
+  justify-content: left;
+  margin-top: 3%;
+  margin-left: 3%;
   z-index: 999;
 }
 div.map-input-selection .form-group {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   flex: 0 0 100%;
+  justify-content: left;
+
 }
 span.ap-dropdown-menu {
   z-index: 99999 !important;
@@ -118,4 +120,18 @@ button.select-office-menu {
   background-color: #007bff;
   color: white;
   z-index: 1;
+}
+button.change-direction {
+  background-color: #007bff;
+  color: white;
+  z-index: 1;
+}
+button.remove-route-point {
+  background-color: #007bff;
+  color: white;
+  z-index: 1;
+}
+.driver-route-input{
+  justify-content: left !important;
+
 }

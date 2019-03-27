@@ -22,7 +22,7 @@ import { OfficeAddresses } from "../../utils/AddressData";
 import "./../../styles/genericStyles.css";
 import "../../styles/testmap.css";
 import SnackBars from "../common/Snackbars";
-import {SnackbarVariants} from "../common/SnackbarVariants";
+import { SnackbarVariants } from "../common/SnackbarVariants";
 import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
 
 
@@ -31,6 +31,8 @@ export class PassengerMap extends React.Component {
     passengerAddress: null,
     direction: "from",
     routes: [],
+    pickUpPointFeature: null,
+    currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
     currentRouteIndex: 0,
     showDriver: false,
     snackBarMessage: "",
@@ -69,16 +71,44 @@ export class PassengerMap extends React.Component {
     return { map, vectorSource };
   }
 
-  updateMap() {
+removeRoute(routeFeature, fromFeature, toFeature){
+  if (routeFeature)
+  this.vectorSource.removeFeature(routeFeature);
+if (fromFeature)
+  this.vectorSource.removeFeature(fromFeature);
+if (toFeature)
+  this.vectorSource.removeFeature(toFeature);
+}
+
+  displayRoute() {
     this.setState({ showDriver: true });
-    this.vectorSource.clear();
+    const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
+    this.removeRoute(routeFeature, fromFeature, toFeature);
+    const { passengerAddress } = this.state;
+ 
+    if (this.state.routes.length > 0) {
+      const route = this.state.routes[this.state.currentRouteIndex];
+      const routeFeature = createRouteFeature(route.geometry);
+      const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
+      const toFeature = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
+
+      this.setState({ currentRoute: { ...this.state.currentRoute, routeFeature: routeFeature, fromFeature: fromFeature, toFeature: toFeature } });
+      this.vectorSource.addFeature(routeFeature);
+      this.vectorSource.addFeature(fromFeature);
+      this.vectorSource.addFeature(toFeature);
+    }
+  }
+
+  changePickUpPoint() {
+    if (this.state.pickUpPointFeature){
+      this.vectorSource.removeFeature(this.state.pickUpPointFeature);
+    }
     const { passengerAddress } = this.state;
     if (passengerAddress) {
       const { longitude, latitude } = passengerAddress;
-      this.vectorSource.addFeature(createPointFeature(longitude, latitude));
-    }
-    if (this.state.routes.length > 0) {
-      this.vectorSource.addFeature(createRouteFeature(this.state.routes[this.state.currentRouteIndex].geometry));
+      var feature = createPointFeature(longitude, latitude);
+      this.setState({ pickUpPointFeature: feature })
+      this.vectorSource.addFeature(feature);
     }
   }
 
@@ -90,14 +120,21 @@ export class PassengerMap extends React.Component {
         this.autocompleteInput.value = response.display_name;
         address.longitude = longitude;
         address.latitude = latitude;
-        this.setState({ passengerAddress: address }, this.updateMap);
+        this.setState({ passengerAddress: address }, this.changePickUpPoint);
       });
   }
 
   onMeetupAddressChange(newAddress) {
-    this.autocompleteInput.value = addressToString(newAddress);
-    this.setState({ passengerAddress: newAddress }, this.updateMap);
-    if (newAddress) centerMap(newAddress.longitude, newAddress.latitude, this.map);
+    if (newAddress) {
+      var address = addressToString(newAddress);
+      if (address) {
+        this.autocompleteInput.value = address;
+        this.setState({ passengerAddress: newAddress }, this.changePickUpPoint);
+        if (newAddress) {
+          centerMap(newAddress.longitude, newAddress.latitude, this.map);
+        }
+      }
+    }
   }
 
   getAllRoutes(address, direction) {
@@ -107,15 +144,14 @@ export class PassengerMap extends React.Component {
       routeDto = { AddressTo: address };
     else
       routeDto = { AddressFrom: address };
-
     api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
       if (res.status === 200 && res.data !== "") {
-        this.setState({ routes: res.data }, this.updateMap);
+        const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
+        this.removeRoute(routeFeature, fromFeature, toFeature);
+        this.setState({ routes: res.data, currentRoute: { ...this.state.currentRoute, routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
       }
     }).catch((error) => {
-
-      this.showSnackBar("Failed to load routes...", 2)
-
+      this.showSnackBar("Failed to load routes", 2)
     });
   }
 
@@ -138,25 +174,29 @@ export class PassengerMap extends React.Component {
         this.showSnackBar("Ride requested!", 0)
 
       })
-      .catch((error) => {
-        this.showSnackBar("Failed to request ride...", 2)
-      });
+        .catch((error) => {
+          if (error.response && error.response.status === 409) {
+            this.showSnackBar(error.response.data, 2)
+          } else {
+            this.showSnackBar("Failed to request ride", 2)
+          }
+        });
     }
   }
 
-showSnackBar(message, variant){
-  this.setState({
-    snackBarClicked: true,
-    snackBarMessage: message,
-    snackBarVariant: SnackbarVariants[variant]
-  });
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
     setTimeout(
       function () {
         this.setState({ snackBarClicked: false });
       }.bind(this),
       3000
-  );
-}
+    );
+  }
 
   render() {
     return (
@@ -189,7 +229,7 @@ showSnackBar(message, variant){
               onClick={() => this.setState({
                 currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
               },
-                this.updateMap
+                this.displayRoute
               )}
               text="View Previous Route"
             />
@@ -197,7 +237,7 @@ showSnackBar(message, variant){
               onClick={() => this.setState({
                 currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
               },
-                this.updateMap
+                this.displayRoute
               )}
               text="View Next Route"
             />

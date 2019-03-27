@@ -307,5 +307,10 @@ namespace ShareCar.Logic.Ride_Logic
         {
             _rideRepository.UpdateRide(_mapper.Map<RideDto, Ride>(ride));
         }
+
+        public bool IsRideRequested(int rideId, string email)
+        {
+            return _rideRepository.IsRideRequested(rideId, email);
+        }
     }
 }

@@ -73,16 +73,23 @@ namespace ShareCar.Logic.Route_Logic
                 }
                 route.Rides = rides;
                 if (route.Rides.Count != 0)
-                {                  
-                    mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
-                    mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
-                    mappedRoute.FromId = route.FromId;
-                    mappedRoute.Geometry = route.Geometry;
-                    foreach(var ride in route.Rides)
+                {
+                    foreach (var ride in route.Rides)
                     {
-                        mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
+                        if (ride.NumberOfSeats > 0 && ride.RideDateTime >= DateTime.Now)
+                        {
+                            mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
+                        }
                     }
-                    dtoRoutes.Add(mappedRoute);
+                    if (mappedRoute.Rides.Count > 0)
+                    {
+                        mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
+                        mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
+                        mappedRoute.FromId = route.FromId;
+                        mappedRoute.Geometry = route.Geometry;
+
+                        dtoRoutes.Add(mappedRoute);
+                    }
                 }
             }
             return dtoRoutes;
