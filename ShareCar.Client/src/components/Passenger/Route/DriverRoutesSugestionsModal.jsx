@@ -29,16 +29,11 @@ class DriverRoutesSugestionsModal extends React.Component {
                 <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
                     Show drivers
                 </Button>
-                <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
-                    <DialogTitle id="simple-dialog-title">Drivers for this route</DialogTitle>
-                    <div>
-                        <List>
-                          <DriverRoutesSugestions
-                            rides={this.props.rides}
-                            onRegister={ride => this.props.onRegister(ride)}
-                          />
-                        </List>
-                    </div>
+                <Dialog className="sugestion-modal-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>
+                    <DriverRoutesSugestions
+                      rides={this.props.rides}
+                      onRegister={ride => this.props.onRegister(ride)}
+                    />
                 </Dialog>
             </div>
       );

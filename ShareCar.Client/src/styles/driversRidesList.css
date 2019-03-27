@@ -11,6 +11,24 @@ div.container {
   padding-top: 10%;
 }
 
+/* .sugestion-modal-dialog {
+  height: 90%;
+  width: 80%;
+} */
+
+.drivers-list-root {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+  background-color: red;
+}
+
+.drivers-list {
+  /* width: 500;
+  height: 450; */
+}
+
 h2 {
   text-align: center;
   flex: 0 0 100%;
