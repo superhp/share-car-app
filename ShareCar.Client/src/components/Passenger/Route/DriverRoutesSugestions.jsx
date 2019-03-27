@@ -11,8 +11,7 @@ import "../../../styles/driversRidesList.css";
 export const DriverRoutesSugestions = (props) => (
     <div className="drivers-list-root">
         <List 
-            className="drivers-list"
-            subheader={<ListSubheader component="div">Drivers for this route</ListSubheader>}
+            subheader={<ListSubheader component="div" className="drivers-list-header">Drivers for this route</ListSubheader>}
         >
             {props.rides.map((ride, i) => (
                 <DriverRouteSuggestionsItem

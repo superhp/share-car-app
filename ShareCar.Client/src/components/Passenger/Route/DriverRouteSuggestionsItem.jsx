@@ -14,7 +14,7 @@ import "../../../styles/genericStyles.css";
 import "../../../styles/testmap.css";
 
 export const DriverRouteSuggestionsItem = props => (
-    <ListItem alignItems="flex-start">
+    <ListItem className="drivers-list">
         <ListItemText
             primary={<span>{props.ride.driverFirstName} {props.ride.driverLastName}</span>}
             secondary={
@@ -33,7 +33,7 @@ export const DriverRouteSuggestionsItem = props => (
         />
         <Button
             color="primary"
-            variant="contained"
+            variant="outlined"
             onClick={() => props.onRegister()}
         >
             Register

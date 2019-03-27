@@ -24,6 +24,15 @@ div.container {
   background-color: white;
 }
 
+.drivers-list-header {
+  text-align: center;
+}
+
+.drivers-list {
+  align-items: flex-start;
+  vertical-align: middle;
+}
+
 h2 {
   text-align: center;
   flex: 0 0 100%;
