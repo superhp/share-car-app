@@ -21,12 +21,7 @@ div.container {
   flex-wrap: wrap;
   justify-content: space-around;
   overflow: hidden;
-  background-color: red;
-}
-
-.drivers-list {
-  /* width: 500;
-  height: 450; */
+  background-color: white;
 }
 
 h2 {
