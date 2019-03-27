@@ -108,26 +108,35 @@ export class Rides extends React.Component {
         if (response === 1) {
           this.showSnackBar("Request accepted", 0)
           var request = this.state.requests.find(x => x.requestId === requestId);
-          this.setState(prevState => ({
-            passengers: [...prevState.passengers, { firstName: request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone }],
+          this.setState({
+            passengers: [...this.state.passengers, {
+              firstName: request.passengerFirstName,
+              lastName: request.passengerLastName,
+              phone: request.passengerPhone,
+              longitude: request.longitude,
+              latitude: request.latitude,
+              route: request.route,
+              rideId: request.rideId,
+            }],
             clickedRequest: true,
-            }));
+          });
+
         } else {
           this.showSnackBar("Request denied", 0)
         }
-        this.setState({ clickedRequest: true,
+        this.setState({
+          clickedRequest: true,
           requests: this.state.requests.filter(
             x => x.requestId !== requestId
           ),
         });
-
       }
     }).catch((error) => {
-      if(error.response && error.response.status === 409){
+      if (error.response && error.response.status === 409) {
         this.showSnackBar(error.response.data, 2)
       }
-      else{
-      this.showSnackBar("Failed to respond to request", 2)
+      else {
+        this.showSnackBar("Failed to respond to request", 2)
       }
     });
   }
@@ -147,7 +156,6 @@ export class Rides extends React.Component {
             unseenRequests.push(this.state.requests[i].requestId);
           }
         }
-
         if (unseenRequests.length !== 0) {
           api.post("RideRequest/seenDriver", unseenRequests).then(res => {
           });
@@ -158,34 +166,10 @@ export class Rides extends React.Component {
       });
   }
 
-  sendRides() {
-
-    var p = this.state.rides.length !== 0
-      ?
-      this.state.clicked
-        ? this.state.rides.filter(
-          x => x.rideId === this.state.selectedRideId
-        )
-        : this.state.rides
-      : [];
-
-  }
-
-  sendPassengers() {
-    return this.state.rides.length !== 0
-   ? this.state.passengers.length !== 0 
-        ?this.state.clicked
-          ? this.state.passengers.filter(
-            x => x.rideId === this.state.selectedRideId
-          )
-          : []
-        : []
-      : [];
-  }
   sendRequests() {
     return this.state.rides.length !== 0
-   ? this.state.requests.length !== 0 
-        ?this.state.clicked
+      ? this.state.requests.length !== 0
+        ? this.state.clicked
           ? this.state.requests.filter(
             x => x.rideId === this.state.selectedRideId
           )
@@ -197,39 +181,39 @@ export class Rides extends React.Component {
 
     return (
       <div>
-          <DriversRidesList
-            onDelete={this.handleRideDelete.bind(this)}
-            handleRequestResponse={(button, response, requestId, rideId, driverEmail) => {this.sendRequestResponse(button, response, requestId, rideId, driverEmail)}}
-            selectedRide={this.state.selectedRideId}
-            rideClicked={this.state.clicked}
-            onRideClick={this.handleClick.bind(this)}
-            rides={this.state.rides.length !== 0
-              ?
-              this.state.clicked
-                ? this.state.rides.filter(
+        <DriversRidesList
+          onDelete={this.handleRideDelete.bind(this)}
+          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => { this.sendRequestResponse(button, response, requestId, rideId, driverEmail) }}
+          selectedRide={this.state.selectedRideId}
+          rideClicked={this.state.clicked}
+          onRideClick={this.handleClick.bind(this)}
+          rides={this.state.rides.length !== 0
+            ?
+            this.state.clicked
+              ? this.state.rides.filter(
+                x => x.rideId === this.state.selectedRideId
+              )
+              : this.state.rides
+            : []}
+          passengers={this.state.rides.length !== 0
+            ? this.state.passengers.length !== 0
+              ? this.state.clicked
+                ? this.state.passengers.filter(
                   x => x.rideId === this.state.selectedRideId
                 )
-                : this.state.rides
-              : []}
-            passengers={this.state.rides.length !== 0
-              ? this.state.passengers.length !== 0 
-                   ?this.state.clicked
-                     ? this.state.passengers.filter(
-                       x => x.rideId === this.state.selectedRideId
-                     )
-                     : []
-                   : []
-                 : []}
-            requests={this.state.rides.length !== 0
-              ? this.state.requests.length !== 0 
-                   ?this.state.clicked
-                     ? this.state.requests.filter(
-                       x => x.rideId === this.state.selectedRideId
-                     )
-                     : []
-                   : []
-                 : []}
-          />
+                : []
+              : []
+            : []}
+          requests={this.state.rides.length !== 0
+            ? this.state.requests.length !== 0
+              ? this.state.clicked
+                ? this.state.requests.filter(
+                  x => x.rideId === this.state.selectedRideId
+                )
+                : []
+              : []
+            : []}
+        />
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}

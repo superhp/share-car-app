@@ -12,7 +12,10 @@ const fontColor = {
 export class PendingRequests extends React.Component {
     render() {
         return (
+            
     <Grid container justify="center">
+    {console.log("------------------")}
+    {console.log(this.props)}
         <Grid item xs={12}>
             <Typography style={fontColor} variant="title">
                 Requests

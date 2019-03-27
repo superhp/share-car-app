@@ -76,7 +76,7 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     foreach (var ride in route.Rides)
                     {
-                        if (ride.NumberOfSeats > 0)
+                        if (ride.NumberOfSeats > 0 && ride.RideDateTime >= DateTime.Now)
                         {
                             mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
                         }

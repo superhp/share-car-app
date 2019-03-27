@@ -6,25 +6,28 @@ import CardContent from "@material-ui/core/CardContent";
 import "../../../styles/genericStyles.css";
 import RidePassengerCard from "./RidePassengerCard";
 const fontColor = {
-    color: "#007BFF"
+  color: "#007BFF"
 };
-
-export const RidePassengersList = (props) => (
-    props.passengers != null ? (
-      <Grid container justify="center">
-            <Grid item xs={12}>
+export class RidePassengersList extends React.Component {
+  render() {
+    return (
+      this.props.passengers != null ? (
+        <Grid container justify="center">
+          <Grid item xs={12}>
             <Typography style={fontColor} variant="title">
               Passengers
             </Typography>
           </Grid>
-          {props.passengers.length !== 0
-            ? props.passengers.map((passenger, index) => (
-                  <RidePassengerCard 
-                  passenger = {passenger}
-                  index={index}
-                  />
-              ))
+          {this.props.passengers.length !== 0
+            ? this.props.passengers.map((passenger, index) => (
+              <RidePassengerCard
+                passenger={passenger}
+                index={index}
+              />
+            ))
             : "Ride doesn't have any passengers"}
         </Grid>
       ) : null
-);
+    );
+  }
+}

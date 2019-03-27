@@ -112,7 +112,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 }
                 else
                 {
-                    throw new NoSeatsInRideException("Ride doesn't have empty seats left");
+                    throw new NoSeatsInRideException();
                 }
             }
             else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)
@@ -151,6 +151,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
                     dtoRequests[count].PassengerFirstName = user.FirstName;
                     dtoRequests[count].PassengerLastName = user.LastName;
+                    dtoRequests[count].PassengerPhone = user.Phone;
                 }
                 else
                 {
