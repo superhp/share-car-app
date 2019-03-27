@@ -19,15 +19,23 @@ export const DriverRouteSuggestionsItem = props => (
             primary={<span>{props.ride.driverFirstName} {props.ride.driverLastName}</span>}
             secondary={
                 <React.Fragment>
-                    <Typography component="span" style={{display: 'inline'}} color="textPrimary">
-                        Time: 
-                    </Typography>
-                    {props.ride.rideDateTime}
-                    <br/>
-                    <Typography component="span" style={{display: 'inline'}} color="textPrimary">
-                        Phone: 
-                    </Typography>
-                    {props.ride.driverPhone}
+                    {props.ride.rideDateTime !== null ? 
+                        <div>
+                            <Typography component="span" style={{display: 'inline'}} color="textPrimary">
+                                Time: &nbsp;
+                            </Typography>
+                            {props.ride.rideDateTime}
+                            <br/>
+                        </div>
+                    : ""}
+                    {props.ride.driverPhone !== null ? 
+                        <div>
+                            <Typography component="span" style={{display: 'inline'}} color="textPrimary">
+                                Phone: &nbsp;
+                            </Typography>
+                            {props.ride.driverPhone}
+                        </div>
+                    : ""}
                 </React.Fragment>
             }
         />
