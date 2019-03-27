@@ -175,7 +175,6 @@ if (toFeature)
       })
         .catch((error) => {
           if (error.response && error.response.status === 409) {
-            console.log(error.response)
             this.showSnackBar(error.response.data, 2)
           } else {
             this.showSnackBar("Failed to request ride", 2)

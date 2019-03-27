@@ -75,7 +75,6 @@ export class PassengerRideRequestsList extends React.Component {
         api
             .get("RideRequest/passenger")
             .then(response => {
-                console.log(response)
                 if (response.data !== "") {
                     this.setState({ requests: response.data });
                 }

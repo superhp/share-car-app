@@ -21,9 +21,7 @@ let moment = require("moment");
 const style = {
   margin: "1em 0",
 }
-const fontColor = {
-  color: "#007BFF"
-}
+
 export class DriversRidesList extends React.Component {
 
   render() {
@@ -47,7 +45,7 @@ export class DriversRidesList extends React.Component {
             <Grid container >
             <Grid item xs={8}>
                   <CardContent > 
-                    <Typography  style={fontColor} component="p">
+                    <Typography  className="generic-color" component="p">
                       From {req.fromStreet} {req.fromNumber}, {req.fromCity}
                     </Typography>
                     <Typography  color="textSecondary">

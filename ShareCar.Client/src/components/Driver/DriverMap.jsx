@@ -62,7 +62,6 @@ export class DriverMap extends React.Component {
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         if (!response.address) {
-          console.log(response.error)
           return;
         } else {
           var address = fromLocationIqResponse(response);

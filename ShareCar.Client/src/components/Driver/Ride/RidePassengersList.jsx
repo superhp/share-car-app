@@ -5,16 +5,14 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import "../../../styles/genericStyles.css";
 import RidePassengerCard from "./RidePassengerCard";
-const fontColor = {
-  color: "#007BFF"
-};
+
 export class RidePassengersList extends React.Component {
   render() {
     return (
       this.props.passengers != null ? (
         <Grid container justify="center">
           <Grid item xs={12}>
-            <Typography style={fontColor} variant="title">
+            <Typography className="generic-color" variant="title">
               Passengers
             </Typography>
           </Grid>

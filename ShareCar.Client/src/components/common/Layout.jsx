@@ -20,7 +20,7 @@ type LayoutProps = {
 };
 
 class Layout extends React.Component<LayoutProps, MyProfileState> {
-  state: MyProfileState = { loading: true, user: null };
+  state : UserProfileData = { loading: true, user: null};
   userService = new UserService();
   authService = new AuthenticationService();
 

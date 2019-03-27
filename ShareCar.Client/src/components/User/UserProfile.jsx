@@ -30,7 +30,6 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 
   updateUserProfile = (user: UserProfileData) => {
-    console.log(user);
     this.setState({ loading: false, user: user });
   };
 
