@@ -174,7 +174,7 @@ showSnackBar(message, variant){
             }}
           />
           {this.state.showDriver && this.state.routes.length > 0 ? (
-            <DriverRoutesSugestions
+            <DriverRoutesSugestionsModal 
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
             />
@@ -183,7 +183,6 @@ showSnackBar(message, variant){
             )}
         </div>
         <div id="map"></div>
-        <DriverRoutesSugestionsModal />
         {this.state.routes.length > 1
           ? <div>
             <PassengerNavigationButton
