@@ -8,13 +8,8 @@ div.container {
 }
 
 .drivers-sugestion-modal {
-  padding-top: 10%;
+  padding-top: 7vh;
 }
-
-/* .sugestion-modal-dialog {
-  height: 90%;
-  width: 80%;
-} */
 
 .drivers-list-root {
   display: flex;

@@ -6,6 +6,7 @@ import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
+import Grid from "@material-ui/core/Grid";
 
 import { centerMap } from "./../../utils/mapUtils";
 import { DriverRoutesSugestions } from "./Route/DriverRoutesSugestions";
@@ -201,6 +202,7 @@ if (toFeature)
   render() {
     return (
       <div>
+        <div id="map"></div>
         <div className="passengerForm">
           <PassengerRouteSelection
             direction={this.state.direction}
@@ -222,9 +224,8 @@ if (toFeature)
               <div></div>
             )}
         </div>
-        <div id="map"></div>
         {this.state.routes.length > 1
-          ? <div>
+          ? <Grid>
             <PassengerNavigationButton
               onClick={() => this.setState({
                 currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
@@ -242,7 +243,7 @@ if (toFeature)
               text="View Next Route"
             />
 
-          </div>
+          </Grid>
           : <div />
         }
         <SnackBars
