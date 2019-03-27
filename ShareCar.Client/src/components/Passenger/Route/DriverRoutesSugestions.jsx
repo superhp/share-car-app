@@ -1,10 +1,9 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 
-import { DriverRouteSuggestionsItem } from "./DriverRouteSuggestionsItem";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
+
+import { DriverRouteSuggestionsItem } from "./DriverRouteSuggestionsItem";
 
 import "../../../styles/driversRidesList.css";
 

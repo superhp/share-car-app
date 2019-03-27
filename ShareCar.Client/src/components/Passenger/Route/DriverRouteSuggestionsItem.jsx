@@ -1,12 +1,7 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Phone from "@material-ui/icons/Phone";
 import Button from "@material-ui/core/Button";
-import Timer from "@material-ui/icons/Timer";
 
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
@@ -24,7 +19,7 @@ export const DriverRouteSuggestionsItem = props => (
                             <Typography component="span" style={{display: 'inline'}} color="textPrimary">
                                 Time: &nbsp;
                             </Typography>
-                            {props.ride.rideDateTime}
+                            {props.ride.rideDateTime.split("T").join(" ")}
                             <br/>
                         </div>
                     : ""}
