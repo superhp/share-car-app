@@ -10,6 +10,7 @@ using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Logic.Exceptions;
 
 namespace ShareCar.Api.Controllers
 {
@@ -57,9 +58,14 @@ namespace ShareCar.Api.Controllers
             }
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
-            string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
+            var ride = _rideLogic.GetRideById(request.RideId);
 
-            _requestLogic.AddRequest(request, email);
+            if(ride == null)
+            {
+                throw new RideNoLongerExistsException();
+            }
+
+            _requestLogic.AddRequest(request, ride.DriverEmail);
 
             return Ok();
         }

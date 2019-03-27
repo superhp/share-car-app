@@ -13,6 +13,7 @@ using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
 using System;
 using System.Linq;
+using ShareCar.Logic.Exceptions;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -50,6 +51,23 @@ namespace ShareCar.Logic.RideRequest_Logic
                 throw new ArgumentException("Failed to get address id");
             }
 
+            var ride = _rideLogic.GetRideById(requestDto.RideId);
+
+            if (ride == null)
+            {
+                throw new RideNoLongerExistsException();
+            }
+
+            if (ride.NumberOfSeats <= 0)
+            {
+                throw new NoSeatsInRideException();
+            }
+
+            if (_rideLogic.IsRideRequested(requestDto.RideId, requestDto.PassengerEmail))
+            {
+                throw new AlreadyRequestedException();
+            }
+
             requestDto.AddressId = addressId;
             _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
@@ -75,20 +93,26 @@ namespace ShareCar.Logic.RideRequest_Logic
                 request.SeenByDriver = true;
                 request.SeenByPassenger = false;
             }
-            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
             var rideToUpdate = _rideLogic.GetRideById(request.RideId);
 
             if (request.Status == Dto.Status.ACCEPTED && previousStatus == Dto.Status.WAITING)
             {
                 if (rideToUpdate.NumberOfSeats != 0)
                 {
-                    _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                    rideToUpdate.NumberOfSeats--;
-                    _rideLogic.UpdateRide(rideToUpdate);
+                    if (_passengerLogic.IsUserAlreadyAPassenger(request.RideId, entityRequest.PassengerEmail))
+                    {
+                        throw new AlreadyAPassengerException();
+                    }
+                    else
+                    {
+                        _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
+                        rideToUpdate.NumberOfSeats--;
+                        _rideLogic.UpdateRide(rideToUpdate);
+                    }
                 }
                 else
                 {
-                    throw new ArgumentException("Selected ride deosn't have empty seats");
+                    throw new NoSeatsInRideException();
                 }
             }
             else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)
@@ -97,6 +121,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 rideToUpdate.NumberOfSeats++;
                 _rideLogic.UpdateRide(rideToUpdate);
             }
+            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
         }
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)
@@ -126,6 +151,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
                     dtoRequests[count].PassengerFirstName = user.FirstName;
                     dtoRequests[count].PassengerLastName = user.LastName;
+                    dtoRequests[count].PassengerPhone = user.Phone;
                 }
                 else
                 {

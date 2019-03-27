@@ -10,7 +10,7 @@ export const UserProfileForm = (props) => (
     <div className="container-fluid">
         <div className="container profile-container">
           <form className="profile-form col-sm-6">
-            <img className="thumbnail" src={props.user.pictureUrl} alt="" />
+            <img className="thumbnail" src={props.user.profilePicture} alt="" />
             <UserProfileFormField 
                 displayName="Your Email"
                 disabled="true"

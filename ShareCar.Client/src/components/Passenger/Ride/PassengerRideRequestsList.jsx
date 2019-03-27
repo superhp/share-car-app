@@ -75,7 +75,6 @@ export class PassengerRideRequestsList extends React.Component {
         api
             .get("RideRequest/passenger")
             .then(response => {
-                console.log(response)
                 if (response.data !== "") {
                     this.setState({ requests: response.data });
                 }
@@ -111,6 +110,7 @@ export class PassengerRideRequestsList extends React.Component {
                         request={req}
                         key={i}
                         index={i}
+                        cancelRequest ={id => {this.cancelRequest(id)}}
                     />
                 )}
                 </div>

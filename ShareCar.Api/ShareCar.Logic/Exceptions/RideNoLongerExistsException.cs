@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ShareCar.Logic.Exceptions
 {
-    public class NoSeatsInRideException : Exception
+    public class RideNoLongerExistsException: Exception
     {
-        public NoSeatsInRideException()
-    : base("Ride doesn't have any seats left")
+        public RideNoLongerExistsException()
+    : base("Ride no longer exists")
         {
 
         }

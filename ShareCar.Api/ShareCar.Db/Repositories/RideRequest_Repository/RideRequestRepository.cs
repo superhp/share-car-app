@@ -99,6 +99,5 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             _databaseContext.SaveChanges();
         }
 
-
     }
 }

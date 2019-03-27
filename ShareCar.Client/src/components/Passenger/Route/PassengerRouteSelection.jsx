@@ -85,7 +85,6 @@ class PassengerRouteSelectionInner extends React.Component {
                                 </Grid>
                             </Grid>
                             <SimpleMenu
-                                buttonText="Select Office"
                                 handleSelection={(address) => {this.handleFilterringChange(address, this.state.direction)} }
                             />
                         </Grid>
@@ -95,5 +94,4 @@ class PassengerRouteSelectionInner extends React.Component {
         );
     }
 }
-
 export const PassengerRouteSelection = React.forwardRef((props, ref) => <PassengerRouteSelectionInner {...props} innerRef={ref} />);

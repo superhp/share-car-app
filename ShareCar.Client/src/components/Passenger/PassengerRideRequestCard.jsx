@@ -22,7 +22,7 @@ export default class PassengerRideRequestsCard extends React.Component {
         return (
             <div>
 
-                <Card className="request-card generic-card">
+                <Card className="request-card">
 
                     <CardContent >
                         <Typography variant="headline">
@@ -36,7 +36,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                         </Typography>
                         <Typography variant="headline">
 
-                            {this.props.request.driverFirstName} {this.props.request.driverLastName}
+                            Name: {this.props.request.driverFirstName} {this.props.request.driverLastName}
                         </Typography>
                         <Typography color="textSecondary">
                             Date: <Moment date={this.props.request.rideDate} format="MM-DD HH:mm" />
@@ -57,7 +57,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                         {
                             this.props.request.status === 0 || this.props.request.status === 1 ? (
                                 <Button
-                                    onClick={() => { this.cancelRequest(this.props.request.requestId) }}
+                                    onClick={() => { this.props.cancelRequest(this.props.request.requestId) }}
                                 >
                                     Cancel request
                         </Button>
@@ -70,16 +70,12 @@ export default class PassengerRideRequestsCard extends React.Component {
 
 
                 {this.state.show ? (
-                    <Card className="request-card requestMap generic-card">
-                        <Grid container justify="center">
-                            <Grid item xs={12} zeroMinWidth>
-                                <MapComponent
-                                    pickUpPoint={{ longitude: this.props.request.longitude, latitude: this.props.request.latitude }}
-                                    route={this.props.request.route}
-                                    driver={false}
-                                />
-                            </Grid>
-                        </Grid>
+                    <Card className="request-card requestMap">
+                        <MapComponent
+                            pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
+                            route={this.props.request.route}
+                            index={this.props.index}
+                        />
                     </Card>
                 ) : (
                         <div></div>
