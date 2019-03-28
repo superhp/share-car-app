@@ -15,6 +15,7 @@ import { DriverRideRequestsList } from "./DriverRideRequestList";
 import "../../../styles/driversRidesList.css";
 import "../../../styles/genericStyles.css";
 import "../../../styles/driversRidesList.css";
+import { PendingRequests } from "./PendingRequests";
 
 let moment = require("moment");
 
@@ -36,20 +37,6 @@ export class DriversRidesList extends React.Component {
   }
 
   render() {
-    let detailedRideInfo = this.props.rideClicked ? (
-      <div className="detailedInfoContainer">
-        <DriverRideRequestsList
-          open={this.state.open}
-          requests={this.props.requests}
-          rides={this.props.rides}
-          passengers={this.props.passengers}
-          selectedRide={this.props.selectedRide}
-          rideClicked={this.props.rideClicked}
-          handleClose={() => this.handleClose()}
-          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
-        />
-      </div>
-    ) : null;
     return (
       <Grid container>
         {this.props.rides.length !== 0 ? this.props.rides.map((req, index) => (
@@ -98,7 +85,15 @@ export class DriversRidesList extends React.Component {
             </Card>
           </Grid>
         )) : "You have no rides"}
-{detailedRideInfo}
+        <PendingRequests
+          open={this.state.open}
+          rideRequests={this.props.requests}
+          rides={this.props.rides}
+          passengers={this.props.passengers}
+          selectedRide={this.props.selectedRide}
+          handleClose={() => this.handleClose()}
+          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
+        />
       </Grid>
     );
   }

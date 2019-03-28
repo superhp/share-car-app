@@ -188,29 +188,16 @@ export class Rides extends React.Component {
           rideClicked={this.state.clicked}
           onRideClick={this.handleClick.bind(this)}
           rides={this.state.rides.length !== 0
-            ?
-            this.state.clicked
-              ? this.state.rides.filter(
-                x => x.rideId === this.state.selectedRideId
-              )
-              : this.state.rides
+            ? this.state.rides
             : []}
           passengers={this.state.rides.length !== 0
             ? this.state.passengers.length !== 0
-              ? this.state.clicked
-                ? this.state.passengers.filter(
-                  x => x.rideId === this.state.selectedRideId
-                )
-                : []
-              : []
+              ? this.state.passengers
+              : [] 
             : []}
           requests={this.state.rides.length !== 0
             ? this.state.requests.length !== 0
-              ? this.state.clicked
-                ? this.state.requests.filter(
-                  x => x.rideId === this.state.selectedRideId
-                )
-                : []
+              ? this.state.requests
               : []
             : []}
         />
