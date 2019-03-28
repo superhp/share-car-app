@@ -7,6 +7,9 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import "../../../styles/genericStyles.css";
 import MapComponent from "../../Maps/MapComponent";
+import ListItemText from "@material-ui/core/ListItemText";
+import { ListItem } from "@material-ui/core";
+
 export default class RidePassengerCard extends React.Component {
     state = {
         show: false
@@ -14,21 +17,33 @@ export default class RidePassengerCard extends React.Component {
     render() {
         return (
             <Grid item xs={12}>
-                <Card className="rides-card generic-card">
-                    <Grid container justify="center">
-                        <CardContent>
-                            <Typography variant="title">
-                                {this.props.passenger.firstName + " " + this.props.passenger.lastName}
-                            </Typography>
-                            <Typography variant="p">Phone {this.props.passenger.phone}</Typography>
-                            <CardActions>
-                                <Button
-                                    onClick={() => { this.setState({ show: !this.state.show }) }}
-                                >
-                                    Show on map
-                                </Button>
-                            </CardActions>
-                        </CardContent>
+                <Card className="passengers-card generic-card">
+                    <Grid container justify="center" className="passengers-list">
+                        <Grid item xs={8}>
+                            <ListItemText
+                                primary={<span>{this.props.passenger.firstName} {this.props.passenger.lastName}</span>}
+                                secondary={
+                                    <React.Fragment>
+                                        {this.props.passenger.phone !== null ? 
+                                            <div>
+                                                <Typography component="span" style={{display: 'inline'}} color="textPrimary">
+                                                    Phone: &nbsp;
+                                                </Typography>
+                                                {this.props.passenger.phone}
+                                            </div>
+                                        : ""}
+                                    </React.Fragment>
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button
+                                variant="outlined"
+                                onClick={() => { this.setState({ show: !this.state.show }) }}
+                            >
+                                Show on map
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Card>
                     {this.state.show ?
@@ -44,8 +59,7 @@ export default class RidePassengerCard extends React.Component {
                             </Grid>
                         </Card>
                         : <div></div>}
-        
             </Grid>
-                );
-                    }
+        );
+    }
 }

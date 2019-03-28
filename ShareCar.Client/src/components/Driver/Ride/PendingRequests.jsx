@@ -15,12 +15,10 @@ import "../../../styles/genericStyles.css";
 
 export class PendingRequests extends React.Component {
     render() {
-        console.log(this.props.rideRequests);
-        console.log(this.props.selectedRide);
         return (
             <Dialog onClose={() => this.props.handleClose()} aria-labelledby="simple-dialog-title" open={this.props.open}>
                 <div className="pending-requests">
-                    <DialogTitle>Requests</DialogTitle>
+                    <DialogTitle className="dialog-title">Requests</DialogTitle>
                     <List>
                     {this.props.rideRequests.filter(x => x.rideId === this.props.selectedRide).length !== 0
                     ? this.props.rideRequests
@@ -38,7 +36,7 @@ export class PendingRequests extends React.Component {
                         ))
                     : "No requests"}
                     </List>
-                    <DialogTitle>Passengers</DialogTitle>
+                    <DialogTitle className="dialog-title">Passengers</DialogTitle>
                     <RidePassengersList 
                         passengers={this.props.passengers}
                         rides={this.props.rides}

@@ -89,4 +89,8 @@ div.rides-card {
     margin-top: 10px;
 }
 
-
+div.passengers-card {
+  margin: 1em;
+  margin-top: 10px;
+  padding: 8px 4px;
+}
