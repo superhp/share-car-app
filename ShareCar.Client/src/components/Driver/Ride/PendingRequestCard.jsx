@@ -20,7 +20,7 @@ export class PendingRequestCard extends React.Component {
                 <Card className="rides-card generic-card">
                     <Grid container justify="center">
                         <Grid item xs={12} zeroMinWidth>
-                            <Grid container justify="center">
+                            <Grid container justify="center" className="request-person-info">
                                 {!this.props.req.seenByDriver ? (
                                     <Badge
                                         className="new-badge"
@@ -36,32 +36,44 @@ export class PendingRequestCard extends React.Component {
                         </Grid>
                         <Grid item xs={12} zeroMinWidth>
                             <CardActions>
-                                <Button
-                                    onClick={() => { this.setState({ show: !this.state.show }) }}
-                                >
-                                    Show on map
-                    </Button>
-                                {this.props.req.status !== 4 ?
-                                    <div>
+                                <Grid container spacing={16}>
+                                    <Grid item xs={4} className="pending-request-button">
                                         <Button
-                                            color="primary"
-                                            onClick={() => this.props.onAcceptClick()}
+                                            variant="outlined"
+                                            onClick={() => { this.setState({ show: !this.state.show }) }}
                                         >
-                                            Accept
-                    </Button>
-                                        <Button
-                                            color="secondary"
-                                            onClick={() => this.props.onDenyClick()}
-                                        >
-                                            Deny
-                    </Button>
-                                    </div>
-                                    : <p>
-                                        Request was canceled
-                    </p>
-                                }
+                                            Show on map
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        {this.props.req.status !== 4 ?
+                                            <Grid container spacing={8}>
+                                                <Grid item xs={6} className="pending-request-button">
+                                                    <Button
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        onClick={() => this.props.onAcceptClick()}
+                                                    >
+                                                        Accept
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item xs={6} className="pending-request-button">
+                                                    <Button
+                                                        color="secondary"
+                                                        variant="outlined"
+                                                        onClick={() => this.props.onDenyClick()}
+                                                    >
+                                                        Deny
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                            : <p>
+                                                Request was canceled
+                                            </p>
+                                        }
+                                    </Grid>
+                                </Grid>
                             </CardActions>
-
                         </Grid>
                     </Grid>
                 </Card>

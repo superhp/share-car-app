@@ -7,6 +7,10 @@
   width: 300px;
 }
 
+.pending-requests {
+  background-color: #f7f7f7;
+}
+
 .generic-container-color {
   background-color: #007bff !important;
 }
