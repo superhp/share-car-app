@@ -13,22 +13,24 @@ export default class RidePassengerCard extends React.Component {
     }
     render() {
         return (
-            <div>
-                <Card className="generic-card passenger-card">
-                    <CardContent>
-                        <Typography variant="title">
-                            {this.props.passenger.firstName + " " + this.props.passenger.lastName}
-                        </Typography>
-                        <Typography variant="p">Phone {this.props.passenger.phone}</Typography>
-                        <CardActions>
-                            <Button
-                                onClick={() => { this.setState({ show: !this.state.show }) }}
-                            >
-                                Show on map
-                    </Button>
+            <Grid item xs={12}>
+                <Card className="rides-card generic-card">
+                    <Grid container justify="center">
+                        <CardContent>
+                            <Typography variant="title">
+                                {this.props.passenger.firstName + " " + this.props.passenger.lastName}
+                            </Typography>
+                            <Typography variant="p">Phone {this.props.passenger.phone}</Typography>
+                            <CardActions>
+                                <Button
+                                    onClick={() => { this.setState({ show: !this.state.show }) }}
+                                >
+                                    Show on map
+                                </Button>
                             </CardActions>
-                </CardContent>
-            </Card>
+                        </CardContent>
+                    </Grid>
+                </Card>
                     {this.state.show ?
                         <Card className="requestMap rides-card generic-card">
                             <Grid container justify="center">
@@ -43,7 +45,7 @@ export default class RidePassengerCard extends React.Component {
                         </Card>
                         : <div></div>}
         
-</div>
+            </Grid>
                 );
                     }
 }
