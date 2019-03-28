@@ -10,7 +10,7 @@ import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "./../../../styles/genericStyles.css";
 
-class PassengerRouteSelectionInner extends React.Component {
+export class PassengerRouteSelection extends React.Component {
 
     state = {
         address: this.props.initialAddress,
@@ -37,9 +37,9 @@ class PassengerRouteSelectionInner extends React.Component {
                         justify="center"
                     >
                         <AddressInput
+                            displayName={this.props.displayName}
                             placeholder="Type in meetup point or click on the map"
                             onChange={(suggestion) => this.props.onMeetupAddressChange(fromAlgoliaAddress(suggestion))}
-                            ref={this.props.innerRef}
                         />
                     </Grid>
                     <Card className="paper-background">
@@ -57,7 +57,7 @@ class PassengerRouteSelectionInner extends React.Component {
                                     <Radio
                                         color="primary"
                                         checked={this.props.direction === "from"}
-                                        onClick={() => {this.handleFilterringChange(this.state.address, "from")} }
+                                        onClick={() => { this.handleFilterringChange(this.state.address, "from") }}
                                         value="to"
                                         name="radio-button-demo"
                                         aria-label="A"
@@ -77,7 +77,7 @@ class PassengerRouteSelectionInner extends React.Component {
                                     <Radio
                                         color="primary"
                                         checked={this.props.direction === "to"}
-                                        onClick={() => {this.handleFilterringChange(this.state.address, "to")} }
+                                        onClick={() => { this.handleFilterringChange(this.state.address, "to") }}
                                         value="from"
                                         name="radio-button-demo"
                                         aria-label="A"
@@ -85,7 +85,7 @@ class PassengerRouteSelectionInner extends React.Component {
                                 </Grid>
                             </Grid>
                             <SimpleMenu
-                                handleSelection={(address) => {this.handleFilterringChange(address, this.state.direction)} }
+                                handleSelection={(address) => { this.handleFilterringChange(address, this.state.direction) }}
                             />
                         </Grid>
                     </Card>
@@ -94,4 +94,3 @@ class PassengerRouteSelectionInner extends React.Component {
         );
     }
 }
-export const PassengerRouteSelection = React.forwardRef((props, ref) => <PassengerRouteSelectionInner {...props} innerRef={ref} />);

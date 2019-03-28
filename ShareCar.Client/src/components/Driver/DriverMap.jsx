@@ -43,6 +43,7 @@ export class DriverMap extends React.Component {
 
   // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented
   changeRoutePoint(address, index) {
+    if(address){
     index++;
     const { longitude, latitude } = address
     var routePoints = this.state.routePoints;
@@ -54,6 +55,7 @@ export class DriverMap extends React.Component {
       this.vectorSource.addFeature(feature);
       routePoints[index] = { address: address, feature: feature, displayName: addressToString(address) }
       this.setState({ routePoints: routePoints }, this.displayNewRoute);
+    }
     }
   }
 
@@ -81,9 +83,7 @@ export class DriverMap extends React.Component {
     const { longitude, latitude } = address;
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
-    var routePoints = this.state.routePoints;
-    routePoints.push({ address: address, feature: feature, displayName: addressToString(address) });
-    this.setState({ routePoints: routePoints }, () => {
+    this.setState({ routePoints: [...this.state.routePoints, { address: address, feature: feature, displayName: addressToString(address) }]}, () => {
       if (this.state.routePoints.length > 1) {
         this.displayNewRoute();
       }
@@ -118,22 +118,6 @@ export class DriverMap extends React.Component {
 
     routePoints.splice(index + 1, 1);
     this.setState({ routePoints: routePoints }, this.displayNewRoute);
-  }
-
-  manageRoutePointInputs(e) {
-    if (e) {
-      if (!this.autocompleteInputs.includes(e.autocompleteElem)) {
-        if (this.autocompleteInputs.length >= 1 && this.autocompleteInputs.length < this.state.routePoints.length) {
-          this.autocompleteInputs[this.autocompleteInputs.length - 1].value = this.state.routePoints[this.autocompleteInputs.length].displayName;
-        }
-        if (this.autocompleteInputs.length === this.state.routePoints.length - 1) {
-          e.autocompleteElem.value = "";
-          e.autocompleteElem.placeholder = this.state.isRouteToOffice ? "Select from location" : "Select to location";
-        }
-
-        this.autocompleteInputs.push(e.autocompleteElem);
-      }
-    }
   }
 
   handleDirectionChange() {
@@ -175,7 +159,6 @@ export class DriverMap extends React.Component {
                 changeDirection={() => this.handleDirectionChange()}
                 routePoints={this.state.routePoints}
                 removeRoutePoint={index => this.removeRoutePoint(index)}
-                ref={e => this.manageRoutePointInputs(e)}
               />
         </div>
         <div id="map"></div>
