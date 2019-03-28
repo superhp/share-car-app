@@ -14,7 +14,7 @@ button.ap-input-icon {
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
-  position: absolute;
+  position: relative;
   left: 0;
   top: 70px;
   width: 100%;

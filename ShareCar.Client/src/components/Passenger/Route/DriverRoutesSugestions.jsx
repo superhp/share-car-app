@@ -1,12 +1,17 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
+
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
 
 import { DriverRouteSuggestionsItem } from "./DriverRouteSuggestionsItem";
 
+import "../../../styles/driversRidesList.css";
+
 export const DriverRoutesSugestions = (props) => (
-    <Grid container justify="center" item xs={10}>
-        <Card>
+    <div className="drivers-list-root">
+        <List 
+            subheader={<ListSubheader component="div" className="drivers-list-header">Drivers for this route</ListSubheader>}
+        >
             {props.rides.map((ride, i) => (
                 <DriverRouteSuggestionsItem
                     key={i}
@@ -14,6 +19,6 @@ export const DriverRoutesSugestions = (props) => (
                     onRegister={() => props.onRegister(ride)}
                 />
             ))}
-        </Card>
-    </Grid>
+        </List>
+    </div>
 );
