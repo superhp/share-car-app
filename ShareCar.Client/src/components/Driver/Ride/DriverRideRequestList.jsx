@@ -20,6 +20,8 @@ export class DriverRideRequestsList extends React.Component {
           handleRequestResponse={(button, response, requestId, rideId, driverEmail) =>
             this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
           passengers={this.props.passengers}
+          handleClose={() => this.props.handleClose()}
+          open={this.props.open}
         />
       </div>
     );
