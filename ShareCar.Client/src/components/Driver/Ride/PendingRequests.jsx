@@ -17,8 +17,8 @@ export class PendingRequests extends React.Component {
     render() {
         return (
             <Dialog onClose={() => this.props.handleClose()} aria-labelledby="simple-dialog-title" open={this.props.open}>
-                <DialogTitle>Requests</DialogTitle>
                 <div>
+                    <DialogTitle>Requests</DialogTitle>
                     <List>
                     {this.props.rideRequests.filter(x => x.rideId === this.props.selectedRide).length !== 0
                     ? this.props.rideRequests
@@ -36,6 +36,7 @@ export class PendingRequests extends React.Component {
                         ))
                     : "No requests"}
                     </List>
+                    <DialogTitle>Passengers</DialogTitle>
                     <RidePassengersList 
                         passengers={this.props.passengers}
                         rides={this.props.rides}

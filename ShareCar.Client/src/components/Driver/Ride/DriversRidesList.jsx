@@ -72,7 +72,10 @@ export class DriversRidesList extends React.Component {
                         </Button>
                         <Button
                           size="small"
-                          onClick={() => this.props.onDelete(req)}
+                          onClick={() => {
+                            this.props.onDelete(req);
+                            this.props.onRideClick(req.rideId);
+                          }}
                           variant="contained"
                           color="secondary"
                           className="generic-button"
