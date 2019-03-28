@@ -42,7 +42,7 @@ export class DriversRidesList extends React.Component {
         {this.props.rides.length !== 0 ? this.props.rides.map((req, index) => (
           <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card generic-card">
-            <Grid container >
+            <Grid container className="active-rides-card-container">
             <Grid item xs={8}>
                   <CardContent > 
                     <Typography  className="generic-color" component="p">
