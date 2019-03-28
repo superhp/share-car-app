@@ -31,6 +31,12 @@ export class AddressInput extends React.Component {
             <div className="form-group">
                 <AlgoliaPlaces
                     onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => this.props.onChange(suggestion, this.props.index)}
+                    onBlur={() => {
+                        if(this.placesAutocomplete.autocomplete[0].value === "" && this.props.displayName){
+                            this.placesAutocomplete.setVal(this.props.displayName);
+
+                        }
+                    }}
                     onClear={() => this.props.onChange(null)}
                     ref={this.algoliaRef}
                 />
