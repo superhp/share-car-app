@@ -34,7 +34,7 @@ export class PendingRequests extends React.Component {
                                 />
                             </ListItem>
                         ))
-                    : "No requests"}
+                    : <div className="no-requests-div">No requests</div>}
                     </List>
                     <DialogTitle className="dialog-title">Passengers</DialogTitle>
                     <RidePassengersList 

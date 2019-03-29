@@ -14,7 +14,6 @@ import { DriverRideRequestsList } from "./DriverRideRequestList";
 
 import "../../../styles/driversRidesList.css";
 import "../../../styles/genericStyles.css";
-import "../../../styles/driversRidesList.css";
 import { PendingRequests } from "./PendingRequests";
 
 let moment = require("moment");
@@ -56,7 +55,7 @@ export class DriversRidesList extends React.Component {
                     </Typography>
                   </CardContent>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={4} className="list-buttons">
                         <Button
                           onClick={() => {
                             this.props.onRideClick(req.rideId);

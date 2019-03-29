@@ -22,7 +22,7 @@ export class RidePassengersList extends React.Component {
                 />
               </ListItem>
             ))
-            : "Ride doesn't have any passengers"}
+            : <div className="no-requests-div">Ride doesn't have any passengers</div>}
         </List>
       ) : null
     );
