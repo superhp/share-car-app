@@ -72,24 +72,35 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
 
-        public void UpdateRequest(RideRequestDto request)
+        public void UpdateRequest(RideRequestDto request, string updaterEmail)
         {
+
+
+
             var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);
             var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
 
-            if(request.Status == previousStatus)
+            if(request.Status == previousStatus || request.Status == Dto.Status.WAITING)
             {
                 return; // Should exception be thrown ? This is unexpected behavior, though returning prevents any undesired consequences
             }
 
             if (request.Status == Dto.Status.CANCELED)
             {
+                if(entityRequest.PassengerEmail != updaterEmail)
+                {
+                    throw new UnauthorizedAccessException("Only creator of request can cancel it");
+                }
                 request.SeenByDriver = false;
                 request.SeenByPassenger = true;
 
             }
             else
             {
+                if (entityRequest.DriverEmail != updaterEmail)
+                {
+                    throw new UnauthorizedAccessException("Only driver of requested ride can set request status to ACCEPT, DELETED, DENIED");
+                }
                 request.SeenByDriver = true;
                 request.SeenByPassenger = false;
             }

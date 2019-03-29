@@ -83,14 +83,16 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateRequests([FromBody] RideRequestDto request)
+        public async Task<IActionResult> UpdateRequestsAsync([FromBody] RideRequestDto request)
         {
             if (request == null)
             {
                 return BadRequest();
             }
 
-            _requestLogic.UpdateRequest(request);
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+            _requestLogic.UpdateRequest(request, userDto.Email);
 
             return Ok();
 

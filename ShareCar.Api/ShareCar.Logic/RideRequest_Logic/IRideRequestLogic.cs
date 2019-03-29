@@ -9,7 +9,7 @@ namespace ShareCar.Logic.RideRequest_Logic
     {
         IEnumerable<RideRequestDto> GetPassengerRequests(string email);
         IEnumerable<RideRequestDto> GetDriverRequests(string email);
-        void UpdateRequest(RideRequestDto request);
+        void UpdateRequest(RideRequestDto request, string updaterEmail);
         void AddRequest(RideRequestDto request, string driverEmail);
         void SeenByPassenger(int[] requests);
         void SeenByDriver(int[] requests);
