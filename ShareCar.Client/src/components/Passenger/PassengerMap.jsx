@@ -72,21 +72,21 @@ export class PassengerMap extends React.Component {
     return { map, vectorSource };
   }
 
-removeRoute(routeFeature, fromFeature, toFeature){
-  if (routeFeature)
-  this.vectorSource.removeFeature(routeFeature);
-if (fromFeature)
-  this.vectorSource.removeFeature(fromFeature);
-if (toFeature)
-  this.vectorSource.removeFeature(toFeature);
-}
+  removeRoute(routeFeature, fromFeature, toFeature) {
+    if (routeFeature)
+      this.vectorSource.removeFeature(routeFeature);
+    if (fromFeature)
+      this.vectorSource.removeFeature(fromFeature);
+    if (toFeature)
+      this.vectorSource.removeFeature(toFeature);
+  }
 
   displayRoute() {
     this.setState({ showDriver: true });
     const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
     this.removeRoute(routeFeature, fromFeature, toFeature);
     const { passengerAddress } = this.state;
- 
+
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
       const routeFeature = createRouteFeature(route.geometry);
@@ -101,7 +101,7 @@ if (toFeature)
   }
 
   changePickUpPoint() {
-    if (this.state.pickUpPointFeature){
+    if (this.state.pickUpPointFeature) {
       this.vectorSource.removeFeature(this.state.pickUpPointFeature);
     }
     const { passengerAddress } = this.state;
@@ -118,18 +118,16 @@ if (toFeature)
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
         const address = fromLocationIqResponse(response);
-        this.autocompleteInput.value = response.display_name;
         address.longitude = longitude;
         address.latitude = latitude;
         this.setState({ passengerAddress: address }, this.changePickUpPoint);
-      });
+      }).catch();
   }
 
   onMeetupAddressChange(newAddress) {
     if (newAddress) {
       var address = addressToString(newAddress);
       if (address) {
-        this.autocompleteInput.value = address;
         this.setState({ passengerAddress: newAddress }, this.changePickUpPoint);
         if (newAddress) {
           centerMap(newAddress.longitude, newAddress.latitude, this.map);
@@ -139,21 +137,23 @@ if (toFeature)
   }
 
   getAllRoutes(address, direction) {
-    let routeDto;
-    this.setState({ direction: direction });
-    if (direction === "to")
-      routeDto = { AddressTo: address };
-    else
-      routeDto = { AddressFrom: address };
-    api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
-      if (res.status === 200 && res.data !== "") {
-        const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
-        this.removeRoute(routeFeature, fromFeature, toFeature);
-        this.setState({ routes: res.data, currentRoute: { ...this.state.currentRoute, routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
-      }
-    }).catch((error) => {
-      this.showSnackBar("Failed to load routes", 2)
-    });
+    if (address) {
+      let routeDto;
+      this.setState({ direction: direction });
+      if (direction === "to")
+        routeDto = { AddressTo: address };
+      else
+        routeDto = { AddressFrom: address };
+      api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
+        if (res.status === 200 && res.data !== "") {
+          const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
+          this.removeRoute(routeFeature, fromFeature, toFeature);
+          this.setState({ routes: res.data, currentRoute: { ...this.state.currentRoute, routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
+        }
+      }).catch((error) => {
+        this.showSnackBar("Failed to load routes", 2)
+      });
+    }
   }
 
   handleRegister(ride) {
@@ -207,13 +207,9 @@ if (toFeature)
           <PassengerRouteSelection
             direction={this.state.direction}
             initialAddress={OfficeAddresses[0]}
+            displayName={addressToString(this.state.passengerAddress)}
             onChange={(address, direction) => this.getAllRoutes(address, direction)}
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
-            ref={e => {
-              if (e) {
-                this.autocompleteInput = e.autocompleteElem;
-              }
-            }}
           />
           {this.state.showDriver && this.state.routes.length > 0 ? (
             <DriverRoutesSugestionsModal 

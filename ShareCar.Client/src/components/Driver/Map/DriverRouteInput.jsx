@@ -9,7 +9,7 @@ import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 import "../../../styles/testmap.css";
 import SimpleMenu from "../../common/SimpleMenu";
 
-class DriverRouteInputInner extends React.Component {
+export class DriverRouteInput extends React.Component {
 
     render() {
         return (
@@ -22,7 +22,10 @@ class DriverRouteInputInner extends React.Component {
                         deletable={index !== this.props.routePoints.length - 1}
                         removeRoutePoint={id => { this.props.removeRoutePoint(id) }}
                         onChange={(suggestion, index) => this.props.changeRoutePoint(fromAlgoliaAddress(suggestion), index)}
-                        ref={this.props.innerRef}
+                          displayName={(index + 1) < this.props.routePoints.length
+                            ? this.props.routePoints[index + 1].displayName
+                            : ""
+                        }
                     />
                 ))}
 
@@ -46,5 +49,3 @@ class DriverRouteInputInner extends React.Component {
         );
     }
 }
-
-export const DriverRouteInput = React.forwardRef((props, ref) => <DriverRouteInputInner {...props} innerRef={ref} />);
