@@ -192,12 +192,12 @@ export class Rides extends React.Component {
             : []}
           passengers={this.state.rides.length !== 0
             ? this.state.passengers.length !== 0
-              ? this.state.passengers
+              ? this.state.passengers.filter(x => x.rideId === this.state.selectedRideId)
               : [] 
             : []}
           requests={this.state.rides.length !== 0
             ? this.state.requests.length !== 0
-              ? this.state.requests
+              ? this.state.requests.filter(x => x.rideId === this.state.selectedRideId)
               : []
             : []}
         />
