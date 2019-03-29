@@ -59,11 +59,11 @@ class RideSchedulerHelper extends React.Component {
                     <Grid item xs={12}>
                         <TimePickers onTimeSet={value => this.props.handleTime(value)} />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className="create-rides-button">
                         <Button
                             disabled={this.props.selectedDates.length === 0 ? true : false}
-                            variant="contained"
-                            color="inherit"
+                            variant="outlined"
+                            color="primary"
                             onClick={() => this.props.handleCreate()}
                         >
                             Create Rides
