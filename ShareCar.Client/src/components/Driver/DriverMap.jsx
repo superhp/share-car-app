@@ -21,11 +21,13 @@ import { routeStyles } from "./../../utils/mapStyles";
 import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
+
 export class DriverMap extends React.Component {
   constructor(props) {
     super(props);
     this.autocompleteInputs = [];
   }
+
   state = {
     isRideSchedulerVisible: false,
     isRouteToOffice: true, // can the fromAddress be changed by clicking on the map?
@@ -39,6 +41,7 @@ export class DriverMap extends React.Component {
     this.map = map;
     this.vectorSource = vectorSource;
     this.addNewRoutePoint(OfficeAddresses[0])
+
   }
 
   // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented

@@ -48,6 +48,22 @@ export class PassengerMap extends React.Component {
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
   }
 
+componentWillReceiveProps(nextProps){
+  this.vectorSource.clear();
+  this.setState({    
+    passengerAddress: null,
+    direction: "from",
+    routes: [],
+    pickUpPointFeature: null,
+    currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
+    currentRouteIndex: 0,
+    showDriver: false,
+    snackBarMessage: "",
+    snackBarClick: false,
+    snackBarVariant: null,});
+  this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+}
+
   initializeMap() {
     const vectorSource = new SourceVector();
     const vectorLayer = new LayerVector({ source: vectorSource });

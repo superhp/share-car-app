@@ -26,6 +26,12 @@ export class Rides extends React.Component {
     this.getDriverRequests();
   }
 
+componentWillReceiveProps(props){
+  this.getDriversRides();
+  this.getDriverPassengers();
+  this.getDriverRequests();
+}
+
   showSnackBar(message, variant) {
     this.setState({
       snackBarClicked: true,

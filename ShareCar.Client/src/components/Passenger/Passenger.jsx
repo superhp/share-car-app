@@ -5,7 +5,7 @@ import UserService from "../../services/userService";
 import { ViewRideRequests } from "../Driver/Ride/ViewRideRequests";
 import { PassengerRideRequestsList } from "./Ride/PassengerRideRequestsList";
 
-export default class Driver extends Component<{}, MyProfileState> {
+export default class Passenger extends Component<{}, MyProfileState> {
   userService = new UserService();
   state: MyProfileState = { loading: true, user: null };
 
@@ -13,8 +13,11 @@ export default class Driver extends Component<{}, MyProfileState> {
     this.userService.getLoggedInUser(this.updateLoggedInUser);
   }
 
+
+
   updateLoggedInUser = (user: UserProfileData) => {
     this.setState({ loading: false, user: user });
+    
   };
 
   render() {
@@ -26,7 +29,7 @@ export default class Driver extends Component<{}, MyProfileState> {
       <p>Failed</p>
     ) : (
       <div className="role-container">
-        <PassengerRideRequestsList/>
+        <PassengerRideRequestsList refetch={this.props.refetch}/>
       </div>
     );
     return <div>{content}</div>;

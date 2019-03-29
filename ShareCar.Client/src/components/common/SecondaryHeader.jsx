@@ -10,13 +10,15 @@ export const SecondaryHeader = props => (
         <Button
             className="header-button"
             size="large"
+            onClick={() => props.refetch()}
+
         >
             <RefreshIcon fontSize="large" />
         </Button>
         <Button 
             className="header-button"
             size="large"
-            onClick={() => props.onClick()}
+            onClick={() => props.logout()}
         >
             Logout
         </Button>
