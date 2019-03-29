@@ -51,3 +51,7 @@ div.requestListTable table tbody tr td {
 .name-para {
   padding-left: 20px;
 }
+
+.pending-requests-container {
+  justify-content: center;
+}

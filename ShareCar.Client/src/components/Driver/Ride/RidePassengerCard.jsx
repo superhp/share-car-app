@@ -19,7 +19,7 @@ export default class RidePassengerCard extends React.Component {
             <Grid item xs={12}>
                 <Card className="passengers-card generic-card">
                     <Grid container justify="center" className="passengers-list">
-                        <Grid item xs={8}>
+                        <Grid item md={8}>
                             <ListItemText
                                 primary={<span>{this.props.passenger.firstName} {this.props.passenger.lastName}</span>}
                                 secondary={
@@ -36,7 +36,7 @@ export default class RidePassengerCard extends React.Component {
                                 }
                             />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item md={4}>
                             <Button
                                 variant="outlined"
                                 onClick={() => { this.setState({ show: !this.state.show }) }}

@@ -36,8 +36,8 @@ export class PendingRequestCard extends React.Component {
                         </Grid>
                         <Grid item xs={12} zeroMinWidth>
                             <CardActions>
-                                <Grid container spacing={16}>
-                                    <Grid item xs={4} className="pending-request-button">
+                                <Grid container spacing={16} className="pending-requests-container">
+                                    <Grid item md={4} className="pending-request-button">
                                         <Button
                                             variant="outlined"
                                             onClick={() => { this.setState({ show: !this.state.show }) }}
@@ -45,10 +45,10 @@ export class PendingRequestCard extends React.Component {
                                             Show on map
                                         </Button>
                                     </Grid>
-                                    <Grid item xs={8}>
+                                    <Grid item md={8}>
                                         {this.props.req.status !== 4 ?
                                             <Grid container spacing={8}>
-                                                <Grid item xs={6} className="pending-request-button">
+                                                <Grid item md={6} className="pending-request-button">
                                                     <Button
                                                         color="primary"
                                                         variant="outlined"
@@ -57,7 +57,7 @@ export class PendingRequestCard extends React.Component {
                                                         Accept
                                                     </Button>
                                                 </Grid>
-                                                <Grid item xs={6} className="pending-request-button">
+                                                <Grid item md={6} className="pending-request-button">
                                                     <Button
                                                         color="secondary"
                                                         variant="outlined"
