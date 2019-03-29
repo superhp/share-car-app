@@ -34,6 +34,11 @@ export class PassengerRideRequestsList extends React.Component {
         this.showPassengerRequests();
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.showPassengerRequests();
+
+    }
+
     showSnackBar(message, variant) {
         this.setState({
             snackBarClicked: true,

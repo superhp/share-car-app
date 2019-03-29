@@ -18,6 +18,7 @@ import { SecondaryHeader } from "./SecondaryHeader";
 type LayoutProps = {
   children?: React.Node
 };
+const ThemeContext = React.createContext('light');
 
 class Layout extends React.Component<LayoutProps, MyProfileState> {
   state : UserProfileData = { loading: true, user: null};
@@ -34,6 +35,10 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
 
   logout = () => {
     this.authService.logout(this.userLoggedOut);
+  };
+
+  refetch = () => {
+    this.props.refetch();
   };
 
   userLoggedOut = () => {
@@ -58,7 +63,7 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={4}>
-                        <SecondaryHeader onClick={() => this.logout()}/>
+                        <SecondaryHeader logout={() => this.logout()} refetch={() => this.refetch()}/>
                       </Grid>
                   </Toolbar>
               </AppBar>

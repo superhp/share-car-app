@@ -19,6 +19,11 @@ export class WinnerBoard extends React.Component {
   componentDidMount() {
     this.showWinnersBoard();
   }
+
+  componentWillReceiveProps(nextProps){
+    this.showWinnersBoard();
+  }
+
   showWinnersBoard() {
     api.get("user/WinnerBoard")
       .then(response => {
