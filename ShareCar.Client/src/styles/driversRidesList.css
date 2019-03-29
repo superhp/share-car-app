@@ -7,6 +7,27 @@ div.container {
   flex-wrap: wrap;
 }
 
+.drivers-sugestion-modal {
+  padding-top: 7vh;
+}
+
+.drivers-list-root {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+  background-color: white;
+}
+
+.drivers-list-header {
+  text-align: center;
+}
+
+.drivers-list {
+  align-items: flex-start;
+  vertical-align: middle;
+}
+
 h2 {
   text-align: center;
   flex: 0 0 100%;

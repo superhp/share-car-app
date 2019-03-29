@@ -6,6 +6,7 @@ import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
+import Grid from "@material-ui/core/Grid";
 
 import { centerMap } from "./../../utils/mapUtils";
 import { DriverRoutesSugestions } from "./Route/DriverRoutesSugestions";
@@ -23,6 +24,7 @@ import "./../../styles/genericStyles.css";
 import "../../styles/testmap.css";
 import SnackBars from "../common/Snackbars";
 import { SnackbarVariants } from "../common/SnackbarVariants";
+import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
 
 
 export class PassengerMap extends React.Component {
@@ -216,6 +218,7 @@ if (toFeature)
   render() {
     return (
       <div>
+        <div id="map"></div>
         <div className="passengerForm">
           <PassengerRouteSelection
             direction={this.state.direction}
@@ -229,7 +232,7 @@ if (toFeature)
             }}
           />
           {this.state.showDriver && this.state.routes.length > 0 ? (
-            <DriverRoutesSugestions
+            <DriverRoutesSugestionsModal 
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
             />
@@ -237,9 +240,8 @@ if (toFeature)
               <div></div>
             )}
         </div>
-        <div id="map"></div>
         {this.state.routes.length > 1
-          ? <div>
+          ? <Grid>
             <PassengerNavigationButton
               onClick={() => this.setState({
                 currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
@@ -257,7 +259,7 @@ if (toFeature)
               text="View Next Route"
             />
 
-          </div>
+          </Grid>
           : <div />
         }
         <SnackBars
