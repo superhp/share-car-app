@@ -34,3 +34,22 @@ div.react-datetime-picker input {
   flex: 1;
   color: black;
 }
+
+.calendar {
+  display: inline;
+}
+
+.calendar-container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.create-rides-button {
+  text-align: right;
+}
+
+.create-rides-button button {
+  margin-bottom: 15px;
+  margin-right: 15px;
+  color: #007bff;
+}

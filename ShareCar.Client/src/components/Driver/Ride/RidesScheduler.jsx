@@ -9,7 +9,7 @@ import "../../common/TimePickers";
 import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
 import { SnackbarVariants } from "../../common/SnackbarVariants";
-import { RideSchedulerHelper } from "./RideSchedulerHelper";
+import RideSchedulerHelper from "./RideSchedulerHelper";
 
 const styles = {
   appBar: {
@@ -20,20 +20,11 @@ const styles = {
   }
 };
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-
 class RidesScheduler extends React.Component {
   state = {
-    open: true,
     selectedDates: [],
     time: "07:00",
     snackBarClicked: false
-  };
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
   };
 
   handleSelect(e) {
@@ -62,9 +53,6 @@ class RidesScheduler extends React.Component {
       }));
     }
   }
-  handleClose = () => {
-    this.setState({ open: false });
-  };
 
   handleCreate = () => {
     let ridesToPost = [];
@@ -146,22 +134,15 @@ class RidesScheduler extends React.Component {
   render() {
     return (
       <div>
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={() => this.handleClose()}
-          TransitionComponent={Transition}
-        >
-          <RideSchedulerHelper
-            appBar={this.props.appBar}
-            handleClose={() => this.handleClose()}
-            flex={this.props.flex}
-            selectedDates={this.state.selectedDates}
-            handleCreate={() => this.handleCreate()}
-            handleSelect={e => this.handleSelect(e)}
-            handleTime={value => this.handleTime(value)}
-          />
-        </Dialog>
+        <RideSchedulerHelper
+          appBar={this.props.appBar}
+          handleClose={() => this.handleClose()}
+          flex={this.props.flex}
+          selectedDates={this.state.selectedDates}
+          handleCreate={() => this.handleCreate()}
+          handleSelect={e => this.handleSelect(e)}
+          handleTime={value => this.handleTime(value)}
+        />
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}
