@@ -6,6 +6,14 @@
   border-radius: 5px;
 }
 
+.pending-request-button {
+  text-align: center;
+}
+
+.request-person-info {
+  padding-top: 10px;
+}
+
 .ride-requests-text {
   margin: auto;
   border-radius: 5px;
@@ -42,4 +50,8 @@ div.requestListTable table tbody tr td {
 }
 .name-para {
   padding-left: 20px;
+}
+
+.pending-requests-container {
+  justify-content: center;
 }
