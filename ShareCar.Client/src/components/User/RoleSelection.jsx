@@ -12,6 +12,8 @@ import { RoleContext } from "../../helpers/roles";
 import "../../styles/roleSelection.css";
 import driverLogo from "../../images/driver.png";
 import passengerLogo from "../../images/passenger.png";
+import { CircularProgress, withStyles } from "@material-ui/core";
+import {styles} from "../../utils/spinnerStyle";
 
 class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   userService = new UserService();
@@ -58,11 +60,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   }
 
   render() {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading..</em>
-      </p>
-    ) : this.state.user === null ? (
+    const content = this.state.loading ? 
+      <div>
+        <CircularProgress/>
+      </div>
+     : this.state.user === null ? (
       <p>Failed</p>
     ) : (
       <div>
@@ -91,4 +93,4 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     return <div>{content}</div>;
   }
 }
-export default RoleSelection;
+export default withStyles(styles) (RoleSelection);

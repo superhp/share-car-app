@@ -12,6 +12,8 @@ import UserService from "../../services/userService";
 import { UserProfileForm } from "./UserProfileForm";
 
 import "../../styles/userProfile.css";
+import { CircularProgress, withStyles } from "@material-ui/core";
+import {styles} from "../../utils/spinnerStyle";
 
 type UserProfileState = {
   loading: boolean,
@@ -55,11 +57,11 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 
   render() {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading...</em>
-      </p>
-    ) : this.state.user === null ? (
+    const content = this.state.loading ? 
+      <div>
+        <CircularProgress/>
+      </div>
+     : this.state.user === null ? (
       <p>The user failed to load</p>
     ) : (
       <UserProfileForm 
@@ -98,4 +100,4 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 }
 
-export default withAlert(UserProfile);
+export default withStyles(styles) (withAlert(UserProfile));
