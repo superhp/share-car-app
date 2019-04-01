@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
 import { AddressInput } from "../../common/AddressInput";
-import { OfficeAddresses } from "../../../utils/AddressData";
 import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "../../../styles/testmap.css";

@@ -17,7 +17,7 @@ onCheckBoxClick = () =>{
 
     if (!email ||
       email.length <= 14 ||
-      email.substring(email.length - 14) != "@cognizant.com") {
+      email.substring(email.length - 14) !== "@cognizant.com") {
 
       alert("Only Cognizant emails are allowed");
 

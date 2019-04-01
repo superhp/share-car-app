@@ -6,8 +6,6 @@ import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 import { OfficeAddresses } from "../../utils/AddressData";
 import RidesScheduler from "./Ride/RidesScheduler";
 import { DriverRouteInput } from "./Map/DriverRouteInput";
@@ -15,9 +13,8 @@ import {
   fromLonLatToMapCoords, fromMapCoordsToLonLat,
   getNearest, coordinatesToLocation,
   createPointFeature, createRouteFeature,
-  createRoute, centerMap
+  createRoute
 } from "./../../utils/mapUtils";
-import { routeStyles } from "./../../utils/mapStyles";
 import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
@@ -95,7 +92,7 @@ export class DriverMap extends React.Component {
 
   displayNewRoute() {
     let points = this.state.routePoints.map(a => a.address);
-    if (points.length == 1) {
+    if (points.length === 1) {
       if (this.state.routePolylineFeature) {
         this.vectorSource.removeFeature(this.state.routePolylineFeature);
         this.setState({ routePolylineFeature: null });

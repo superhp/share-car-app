@@ -7,10 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoIcon from "@material-ui/icons/Info";
 import "typeface-roboto";
-import SnackBars from "../../common/Snackbars";
-import { SnackbarVariants } from "../../common/SnackbarVariants"
-import api from "../../../helpers/axiosHelper";
-import { DriverRideRequestsList } from "./DriverRideRequestList";
 
 import "../../../styles/driversRidesList.css";
 import "../../../styles/genericStyles.css";

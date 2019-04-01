@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 
 import UserService from "../../services/userService";
-import { ViewRideRequests } from "../Driver/Ride/ViewRideRequests";
 import { PassengerRideRequestsList } from "./Ride/PassengerRideRequestsList";
 import { CircularProgress, withStyles } from "@material-ui/core";
 import { styles } from "../../utils/spinnerStyle";

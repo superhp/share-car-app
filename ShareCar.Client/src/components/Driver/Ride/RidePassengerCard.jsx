@@ -3,12 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import "../../../styles/genericStyles.css";
 import MapComponent from "../../Maps/MapComponent";
 import ListItemText from "@material-ui/core/ListItemText";
-import { ListItem } from "@material-ui/core";
 
 export default class RidePassengerCard extends React.Component {
     state = {

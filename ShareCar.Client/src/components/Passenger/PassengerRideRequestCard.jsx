@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import Badge from "@material-ui/core/Badge";
 import MapComponent from "../Maps/MapComponent";
 import { Status } from "../../utils/status";
-import Grid from "@material-ui/core/Grid";
 import "../../styles/riderequests.css";
 import "../../styles/genericStyles.css";
 

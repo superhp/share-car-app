@@ -1,12 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import Slide from "@material-ui/core/Slide";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
 import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
-import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
 import { SnackbarVariants } from "../../common/SnackbarVariants";
 import RideSchedulerHelper from "./RideSchedulerHelper";

@@ -10,7 +10,7 @@ import Tile from "ol/layer/Tile";
 import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
 
-import { centerMap, fromLonLatToMapCoords, fromMapCoordsToLonLat, createPointFeature, createRouteFeature } from "../../utils/mapUtils";
+import { centerMap, fromLonLatToMapCoords, createPointFeature, createRouteFeature } from "../../utils/mapUtils";
 
 import "../../styles/mapComponent.css";
 

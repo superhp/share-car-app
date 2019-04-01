@@ -6,8 +6,6 @@ import "typeface-roboto";
 import SnackBars from "../common/Snackbars";
 import {SnackbarVariants} from "../common/SnackbarVariants";
 import api from "../../helpers/axiosHelper";
-import AuthenticationService from "../../services/authenticationService";
-import history from "../../helpers/history";
 import UserService from "../../services/userService";
 import { UserProfileForm } from "./UserProfileForm";
 
