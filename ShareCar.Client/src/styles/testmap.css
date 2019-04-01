@@ -111,7 +111,7 @@ div.displayRoutes {
 }
 button.continue-button {
   position: absolute;
-  bottom: 80px;
+  bottom: 15vh;
   right: 10px;
   z-index: 999;
   background-color: #007bff;
