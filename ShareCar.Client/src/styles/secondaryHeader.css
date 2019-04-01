@@ -3,6 +3,16 @@
     color: white;
 }
 
+.secondary-header {
+    justify-content: flex-end;
+}
+
 .profile {
     height: 100%;
+}
+
+@media only screen and (max-width: 713px) {
+    .secondary-header {
+        justify-content: center;
+    }
 }

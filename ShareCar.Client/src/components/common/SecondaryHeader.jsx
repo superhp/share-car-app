@@ -8,7 +8,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import "../../styles/secondaryHeader.css";
 
 export const SecondaryHeader = props => (
-    <Grid className="secondary-header" container justify="flex-end">
+    <Grid className="secondary-header" container>
         <Button
             className="header-button"
             size="large"

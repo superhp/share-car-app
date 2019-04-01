@@ -25,7 +25,11 @@
   font-size: large;
 }
 
-.header-text {
+.heading-small-device {
+  text-align: center;
+}
+
+.header-big-device {
   padding-left: 33%;
 }
 
