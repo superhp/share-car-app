@@ -26,6 +26,8 @@ import SnackBars from "../common/Snackbars";
 import { SnackbarVariants } from "../common/SnackbarVariants";
 import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
 
+const polylineDecoder = require('@mapbox/polyline');
+
 
 export class PassengerMap extends React.Component {
   state = {
@@ -48,21 +50,22 @@ export class PassengerMap extends React.Component {
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
   }
 
-componentWillReceiveProps(nextProps){
-  this.vectorSource.clear();
-  this.setState({    
-    passengerAddress: null,
-    direction: "from",
-    routes: [],
-    pickUpPointFeature: null,
-    currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
-    currentRouteIndex: 0,
-    showDriver: false,
-    snackBarMessage: "",
-    snackBarClick: false,
-    snackBarVariant: null,});
-  this.getAllRoutes(OfficeAddresses[0], this.state.direction);
-}
+  componentWillReceiveProps(nextProps) {
+    this.vectorSource.clear();
+    this.setState({
+      passengerAddress: null,
+      direction: "from",
+      routes: [],
+      pickUpPointFeature: null,
+      currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
+      currentRouteIndex: 0,
+      showDriver: false,
+      snackBarMessage: "",
+      snackBarClick: false,
+      snackBarVariant: null,
+    });
+    this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+  }
 
   initializeMap() {
     const vectorSource = new SourceVector();
@@ -105,6 +108,8 @@ componentWillReceiveProps(nextProps){
 
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
+   
+
       const routeFeature = createRouteFeature(route.geometry);
       const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
       const toFeature = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
@@ -136,9 +141,77 @@ componentWillReceiveProps(nextProps){
         const address = fromLocationIqResponse(response);
         address.longitude = longitude;
         address.latitude = latitude;
+   
+        var pts = this.decodeRoutes([this.state.routes[0].geometry]);
+        var d = this.calculateDisntances(pts, address);
+        
+   
         this.setState({ passengerAddress: address }, this.changePickUpPoint);
       }).catch();
   }
+
+  sortRoutes() {
+
+  }
+
+  decodeRoutes(routes) {
+
+    var points = [];
+    for (var i = 0; i < routes.length; i++) {
+      points.push(polylineDecoder.decode(routes[i]));
+    }
+    return points;
+  }
+
+  calculateDisntances(routePoints, pickUpPoint) {
+
+    const { longitude, latitude } = pickUpPoint;
+
+    var shortestDistances = [];
+
+console.log(routePoints);
+console.log(longitude);
+console.log(latitude);
+
+var t1 = 0;
+var t2 = 0;
+var t3 = 0;
+var t4 = 0;
+
+
+    for (var i = 0; i < routePoints.length; i++) {
+      var shortestDistance = 999999;
+      for (var j = 0; j < routePoints[i].length-1; j++) {
+        var x1 =routePoints[i][j][1];
+        var y1 =routePoints[i][j][0];
+        var x2 =routePoints[i][j+1][1];
+        var y2 =routePoints[i][j+1][0];
+
+var distance = Math.abs(((y2 - y1)*longitude - (x2 - x1)*latitude + x2*y1 - y2*x1)/Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2)));
+console.log(distance)
+if(distance < shortestDistance){
+  shortestDistance = distance;
+  t1 = x1;
+  t2 = y1;
+  t3 = x2;
+  t4 = y2; 
+}
+
+}
+shortestDistances.push(shortestDistance);
+    }
+    console.log(shortestDistances);
+    console.log(t1);
+    console.log(t2);
+    console.log(t3);
+    console.log(t4);
+  var k = createPointFeature(t1,t2);
+  var l = createPointFeature(t3,t4);
+
+  this.vectorSource.addFeature(k);
+  this.vectorSource.addFeature(l);
+
+}
 
   onMeetupAddressChange(newAddress) {
     if (newAddress) {
@@ -228,7 +301,7 @@ componentWillReceiveProps(nextProps){
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
           />
           {this.state.showDriver && this.state.routes.length > 0 ? (
-            <DriverRoutesSugestionsModal 
+            <DriverRoutesSugestionsModal
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
             />
