@@ -17,6 +17,11 @@
   padding-top: 20px;
 }
 
+.informative-message {
+  text-align: center;
+  margin: 1em 0 !important;
+}
+
 .pending-requests {
   background-color: #f7f7f7;
 }

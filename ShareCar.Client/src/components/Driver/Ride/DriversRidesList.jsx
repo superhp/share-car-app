@@ -82,7 +82,11 @@ export class DriversRidesList extends React.Component {
                   </Grid>
             </Card>
           </Grid>
-        )) : "You have no rides"}
+        )) :  
+          <Grid item xs={12} className="informative-message">
+            <h3>You have no rides</h3>
+          </Grid>
+        }
         <PendingRequests
           open={this.state.open}
           rideRequests={this.props.requests}
