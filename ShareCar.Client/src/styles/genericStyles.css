@@ -93,3 +93,8 @@ th {
 .generic-color{
   color:#007BFF !important;
 }
+
+.read-more{
+  font-weight: bold;
+  cursor: pointer;
+}
