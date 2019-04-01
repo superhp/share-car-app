@@ -12,6 +12,7 @@ import { UserProfileForm } from "./UserProfileForm";
 import "../../styles/userProfile.css";
 import { CircularProgress, withStyles } from "@material-ui/core";
 import {styles} from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
 type UserProfileState = {
   loading: boolean,
@@ -56,7 +57,7 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
 
   render() {
     const content = this.state.loading ? 
-      <div>
+      <div className="progress-circle">
         <CircularProgress/>
       </div>
      : this.state.user === null ? (

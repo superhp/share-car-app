@@ -9,6 +9,7 @@ import history from "../../helpers/history";
 import { ViewRideRequests } from "./Ride/ViewRideRequests";
 import { CircularProgress, withStyles } from "@material-ui/core";
 import { styles } from "../../utils/spinnerStyle";
+import "../../styles/genericStyles";
 
 class Driver extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -25,7 +26,7 @@ class Driver extends Component<{}, MyProfileState> {
 
   render() {
     const content = this.state.loading ? 
-      <div>
+      <div className="progress-circle">
         <CircularProgress/>
       </div>
      : this.state.user === null ? (

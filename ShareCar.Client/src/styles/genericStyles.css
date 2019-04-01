@@ -12,6 +12,11 @@
   width: 300px;
 }
 
+.progress-circle {
+  text-align: center;
+  padding-top: 20px;
+}
+
 .pending-requests {
   background-color: #f7f7f7;
 }

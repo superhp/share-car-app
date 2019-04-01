@@ -5,6 +5,7 @@ import UserService from "../../services/userService";
 import { PassengerRideRequestsList } from "./Ride/PassengerRideRequestsList";
 import { CircularProgress, withStyles } from "@material-ui/core";
 import { styles } from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
 class Passenger extends Component<{}, MyProfileState> {
   userService = new UserService();
@@ -23,7 +24,7 @@ class Passenger extends Component<{}, MyProfileState> {
 
   render() {
     const content = this.state.loading ? 
-      <div>
+      <div className="progress-circle">
         <CircularProgress/>
       </div>
       : this.state.user == null ? (

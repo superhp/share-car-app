@@ -14,6 +14,7 @@ import driverLogo from "../../images/driver.png";
 import passengerLogo from "../../images/passenger.png";
 import { CircularProgress, withStyles } from "@material-ui/core";
 import {styles} from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
 class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   userService = new UserService();
@@ -61,7 +62,7 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
 
   render() {
     const content = this.state.loading ? 
-      <div>
+      <div className="progress-circle">
         <CircularProgress/>
       </div>
      : this.state.user === null ? (
