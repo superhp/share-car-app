@@ -13,12 +13,6 @@ const NavBar = props => {
   const status = props.isDriver ? "/driver" : "/passenger";
   return (
     <div className="navBar">
-      <Link className="navBar-button" role="button" to={status + "/profile"}>
-        <div className="button-container">
-          <AccountCircleIcon />
-          <div className="button-container">Profile</div>
-        </div>
-      </Link>
       <Link className="navBar-button" role="button" to={status + "/Map"}>
         <div className="button-container">
           <Map />
@@ -29,7 +23,6 @@ const NavBar = props => {
         <Link className="navBar-button" role="button" to={status + "/Requests"}>
           <div className="button-container">
             <NoteAdd />
-
             <div className="button-container">Requests</div>
           </div>
         </Link>
