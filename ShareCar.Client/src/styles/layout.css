@@ -25,7 +25,11 @@
   font-size: large;
 }
 
-.header-text {
+.heading-small-device {
+  text-align: center;
+}
+
+.header-big-device {
   padding-left: 50%;
 }
 
@@ -34,6 +38,7 @@
   flex-direction: column;
   justify-content: center;
   height: 100%;
+  margin-bottom: 9%;
 }
 
 @keyframes app-logo-spin {

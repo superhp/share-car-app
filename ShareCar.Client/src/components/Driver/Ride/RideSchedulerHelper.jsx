@@ -59,7 +59,10 @@ class RideSchedulerHelper extends React.Component {
                             disabled={this.props.selectedDates.length === 0 ? true : false}
                             variant="outlined"
                             color="primary"
-                            onClick={() => this.props.handleCreate()}
+                            onClick={() => {
+                                this.props.handleCreate();
+                                this.setState({open: false});
+                            }}
                         >
                             Create Rides
                         </Button>
