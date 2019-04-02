@@ -20,20 +20,22 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IJwtFactory _jwtFactory;
         private readonly IUserRepository _userRepository;
         private static readonly HttpClient Client = new HttpClient();
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
-        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, IJwtFactory jwtFactory, IUserRepository userRepository)
+        public FacebookIdentity(IOptions<FacebookAuthSettings> fbAuthSettings, IJwtFactory jwtFactory, IUserRepository userRepository, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _fbAuthSettings = fbAuthSettings.Value;
             _jwtFactory = jwtFactory;
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         private async Task<FacebookUserDataDto> GetUserFromFacebook(AccessTokenDto facebookAccessToken)
         {
             // generate an app access token
             var appAccessTokenUrl = _fbAuthSettings.AppAccessTokenUrl
-                .Replace("{AppId}", _fbAuthSettings.AppId)
-                .Replace("{AppSecret}", _fbAuthSettings.AppSecret);
+                .Replace("{AppId}", _configuration["FBAppId"])
+                .Replace("{AppSecret}", _configuration["FBAppSecret"]);
             var appAccessTokenResponse = await Client.GetStringAsync(appAccessTokenUrl);
             var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessTokenDto>(appAccessTokenResponse);
 

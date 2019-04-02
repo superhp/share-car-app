@@ -11,10 +11,7 @@ using ShareCar.Dto.Identity.Cognizant;
 using ShareCar.Logic.User_Logic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace ShareCar.Logic.Identity_Logic
@@ -27,10 +24,9 @@ namespace ShareCar.Logic.Identity_Logic
         private readonly IUserRepository _userRepository;
         private readonly IJwtFactory _jwtFactory;
 
-        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, IUserRepository userRepository, IJwtFactory jwtFactory)
+        public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, IUserRepository userRepository, IJwtFactory jwtFactory, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
-            _sgSettings = sgSettings.Value;
-            _client = new SendGridClient(_sgSettings.APIKey);
+            _client = new SendGridClient(configuration["SendGridApiKey"]);
             _userlogic = userlogic;
             _userRepository = userRepository;
             _jwtFactory = jwtFactory;
