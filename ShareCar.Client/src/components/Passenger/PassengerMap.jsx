@@ -187,7 +187,8 @@ var t4 = 0;
         var x2 =routePoints[i][j+1][1];
         var y2 =routePoints[i][j+1][0];
 
-var distance = Math.abs(((y2 - y1)*longitude - (x2 - x1)*latitude + x2*y1 - y2*x1)/Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2)));
+//var distance = Math.abs(((y2 - y1)*longitude - (x2 - x1)*latitude + x2*y1 - y2*x1)/Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2)));
+var distance = this.distToSegment({x : longitude, y: latitude}, {x : x1, y: y1}, {x : x2, y: y2})
 console.log(distance)
 if(distance < shortestDistance){
   shortestDistance = distance;
@@ -198,6 +199,7 @@ if(distance < shortestDistance){
 }
 
 }
+
 shortestDistances.push(shortestDistance);
     }
     console.log(shortestDistances);
@@ -212,6 +214,17 @@ shortestDistances.push(shortestDistance);
   this.vectorSource.addFeature(l);
 
 }
+
+ distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x,2) + Math.pow(point1.y - point2.y,2) }
+ distToSegmentSquared(pivot, point1, point2) {
+  var l2 = this.distanceBetweenPoints(point1, point2);
+  if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
+  var t = ((pivot.x - point1.x) * (point2.x - point1.x) + (pivot.y - point1.y) * (point2.y - point1.y)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  return this.distanceBetweenPoints(pivot, { x: point1.x + t * (point2.x - point1.x),
+                    y: point1.y + t * (point2.y - point1.y) });
+}
+ distToSegment(pivot, point1, point2) { return Math.sqrt(this.distToSegmentSquared(pivot, point1, point2)); }
 
   onMeetupAddressChange(newAddress) {
     if (newAddress) {
