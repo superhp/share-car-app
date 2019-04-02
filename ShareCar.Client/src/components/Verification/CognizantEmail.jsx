@@ -59,7 +59,7 @@ onCheckBoxClick = () =>{
   render() {
     return (
       <div className="email-submit">
-        <Card>
+        <Card className="login-card">
           <CardContent>
             <span>Submit your cognizant email to receive verification code</span>
             <div className="email-input">

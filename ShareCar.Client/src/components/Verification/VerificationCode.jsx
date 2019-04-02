@@ -36,7 +36,7 @@ class VerificationCode extends Component {
   render() {
     return (
       <div className="code-submit">
-        <Card>
+        <Card className="login-card">
           <CardContent>
             <span>Submit your verification code</span>
             <div className="code-input">

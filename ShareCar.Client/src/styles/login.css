@@ -15,6 +15,10 @@
     width: auto;
 }
 
+.login-card {
+    margin: 10px;
+}
+
 .email-submit, .code-submit{
     margin-top: 25px;
     text-align: left!important;
