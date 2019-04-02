@@ -13,6 +13,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TimePickers from "../../common/TimePickers";
 
 import "../../../styles/newRideForm.css";
+import { calendarStyle } from "../../../utils/calendarStyle";
 
 const today = new Date();
 
@@ -49,6 +50,7 @@ class RideSchedulerHelper extends React.Component {
                             disabledDays={[0, 6]}
                             minDate={today}
                             className="calendar"
+                            theme={calendarStyle}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -58,7 +60,6 @@ class RideSchedulerHelper extends React.Component {
                         <Button
                             disabled={this.props.selectedDates.length === 0 ? true : false}
                             variant="outlined"
-                            color="primary"
                             onClick={() => {
                                 this.props.handleCreate();
                                 this.setState({open: false});
