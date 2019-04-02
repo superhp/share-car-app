@@ -38,6 +38,11 @@
   margin: 3px !important;
   width: 100px;
 }
+
+.rides-delete-button {
+  background-color: #f96f59!important;
+  color: white!important;
+}
 .generic-table {
   width: 100%;
   text-align: center;
@@ -106,7 +111,7 @@ th {
 }
 
 .generic-color{
-  color:#007BFF !important;
+  color:#3581b8 !important;
 }
 
 .read-more{

@@ -1,7 +1,7 @@
 export const calendarStyle = {
     accentColor: '#f96f59',
     floatingNav: {
-      background: 'rgb(246,47,15, 0.94)',
+      background: 'rgb(248,90,64, 0.94)',
       chevron: '#FFA726',
       color: '#FFF',
     },
