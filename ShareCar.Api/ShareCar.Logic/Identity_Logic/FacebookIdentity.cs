@@ -34,8 +34,8 @@ namespace ShareCar.Logic.Identity_Logic
         {
             // generate an app access token
             var appAccessTokenUrl = _fbAuthSettings.AppAccessTokenUrl
-                .Replace("{AppId}", _configuration["FBAppId"])
-                .Replace("{AppSecret}", _configuration["FBAppSecret"]);
+                .Replace("{AppId}", "2371871473042404")
+                .Replace("{AppSecret}", "aeb618c15f84b685e7824732ba2b6224");
             var appAccessTokenResponse = await Client.GetStringAsync(appAccessTokenUrl);
             var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessTokenDto>(appAccessTokenResponse);
 

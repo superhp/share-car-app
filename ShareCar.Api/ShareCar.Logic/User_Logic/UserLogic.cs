@@ -109,6 +109,10 @@ namespace ShareCar.Logic.User_Logic
         public UnauthorizedUserDto GetUnauthorizedUser(string email)
         {
            var user = _userRepository.GetUnauthorizedUser(email);
+            if (user == null)
+            {
+                throw new ArgumentException("Unauthorized user doesn't exists");
+            }
             return _mapper.Map<UnauthorizedUser, UnauthorizedUserDto>(user);
         }
 

@@ -26,7 +26,7 @@ namespace ShareCar.Logic.Identity_Logic
 
         public CognizantIdentity(IUserLogic userlogic, IOptions<SendGridSettings> sgSettings, IUserRepository userRepository, IJwtFactory jwtFactory, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
-            _client = new SendGridClient(configuration["SendGridApiKey"]);
+            _client = new SendGridClient("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");
             _userlogic = userlogic;
             _userRepository = userRepository;
             _jwtFactory = jwtFactory;

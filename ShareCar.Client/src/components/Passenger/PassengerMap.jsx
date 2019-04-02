@@ -157,7 +157,7 @@ componentWillReceiveProps(nextProps){
         routeDto = { AddressTo: address };
       else
         routeDto = { AddressFrom: address };
-      api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
+      api.post("Ride/routes", routeDto).then(res => {
         if (res.status === 200 && res.data !== "") {
           const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
           this.removeRoute(routeFeature, fromFeature, toFeature);
@@ -183,7 +183,7 @@ componentWillReceiveProps(nextProps){
         Latitude: this.state.passengerAddress.latitude
       };
 
-      api.post(`https://localhost:44347/api/RideRequest`, request).then(response => {
+      api.post(`RideRequest`, request).then(response => {
 
         this.showSnackBar("Ride requested!", 0)
 

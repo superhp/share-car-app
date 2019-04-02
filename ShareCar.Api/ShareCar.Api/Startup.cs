@@ -28,7 +28,7 @@ namespace ShareCar.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JwtSecretKey"]));
+            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("YUjuhzsc8QH09XCxWIoHiVQrJjWPkZJK"));
         }
 
         public IConfiguration Configuration { get; }
@@ -37,7 +37,7 @@ namespace ShareCar.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 
-            var connectionString = Configuration["Connectionstring"];
+            var connectionString = "Server=tcp:cts-share-car.database.windows.net,1433;Initial Catalog=cts-share-car;Persist Security Info=False;User ID=cts-share-car;Password=ATATTier3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";// Configuration["Connectionstring"];
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString),
