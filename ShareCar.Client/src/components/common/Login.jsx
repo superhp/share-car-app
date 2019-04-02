@@ -10,6 +10,7 @@ import "../../styles/login.css";
 import logo from '../../images/shareCarLogo.png';
 import SnackBars from "../common/Snackbars";
 import { SnackbarVariants } from "../common/SnackbarVariants";
+import Grid from "@material-ui/core/Grid";
 
 class Login extends Component<{}> {
   authService: AuthenticationService = new AuthenticationService();
@@ -84,17 +85,20 @@ class Login extends Component<{}> {
       <div className="login-container">
         <img className="login-image" src={logo} alt="" />
         <h1>ShareCar Login</h1>
-        <FacebookLogin
-          appId="599580833757975"
-          fields="name,email,picture"
-          callback={this.responseFacebook}
-        />
-        <GoogleLogin
-          clientId="875441727934-b39rfvblph43cr5u9blmp4cafbnqcr9k.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={this.responseGoogle}
-        //   onFailure={ Generic error message }
-        />
+        <div className="login-buttons-container">
+          <FacebookLogin
+              appId="599580833757975"
+              fields="name,email,picture"
+              callback={this.responseFacebook}
+              cssClass="facebook-login-button"
+          />
+          <GoogleLogin
+              clientId="875441727934-b39rfvblph43cr5u9blmp4cafbnqcr9k.apps.googleusercontent.com"
+              buttonText="Login with Google"
+              onSuccess={this.responseGoogle}
+            //   onFailure={ Generic error message }
+            />
+        </div>
         {
           this.state.submitEmail ? (
             this.state.submitCode

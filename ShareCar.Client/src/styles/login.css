@@ -21,3 +21,22 @@
     align-items: center;
     width: auto;
 }
+
+.facebook-login-button {
+    display: inline-block;
+    height: 43px;
+    width: 100%;
+    background-color: #3b5998;
+    border: 1px solid #1a356e;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+    line-height: 22px;
+    margin-bottom: 15px;
+} 
+
+.login-buttons-container {
+    display: flex;
+    flex-direction: column;
+}
