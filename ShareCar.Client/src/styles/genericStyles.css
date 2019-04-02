@@ -12,6 +12,10 @@
   width: 300px;
 }
 
+.gdpr-checkbox {
+  margin-top: 15px;
+}
+
 .progress-circle {
   text-align: center;
   padding-top: 20px;

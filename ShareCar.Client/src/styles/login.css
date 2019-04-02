@@ -14,6 +14,23 @@
     height: 50%;
     width: auto;
 }
+
+.email-submit, .code-submit{
+    margin-top: 25px;
+    text-align: left!important;
+}
+
+.email-input-field, .verification-code-field{
+    width: 190px;
+    margin-top: 15px;
+}
+
+.button-submit {
+    height: 40px!important;
+    margin-top: 15px!important;
+    margin-left: 5px!important;
+}
+
 .email-submit, .email-input, .code-submit, .code-input {
     align-self:center;
     text-align: center;
@@ -39,4 +56,5 @@
 .login-buttons-container {
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
 }
