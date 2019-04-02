@@ -7,10 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import DeleteIcon from "@material-ui/icons/Delete";
 import InfoIcon from "@material-ui/icons/Info";
 import "typeface-roboto";
-import SnackBars from "../../common/Snackbars";
-import { SnackbarVariants } from "../../common/SnackbarVariants"
-import api from "../../../helpers/axiosHelper";
-import { DriverRideRequestsList } from "./DriverRideRequestList";
 
 import "../../../styles/driversRidesList.css";
 import "../../../styles/genericStyles.css";
@@ -38,7 +34,7 @@ export class DriversRidesList extends React.Component {
   render() {
     return (
       <Grid container>
-        {this.props.rides.length !== 0 ? this.props.rides.map((req, index) => (
+        {this.props.rides.length > 0 ? this.props.rides.map((req, index) => (
           <Grid style={style} key={index} item xs={12}>
             <Card className="rides-card generic-card">
             <Grid container className="active-rides-card-container">
@@ -86,7 +82,11 @@ export class DriversRidesList extends React.Component {
                   </Grid>
             </Card>
           </Grid>
-        )) : "You have no rides"}
+        )) :  
+          <Grid item xs={12} className="informative-message">
+            <h3>You have no rides</h3>
+          </Grid>
+        }
         <PendingRequests
           open={this.state.open}
           rideRequests={this.props.requests}

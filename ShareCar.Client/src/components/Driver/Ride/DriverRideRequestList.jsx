@@ -1,8 +1,6 @@
 import * as React from "react";
 import "typeface-roboto";
 
-import api from "../../../helpers/axiosHelper";
-import MapComponent from "../../Maps/MapComponent";
 import { PendingRequests } from "./PendingRequests";
 
 import "../../../styles/riderequests.css";

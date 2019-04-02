@@ -6,12 +6,13 @@ import "typeface-roboto";
 import SnackBars from "../common/Snackbars";
 import {SnackbarVariants} from "../common/SnackbarVariants";
 import api from "../../helpers/axiosHelper";
-import AuthenticationService from "../../services/authenticationService";
-import history from "../../helpers/history";
 import UserService from "../../services/userService";
 import { UserProfileForm } from "./UserProfileForm";
 
 import "../../styles/userProfile.css";
+import { CircularProgress, withStyles } from "@material-ui/core";
+import {styles} from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
 type UserProfileState = {
   loading: boolean,
@@ -55,11 +56,11 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 
   render() {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading...</em>
-      </p>
-    ) : this.state.user === null ? (
+    const content = this.state.loading ? 
+      <div className="progress-circle">
+        <CircularProgress/>
+      </div>
+     : this.state.user === null ? (
       <p>The user failed to load</p>
     ) : (
       <UserProfileForm 
@@ -98,4 +99,4 @@ class UserProfile extends Component<{}, UserProfileState, LayoutProps, MyProfile
   }
 }
 
-export default withAlert(UserProfile);
+export default withStyles(styles) (withAlert(UserProfile));

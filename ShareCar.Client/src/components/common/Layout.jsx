@@ -19,7 +19,6 @@ import Media from "react-media";
 type LayoutProps = {
   children?: React.Node
 };
-const ThemeContext = React.createContext('light');
 
 class Layout extends React.Component<LayoutProps, MyProfileState> {
   state : UserProfileData = { loading: true, user: null};

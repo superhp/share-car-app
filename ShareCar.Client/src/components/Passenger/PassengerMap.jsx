@@ -1,5 +1,4 @@
 import * as React from "react";
-import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
 import SourceVector from "ol/source/Vector";
@@ -9,7 +8,6 @@ import OSM from "ol/source/OSM";
 import Grid from "@material-ui/core/Grid";
 
 import { centerMap } from "./../../utils/mapUtils";
-import { DriverRoutesSugestions } from "./Route/DriverRoutesSugestions";
 import { PassengerRouteSelection } from "./Route/PassengerRouteSelection";
 import { PassengerNavigationButton } from "./PassengerNavigationButton";
 import api from "./../../helpers/axiosHelper";
@@ -101,7 +99,6 @@ componentWillReceiveProps(nextProps){
     this.setState({ showDriver: true });
     const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
     this.removeRoute(routeFeature, fromFeature, toFeature);
-    const { passengerAddress } = this.state;
 
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];

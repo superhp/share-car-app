@@ -12,7 +12,6 @@ import Rides from "./Driver/Ride/Rides";
 import Manual from "./Manual";
 import WinnerBoard from "./Winner/WinnerBoard";
 import Map from "./Maps/Map";
-import SnackBars from "./common/Snackbars";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 

@@ -1,5 +1,4 @@
 import * as React from "react";
-import SimpleMenu from "./SimpleMenu";
 import AlgoliaPlaces from "algolia-places-react";
 import Close from "@material-ui/icons/Close";
 

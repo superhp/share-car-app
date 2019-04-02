@@ -1,13 +1,9 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 
-import {SnackbarVariants} from "../../common/SnackbarVariants"
 import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
 import {Status} from "../../../utils/status";
