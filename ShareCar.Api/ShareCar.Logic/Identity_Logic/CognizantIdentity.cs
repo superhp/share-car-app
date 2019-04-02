@@ -77,7 +77,7 @@ namespace ShareCar.Logic.Identity_Logic
             int code = _userlogic.GetUnauthorizedUser(loginEmail).VerificationCode;
             var msg = new SendGridMessage();
 
-            msg.SetFrom(new EmailAddress("edgar.reis447@gmail.com", "Share car"));
+            msg.SetFrom(new EmailAddress("edgar.reis@cognizant.com", "Share car"));
 
             var recipients = new List<EmailAddress>
             {
