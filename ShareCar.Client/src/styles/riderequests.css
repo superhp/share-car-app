@@ -10,13 +10,13 @@
   text-align: center;
 }
 
-.pending-request-button .show-on-map {
-  background-color: #0A2239;
-  color: white;
+.pending-request-button .show-on-map, .show-on-map {
+  background-color: #0A2239!important;
+  color: white!important;
 }
 
-.pending-request-button .show-on-map:hover {
-  background-color: #10365a;
+.pending-request-button .show-on-map:hover, .show-on-map:hover {
+  background-color: #10365a!important;
 }
 
 .pending-request-button .accept {
@@ -28,13 +28,13 @@
   background-color: #539acd;
 }
 
-.pending-request-button .deny {
-  background-color: #f74428;
-  color: white;
+.pending-request-button .deny, .cancel-request {
+  background-color: #f74428!important;
+  color: white!important;
 }
 
-.pending-request-button .deny:hover {
-  background-color: #f96f59;
+.pending-request-button .deny:hover, .cancel-request:hover {
+  background-color: #f96f59!important;
 }
 
 .request-person-info {

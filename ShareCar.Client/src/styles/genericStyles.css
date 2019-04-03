@@ -12,6 +12,12 @@
   width: 300px;
 }
 
+.ride-completed-notification-button, .ride-completed-notification-button:hover {
+  color: #f74428!important;
+  border-color: #f74428!important;
+  background-color: white!important;
+}
+
 .passengers-list .show-on-map {
   background-color: #0A2239;
   color: white;
