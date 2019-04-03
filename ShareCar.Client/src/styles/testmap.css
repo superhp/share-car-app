@@ -74,6 +74,8 @@ div.map-input-selection {
   justify-content: left;
   margin-top: 3%;
   margin-left: 3%;
+    width: 20vh;
+
   z-index: 999;
 }
 div.map-input-selection .form-group {
@@ -106,8 +108,9 @@ div.displayRoutes {
   position: absolute;
   left: 0;
   top: 10;
-  width: 100%;
   z-index: 99;
+      width: 20vh;
+
 }
 button.continue-button {
   position: absolute;

@@ -38,7 +38,7 @@ export const coordinatesToLocation = (latitude, longitude) => {
       })
       .then(function (json) {
         resolve(json);
-      });
+      }).catch((error)=>{reject(error)});
   });
 }
 
