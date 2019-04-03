@@ -76,6 +76,12 @@
 
 .next-button {
   margin-right: 20px!important;
+  background-color: #0A2239!important;
+  color: #e8e9eb!important;
+}
+
+.next-button:hover {
+  background-color: #10365a!important;
 }
 
 .passengers-list {
