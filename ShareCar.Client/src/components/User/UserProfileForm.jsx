@@ -3,6 +3,7 @@ import * as React from "react";
 import "../../styles/userProfile.css";
 import { UserPoints } from "./UserPoints";
 import { UserProfileFormField } from "./UserProfileFormField";
+import Button from "@material-ui/core/Button";
 
 import "../../styles/userProfile.css";
 
@@ -10,7 +11,7 @@ export const UserProfileForm = (props) => (
     <div className="container-fluid">
         <div className="container profile-container">
           <form className="profile-form col-sm-6">
-            <img className="thumbnail" src={props.user.profilePicture} alt="" />
+            <img className="thumbnail" src={props.user.pictureUrl} alt="" />
             <UserProfileFormField 
                 displayName="Your Email"
                 disabled="true"
@@ -46,12 +47,13 @@ export const UserProfileForm = (props) => (
                 value={props.user.licensePlate}
                 onChange={e => props.onLicenseChange(e)}
             />
-            <button
+            <Button
               onClick={e => props.onButtonClick(e)}
-              className="btn btn-primary"
+              variant="contained"
+              className="profile-save-button"
             >
               Save
-            </button>
+            </Button>
           </form>
           <UserPoints 
             pointCount={props.user.pointCount}

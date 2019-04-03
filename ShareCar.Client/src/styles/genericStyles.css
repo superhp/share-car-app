@@ -147,4 +147,16 @@ th {
 
 .manual{
   padding: 3vh;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.manual img {
+  max-width: 100%;
+  height: auto;
+  align-content: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* width: 90%; */
 }
