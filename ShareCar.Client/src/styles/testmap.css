@@ -118,6 +118,15 @@ button.continue-button {
   color: #e8e9eb;
 }
 
+.register-button {
+  background-color: #0a2239!important;
+  color: white!important;
+}
+
+.register-button:hover {
+  background-color: #10365a!important;
+}
+
 button.continue-button:hover, button.select-office-menu:hover, button.change-direction:hover {
   background-color: #F96F59;
 }
