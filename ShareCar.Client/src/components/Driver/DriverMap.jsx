@@ -60,11 +60,9 @@ export class DriverMap extends React.Component {
   }
 
   handleMapClick(longitude, latitude) {
-    console.log("RRRRRRRRR")
     return getNearest(longitude, latitude)
       .then(([long, lat]) => coordinatesToLocation(lat, long))
       .then(response => {
-        console.log(response)
         if (!response.address) {
           return;
         } else {
@@ -78,7 +76,7 @@ export class DriverMap extends React.Component {
             this.addNewRoutePoint(address);
           }
         }
-      }).catch(error => { console.log(error)});
+      }).catch(error => { });
   }
 
   addNewRoutePoint(address) {
@@ -144,10 +142,11 @@ export class DriverMap extends React.Component {
       })
     });
     map.on("click", e => {
-      console.log("CCCCCCCCCCCCC")
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
+    setTimeout( () => { this.map.updateSize();}, 200);
+
     return { map, vectorSource };
   }
 
