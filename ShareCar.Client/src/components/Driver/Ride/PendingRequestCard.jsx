@@ -39,7 +39,8 @@ export class PendingRequestCard extends React.Component {
                                 <Grid container spacing={16} className="pending-requests-container">
                                     <Grid item md={4} className="pending-request-button">
                                         <Button
-                                            variant="outlined"
+                                            variant="contained"
+                                            className="show-on-map"
                                             onClick={() => { this.setState({ show: !this.state.show }) }}
                                         >
                                             Show on map
@@ -50,8 +51,8 @@ export class PendingRequestCard extends React.Component {
                                             <Grid container spacing={8}>
                                                 <Grid item md={6} className="pending-request-button">
                                                     <Button
-                                                        color="primary"
-                                                        variant="outlined"
+                                                        variant="contained"
+                                                        className="accept"
                                                         onClick={() => this.props.onAcceptClick()}
                                                     >
                                                         Accept
@@ -59,8 +60,8 @@ export class PendingRequestCard extends React.Component {
                                                 </Grid>
                                                 <Grid item md={6} className="pending-request-button">
                                                     <Button
-                                                        color="secondary"
-                                                        variant="outlined"
+                                                        variant="contained"
+                                                        className="deny"
                                                         onClick={() => this.props.onDenyClick()}
                                                     >
                                                         Deny

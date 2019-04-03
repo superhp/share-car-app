@@ -114,21 +114,33 @@ button.continue-button {
   bottom: 15vh;
   right: 10px;
   z-index: 999;
-  background-color: #007bff;
+  background-color: #f74428;
+  color: #e8e9eb;
+}
+
+.register-button {
+  background-color: #0a2239!important;
+  color: white!important;
+}
+
+.register-button:hover {
+  background-color: #10365a!important;
+}
+
+button.continue-button:hover, button.select-office-menu:hover, button.change-direction:hover {
+  background-color: #F96F59;
 }
 button.select-office-menu {
-  background-color: #007bff;
-  color: white;
+  background-color: #f74428;
+  color: #e8e9eb;
   z-index: 1;
 }
 button.change-direction {
-  background-color: #007bff;
-  color: white;
+  background-color: #f74428;
+  color: #e8e9eb;
   z-index: 1;
 }
 button.remove-route-point {
-  background-color: #007bff;
-  color: white;
   z-index: 1;
 }
 .driver-route-input{

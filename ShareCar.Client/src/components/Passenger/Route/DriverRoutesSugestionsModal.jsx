@@ -22,7 +22,7 @@ class DriverRoutesSugestionsModal extends React.Component {
     render() {
       return (
             <div className="drivers-sugestion-modal">
-                <Button variant="contained" color="secondary" onClick={this.handleClickOpen}>
+                <Button variant="contained" className="show-drivers" onClick={this.handleClickOpen}>
                     Show drivers
                 </Button>
                 <Dialog className="sugestion-modal-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={this.state.open}>

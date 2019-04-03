@@ -72,8 +72,7 @@ export class DriversRidesList extends React.Component {
                             this.props.onRideClick(req.rideId);
                           }}
                           variant="contained"
-                          color="secondary"
-                          className="generic-button"
+                          className="rides-delete-button generic-button"
                         >
                           Delete
                           <DeleteIcon />

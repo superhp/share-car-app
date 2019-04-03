@@ -72,9 +72,8 @@ onCheckBoxClick = () =>{
                 />
                 <Button 
                   className="button-submit"
-                  variant="outlined"
+                  variant="contained"
                   disabled = {this.state.disabled}
-                  color="primary"
                   onClick={() => this.submitEmail()}
                 >
                   Get code

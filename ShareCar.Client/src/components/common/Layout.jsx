@@ -52,7 +52,6 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
           <Grid container justify="center">
               <AppBar
                 position="static"
-                color="primary"
                 className="generic-container-color"
               >
                 <Media query="(max-width: 713px)">

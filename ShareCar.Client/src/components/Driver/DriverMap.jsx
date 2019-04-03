@@ -173,7 +173,6 @@ export class DriverMap extends React.Component {
           disabled={this.state.routePoints.length < 2}
           className="continue-button"
           variant="contained"
-          color="primary"
           onClick={() => this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible })}
         >
           Continue
