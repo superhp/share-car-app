@@ -12,6 +12,15 @@
   width: 300px;
 }
 
+.passengers-list .show-on-map {
+  background-color: #0A2239;
+  color: white;
+}
+
+.passengers-list .show-on-map:hover {
+  background-color: #10365a;
+}
+
 .gdpr-checkbox {
   margin-top: 15px;
 }
@@ -27,7 +36,7 @@
 }
 
 .pending-requests {
-  background-color: #f7f7f7;
+  background-color: #e8e9eb;
 }
 
 .generic-container-color {
@@ -40,9 +49,14 @@
 }
 
 .rides-delete-button {
-  background-color: #f96f59!important;
+  background-color: #f74428!important;
   color: white!important;
 }
+
+.rides-delete-button:hover {
+  background-color: #f96f59!important;
+}
+
 .generic-table {
   width: 100%;
   text-align: center;
