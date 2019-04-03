@@ -7,7 +7,7 @@ import "../styles/genericStyles.css";
 const Manual = props => {
   return (
     <Grid className="manual">
-      <h3 style={{textAlign: "center", color: "#173f5f"}}> Login </h3>
+      <h3 className="manual-heading"> Login </h3>
       <p>
         In order to use an application you need to login with Facebook or Google account.
         If it is your first time logging in, you will be asked to submit your Cognizant email
@@ -22,20 +22,20 @@ const Manual = props => {
         because application automatically load user Facebook/Google user, which is logged in in a browser.
                 </p>
 
-      <h3 style={{textAlign: "center", color: "#173f5f"}}> Role selection </h3>
+      <h3 className="manual-heading"> Role selection </h3>
       <p>
         Once you have logged in, choose your role. If you want to someone to pick you up - choose passenger,
         if you want to drive other people to office - choose driver. You will be able to change a this role anytime.
       </p>
 
-      <h3 style={{textAlign: "center", color: "#173f5f"}}> Upper navigation bar </h3>
+      <h3 className="manual-heading"> Upper navigation bar </h3>
 
       <p>
         Independentlly from the role ypou choose, you will always see same upper navigation bar.
         Here you can logout, navigate to you profile or reload data displayed in application.
                 </p>
 
-      <h3 style={{textAlign: "center", color: "#173f5f"}}> Driver</h3>
+      <h3 className="manual-heading"> Driver</h3>
 
       <p>
         If you choose to be a driver, available actions are displayed in lower navigation bar.
@@ -77,7 +77,7 @@ You can view desired pick up point of a person requesting ride by clicking <span
 Once you accept request, person is added to list of passengers.
           </p>
 
-      <h3 style={{textAlign: "center", color: "#173f5f"}}> Passenger</h3>
+      <h3 className="manual-heading"> Passenger</h3>
 
 <p>
   If ypu choose to be a passenger, available actions are displayed in lower navigation bar.

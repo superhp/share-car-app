@@ -158,5 +158,9 @@ th {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* width: 90%; */
+}
+
+.manual-heading {
+ text-align: center; 
+ color: #173f5f;
 }
