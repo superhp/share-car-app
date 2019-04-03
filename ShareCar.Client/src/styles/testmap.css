@@ -114,20 +114,20 @@ button.continue-button {
   bottom: 15vh;
   right: 10px;
   z-index: 999;
-  background-color: #F96F59;
+  background-color: #f74428;
   color: #e8e9eb;
 }
 
 button.continue-button:hover, button.select-office-menu:hover, button.change-direction:hover {
-  background-color: #fb9a8a;
+  background-color: #F96F59;
 }
 button.select-office-menu {
-  background-color: #F96F59;
+  background-color: #f74428;
   color: #e8e9eb;
   z-index: 1;
 }
 button.change-direction {
-  background-color: #F96F59;
+  background-color: #f74428;
   color: #e8e9eb;
   z-index: 1;
 }
