@@ -106,22 +106,18 @@ export class PassengerRideRequestsList extends React.Component {
                 ? <div className="progress-circle">
                     <CircularProgress />
                 </div> 
-                : <Grid container style={style} justify="center">
-                    <Grid item xs={12} >
-                        {this.state.requests.length > 0 
-                        ? <div>
-                            {this.state.requests.map((req, i) =>
+                : <Grid container>
+                        {this.state.requests.length > 0 ? this.state.requests.map((req, i) =>
+                            <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
                                     request={req}
                                     key={i}
                                     index={i}
                                     cancelRequest ={id => {this.cancelRequest(id)}}
                                 />
-                            )}
-                        </div>
+                            </Grid>)
                         : <h3>You have no requests</h3>
                         } 
-                    </Grid>
                     <SnackBars
                         message={this.state.snackBarMessage}
                         snackBarClicked={this.state.snackBarClicked}
@@ -132,4 +128,4 @@ export class PassengerRideRequestsList extends React.Component {
             </div>  
         )
     }
-}
+}            
