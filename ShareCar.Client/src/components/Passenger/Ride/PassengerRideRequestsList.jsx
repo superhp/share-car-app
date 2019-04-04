@@ -106,7 +106,7 @@ export class PassengerRideRequestsList extends React.Component {
                 ? <div className="progress-circle">
                     <CircularProgress />
                 </div> 
-                : <Grid container>
+                : <Grid container justify="center">
                         {this.state.requests.length > 0 ? this.state.requests.map((req, i) =>
                             <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
@@ -116,7 +116,7 @@ export class PassengerRideRequestsList extends React.Component {
                                     cancelRequest ={id => {this.cancelRequest(id)}}
                                 />
                             </Grid>)
-                        : <h3>You have no requests</h3>
+                        : <div className="informative-message"><h3>You have no requests</h3></div>
                         } 
                     <SnackBars
                         message={this.state.snackBarMessage}
