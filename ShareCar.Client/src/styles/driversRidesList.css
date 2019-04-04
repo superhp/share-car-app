@@ -42,6 +42,15 @@ div.container {
   background-color: #10365a!important;
 }
 
+.delete-button {
+  background-color: #f74428!important;
+  color: white!important;
+}
+
+.delete-button:hover {
+  background-color: #f96f59!important;
+}
+
 h2 {
   text-align: center;
   flex: 0 0 100%;

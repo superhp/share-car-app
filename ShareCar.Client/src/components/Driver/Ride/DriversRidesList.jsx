@@ -68,9 +68,8 @@ export class DriversRidesList extends React.Component {
                       this.handleClickOpen();
                     }}
                     variant="contained"
-                    color="primary"
                     size="small"
-                    className="generic-container-color generic-button"
+                    className="show-drivers"
                   >
                     View
                           <InfoIcon />
@@ -82,8 +81,7 @@ export class DriversRidesList extends React.Component {
                       this.props.onRideClick(ride.rideId);
                     }}
                     variant="contained"
-                    color="secondary"
-                    className="generic-button"
+                    className="delete-button"
                   >
                     Delete
                           <DeleteIcon />
