@@ -8,7 +8,7 @@ export default class Map extends React.Component {
   render() {
     
       return this.props.match.params.role === "driver" ? (
-        <DriverMap/>
+        <DriverMap refetch={this.props.refetch}/>
       ) : (
         <PassengerMap refetch={this.props.refetch}/>
       );

@@ -41,7 +41,7 @@ export class DriverRouteInput extends React.Component {
                 </Button>
                 <SimpleMenu
                     handleSelection={office => {
-                        this.props.changeRoutePoint(office, -1);
+                        this.props.officeSelectionChange(office, -1);
                     }}
                 />
 

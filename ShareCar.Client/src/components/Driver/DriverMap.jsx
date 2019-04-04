@@ -27,10 +27,11 @@ export class DriverMap extends React.Component {
 
   state = {
     isRideSchedulerVisible: false,
-    isRouteToOffice: true, 
+    isRouteToOffice: true,
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
     routePoints: [],
     routePolylineFeature: null,
+    currentOffice: OfficeAddresses[0],
   };
 
   componentDidMount() {
@@ -41,21 +42,38 @@ export class DriverMap extends React.Component {
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.vectorSource.clear();
+    this.setState({
+      isRideSchedulerVisible: false,
+      routeGeometry: null,
+      routePoints: [],
+      routePolylineFeature: null,
+    }, () => {
+      this.addNewRoutePoint(this.state.currentOffice)
+    });
+  }
+
+  officeSelectionChange(address, inputFieldIndex) {
+    this.setState({ currentOffice: address });
+    this.changeRoutePoint(address, inputFieldIndex);
+  }
+
   // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented
   changeRoutePoint(address, index) {
-    if(address){
-    index++;
-    const { longitude, latitude } = address
-    var routePoints = this.state.routePoints;
-    if (index >= routePoints.length) {
-      this.addNewRoutePoint(address);
-    } else {
-      this.vectorSource.removeFeature(routePoints[index].feature);
-      const feature = createPointFeature(longitude, latitude);
-      this.vectorSource.addFeature(feature);
-      routePoints[index] = { address: address, feature: feature, displayName: addressToString(address) }
-      this.setState({ routePoints: routePoints }, this.displayNewRoute);
-    }
+    if (address) {
+      index++;
+      const { longitude, latitude } = address
+      var routePoints = this.state.routePoints;
+      if (index >= routePoints.length) {
+        this.addNewRoutePoint(address);
+      } else {
+        this.vectorSource.removeFeature(routePoints[index].feature);
+        const feature = createPointFeature(longitude, latitude);
+        this.vectorSource.addFeature(feature);
+        routePoints[index] = { address: address, feature: feature, displayName: addressToString(address) }
+        this.setState({ routePoints: routePoints }, this.displayNewRoute);
+      }
     }
   }
 
@@ -83,7 +101,7 @@ export class DriverMap extends React.Component {
     const { longitude, latitude } = address;
     const feature = createPointFeature(longitude, latitude);
     this.vectorSource.addFeature(feature);
-    this.setState({ routePoints: [...this.state.routePoints, { address: address, feature: feature, displayName: addressToString(address) }]}, () => {
+    this.setState({ routePoints: [...this.state.routePoints, { address: address, feature: feature, displayName: addressToString(address) }] }, () => {
       if (this.state.routePoints.length > 1) {
         this.displayNewRoute();
       }
@@ -145,7 +163,7 @@ export class DriverMap extends React.Component {
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
-    setTimeout( () => { this.map.updateSize();}, 200);
+    setTimeout(() => { this.map.updateSize(); }, 200);
 
     return { map, vectorSource };
   }
@@ -156,13 +174,14 @@ export class DriverMap extends React.Component {
       <div>
         {this.autocompleteInputs = []}
         <div className="displayRoutes">
-              <DriverRouteInput
-                changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
-                changeDirection={() => this.handleDirectionChange()}
-                routePoints={this.state.routePoints}
-                removeRoutePoint={index => this.removeRoutePoint(index)}
-                isRouteToOffice={this.state.isRouteToOffice}
-              />
+          <DriverRouteInput
+            officeSelectionChange={(address, inputIndex, officeIndex) => this.officeSelectionChange(address, inputIndex, officeIndex)}
+            changeRoutePoint={(address, index) => this.changeRoutePoint(address, index)}
+            changeDirection={() => this.handleDirectionChange()}
+            routePoints={this.state.routePoints}
+            removeRoutePoint={index => this.removeRoutePoint(index)}
+            isRouteToOffice={this.state.isRouteToOffice}
+          />
         </div>
         <div id="map"></div>
         {this.state.isRideSchedulerVisible ? (
