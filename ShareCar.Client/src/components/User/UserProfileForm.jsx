@@ -54,7 +54,7 @@ export const UserProfileForm = (props) => (
             </button>
           </form>
           <UserPoints 
-            pointCount={props.user.pointCount}
+            pointCount={props.points}
             role={props.role}
           />
         </div>
