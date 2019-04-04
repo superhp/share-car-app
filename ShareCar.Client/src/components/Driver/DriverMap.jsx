@@ -27,7 +27,7 @@ export class DriverMap extends React.Component {
 
   state = {
     isRideSchedulerVisible: false,
-    isRouteToOffice: true, // can the fromAddress be changed by clicking on the map?
+    isRouteToOffice: true, 
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
     routePoints: [],
     routePolylineFeature: null,
@@ -161,6 +161,7 @@ export class DriverMap extends React.Component {
                 changeDirection={() => this.handleDirectionChange()}
                 routePoints={this.state.routePoints}
                 removeRoutePoint={index => this.removeRoutePoint(index)}
+                isRouteToOffice={this.state.isRouteToOffice}
               />
         </div>
         <div id="map"></div>
