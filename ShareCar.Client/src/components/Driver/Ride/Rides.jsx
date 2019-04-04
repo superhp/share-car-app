@@ -156,34 +156,12 @@ componentWillReceiveProps(props){
           this.setState({ requests: response.data });
       })
       .then(() => {
-        const unseenRequests = [];
-
-        for (let i = 0; i < this.state.requests.length; i++) {
-          if (!this.state.requests[i].seenByDriver) {
-            unseenRequests.push(this.state.requests[i].requestId);
-          }
-        }
-        if (unseenRequests.length !== 0) {
-          api.post("RideRequest/seenDriver", unseenRequests).then(res => {
-          });
-        }
       })
       .catch((error) => {
         this.showSnackBar("Failed to load requests", 2)
       });
   }
 
-  sendRequests() {
-    return this.state.rides.length !== 0
-      ? this.state.requests.length !== 0
-        ? this.state.clicked
-          ? this.state.requests.filter(
-            x => x.rideId === this.state.selectedRideId
-          )
-          : []
-        : []
-      : [];
-  }
   render() {
 
     return (
@@ -198,19 +176,9 @@ componentWillReceiveProps(props){
             selectedRide={this.state.selectedRideId}
             rideClicked={this.state.clicked}
             onRideClick={this.handleClick.bind(this)}
-            rides={this.state.rides.length !== 0
-              ? this.state.rides
-              : []}
-            passengers={this.state.rides.length !== 0
-              ? this.state.passengers.length !== 0
-                ? this.state.passengers.filter(x => x.rideId === this.state.selectedRideId)
-                : [] 
-              : []}
-            requests={this.state.rides.length !== 0
-              ? this.state.requests.length !== 0
-                ? this.state.requests.filter(x => x.rideId === this.state.selectedRideId)
-                : []
-              : []}
+            rides={this.state.rides}
+            passengers={this.state.passengers}
+            requests={this.state.requests}
           />
         }
         <SnackBars

@@ -75,34 +75,37 @@ namespace ShareCar.Logic.User_Logic
             return _passengerLogic.GetUsersPoints(email);
         }
 
-        public Dictionary<UserDto, int> GetWinnerBoard()
+        public List<Tuple<UserDto, int>> GetWinnerBoard()
         {
-            Dictionary<UserDto, int> userWithPoints = new Dictionary<UserDto, int>();
+            List<Tuple<UserDto, int>> userWithPoints = new List<Tuple<UserDto, int>>();
             var users = _userRepository.GetAllUsers();
-            int i = 0;
-            foreach(var user in users)
+
+            foreach (var user in users)
             {
                 int userPoints = CountPoints(user.Email);
-                if(i<5)
+                if (userPoints > 0)
                 {
-                    if (userPoints > 0)
-                    {
-                        userWithPoints.Add(MapToDto(user), userPoints);
-                    }
+                    userWithPoints.Add(new Tuple<UserDto, int>(MapToDto(user), userPoints));
                 }
-                else
-                {
-                    var lowestPoints = userWithPoints.Values.Min();
-                    int count = userWithPoints.Where(x => x.Value == lowestPoints).Count();
-                    if (lowestPoints < userPoints)
-                    {
-                        userWithPoints.Add(MapToDto(user), userPoints);
-                        userWithPoints.Remove(userWithPoints.FirstOrDefault(x => x.Value == lowestPoints).Key);
-                    }
-                }
-                i++;
             }
-            userWithPoints = userWithPoints.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            userWithPoints = userWithPoints.OrderByDescending(x => x.Item2).ToList();
+
+            int count = 0;
+            int currentPoints = 9999;
+            for(int i = 0; i < userWithPoints.Count; i++)
+            {
+                if(userWithPoints[i].Item2 < currentPoints)
+                {
+                    count++;
+                    currentPoints = userWithPoints[i].Item2;
+                }
+                if(count == 5)
+                {
+                    break;
+                }
+            }
+
             return userWithPoints;
         }
 
@@ -265,6 +268,11 @@ namespace ShareCar.Logic.User_Logic
                 LicensePlate = user.LicensePlate,
                 Phone = user.Phone
             };
+        }
+
+        public int GetPoints(string userEmail)
+        {
+            return CountPoints(userEmail);
         }
     }
 }

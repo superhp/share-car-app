@@ -83,6 +83,7 @@ componentWillReceiveProps(nextProps){
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
+    setTimeout( () => { this.map.updateSize();}, 200);
     return { map, vectorSource };
   }
 

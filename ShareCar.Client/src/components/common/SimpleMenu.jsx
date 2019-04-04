@@ -23,7 +23,8 @@ const styles = theme => ({
 class SimpleMenu extends React.Component {
   state = {
     open: false,
-    address: OfficeAddresses[0].street + OfficeAddresses[0].number
+    address: OfficeAddresses[0].street + OfficeAddresses[0].number,
+    index: 0
   };
 
   handleToggle = () => {
@@ -34,8 +35,12 @@ class SimpleMenu extends React.Component {
     if (this.anchorEl.contains(event.target)) {
       return;
     }
-
-    this.setState({ open: false, address: OfficeAddresses[index].street + OfficeAddresses[index].number });
+    if(!index){
+      this.setState({open:false});
+      this.props.handleSelection(OfficeAddresses[this.state.index]);
+      return;
+    }
+    this.setState({ open: false, address: OfficeAddresses[index].street + OfficeAddresses[index].number, index:index });
     this.props.handleSelection(OfficeAddresses[index]);
   };
 

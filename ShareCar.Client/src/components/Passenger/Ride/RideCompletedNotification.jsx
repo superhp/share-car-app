@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import api from "../../../helpers/axiosHelper";
+import "../../../styles/genericStyles.css";
 
 class RideCompletedNotification extends React.Component {
     state = {
@@ -40,7 +41,7 @@ class RideCompletedNotification extends React.Component {
                     <DialogContentText id="alert-dialog-description">
                         Driver: {ride.driverFirstName} {ride.driverLastName}
                         <br/>
-                        Ride time: {ride.rideDateTime}
+                        Ride time: {ride.rideDateTime.split("T").join(" ")}
                     </DialogContentText>
                     <DialogActions>
                         <Button onClick={() => {
@@ -48,7 +49,8 @@ class RideCompletedNotification extends React.Component {
                                 this.sendResponse(true, ride.rideId);
                                 this.setState({ridesId: [...this.state.ridesId, ride.rideId]});
                             }} 
-                            color="primary"
+                            className="ride-completed-notification-button"
+                            variant="outlined"
                         >
                             Yes
                         </Button>
@@ -57,7 +59,8 @@ class RideCompletedNotification extends React.Component {
                                 this.sendResponse(false, ride.rideId);
                                 this.setState({ridesId: [...this.state.ridesId, ride.rideId]});
                             }} 
-                            color="primary"
+                            className="ride-completed-notification-button"
+                            variant="outlined"
                         >
                             No
                         </Button>

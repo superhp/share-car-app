@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     display: block;
-    height: 50%;
+    height: 40%;
     width: auto;
 }
 
@@ -33,6 +33,12 @@
     height: 40px!important;
     margin-top: 15px!important;
     margin-left: 5px!important;
+    background-color: #0a2239!important;
+    color: white!important;
+}
+
+.button-submit:disabled {
+    background-color: #cccccc!important;
 }
 
 .email-submit, .email-input, .code-submit, .code-input {

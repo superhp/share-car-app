@@ -44,6 +44,8 @@ export default class PassengerRideRequestsCard extends React.Component {
                             Status: {Status[parseInt(this.props.request.status)]}
                         </Typography>
                         <Button
+                            variant="contained"
+                            className="show-on-map"
                             onClick={() => {
                                 this.setState({
                                     show: !this.state.show
@@ -56,6 +58,8 @@ export default class PassengerRideRequestsCard extends React.Component {
                         {
                             this.props.request.status === 0 || this.props.request.status === 1 ? (
                                 <Button
+                                    variant="contained"
+                                    className="cancel-request"
                                     onClick={() => { this.props.cancelRequest(this.props.request.requestId) }}
                                 >
                                     Cancel request

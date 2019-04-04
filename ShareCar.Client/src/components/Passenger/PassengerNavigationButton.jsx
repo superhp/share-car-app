@@ -6,8 +6,6 @@ import "../../styles/genericStyles.css";
 export const PassengerNavigationButton = (props) => (
     <Button
         variant="contained"
-        color="primary"
-        style={{ "backgroundColor": "#007bff" }}
         className="next-button"
         onClick={() => props.onClick()}
     >
