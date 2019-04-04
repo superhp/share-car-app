@@ -16,10 +16,16 @@ button.ap-input-icon {
   flex-wrap: wrap;
   position: relative;
   left: 0;
-  top: 70px;
+  top: 20px;
   width: 100%;
   z-index: 999;
 }
+
+.navigation-buttons {
+  position: fixed;
+  bottom: 12%;
+}
+
 .algolia-input {
   justify-self: center;
   margin-top: 20px;
@@ -33,13 +39,7 @@ button.ap-input-icon {
   height: 100px;
   justify-content: center;
 }
-.next-button {
-  position: absolute;
-  height: 50px;
-  top: 450px;
-  left: 15px;
-  z-index: 999;
-}
+
 input.center-location {
   opacity: 0.8;
 }
@@ -58,9 +58,9 @@ input.center-location {
   display: flex;
   justify-content: space-evenly;
 }
-.from-to-container {
+/* .from-to-container {
   height: 100px;
-}
+} */
 .centerElement input {
   flex: 0 0 100%;
 }
