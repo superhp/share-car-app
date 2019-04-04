@@ -19,6 +19,7 @@ export class AddressInput extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        this.algoliaRef.current.autocompleteElem.placeholder = nextProps.placeholder;
         if (nextProps && this.algoliaRef.current && this.placesAutocomplete) {
             this.placesAutocomplete.setVal(nextProps.displayName ? nextProps.displayName : "");
             this.placesAutocomplete.close();
@@ -38,6 +39,7 @@ export class AddressInput extends React.Component {
                     }}
                     onClear={() => this.props.onChange(null)}
                     ref={this.algoliaRef}
+                    placeholder={this.props.placeholder}
                 />
                 {
                     this.props.deletable ?

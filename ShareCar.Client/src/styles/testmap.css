@@ -67,15 +67,7 @@ input.center-location {
 #map div {
   border: none !important;
 }
-div.map-input-selection {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: left;
-  margin-top: 3%;
-  margin-left: 3%;
-  z-index: 999;
-}
+
 div.map-input-selection .form-group {
   display: flex;
   flex-wrap: wrap;
@@ -101,14 +93,48 @@ span.algolia-places {
 }
 div.map-input-selection input.location-select {
   z-index: 999;
+} 
+
+@media (min-width: 750px) {
+  div.displayRoutes {
+    position: absolute;
+    left: 0;
+    top: 10;
+    z-index: 99;
+    width:30%;
+  }
+  div.map-input-selection {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: left;
+    margin-top: 3%;
+    margin-left: 3%;
+    z-index: 999;
+    width:100%;
+  }
+} 
+
+@media (max-width: 749px) {
+  div.displayRoutes {
+    position: absolute;
+    left: 0;
+    top: 10;
+    z-index: 99;
+    width:100%;
+  }
+  div.map-input-selection {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: left;
+    margin-top: 3%;
+    margin-left: 3%;
+    z-index: 999;
+    width:100%;
+  }
 }
-div.displayRoutes {
-  position: absolute;
-  left: 0;
-  top: 10;
-  width: 100%;
-  z-index: 99;
-}
+
 button.continue-button {
   position: absolute;
   bottom: 15vh;
