@@ -36,7 +36,8 @@ export const DriverRouteSuggestionsItem = props => (
         />
         <Button
             color="primary"
-            variant="outlined"
+            variant="contained"
+            className="register-button"
             onClick={() => props.onRegister()}
         >
             Register

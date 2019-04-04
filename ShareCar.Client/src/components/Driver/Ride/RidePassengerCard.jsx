@@ -35,7 +35,8 @@ export default class RidePassengerCard extends React.Component {
                         </Grid>
                         <Grid item md={4}>
                             <Button
-                                variant="outlined"
+                                variant="contained"
+                                className="show-on-map"
                                 onClick={() => { this.setState({ show: !this.state.show }) }}
                             >
                                 Show on map

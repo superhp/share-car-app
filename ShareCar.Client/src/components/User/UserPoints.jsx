@@ -30,7 +30,7 @@ export const UserPoints = (props) => (
                                 variant="display1"
                                 color="textPrimary"
                                 >
-                                {props.pointCount}
+                                {props.pointCount ? props.pointCount : "0"}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -46,7 +46,6 @@ export const UserPoints = (props) => (
                         <Link
                         to={"/" + props.role + "/winnerBoard"}
                         >
-                        {" "}
                             <Grid
                                 container
                                 alignItems="center"

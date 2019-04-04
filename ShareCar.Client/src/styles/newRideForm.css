@@ -51,5 +51,10 @@ div.react-datetime-picker input {
 .create-rides-button button {
   margin-bottom: 15px;
   margin-right: 15px;
-  color: #007bff;
+  color: #f96f59;
+  border-color: #f62f0f;
+}
+
+.create-rides-button button:hover {
+  background-color: white;
 }
