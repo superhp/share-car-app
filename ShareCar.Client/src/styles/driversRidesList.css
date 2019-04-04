@@ -98,3 +98,7 @@ div.passengers-card {
   margin-top: 10px;
   padding: 8px 4px;
 }
+
+.rides-badge{
+  position: absolute !important;
+}
