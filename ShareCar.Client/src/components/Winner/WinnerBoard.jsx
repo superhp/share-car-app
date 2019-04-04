@@ -37,26 +37,23 @@ export class WinnerBoard extends React.Component {
   }
   render() {
     return (
-      <Paper>
-        <Grid container justify="center">
+        <Grid container className="winner-board">
           <Grid item xs={12}>
             <Grid container justify="center">
               <AppBar position="static" color="primary" />
               <Typography
                 variant="display1"
-                color="inherit"
                 className="winner-container"
               >
                 TOP 5
               </Typography>
             </Grid>
           </Grid>
-        </Grid>
         <WinnersList
           winnersList={this.state.winners}
           pointsList={this.state.points}
         />
-      </Paper>
+      </Grid>
     );
   }
 }
