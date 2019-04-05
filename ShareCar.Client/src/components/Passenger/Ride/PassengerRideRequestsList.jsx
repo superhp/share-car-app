@@ -63,10 +63,11 @@ export class PassengerRideRequestsList extends React.Component {
             if (res.status === 200) {
                 requests[index].status = 4;
                 this.setState({ requests: requests });
+                this.showSnackBar("Request was canceled", 0);
             }
         })
             .catch(error => {
-                this.showSnackBar("Failed to cancel request", 2)
+                this.showSnackBar("Failed to cancel request", 2);
             });
 
     }
