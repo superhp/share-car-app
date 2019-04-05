@@ -141,48 +141,46 @@ export class PassengerMap extends React.Component {
         const address = fromLocationIqResponse(response);
         address.longitude = longitude;
         address.latitude = latitude;
-
-        var pts = this.decodeRoutes([this.state.routes[0].geometry]);
-        var d = this.calculateDisntances(pts, address);
-
-
-        this.setState({ passengerAddress: address }, this.changePickUpPoint);
+        this.sortRoutes(address);
+        this.displayRoute();
+        this.setState({ passengerAddress: address, currentRouteIndex: 0 }, this.changePickUpPoint);
       }).catch();
   }
 
   sortRoutes(address) {
-var distances = this.calculateDisntances(this.state.routes, address);
-var routeCopy = [...this.state.routes];
 
-for(var i = 0; i < distances.length; i++){
-routeCopy[i].distance = distances[i];
-}
+    var routePoints = this.decodeRoutes(this.state.routes.map(x => x.geometry));
+    var distances = this.calculateDisntances(routePoints, address);
+    var routeCopy = [...this.state.routes];
+    for (var i = 0; i < distances.length; i++) {
+      routeCopy[i].distance = distances[i];
+    }
 
-this.mergeSort(routeCopy);
+    routeCopy = this.mergeSort(routeCopy);
 
-this.setState({routes:routeCopy});
+    this.setState({ routes: routeCopy });
   }
 
-   mergeSort (arr) {
-    if (arr.length === 1) {
+  mergeSort(arr) {
+    if (arr.length < 2) {
       return arr
     }
-  
-    const middle = Math.floor(arr.length / 2) 
-    const left = arr.slice(0, middle) 
-    const right = arr.slice(middle) 
-  
+
+    const middle = Math.floor(arr.length / 2)
+    const left = arr.slice(0, middle)
+    const right = arr.slice(middle)
+
     return this.merge(
       this.mergeSort(left),
       this.mergeSort(right)
     )
   }
-  
-   merge (left, right) {
+
+  merge(left, right) {
     let result = []
     let indexLeft = 0
     let indexRight = 0
-  
+
     while (indexLeft < left.length && indexRight < right.length) {
       if (left[indexLeft].distance < right[indexRight].distance) {
         result.push(left[indexLeft])
@@ -192,8 +190,9 @@ this.setState({routes:routeCopy});
         indexRight++
       }
     }
-  
+
     return result.concat(left.slice(indexLeft)).concat(right.slice(indexRight))
+
   }
 
   decodeRoutes(routes) {
@@ -225,7 +224,7 @@ this.setState({routes:routeCopy});
       }
       shortestDistances.push(shortestDistance);
     }
-return shortestDistances;
+    return shortestDistances;
   }
 
   distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
