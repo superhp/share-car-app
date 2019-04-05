@@ -57,6 +57,7 @@ componentWillReceiveProps(props){
           clicked: false,
           selectedRideId: null
         });
+        this.showSnackBar("Ride successfully deleted", 0);
       }
     }).catch(() => {
       this.showSnackBar("Failed to delete ride", 2);
