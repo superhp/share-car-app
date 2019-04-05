@@ -20,7 +20,7 @@ export class DriverRouteInput extends React.Component {
                         index={index}
                         deletable={index !== this.props.routePoints.length - 1}
                         removeRoutePoint={id => { this.props.removeRoutePoint(id) }}
-                        placeholder={this.props.isRouteToOffice ? "To location" : "From location"}
+                        placeholder={this.props.isRouteToOffice ? "From location" : "To location"}
                         onChange={(suggestion, index) => this.props.changeRoutePoint(fromAlgoliaAddress(suggestion), index)}
                           displayName={(index + 1) < this.props.routePoints.length
                             ? this.props.routePoints[index + 1].displayName
