@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import ImportExport from "@material-ui/icons/ImportExport";
 
 import { AddressInput } from "../../common/AddressInput";
-import { OfficeAddresses } from "../../../utils/AddressData";
 import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "../../../styles/testmap.css";
@@ -21,6 +20,7 @@ export class DriverRouteInput extends React.Component {
                         index={index}
                         deletable={index !== this.props.routePoints.length - 1}
                         removeRoutePoint={id => { this.props.removeRoutePoint(id) }}
+                        placeholder={this.props.isRouteToOffice ? "To location" : "From location"}
                         onChange={(suggestion, index) => this.props.changeRoutePoint(fromAlgoliaAddress(suggestion), index)}
                           displayName={(index + 1) < this.props.routePoints.length
                             ? this.props.routePoints[index + 1].displayName
@@ -28,23 +28,23 @@ export class DriverRouteInput extends React.Component {
                         }
                     />
                 ))}
-
-                <Button
-                    variant="contained"
-                    className="select-office-menu"
-                    onClick={() => {
-                        this.props.changeDirection();
-                    }}
-                    aria-haspopup="true"
-                >
-                    <ImportExport fontSize="medium" />
-                </Button>
-                <SimpleMenu
-                    handleSelection={office => {
-                        this.props.changeRoutePoint(office, -1);
-                    }}
-                />
-
+                <div className="route-creation-input-buttons">
+                    <Button
+                        variant="contained"
+                        className="select-office-menu"
+                        onClick={() => {
+                            this.props.changeDirection();
+                        }}
+                        aria-haspopup="true"
+                    >
+                        <ImportExport fontSize="medium" />
+                    </Button>
+                    <SimpleMenu
+                        handleSelection={office => {
+                            this.props.changeRoutePoint(office, -1);
+                        }}
+                    />
+                </div>
             </div>
         );
     }

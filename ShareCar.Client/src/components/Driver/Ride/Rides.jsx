@@ -1,5 +1,4 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import "typeface-roboto";
 
 import api from "../../../helpers/axiosHelper";
@@ -8,6 +7,7 @@ import { DriversRidesList } from "./DriversRidesList";
 import "../../../styles/genericStyles.css";
 import SnackBars from "../../common/Snackbars";
 import { SnackbarVariants } from "../../common/SnackbarVariants"
+import { CircularProgress } from "@material-ui/core";
 
 export class Rides extends React.Component {
   state = {
@@ -18,7 +18,8 @@ export class Rides extends React.Component {
     selectedRideId: null,
     snackBarClicked: false,
     snackBarMessage: null,
-    snackBarVariant: null
+    snackBarVariant: null,
+    loading: true
   };
   componentDidMount() {
     this.getDriversRides();
@@ -73,7 +74,7 @@ componentWillReceiveProps(props){
     api.get("Ride")
       .then(response => {
         if (response.status === 200) {
-          this.setState({ rides: response.data });
+          this.setState({ rides: response.data, loading: false });
         }
       })
       .catch((error) => {
@@ -155,58 +156,31 @@ componentWillReceiveProps(props){
           this.setState({ requests: response.data });
       })
       .then(() => {
-        const unseenRequests = [];
-
-        for (let i = 0; i < this.state.requests.length; i++) {
-          if (!this.state.requests[i].seenByDriver) {
-            unseenRequests.push(this.state.requests[i].requestId);
-          }
-        }
-        if (unseenRequests.length !== 0) {
-          api.post("RideRequest/seenDriver", unseenRequests).then(res => {
-          });
-        }
       })
       .catch((error) => {
         this.showSnackBar("Failed to load requests", 2)
       });
   }
 
-  sendRequests() {
-    return this.state.rides.length !== 0
-      ? this.state.requests.length !== 0
-        ? this.state.clicked
-          ? this.state.requests.filter(
-            x => x.rideId === this.state.selectedRideId
-          )
-          : []
-        : []
-      : [];
-  }
   render() {
 
     return (
       <div>
-        <DriversRidesList
-          onDelete={this.handleRideDelete.bind(this)}
-          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => { this.sendRequestResponse(button, response, requestId, rideId, driverEmail) }}
-          selectedRide={this.state.selectedRideId}
-          rideClicked={this.state.clicked}
-          onRideClick={this.handleClick.bind(this)}
-          rides={this.state.rides.length !== 0
-            ? this.state.rides
-            : []}
-          passengers={this.state.rides.length !== 0
-            ? this.state.passengers.length !== 0
-              ? this.state.passengers.filter(x => x.rideId === this.state.selectedRideId)
-              : [] 
-            : []}
-          requests={this.state.rides.length !== 0
-            ? this.state.requests.length !== 0
-              ? this.state.requests.filter(x => x.rideId === this.state.selectedRideId)
-              : []
-            : []}
-        />
+        {this.state.loading ? 
+          <div className="progress-circle">
+            <CircularProgress />
+          </div> 
+          : <DriversRidesList
+            onDelete={this.handleRideDelete.bind(this)}
+            handleRequestResponse={(button, response, requestId, rideId, driverEmail) => { this.sendRequestResponse(button, response, requestId, rideId, driverEmail) }}
+            selectedRide={this.state.selectedRideId}
+            rideClicked={this.state.clicked}
+            onRideClick={this.handleClick.bind(this)}
+            rides={this.state.rides}
+            passengers={this.state.passengers}
+            requests={this.state.requests}
+          />
+        }
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}

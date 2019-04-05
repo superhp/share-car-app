@@ -1,19 +1,13 @@
 import * as React from "react";
-import Moment from "react-moment";
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Badge from "@material-ui/core/Badge";
-import MapComponent from "../../Maps/MapComponent";
 import { Status } from "../../../utils/status";
 import Grid from "@material-ui/core/Grid";
 import "../../../styles/riderequests.css";
 import "../../../styles/genericStyles.css";
 import api from "../../../helpers/axiosHelper";
 import SnackBars from "../../common/Snackbars";
-import { SnackbarVariants } from "../../common/SnackbarVariants"
-import PassengerRideRequestCard from "../PassengerRideRequestCard"
+import { SnackbarVariants } from "../../common/SnackbarVariants";
+import PassengerRideRequestCard from "../PassengerRideRequestCard";
+import { CircularProgress } from "@material-ui/core";
 
 const style = {
     margin: "1em 0",
@@ -28,6 +22,7 @@ export class PassengerRideRequestsList extends React.Component {
         snackBarClicked: false,
         snackBarMessage: null,
         snackBarVariant: null,
+        loading: true
     }
 
     componentDidMount() {
@@ -81,7 +76,7 @@ export class PassengerRideRequestsList extends React.Component {
             .get("RideRequest/passenger")
             .then(response => {
                 if (response.data !== "") {
-                    this.setState({ requests: response.data });
+                    this.setState({ requests: response.data, loading: false });
                 }
             })
             .then(() => {
@@ -106,28 +101,31 @@ export class PassengerRideRequestsList extends React.Component {
 
     render() {
         return (
-            <Grid container style={style} justify="center">
-                <Grid item xs={12} >
-               {this.state.requests.length > 0 
-               ? <div>
-               {this.state.requests.map((req, i) =>
-                    <PassengerRideRequestCard
-                        request={req}
-                        key={i}
-                        index={i}
-                        cancelRequest ={id => {this.cancelRequest(id)}}
+            <div>
+                {this.state.loading 
+                ? <div className="progress-circle">
+                    <CircularProgress />
+                </div> 
+                : <Grid container justify="center">
+                        {this.state.requests.length > 0 ? this.state.requests.map((req, i) =>
+                            <Grid style={style} key={i} item xs={12}>
+                                <PassengerRideRequestCard
+                                    request={req}
+                                    key={i}
+                                    index={i}
+                                    cancelRequest ={id => {this.cancelRequest(id)}}
+                                />
+                            </Grid>)
+                        : <div className="informative-message"><h3>You have no requests</h3></div>
+                        } 
+                    <SnackBars
+                        message={this.state.snackBarMessage}
+                        snackBarClicked={this.state.snackBarClicked}
+                        variant={this.state.snackBarVariant}
                     />
-                )}
-                </div>
-                : <h3>You have no requests</h3>
-               }
-                 </Grid>
-                <SnackBars
-                    message={this.state.snackBarMessage}
-                    snackBarClicked={this.state.snackBarClicked}
-                    variant={this.state.snackBarVariant}
-                />
-            </Grid>
+                </Grid>
+                }
+            </div>  
         )
     }
-}
+}            

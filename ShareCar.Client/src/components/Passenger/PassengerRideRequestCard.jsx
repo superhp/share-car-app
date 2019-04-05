@@ -21,30 +21,34 @@ export default class PassengerRideRequestsCard extends React.Component {
     render() {
         return (
             <div>
-
-                <Card className="request-card">
-
-                    <CardContent >
-                        <Typography variant="headline">
-                            {!this.props.request.seenByPassenger ? (
-                                <Badge
-                                    className="new-badge"
-                                    badgeContent={"new"}
-                                    color="primary"
-                                />
-                            ) : null}
-                        </Typography>
-                        <Typography variant="headline">
-
-                            Name: {this.props.request.driverFirstName} {this.props.request.driverLastName}
-                        </Typography>
-                        <Typography color="textSecondary">
-                            Date: <Moment date={this.props.request.rideDate} format="MM-DD HH:mm" />
-                        </Typography>
-                        <Typography component="p">
-                            Status: {Status[parseInt(this.props.request.status)]}
-                        </Typography>
+            <Card className="request-card generic-card">
+                <Grid container className="requests-card-container">
+                    <Grid item xs={8}>
+                        <CardContent >
+                            <Typography variant="headline" className="generic-color">
+                                {!this.props.request.seenByPassenger ? (
+                                    <Badge
+                                        className="new-badge"
+                                        badgeContent={"new"}
+                                        color="primary"
+                                    />
+                                ) : null}
+                            </Typography>
+                            <Typography className="generic-color" component="p">
+                                Request for {this.props.request.driverFirstName} {this.props.request.driverLastName}
+                            </Typography>
+                            <Typography color="textSecondary">
+                                Date: <Moment date={this.props.request.rideDate} format="MM-DD HH:mm" />
+                            </Typography>
+                            <Typography component="p">
+                                Status: {Status[parseInt(this.props.request.status)]}
+                            </Typography>
+                        </CardContent>
+                    </Grid>
+                    <Grid item xs={4} className="list-buttons">
                         <Button
+                            variant="contained"
+                            className="show-on-map"
                             onClick={() => {
                                 this.setState({
                                     show: !this.state.show
@@ -57,15 +61,20 @@ export default class PassengerRideRequestsCard extends React.Component {
                         {
                             this.props.request.status === 0 || this.props.request.status === 1 ? (
                                 <Button
+                                    variant="contained"
+                                    className="cancel-request"
                                     onClick={() => { this.props.cancelRequest(this.props.request.requestId) }}
                                 >
                                     Cancel request
                         </Button>
                             )
                                 : (<div> </div>)
-                        }
-                    </CardContent>
-                </Card>
+                        } 
+                    </Grid>
+                    
+                        
+                </Grid>
+            </Card>
 
 
 

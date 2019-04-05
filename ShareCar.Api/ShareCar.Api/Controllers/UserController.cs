@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Dto.Identity;
 using ShareCar.Logic.User_Logic;
@@ -13,10 +14,12 @@ namespace ShareCar.Api.Controllers
     public class UserController : Controller
     {
         private readonly IUserLogic _userLogic;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(IUserLogic userLogic)
+        public UserController(IUserLogic userLogic, IUserRepository userRepository)
         {
             _userLogic = userLogic;
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> Get()
@@ -32,13 +35,29 @@ namespace ShareCar.Api.Controllers
         [HttpGet("WinnerBoard")]
         public IActionResult GetWinnerBoard()
         {
-            Dictionary<UserDto, int> users = _userLogic.GetWinnerBoard();
+            var tupleList = _userLogic.GetWinnerBoard();
+            Dictionary<UserDto, int> users = new Dictionary<UserDto, int>();
+
+            foreach(var item in tupleList)
+            {
+                users.Add(item.Item1, item.Item2);
+            }
+
             return Ok(new
             {
                 users = users.Keys,
                 points = users.Values
             });
         }
+
+        [HttpGet("getPoints")]
+        public async Task<IActionResult> GetPointsAsync()
+        {
+            var userDto = await _userRepository.GetLoggedInUser(User);
+
+            return Ok(_userLogic.GetPoints(userDto.Email));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto user)
         {

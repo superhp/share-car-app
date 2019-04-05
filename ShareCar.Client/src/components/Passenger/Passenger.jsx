@@ -2,10 +2,12 @@
 import React, { Component } from "react";
 
 import UserService from "../../services/userService";
-import { ViewRideRequests } from "../Driver/Ride/ViewRideRequests";
 import { PassengerRideRequestsList } from "./Ride/PassengerRideRequestsList";
+import { CircularProgress, withStyles } from "@material-ui/core";
+import { styles } from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
-export default class Passenger extends Component<{}, MyProfileState> {
+class Passenger extends Component<{}, MyProfileState> {
   userService = new UserService();
   state: MyProfileState = { loading: true, user: null };
 
@@ -21,17 +23,19 @@ export default class Passenger extends Component<{}, MyProfileState> {
   };
 
   render() {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading..</em>
-      </p>
-    ) : this.state.user == null ? (
+    const content = this.state.loading ? 
+      <div className="progress-circle">
+        <CircularProgress/>
+      </div>
+      : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-      <div className="role-container">
+      <div>
         <PassengerRideRequestsList refetch={this.props.refetch}/>
       </div>
     );
     return <div>{content}</div>;
   }
 }
+
+export default withStyles(styles) (Passenger);

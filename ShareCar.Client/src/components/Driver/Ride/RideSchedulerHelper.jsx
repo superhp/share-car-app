@@ -4,20 +4,16 @@ import InfiniteCalendar, {
     withMultipleDates,
     defaultMultipleDateInterpolation
 } from "react-infinite-calendar";
-import Typography from "@material-ui/core/Typography";
-import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
-import Toolbar from "@material-ui/core/Toolbar";
 import Slide from "@material-ui/core/Slide";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import TimePickers from "../../common/TimePickers";
 
 import "../../../styles/newRideForm.css";
+import { calendarStyle } from "../../../utils/calendarStyle";
 
 const today = new Date();
 
@@ -54,6 +50,7 @@ class RideSchedulerHelper extends React.Component {
                             disabledDays={[0, 6]}
                             minDate={today}
                             className="calendar"
+                            theme={calendarStyle}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -63,8 +60,10 @@ class RideSchedulerHelper extends React.Component {
                         <Button
                             disabled={this.props.selectedDates.length === 0 ? true : false}
                             variant="outlined"
-                            color="primary"
-                            onClick={() => this.props.handleCreate()}
+                            onClick={() => {
+                                this.props.handleCreate();
+                                this.setState({open: false});
+                            }}
                         >
                             Create Rides
                         </Button>

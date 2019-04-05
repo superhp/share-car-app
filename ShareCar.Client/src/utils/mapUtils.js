@@ -38,7 +38,7 @@ export const coordinatesToLocation = (latitude, longitude) => {
       })
       .then(function (json) {
         resolve(json);
-      });
+      }).catch((error)=>{reject(error)});
   });
 }
 
@@ -80,8 +80,8 @@ export const createRoute = (routePoints, direction) => {
       coordinates += appendCoordinates(routePoints, i)
     }
   } else {
-    for (var i = routePoints.length - 1; i >= 0; i--) {
-      coordinates += appendCoordinates(routePoints, i)
+    for (var j = routePoints.length - 1; j >= 0; j--) {
+      coordinates += appendCoordinates(routePoints, j)
     }
   }
   coordinates = coordinates.substring(0, coordinates.length-1);

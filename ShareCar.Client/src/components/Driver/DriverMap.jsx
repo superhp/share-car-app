@@ -6,8 +6,6 @@ import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 import { OfficeAddresses } from "../../utils/AddressData";
 import RidesScheduler from "./Ride/RidesScheduler";
 import { DriverRouteInput } from "./Map/DriverRouteInput";
@@ -15,9 +13,8 @@ import {
   fromLonLatToMapCoords, fromMapCoordsToLonLat,
   getNearest, coordinatesToLocation,
   createPointFeature, createRouteFeature,
-  createRoute, centerMap
+  createRoute
 } from "./../../utils/mapUtils";
-import { routeStyles } from "./../../utils/mapStyles";
 import { addressToString, fromLocationIqResponse } from "../../utils/addressUtils";
 
 import "./../../styles/testmap.css";
@@ -30,7 +27,7 @@ export class DriverMap extends React.Component {
 
   state = {
     isRideSchedulerVisible: false,
-    isRouteToOffice: true, // can the fromAddress be changed by clicking on the map?
+    isRouteToOffice: true, 
     routeGeometry: null, // only needed to prevent duplicate calls for RidesScheduler
     routePoints: [],
     routePolylineFeature: null,
@@ -95,7 +92,7 @@ export class DriverMap extends React.Component {
 
   displayNewRoute() {
     let points = this.state.routePoints.map(a => a.address);
-    if (points.length == 1) {
+    if (points.length === 1) {
       if (this.state.routePolylineFeature) {
         this.vectorSource.removeFeature(this.state.routePolylineFeature);
         this.setState({ routePolylineFeature: null });
@@ -148,6 +145,8 @@ export class DriverMap extends React.Component {
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
+    setTimeout( () => { this.map.updateSize();}, 200);
+
     return { map, vectorSource };
   }
 
@@ -162,6 +161,7 @@ export class DriverMap extends React.Component {
                 changeDirection={() => this.handleDirectionChange()}
                 routePoints={this.state.routePoints}
                 removeRoutePoint={index => this.removeRoutePoint(index)}
+                isRouteToOffice={this.state.isRouteToOffice}
               />
         </div>
         <div id="map"></div>
@@ -176,7 +176,6 @@ export class DriverMap extends React.Component {
           disabled={this.state.routePoints.length < 2}
           className="continue-button"
           variant="contained"
-          color="primary"
           onClick={() => this.setState({ isRideSchedulerVisible: !this.state.isRideSchedulerVisible })}
         >
           Continue

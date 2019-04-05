@@ -1,5 +1,4 @@
 import * as React from "react";
-import SimpleMenu from "./SimpleMenu";
 import AlgoliaPlaces from "algolia-places-react";
 import Close from "@material-ui/icons/Close";
 
@@ -20,6 +19,7 @@ export class AddressInput extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        this.algoliaRef.current.autocompleteElem.placeholder = nextProps.placeholder;
         if (nextProps && this.algoliaRef.current && this.placesAutocomplete) {
             this.placesAutocomplete.setVal(nextProps.displayName ? nextProps.displayName : "");
             this.placesAutocomplete.close();
@@ -29,7 +29,7 @@ export class AddressInput extends React.Component {
     render() {
 
         return (
-            <div className="form-group">
+            <div className="form-group-map">
                 <AlgoliaPlaces
                     onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => this.props.onChange(suggestion, this.props.index)}
                     onBlur={() => {
@@ -39,6 +39,7 @@ export class AddressInput extends React.Component {
                     }}
                     onClear={() => this.props.onChange(null)}
                     ref={this.algoliaRef}
+                    placeholder={this.props.placeholder}
                 />
                 {
                     this.props.deletable ?

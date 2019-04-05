@@ -10,6 +10,46 @@
   text-align: center;
 }
 
+.pending-request-button .show-on-map, .show-on-map {
+  background-color: #0A2239!important;
+  color: white!important;
+  margin: 3px!important;
+}
+
+.request-card {
+  margin: 1em;
+  margin-top: 10px;
+}
+
+.requests-card-container {
+  background-color: #f5f5f5;
+  vertical-align: middle;
+}
+
+.pending-request-button .show-on-map:hover, .show-on-map:hover {
+  background-color: #10365a!important;
+}
+
+.pending-request-button .accept {
+  margin-top: 3px;
+  background-color: #3581b8!important;
+  color: white!important;
+}
+
+.pending-request-button .accept:hover {
+  background-color: #539acd!important;
+}
+
+.pending-request-button .deny, .cancel-request {
+  background-color: #f74428!important;
+  color: white!important;
+  margin: 3px!important;
+}
+
+.pending-request-button .deny:hover, .cancel-request:hover {
+  background-color: #f96f59!important;
+}
+
 .request-person-info {
   padding-top: 10px;
 }
