@@ -37,3 +37,7 @@ a.navBar-button:hover {
   height: 100%;
   margin-top: 5px;
 }
+
+button:focus {
+  outline:0!important;
+}

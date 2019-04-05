@@ -45,7 +45,8 @@ export const UserPoints = (props) => (
                         justify="center"
                     >
                         <Link
-                        to={"/" + props.role + "/winnerBoard"}
+                            to={"/" + props.role + "/winnerBoard"}
+                            className="winner-board-link"
                         >
                             <Grid
                                 container

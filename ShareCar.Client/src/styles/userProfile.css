@@ -26,6 +26,10 @@ div.form-group input {
   width: 100%;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 .profile-save-button {
   background-color: #f74428!important;
   color: #e8e9eb!important;

@@ -37,3 +37,10 @@
   margin-left: 10px;
 }
   
+button:focus {
+  outline:0!important;
+}
+
+a:link, a:hover {
+  text-decoration: none!important;
+}

@@ -12,3 +12,7 @@ body {
 .map{
   height:300px !important;
 }
+
+button:focus {
+  outline:0!important;
+}

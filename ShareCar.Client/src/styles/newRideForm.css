@@ -9,6 +9,10 @@ div.container {
   justify-content: space-around;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 div.container form .form-group {
   flex-wrap: wrap;
   flex: 0 0 100%;

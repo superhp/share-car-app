@@ -6,6 +6,10 @@
   border-radius: 5px;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 .pending-request-button {
   text-align: center;
 }

@@ -7,6 +7,10 @@ div.container {
   flex-wrap: wrap;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 .drivers-sugestion-modal {
   margin-top: 15px;
 }

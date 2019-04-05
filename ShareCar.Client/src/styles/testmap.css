@@ -21,6 +21,10 @@ button.ap-input-icon {
   z-index: 999;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 .navigation-buttons {
   position: fixed;
   bottom: 12%;

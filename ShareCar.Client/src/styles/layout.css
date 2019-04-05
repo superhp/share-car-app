@@ -41,6 +41,10 @@
   margin-bottom: 9%;
 }
 
+button:focus {
+  outline:0!important;
+}
+
 @keyframes app-logo-spin {
   from {
     transform: rotate(0deg);
