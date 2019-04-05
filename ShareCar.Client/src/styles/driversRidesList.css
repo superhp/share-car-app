@@ -8,7 +8,7 @@ div.container {
 }
 
 .drivers-sugestion-modal {
-  padding-top: 7vh;
+  margin-top: 15px;
 }
 
 .drivers-list-root {
@@ -40,6 +40,15 @@ div.container {
 
 .show-drivers:hover {
   background-color: #10365a!important;
+}
+
+.delete-button {
+  background-color: #f74428!important;
+  color: white!important;
+}
+
+.delete-button:hover {
+  background-color: #f96f59!important;
 }
 
 h2 {

@@ -29,7 +29,7 @@ export class AddressInput extends React.Component {
     render() {
 
         return (
-            <div className="form-group">
+            <div className="form-group-map">
                 <AlgoliaPlaces
                     onChange={({ query, rawAnswer, suggestion, suggestionIndex }) => this.props.onChange(suggestion, this.props.index)}
                     onBlur={() => {

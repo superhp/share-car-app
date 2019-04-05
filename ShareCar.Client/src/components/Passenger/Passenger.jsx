@@ -30,7 +30,7 @@ class Passenger extends Component<{}, MyProfileState> {
       : this.state.user == null ? (
       <p>Failed</p>
     ) : (
-      <div className="role-container">
+      <div>
         <PassengerRideRequestsList refetch={this.props.refetch}/>
       </div>
     );
