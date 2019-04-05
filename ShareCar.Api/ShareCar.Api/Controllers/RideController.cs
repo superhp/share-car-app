@@ -148,7 +148,7 @@ namespace ShareCar.Api.Controllers
             {
                 return BadRequest();
             }
-
+            _passengerLogic.RemovePassengerByRide(rideDto.RideId);
             _rideRequestLogic.DeletedRide(rideDto.RideId);
             _rideLogic.SetRideAsInactive(rideDto);
             return Ok();
