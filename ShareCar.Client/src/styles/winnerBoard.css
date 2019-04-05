@@ -16,4 +16,16 @@
     color: white;
     font-size: 20px;
   }
+
+.winner-board {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.winner-points {
+  color: #f96f59!important;
+  margin-right: 10px;
+  margin-left: 10px;
+}
   

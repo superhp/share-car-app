@@ -20,10 +20,10 @@ export class WinnersList extends React.Component {
               <CardActions>
                 <Grid container>
                   <CardContent className="winner-mapping">
-                    <Typography component="p">
+                    <Typography variant="headline" component="p">
                       {winner.firstName} {winner.lastName}
                     </Typography>
-                    <Typography variant="display1">
+                    <Typography variant="display1" className="winner-points">
                       {this.props.pointsList[index]} pts
                     </Typography>
                   </CardContent>

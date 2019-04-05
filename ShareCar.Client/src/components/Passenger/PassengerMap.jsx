@@ -23,6 +23,10 @@ import "../../styles/testmap.css";
 import SnackBars from "../common/Snackbars";
 import { SnackbarVariants } from "../common/SnackbarVariants";
 import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
+import Media from "react-media";
+import NavigateNext from "@material-ui/icons/NavigateNext";
+import NavigateBefore from "@material-ui/icons/NavigateBefore";
+import Button from "@material-ui/core/Button";
 
 
 export class PassengerMap extends React.Component {
@@ -235,24 +239,52 @@ componentWillReceiveProps(nextProps){
             )}
         </div>
         {this.state.routes.length > 1
-          ? <Grid>
-            <PassengerNavigationButton
-              onClick={() => this.setState({
-                currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
-              },
-                this.displayRoute
-              )}
-              text="View Previous Route"
-            />
-            <PassengerNavigationButton
-              onClick={() => this.setState({
-                currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
-              },
-                this.displayRoute
-              )}
-              text="View Next Route"
-            />
-
+          ? <Grid className="navigation-buttons">
+              <Media query="(min-width: 714px)">
+                {matches => matches ? 
+                  <div>
+                    <PassengerNavigationButton
+                      onClick={() => this.setState({
+                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                      },
+                        this.displayRoute
+                      )}
+                      text="View Previous Route"
+                    />
+                    <PassengerNavigationButton
+                      onClick={() => this.setState({
+                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                      },
+                        this.displayRoute
+                      )}
+                      text="View Next Route"
+                    />
+                  </div>
+                : <div>
+                  <Button
+                      variant="contained"
+                      className="next-button"
+                      onClick={() => this.setState({
+                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                      },
+                        this.displayRoute
+                      )}
+                  >
+                      <NavigateBefore fontSize="large" />
+                  </Button>
+                  <Button
+                      variant="contained"
+                      className="next-button"
+                      onClick={() => this.setState({
+                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                      },
+                        this.displayRoute
+                      )}
+                  >
+                    <NavigateNext fontSize="large" />
+                  </Button>
+                </div>}
+              </Media>
           </Grid>
           : <div />
         }
