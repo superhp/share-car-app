@@ -30,6 +30,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                 className="rides-badge"
                                 badgeContent={"new"}
                                 color="primary"
+                                children={""}
                             />
                          : null}
                         <CardContent >

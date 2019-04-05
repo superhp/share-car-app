@@ -1,8 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Paper from "@material-ui/core/Paper";
 import "typeface-roboto";
 
 import { WinnersList } from "./WinnersList";
@@ -40,7 +38,6 @@ export class WinnerBoard extends React.Component {
         <Grid container className="winner-board">
           <Grid item xs={12}>
             <Grid container justify="center">
-              <AppBar position="static" color="primary" />
               <Typography
                 variant="display1"
                 className="winner-container"

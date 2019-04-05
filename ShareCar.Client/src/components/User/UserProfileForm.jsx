@@ -14,37 +14,37 @@ export const UserProfileForm = (props) => (
             <img className="thumbnail" src={props.user.pictureUrl} alt="" />
             <UserProfileFormField 
                 displayName="Your Email"
-                disabled="true"
+                disabled={true}
                 name="email"
                 type="email"
-                value={props.user.email}
+                value={props.user.email ? props.user.email : ""}
             />
             <UserProfileFormField 
                 displayName="First Name"
                 name="name"
                 type="text"
-                value={props.user.firstName}
+                value={props.user.firstName ? props.user.firstName : ""}
                 onChange={e => props.onNameChange(e)}
             />
             <UserProfileFormField 
                 displayName="Last Name"
                 name="surname"
                 type="text"
-                value={props.user.lastName}
+                value={props.user.lastName ? props.user.lastName : ""}
                 onChange={e => props.onSurnameChange(e)}
             />
             <UserProfileFormField 
                 displayName="Phone Number"
                 name="phone"
                 type="text"
-                value={props.user.phone}
+                value={props.user.phone ? props.user.phone : ""}
                 onChange={e => props.onPhoneChange(e)}
             />
             <UserProfileFormField 
                 displayName="License Plate Number"
                 name="license"
                 type="text"
-                value={props.user.licensePlate}
+                value={props.user.licensePlate ? props.user.licensePlate : ""}
                 onChange={e => props.onLicenseChange(e)}
             />
             <Button

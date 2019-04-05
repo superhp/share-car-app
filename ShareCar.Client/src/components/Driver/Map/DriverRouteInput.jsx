@@ -37,7 +37,7 @@ export class DriverRouteInput extends React.Component {
                         }}
                         aria-haspopup="true"
                     >
-                        <ImportExport fontSize="medium" />
+                        <ImportExport fontSize="default" />
                     </Button>
                     <SimpleMenu
                         handleSelection={office => {

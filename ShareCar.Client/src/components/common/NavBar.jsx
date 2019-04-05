@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Map from "@material-ui/icons/Map";
 import NoteAdd from "@material-ui/icons/NoteAdd";
 import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
