@@ -108,7 +108,7 @@ export class PassengerMap extends React.Component {
 
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
-   
+
 
       const routeFeature = createRouteFeature(route.geometry);
       const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
@@ -141,17 +141,59 @@ export class PassengerMap extends React.Component {
         const address = fromLocationIqResponse(response);
         address.longitude = longitude;
         address.latitude = latitude;
-   
+
         var pts = this.decodeRoutes([this.state.routes[0].geometry]);
         var d = this.calculateDisntances(pts, address);
-        
-   
+
+
         this.setState({ passengerAddress: address }, this.changePickUpPoint);
       }).catch();
   }
 
-  sortRoutes() {
+  sortRoutes(address) {
+var distances = this.calculateDisntances(this.state.routes, address);
+var routeCopy = [...this.state.routes];
 
+for(var i = 0; i < distances.length; i++){
+routeCopy[i].distance = distances[i];
+}
+
+this.mergeSort(routeCopy);
+
+this.setState({routes:routeCopy});
+  }
+
+   mergeSort (arr) {
+    if (arr.length === 1) {
+      return arr
+    }
+  
+    const middle = Math.floor(arr.length / 2) 
+    const left = arr.slice(0, middle) 
+    const right = arr.slice(middle) 
+  
+    return this.merge(
+      this.mergeSort(left),
+      this.mergeSort(right)
+    )
+  }
+  
+   merge (left, right) {
+    let result = []
+    let indexLeft = 0
+    let indexRight = 0
+  
+    while (indexLeft < left.length && indexRight < right.length) {
+      if (left[indexLeft].distance < right[indexRight].distance) {
+        result.push(left[indexLeft])
+        indexLeft++
+      } else {
+        result.push(right[indexRight])
+        indexRight++
+      }
+    }
+  
+    return result.concat(left.slice(indexLeft)).concat(right.slice(indexRight))
   }
 
   decodeRoutes(routes) {
@@ -166,65 +208,38 @@ export class PassengerMap extends React.Component {
   calculateDisntances(routePoints, pickUpPoint) {
 
     const { longitude, latitude } = pickUpPoint;
-
     var shortestDistances = [];
-
-console.log(routePoints);
-console.log(longitude);
-console.log(latitude);
-
-var t1 = 0;
-var t2 = 0;
-var t3 = 0;
-var t4 = 0;
-
 
     for (var i = 0; i < routePoints.length; i++) {
       var shortestDistance = 999999;
-      for (var j = 0; j < routePoints[i].length-1; j++) {
-        var x1 =routePoints[i][j][1];
-        var y1 =routePoints[i][j][0];
-        var x2 =routePoints[i][j+1][1];
-        var y2 =routePoints[i][j+1][0];
+      for (var j = 0; j < routePoints[i].length - 1; j++) {
+        var x1 = routePoints[i][j][1];
+        var y1 = routePoints[i][j][0];
+        var x2 = routePoints[i][j + 1][1];
+        var y2 = routePoints[i][j + 1][0];
 
-//var distance = Math.abs(((y2 - y1)*longitude - (x2 - x1)*latitude + x2*y1 - y2*x1)/Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2)));
-var distance = this.distToSegment({x : longitude, y: latitude}, {x : x1, y: y1}, {x : x2, y: y2})
-console.log(distance)
-if(distance < shortestDistance){
-  shortestDistance = distance;
-  t1 = x1;
-  t2 = y1;
-  t3 = x2;
-  t4 = y2; 
-}
-
-}
-
-shortestDistances.push(shortestDistance);
+        var distance = this.distanceToSegment({ x: longitude, y: latitude }, { x: x1, y: y1 }, { x: x2, y: y2 })
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+        }
+      }
+      shortestDistances.push(shortestDistance);
     }
-    console.log(shortestDistances);
-    console.log(t1);
-    console.log(t2);
-    console.log(t3);
-    console.log(t4);
-  var k = createPointFeature(t1,t2);
-  var l = createPointFeature(t3,t4);
+return shortestDistances;
+  }
 
-  this.vectorSource.addFeature(k);
-  this.vectorSource.addFeature(l);
-
-}
-
- distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x,2) + Math.pow(point1.y - point2.y,2) }
- distToSegmentSquared(pivot, point1, point2) {
-  var l2 = this.distanceBetweenPoints(point1, point2);
-  if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
-  var t = ((pivot.x - point1.x) * (point2.x - point1.x) + (pivot.y - point1.y) * (point2.y - point1.y)) / l2;
-  t = Math.max(0, Math.min(1, t));
-  return this.distanceBetweenPoints(pivot, { x: point1.x + t * (point2.x - point1.x),
-                    y: point1.y + t * (point2.y - point1.y) });
-}
- distToSegment(pivot, point1, point2) { return Math.sqrt(this.distToSegmentSquared(pivot, point1, point2)); }
+  distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
+  distToSegmentSquared(pivot, point1, point2) {
+    var l2 = this.distanceBetweenPoints(point1, point2);
+    if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
+    var t = ((pivot.x - point1.x) * (point2.x - point1.x) + (pivot.y - point1.y) * (point2.y - point1.y)) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return this.distanceBetweenPoints(pivot, {
+      x: point1.x + t * (point2.x - point1.x),
+      y: point1.y + t * (point2.y - point1.y)
+    });
+  }
+  distanceToSegment(pivot, point1, point2) { return Math.sqrt(this.distToSegmentSquared(pivot, point1, point2)); }
 
   onMeetupAddressChange(newAddress) {
     if (newAddress) {
