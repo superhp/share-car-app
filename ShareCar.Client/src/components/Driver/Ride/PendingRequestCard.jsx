@@ -26,6 +26,7 @@ export class PendingRequestCard extends React.Component {
                                         className="new-badge"
                                         badgeContent={"new"}
                                         color="primary"
+                                        children={""}
                                     />
                                 ) : null}
                                 <Typography className="name-para" component="p">

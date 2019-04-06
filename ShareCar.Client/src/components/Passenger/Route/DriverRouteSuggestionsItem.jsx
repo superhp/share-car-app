@@ -15,21 +15,21 @@ export const DriverRouteSuggestionsItem = props => (
             secondary={
                 <React.Fragment>
                     {props.ride.rideDateTime !== null ? 
-                        <div>
+                        <span>
                             <Typography component="span" style={{display: 'inline'}} color="textPrimary">
                                 Time: &nbsp;
                             </Typography>
                             {props.ride.rideDateTime.split("T").join(" ")}
                             <br/>
-                        </div>
+                        </span>
                     : ""}
                     {props.ride.driverPhone !== null ? 
-                        <div>
+                        <span>
                             <Typography component="span" style={{display: 'inline'}} color="textPrimary">
                                 Phone: &nbsp;
                             </Typography>
                             {props.ride.driverPhone}
-                        </div>
+                        </span>
                     : ""}
                 </React.Fragment>
             }

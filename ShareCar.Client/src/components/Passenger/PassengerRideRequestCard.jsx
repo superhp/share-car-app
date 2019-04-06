@@ -10,6 +10,7 @@ import { Status } from "../../utils/status";
 import Grid from "@material-ui/core/Grid";
 import "../../styles/riderequests.css";
 import "../../styles/genericStyles.css";
+import "../../styles/driversRidesList.css";
 
 
 export default class PassengerRideRequestsCard extends React.Component {
@@ -24,16 +25,15 @@ export default class PassengerRideRequestsCard extends React.Component {
             <Card className="request-card generic-card">
                 <Grid container className="requests-card-container">
                     <Grid item xs={8}>
+                        {!this.props.request.seenByPassenger ? 
+                            <Badge
+                                className="rides-badge"
+                                badgeContent={"new"}
+                                color="primary"
+                                children={""}
+                            />
+                         : null}
                         <CardContent >
-                            <Typography variant="headline" className="generic-color">
-                                {!this.props.request.seenByPassenger ? (
-                                    <Badge
-                                        className="new-badge"
-                                        badgeContent={"new"}
-                                        color="primary"
-                                    />
-                                ) : null}
-                            </Typography>
                             <Typography className="generic-color" component="p">
                                 Request for {this.props.request.driverFirstName} {this.props.request.driverLastName}
                             </Typography>

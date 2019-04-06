@@ -11,7 +11,7 @@ export class RidePassengersList extends React.Component {
         <List>
           {this.props.passengers.length !== 0
             ? this.props.passengers.map((passenger, index) => (
-              <ListItem>
+              <ListItem key={index}>
                 
                 <RidePassengerCard
                   passenger={passenger}

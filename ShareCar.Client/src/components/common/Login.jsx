@@ -10,7 +10,6 @@ import "../../styles/login.css";
 import logo from '../../images/shareCarLogo.png';
 import SnackBars from "../common/Snackbars";
 import { SnackbarVariants } from "../common/SnackbarVariants";
-import Grid from "@material-ui/core/Grid";
 
 class Login extends Component<{}> {
   authService: AuthenticationService = new AuthenticationService();

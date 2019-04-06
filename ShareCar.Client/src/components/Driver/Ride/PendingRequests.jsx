@@ -38,11 +38,10 @@ export class PendingRequests extends React.Component {
                     <List>
                         {this.props.rideRequests.length > 0
                             ? this.props.rideRequests.map((req, index) => (
-                                <ListItem>
+                                <ListItem key={index}>
                                     <PendingRequestCard
                                         req={req}
                                         index={index}
-                                        key={index}
                                         onAcceptClick={() => this.props.handleRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
                                         onDenyClick={() => { this.props.handleRequestResponse(Status[2], 2, req.requestId, req.rideId) }}
                                     />

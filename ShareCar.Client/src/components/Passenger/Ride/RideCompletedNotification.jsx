@@ -37,7 +37,7 @@ class RideCompletedNotification extends React.Component {
           >
             <DialogTitle id="alert-dialog-title">{"Have you participated in these rides?"}</DialogTitle>
             {this.props.rides.filter(x => !this.state.ridesId.includes(x.rideId)).map((ride, i) => 
-               <DialogContent>
+               <DialogContent key={i}>
                     <DialogContentText id="alert-dialog-description">
                         Driver: {ride.driverFirstName} {ride.driverLastName}
                         <br/>

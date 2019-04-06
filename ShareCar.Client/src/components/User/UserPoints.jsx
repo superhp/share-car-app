@@ -6,12 +6,13 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import "../../styles/winnerBoard.css";
 
 export const UserPoints = (props) => (
     <Grid container alignItems="center" direction="row" justify="center">
         <Grid item xs={12}>
             <Card>
-                <CardContent>
+                <CardContent className="points-card">
                     <Grid
                         container
                         alignItems="center"
@@ -36,7 +37,7 @@ export const UserPoints = (props) => (
                         </Grid>
                     </Grid>
                 </CardContent>
-                <CardActions>
+                <CardActions className="button-card">
                     <Grid
                         container
                         alignItems="center"
@@ -44,7 +45,8 @@ export const UserPoints = (props) => (
                         justify="center"
                     >
                         <Link
-                        to={"/" + props.role + "/winnerBoard"}
+                            to={"/" + props.role + "/winnerBoard"}
+                            className="winner-board-link"
                         >
                             <Grid
                                 container

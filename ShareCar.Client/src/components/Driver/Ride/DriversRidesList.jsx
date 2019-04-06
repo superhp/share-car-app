@@ -46,7 +46,8 @@ export class DriversRidesList extends React.Component {
                       className="rides-badge"
                       badgeContent={"new"}
                       color="primary"
-                    />
+                      children={""}
+                    ></Badge>
                     : null
                   }
                   <CardContent >

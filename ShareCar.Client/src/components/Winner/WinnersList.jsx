@@ -13,9 +13,9 @@ import "../../styles/driversRidesList.css";
 export class WinnersList extends React.Component {
   render() {
     return (
-      <Grid container>
-        {this.props.winnersList.map((winner, index) => (
-          <Grid item xs={12}>
+      <Grid container justify="center">
+        {this.props.winnersList.length > 0 ? this.props.winnersList.map((winner, index) => (
+          <Grid item xs={12} key={index}>
             <Card className="rides-card generic-card">
               <CardActions>
                 <Grid container>
@@ -31,7 +31,8 @@ export class WinnersList extends React.Component {
               </CardActions>
             </Card>
           </Grid>
-        ))}
+        ))
+        : <h4 style={{marginTop: "10px"}}>There were no rides this month</h4>}
       </Grid>
     );
   }
