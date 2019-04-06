@@ -67,5 +67,14 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
             return passenger != null;
         }
+
+        public void RemovePassengerByRide(int rideId)
+        {
+            var passengers = _databaseContext.Passengers.Where(x => x.RideId == rideId);
+            foreach (var passenger in passengers)
+            {
+                _databaseContext.Remove(passenger);
+            }
+        }
     }
 }

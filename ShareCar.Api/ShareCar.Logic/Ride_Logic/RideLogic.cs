@@ -130,8 +130,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public void SetRideAsInactive(RideDto rideDto)
         {
-
-            _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
+        _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)
