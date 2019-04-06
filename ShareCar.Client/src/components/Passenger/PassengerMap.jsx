@@ -130,7 +130,7 @@ export class PassengerMap extends React.Component {
     const { passengerAddress } = this.state;
     if (passengerAddress) {
       const { longitude, latitude } = passengerAddress;
-      var feature = createPointFeature(longitude, latitude);
+      let feature = createPointFeature(longitude, latitude);
       this.setState({ pickUpPointFeature: feature })
       this.vectorSource.addFeature(feature);
     }
@@ -151,10 +151,10 @@ export class PassengerMap extends React.Component {
 
   sortRoutes(address) {
 
-    var routePoints = this.decodeRoutes(this.state.routes.map(x => x.geometry));
-    var distances = this.calculateDisntances(routePoints, address);
-    var routeCopy = [...this.state.routes];
-    for (var i = 0; i < distances.length; i++) {
+    let routePoints = this.decodeRoutes(this.state.routes.map(x => x.geometry));
+    let distances = this.calculateDisntances(routePoints, address);
+    let routeCopy = [...this.state.routes];
+    for (let i = 0; i < distances.length; i++) {
       routeCopy[i].distance = distances[i];
     }
 
@@ -165,12 +165,12 @@ export class PassengerMap extends React.Component {
 
   mergeSort(arr) {
     if (arr.length < 2) {
-      return arr
+      return arr;
     }
 
-    const middle = Math.floor(arr.length / 2)
-    const left = arr.slice(0, middle)
-    const right = arr.slice(middle)
+    const middle = Math.floor(arr.length / 2);
+    const left = arr.slice(0, middle);
+    const right = arr.slice(middle);
 
     return this.merge(
       this.mergeSort(left),
@@ -199,8 +199,8 @@ export class PassengerMap extends React.Component {
 
   decodeRoutes(routes) {
 
-    var points = [];
-    for (var i = 0; i < routes.length; i++) {
+    let points = [];
+    for (let i = 0; i < routes.length; i++) {
       points.push(polylineDecoder.decode(routes[i]));
     }
     return points;
@@ -209,17 +209,17 @@ export class PassengerMap extends React.Component {
   calculateDisntances(routePoints, pickUpPoint) {
 
     const { longitude, latitude } = pickUpPoint;
-    var shortestDistances = [];
+    let shortestDistances = [];
 
-    for (var i = 0; i < routePoints.length; i++) {
-      var shortestDistance = 999999;
-      for (var j = 0; j < routePoints[i].length - 1; j++) {
-        var x1 = routePoints[i][j][1];
-        var y1 = routePoints[i][j][0];
-        var x2 = routePoints[i][j + 1][1];
-        var y2 = routePoints[i][j + 1][0];
+    for (let i = 0; i < routePoints.length; i++) {
+      let shortestDistance = 999999;
+      for (let j = 0; j < routePoints[i].length - 1; j++) {
+        let x1 = routePoints[i][j][1];
+        let y1 = routePoints[i][j][0];
+        let x2 = routePoints[i][j + 1][1];
+        let y2 = routePoints[i][j + 1][0];
 
-        var distance = this.distanceToSegment({ x: longitude, y: latitude }, { x: x1, y: y1 }, { x: x2, y: y2 })
+        let distance = this.distanceToSegment({ x: longitude, y: latitude }, { x: x1, y: y1 }, { x: x2, y: y2 })
         if (distance < shortestDistance) {
           shortestDistance = distance;
         }
