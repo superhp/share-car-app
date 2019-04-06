@@ -28,6 +28,8 @@ import NavigateNext from "@material-ui/icons/NavigateNext";
 import NavigateBefore from "@material-ui/icons/NavigateBefore";
 import Button from "@material-ui/core/Button";
 
+const polylineDecoder = require('@mapbox/polyline');
+
 
 export class PassengerMap extends React.Component {
   state = {
@@ -50,21 +52,22 @@ export class PassengerMap extends React.Component {
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
   }
 
-componentWillReceiveProps(nextProps){
-  this.vectorSource.clear();
-  this.setState({    
-    passengerAddress: null,
-    direction: "from",
-    routes: [],
-    pickUpPointFeature: null,
-    currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
-    currentRouteIndex: 0,
-    showDriver: false,
-    snackBarMessage: "",
-    snackBarClick: false,
-    snackBarVariant: null,});
-  this.getAllRoutes(OfficeAddresses[0], this.state.direction);
-}
+  componentWillReceiveProps(nextProps) {
+    this.vectorSource.clear();
+    this.setState({
+      passengerAddress: null,
+      direction: "from",
+      routes: [],
+      pickUpPointFeature: null,
+      currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
+      currentRouteIndex: 0,
+      showDriver: false,
+      snackBarMessage: "",
+      snackBarClick: false,
+      snackBarVariant: null,
+    });
+    this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+  }
 
   initializeMap() {
     const vectorSource = new SourceVector();
@@ -107,6 +110,8 @@ componentWillReceiveProps(nextProps){
 
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
+
+
       const routeFeature = createRouteFeature(route.geometry);
       const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
       const toFeature = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
@@ -125,7 +130,7 @@ componentWillReceiveProps(nextProps){
     const { passengerAddress } = this.state;
     if (passengerAddress) {
       const { longitude, latitude } = passengerAddress;
-      var feature = createPointFeature(longitude, latitude);
+      let feature = createPointFeature(longitude, latitude);
       this.setState({ pickUpPointFeature: feature })
       this.vectorSource.addFeature(feature);
     }
@@ -138,9 +143,104 @@ componentWillReceiveProps(nextProps){
         const address = fromLocationIqResponse(response);
         address.longitude = longitude;
         address.latitude = latitude;
-        this.setState({ passengerAddress: address }, this.changePickUpPoint);
+        this.sortRoutes(address);
+        this.displayRoute();
+        this.setState({ passengerAddress: address, currentRouteIndex: 0 }, this.changePickUpPoint);
       }).catch();
   }
+
+  sortRoutes(address) {
+
+    let routePoints = this.decodeRoutes(this.state.routes.map(x => x.geometry));
+    let distances = this.calculateDisntances(routePoints, address);
+    let routeCopy = [...this.state.routes];
+    for (let i = 0; i < distances.length; i++) {
+      routeCopy[i].distance = distances[i];
+    }
+
+    routeCopy = this.mergeSort(routeCopy);
+
+    this.setState({ routes: routeCopy });
+  }
+
+  mergeSort(arr) {
+    if (arr.length < 2) {
+      return arr;
+    }
+
+    const middle = Math.floor(arr.length / 2);
+    const left = arr.slice(0, middle);
+    const right = arr.slice(middle);
+
+    return this.merge(
+      this.mergeSort(left),
+      this.mergeSort(right)
+    )
+  }
+
+  merge(left, right) {
+    let result = []
+    let indexLeft = 0
+    let indexRight = 0
+
+    while (indexLeft < left.length && indexRight < right.length) {
+      if (left[indexLeft].distance < right[indexRight].distance) {
+        result.push(left[indexLeft])
+        indexLeft++
+      } else {
+        result.push(right[indexRight])
+        indexRight++
+      }
+    }
+
+    return result.concat(left.slice(indexLeft)).concat(right.slice(indexRight))
+
+  }
+
+  decodeRoutes(routes) {
+
+    let points = [];
+    for (let i = 0; i < routes.length; i++) {
+      points.push(polylineDecoder.decode(routes[i]));
+    }
+    return points;
+  }
+
+  calculateDisntances(routePoints, pickUpPoint) {
+
+    const { longitude, latitude } = pickUpPoint;
+    let shortestDistances = [];
+
+    for (let i = 0; i < routePoints.length; i++) {
+      let shortestDistance = 999999;
+      for (let j = 0; j < routePoints[i].length - 1; j++) {
+        let x1 = routePoints[i][j][1];
+        let y1 = routePoints[i][j][0];
+        let x2 = routePoints[i][j + 1][1];
+        let y2 = routePoints[i][j + 1][0];
+
+        let distance = this.distanceToSegment({ x: longitude, y: latitude }, { x: x1, y: y1 }, { x: x2, y: y2 })
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+        }
+      }
+      shortestDistances.push(shortestDistance);
+    }
+    return shortestDistances;
+  }
+
+  distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
+  distToSegmentSquared(pivot, point1, point2) {
+    var l2 = this.distanceBetweenPoints(point1, point2);
+    if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
+    var t = ((pivot.x - point1.x) * (point2.x - point1.x) + (pivot.y - point1.y) * (point2.y - point1.y)) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return this.distanceBetweenPoints(pivot, {
+      x: point1.x + t * (point2.x - point1.x),
+      y: point1.y + t * (point2.y - point1.y)
+    });
+  }
+  distanceToSegment(pivot, point1, point2) { return Math.sqrt(this.distToSegmentSquared(pivot, point1, point2)); }
 
   onMeetupAddressChange(newAddress) {
     if (newAddress) {
@@ -230,7 +330,7 @@ componentWillReceiveProps(nextProps){
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
           />
           {this.state.showDriver && this.state.routes.length > 0 ? (
-            <DriverRoutesSugestionsModal 
+            <DriverRoutesSugestionsModal
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
             />
