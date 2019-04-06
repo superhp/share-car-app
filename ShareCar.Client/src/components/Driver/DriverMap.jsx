@@ -64,7 +64,7 @@ export class DriverMap extends React.Component {
     if (address) {
       index++;
       const { longitude, latitude } = address
-      var routePoints = this.state.routePoints;
+      let routePoints = this.state.routePoints;
       if (index >= routePoints.length) {
         this.addNewRoutePoint(address);
       } else {
@@ -84,7 +84,7 @@ export class DriverMap extends React.Component {
         if (!response.address) {
           return;
         } else {
-          var address = fromLocationIqResponse(response);
+          let address = fromLocationIqResponse(response);
           address.longitude = longitude;
           address.latitude = latitude;
 
@@ -130,7 +130,7 @@ export class DriverMap extends React.Component {
 
   // index => index of input field representing route point. Since First Route Point is office (and there is no input field for office) index must be incermented
   removeRoutePoint(index) {
-    var routePoints = this.state.routePoints;
+    let routePoints = this.state.routePoints;
 
     this.vectorSource.removeFeature(this.state.routePoints[index + 1].feature);
 

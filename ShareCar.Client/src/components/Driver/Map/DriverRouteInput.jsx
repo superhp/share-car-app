@@ -28,25 +28,6 @@ export class DriverRouteInput extends React.Component {
                         }
                     />
                 ))}
-<<<<<<< HEAD
-
-                <Button
-                    variant="contained"
-                    className="select-office-menu"
-                    onClick={() => {
-                        this.props.changeDirection();
-                    }}
-                    aria-haspopup="true"
-                >
-                    <ImportExport fontSize="medium" />
-                </Button>
-                <SimpleMenu
-                    handleSelection={office => {
-                        this.props.officeSelectionChange(office, -1);
-                    }}
-                />
-
-=======
                 <div className="route-creation-input-buttons">
                     <Button
                         variant="contained"
@@ -64,7 +45,6 @@ export class DriverRouteInput extends React.Component {
                         }}
                     />
                 </div>
->>>>>>> origin/dev
             </div>
         );
     }
