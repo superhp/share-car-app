@@ -14,6 +14,7 @@ using ShareCar.Db.Repositories.RideRequest_Repository;
 using System;
 using System.Linq;
 using ShareCar.Logic.Exceptions;
+using ShareCar.Logic.Note_Logic;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -27,8 +28,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
         private readonly IUserLogic _userLogic;
+        private readonly IRideRequestNoteLogic _rideRequestNoteLogic;
 
-        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
+        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _addressLogic = addressLogic;
@@ -37,6 +39,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _mapper = mapper;
             _passengerLogic = passengerLogic;
             _routeLogic = routeLogic;
+            _rideRequestNoteLogic = rideRequestNoteLogic;
         }
 
         public void AddRequest(RideRequestDto requestDto, string driverEmail)
@@ -66,6 +69,12 @@ namespace ShareCar.Logic.RideRequest_Logic
             if (_rideLogic.IsRideRequested(requestDto.RideId, requestDto.PassengerEmail))
             {
                 throw new AlreadyRequestedException();
+            }
+
+            if(requestDto.NoteText != null)
+            {
+               var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideId = requestDto.RideId, Text = requestDto.NoteText });
+                requestDto.RideRequestNoteId = note.RideRequestNoteId;
             }
 
             requestDto.AddressId = addressId;

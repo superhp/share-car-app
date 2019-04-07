@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Logic.Exceptions;
+using ShareCar.Logic.Note_Logic;
 
 namespace ShareCar.Api.Controllers
 {
@@ -20,14 +21,16 @@ namespace ShareCar.Api.Controllers
     public class RideRequestController : Controller
     {
         private readonly IRideRequestLogic _requestLogic;
+        private readonly IRideRequestNoteLogic _noteLogic;
         private readonly IUserRepository _userRepository;
         private readonly IRideLogic _rideLogic;
 
-        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository, IRideLogic rideLogic)
+        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository, IRideLogic rideLogic, IRideRequestNoteLogic noteLogic)
         {
             _requestLogic = requestLogic;
             _userRepository = userRepository;
             _rideLogic = rideLogic;
+            _noteLogic = noteLogic;
         }
         [HttpGet("driver")]
         public async Task<IActionResult> GetDriverRequests()
@@ -47,6 +50,13 @@ namespace ShareCar.Api.Controllers
             IEnumerable<RideRequestDto> request = _requestLogic.GetPassengerRequests(userDto.Email);
 
             return Ok(request);
+        }
+
+        [HttpPost("updateNote}")]
+        public IActionResult UpdateNote(DriverNoteDto note)
+        {
+            _noteLogic.UpdateNote(note);
+            return Ok();
         }
 
         [HttpPost]

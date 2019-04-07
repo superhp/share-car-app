@@ -23,6 +23,8 @@ namespace ShareCar.Dto
         public string City { get; set; }
         public string Street { get; set; }
         public string HouseNumber { get; set; }
+        public string NoteText { get; set; }
+        public int RideRequestNoteId { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }
         public RouteDto Route { get; set; }

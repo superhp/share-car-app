@@ -50,7 +50,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("updateNote}")]
-        public IActionResult GetRideNotes(DriverNoteDto note)
+        public IActionResult UpdateNote(DriverNoteDto note)
         {
              _driverNoteLogic.UpdateNote(note);
              return Ok();
