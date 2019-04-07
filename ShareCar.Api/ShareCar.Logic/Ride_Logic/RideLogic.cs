@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.Ride_Repository;
 using ShareCar.Logic.User_Logic;
+using ShareCar.Logic.Note_Logic;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -23,14 +24,16 @@ namespace ShareCar.Logic.Ride_Logic
         private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
         private readonly IUserLogic _userLogic;
+        private readonly IDriverNoteLogic _driverNoteLogic;
         private readonly IPassengerLogic _passengerLogic;
 
-        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IAddressLogic addressLogic, IMapper mapper, IUserLogic userLogic, IPassengerLogic passengerLogic)
+        public RideLogic(IRouteLogic routeLogic, IRideRepository rideRepository, IDriverNoteLogic driverNoteLogic, IAddressLogic addressLogic, IMapper mapper, IUserLogic userLogic, IPassengerLogic passengerLogic)
         {
             _rideRepository = rideRepository;
             _addressLogic = addressLogic;
             _routeLogic = routeLogic;
             _mapper = mapper;
+            _driverNoteLogic = driverNoteLogic;
             _userLogic = userLogic;
             _passengerLogic = passengerLogic;
         }
@@ -122,6 +125,11 @@ namespace ShareCar.Logic.Ride_Logic
             ride.DriverEmail = email;
 
             ride.Requests = new List<RideRequestDto>();
+
+            if(ride.NoteText != null){
+                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.NoteText });
+                ride.DriverNoteId = note.DriverNoteId;
+            }
 
             AddRouteIdToRide(ride);
 

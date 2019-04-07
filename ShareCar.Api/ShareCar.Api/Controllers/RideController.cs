@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
+using ShareCar.Logic.Note_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.RideRequest_Logic;
@@ -26,6 +28,7 @@ namespace ShareCar.Api.Controllers
         private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IUserRepository _userRepository;
         private readonly IPassengerLogic _passengerLogic;
+        private readonly IDriverNoteLogic _driverNoteLogic;
         private readonly IAddressLogic _addressLogic;
 
         public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
@@ -44,6 +47,13 @@ namespace ShareCar.Api.Controllers
 
             IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(ride);
             return Ok(rides);
+        }
+
+        [HttpPost("updateNote}")]
+        public IActionResult GetRideNotes(DriverNoteDto note)
+        {
+             _driverNoteLogic.UpdateNote(note);
+             return Ok();
         }
 
         [HttpPost("passengerResponse")]

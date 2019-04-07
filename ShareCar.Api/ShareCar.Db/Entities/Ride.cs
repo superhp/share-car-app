@@ -13,6 +13,8 @@ namespace ShareCar.Db.Entities
         [DefaultValue (4)]
         public int NumberOfSeats { get; set; }
         public bool isActive { get; set; }
+        public int DriverNoteId { get; set; }
+        public DriverNote Note { get; set; }
         public List<Passenger> Passengers { get; set; }
         public List<RideRequest> Requests { get; set; }
         public DateTime RideDateTime { get; set; }
