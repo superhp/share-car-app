@@ -63,6 +63,9 @@ namespace ShareCar.Db.Repositories.User_Repository
                 PictureUrl = user.PictureUrl,
                 Phone = user.Phone,
                 LicensePlate = user.LicensePlate,
+                CarColor = user.CarColor,
+                CarModel = user.CarModel,
+                NumberOfSeats = user.NumberOfSeats
             };
 
             return userDto;
@@ -74,6 +77,9 @@ namespace ShareCar.Db.Repositories.User_Repository
             _user.FirstName = user.FirstName;
             _user.LastName = user.LastName;
             _user.Phone = user.Phone;
+            _user.CarModel = user.CarModel;
+            _user.CarColor = user.CarColor;
+            _user.NumberOfSeats = user.NumberOfSeats != 0 ? user.NumberOfSeats : _user.NumberOfSeats;
             _user.LicensePlate = user.LicensePlate;
             var userAsync = await _userManager.UpdateAsync(_user);
             return userAsync;
