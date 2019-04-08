@@ -15,6 +15,9 @@ namespace ShareCar.Db.Entities
         public string CognizantEmail { get; set; }
         public string PictureUrl { get; set; }
         public string LicensePlate { get; set; }
+        public string CarColor { get; set; }
+        public string CarModel { get; set; }
+        public int NumberOfSeats { get; set; }
         public string Phone { get; set; }
     }
 }

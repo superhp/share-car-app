@@ -58,13 +58,8 @@ namespace ShareCar.Logic.Ride_Logic
         public IEnumerable<RideDto> GetRidesByDriver(string email)
         {
             IEnumerable<Ride> rides = _rideRepository.GetRidesByDriver(email);
-
-
             List<RideDto> dtoRide = new List<RideDto>();
             int count = 0;
-
-
-
             foreach (var ride in rides)
             {
 
@@ -120,6 +115,10 @@ namespace ShareCar.Logic.Ride_Logic
         public void AddRide(RideDto ride, string email)
         {
             ride.DriverEmail = email;
+
+            var user = _userLogic.GetUserByEmail(EmailType.LOGIN, email);
+
+            ride.NumberOfSeats = user.NumberOfSeats;
 
             ride.Requests = new List<RideRequestDto>();
 
