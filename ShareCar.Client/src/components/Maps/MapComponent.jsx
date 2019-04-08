@@ -50,6 +50,7 @@ export default class MapComponent extends React.Component<{}> {
     const vectorSource = new SourceVector();
     const vectorLayer = new LayerVector({ source: vectorSource });
     const { pickUpPoint, route} = this.props;
+    console.log(this.props);
     const map = new Map({
       target: "map" + this.props.index,
       controls: [],
@@ -66,8 +67,8 @@ export default class MapComponent extends React.Component<{}> {
     });
 
     const f1 = createPointFeature(pickUpPoint.longitude, pickUpPoint.latitude);
-    const f2 = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
-    const f3 = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
+    const f2 = createPointFeature(route.fromAddress.longitude, route.fromAddress.latitude);
+    const f3 = createPointFeature(route.toAddress.longitude, route.toAddress.latitude);
     const f4 = createRouteFeature(route.geometry);
     vectorSource.addFeature(f1);
     vectorSource.addFeature(f2);

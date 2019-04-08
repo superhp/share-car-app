@@ -113,8 +113,8 @@ export class PassengerMap extends React.Component {
 
 
       const routeFeature = createRouteFeature(route.geometry);
-      const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
-      const toFeature = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
+      const fromFeature = createPointFeature(route.fromAddress.longitude, route.fromAddress.latitude);
+      const toFeature = createPointFeature(route.toAddress.longitude, route.toAddress.latitude);
 
       this.setState({ currentRoute: { ...this.state.currentRoute, routeFeature: routeFeature, fromFeature: fromFeature, toFeature: toFeature } });
       this.vectorSource.addFeature(routeFeature);
@@ -259,9 +259,9 @@ export class PassengerMap extends React.Component {
       let routeDto;
       this.setState({ direction: direction });
       if (direction === "to")
-        routeDto = { AddressTo: address };
+        routeDto = { ToAddress: address };
       else
-        routeDto = { AddressFrom: address };
+        routeDto = { FromAddress: address };
       api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
         if (res.status === 200 && res.data !== "") {
           const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;

@@ -38,7 +38,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                 Request for {this.props.request.driverFirstName} {this.props.request.driverLastName}
                             </Typography>
                             <Typography color="textSecondary">
-                                Date: <Moment date={this.props.request.rideDate} format="MM-DD HH:mm" />
+                                Date: <Moment date={this.props.request.rideDateTime} format="MM-DD HH:mm" />
                             </Typography>
                             <Typography component="p">
                                 Status: {Status[parseInt(this.props.request.status)]}
@@ -63,7 +63,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                 <Button
                                     variant="contained"
                                     className="cancel-request"
-                                    onClick={() => { this.props.cancelRequest(this.props.request.requestId) }}
+                                    onClick={() => { this.props.cancelRequest(this.props.request.rideRequestId) }}
                                 >
                                     Cancel request
                         </Button>
@@ -82,7 +82,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                     <Card className="request-card requestMap">
                         <MapComponent
                             pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
-                            route={this.props.request.route}
+                            route={this.props.route}
                             index={this.props.index}
                         />
                     </Card>

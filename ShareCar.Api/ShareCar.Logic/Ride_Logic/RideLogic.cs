@@ -66,8 +66,10 @@ namespace ShareCar.Logic.Ride_Logic
 
             foreach (var ride in rides)
             {
+               
                 var dtoRide = _mapper.Map<Ride, RideDto>(ride);
-
+                dtoRide.Route = _routeLogic.GetRouteById(ride.RouteId);
+                dtoRide.Route.Rides = null;
                 dtoRides.Add(dtoRide);
                   foreach (var request in dtoRide.Requests)
                 {
@@ -75,6 +77,11 @@ namespace ShareCar.Logic.Ride_Logic
                     request.PassengerFirstName = user.FirstName;
                     request.PassengerLastName = user.LastName;
                     request.PassengerPhone = user.Phone;
+                    request.Address = _addressLogic.GetAddressById(request.AddressId);
+                }
+                foreach (var passenger in dtoRide.Passengers)
+                {
+                    passenger.Ride = null;
                 }
             }
 
@@ -174,14 +181,14 @@ namespace ShareCar.Logic.Ride_Logic
         {
 
 
-            if (ride.Route.AddressFrom.Longitude != 0 && ride.Route.AddressFrom.Latitude != 0 && ride.Route.AddressTo.Longitude != 0 && ride.Route.AddressTo.Latitude != 0)
+            if (ride.Route.FromAddress.Longitude != 0 && ride.Route.FromAddress.Latitude != 0 && ride.Route.ToAddress.Longitude != 0 && ride.Route.ToAddress.Latitude != 0)
             {
                 RouteDto route = new RouteDto();
-                route.FromId = _addressLogic.GetAddressId(ride.Route.AddressFrom);
-                route.ToId = _addressLogic.GetAddressId(ride.Route.AddressTo);
+                route.FromId = _addressLogic.GetAddressId(ride.Route.FromAddress);
+                route.ToId = _addressLogic.GetAddressId(ride.Route.ToAddress);
                 route.Geometry = ride.Route.Geometry;
-                route.AddressFrom = ride.Route.AddressFrom;
-                route.AddressTo = ride.Route.AddressTo;
+                route.FromAddress = ride.Route.FromAddress;
+                route.ToAddress = ride.Route.ToAddress;
 
                 int routeId = _routeLogic.GetRouteId(route.Geometry);
                 if (routeId == -1)

@@ -50,7 +50,7 @@ export default class RidePassengerCard extends React.Component {
                                 <Grid item xs={12} zeroMinWidth>
                                     <MapComponent
                                         pickUpPoint={{ longitude: this.props.passenger.longitude, latitude: this.props.passenger.latitude }}
-                                        route={this.props.passenger.route}
+                                        route={this.props.route}
                                         index={this.props.index}
                                     />
                                 </Grid>

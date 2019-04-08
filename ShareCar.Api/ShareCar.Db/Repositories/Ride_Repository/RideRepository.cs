@@ -92,7 +92,6 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             return _databaseContext.Rides
                 .Include(x=>x.Requests)
                 .Include(x => x.Passengers)
-                .Include(x => x.Route)
                 .Where(x => x.DriverEmail == email && x.isActive == true);
         }
 

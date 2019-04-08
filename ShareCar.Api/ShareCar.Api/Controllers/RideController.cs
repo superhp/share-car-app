@@ -115,7 +115,7 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRoutesAsync([FromBody]RouteDto routeDto)
         {
 
-            if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
+            if (routeDto.FromAddress == null && routeDto.ToAddress == null)
             { 
             return BadRequest();
         }

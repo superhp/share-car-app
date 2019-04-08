@@ -50,11 +50,11 @@ export class PassengerRideRequestsList extends React.Component {
 
     cancelRequest(id) {
         var requests = this.state.requests;
-        var index = requests.findIndex(x => x.requestId === id);
+        var index = requests.findIndex(x => x.rideRequestId === id);
         var request = requests[index];
 
         let data = {
-            RequestId: request.requestId,
+            RideRequestId: request.rideRequestId,
             Status: Status[4],
             RideId: request.rideId,
             DriverEmail: request.driverEmail
@@ -85,7 +85,7 @@ export class PassengerRideRequestsList extends React.Component {
 
                 for (let i = 0; i < this.state.requests.length; i++) {
                     if (!this.state.requests[i].seenByPassenger) {
-                        unseenRequests.push(this.state.requests[i].requestId);
+                        unseenRequests.push(this.state.requests[i].rideRequestId);
                     }
                 }
 

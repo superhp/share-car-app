@@ -52,10 +52,10 @@ export class DriversRidesList extends React.Component {
                   }
                   <CardContent >
                     <Typography className="generic-color" component="p">
-                      From {ride.fromStreet} {ride.fromNumber}, {ride.fromCity}
+                      From {ride.route.fromAddress.street} {ride.route.fromAddress.number}, {ride.route.fromAddress.city}
                     </Typography>
                     <Typography color="textSecondary">
-                      To {ride.toStreet} {ride.toNumber}, {ride.toCity}
+                    To {ride.route.toAddress.street} {ride.route.toAddress.number}, {ride.route.toAddress.city}
                     </Typography>
                     <Typography color="textSecondary">
                       {moment(ride.rideDateTime).format("dddd MMM DD YYYY hh:mm")}
@@ -99,9 +99,10 @@ export class DriversRidesList extends React.Component {
         <PendingRequests
           open={this.state.open}
           rideRequests={this.props.requests.filter(x => x.rideId === this.props.selectedRide)}
+          route={this.props.rides.find(x => x.rideId === this.props.selectedRide) ? this.props.rides.find(x => x.rideId === this.props.selectedRide).route : null}
           passengers={this.props.passengers.filter(x => x.rideId === this.props.selectedRide)}
           handleClose={() => this.handleClose()}
-          handleRequestResponse={(button, response, requestId, rideId, driverEmail) => this.props.handleRequestResponse(button, response, requestId, rideId, driverEmail)}
+          handleRequestResponse={(response, rideRequestId, rideId, driverEmail) => this.props.handleRequestResponse(response, rideRequestId, rideId, driverEmail)}
         />
       </Grid>
     );

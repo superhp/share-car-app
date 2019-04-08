@@ -15,7 +15,7 @@ export class PendingRequests extends React.Component {
         const unseenRequests = [];
         for (let i = 0; i < requests.length; i++) {
             if (!requests[i].seenByDriver) {
-                unseenRequests.push(requests[i].requestId);
+                unseenRequests.push(requests[i].rideRequestId);
             }
         }
         if (unseenRequests.length !== 0) {
@@ -33,6 +33,7 @@ export class PendingRequests extends React.Component {
     render() {
         return (
             <Dialog onClose={() => this.props.handleClose()} aria-labelledby="simple-dialog-title" open={this.props.open}>
+            {console.log(this.props.rideRequests)}
                 <div className="pending-requests">
                     <DialogTitle className="dialog-title">Requests</DialogTitle>
                     <List>
@@ -42,8 +43,9 @@ export class PendingRequests extends React.Component {
                                     <PendingRequestCard
                                         req={req}
                                         index={index}
-                                        onAcceptClick={() => this.props.handleRequestResponse(Status[1], 1, req.requestId, req.rideId, req.driverEmail)}
-                                        onDenyClick={() => { this.props.handleRequestResponse(Status[2], 2, req.requestId, req.rideId) }}
+                                        route={this.props.route}
+                                        onAcceptClick={() => this.props.handleRequestResponse(1, req.rideRequestId, req.rideId, req.driverEmail)}
+                                        onDenyClick={() => { this.props.handleRequestResponse(2, req.rideRequestId, req.rideId) }}
                                     />
                                 </ListItem>
                             ))
@@ -52,6 +54,8 @@ export class PendingRequests extends React.Component {
                     <DialogTitle className="dialog-title">Passengers</DialogTitle>
                     <RidePassengersList
                         passengers={this.props.passengers}
+                        route={this.props.route}
+
                     />
                 </div>
             </Dialog>

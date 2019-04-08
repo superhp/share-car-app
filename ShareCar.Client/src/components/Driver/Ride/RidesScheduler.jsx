@@ -65,7 +65,7 @@ class RidesScheduler extends React.Component {
 
     const ride = {
       route:{
-        AddressFrom:{
+        FromAddress:{
           Number: from.number,
           Street: from.street,
           City: from.city,
@@ -73,7 +73,7 @@ class RidesScheduler extends React.Component {
           Longitude: from.longitude,
           Latitude: from.latitude,
         },
-        AddressTo:{
+        ToAddress:{
           Number: to.number,
           Street: to.street,
           City: to.city,

@@ -84,8 +84,8 @@ export class PendingRequestCard extends React.Component {
                         <Grid container justify="center">
                             <Grid item xs={12} zeroMinWidth>
                                 <MapComponent
-                                    pickUpPoint={{ longitude: this.props.req.longitude, latitude: this.props.req.latitude }}
-                                    route={this.props.req.route}
+                                    pickUpPoint={{ longitude: this.props.req.address.longitude, latitude: this.props.req.address.latitude }}
+                                    route={this.props.route}
                                     index={this.props.index}
                                 />
                             </Grid>
