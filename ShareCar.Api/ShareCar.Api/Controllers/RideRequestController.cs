@@ -32,15 +32,6 @@ namespace ShareCar.Api.Controllers
             _rideLogic = rideLogic;
             _noteLogic = noteLogic;
         }
-        [HttpGet("driver")]
-        public async Task<IActionResult> GetDriverRequests()
-        {
-            var userDto = await _userRepository.GetLoggedInUser(User);
-
-            IEnumerable<RideRequestDto> request = _requestLogic.GetDriverRequests(userDto.Email);
-
-            return Ok(request);
-        }
 
         [HttpGet("passenger")]
         public async Task<IActionResult> GetPassengerRequests()

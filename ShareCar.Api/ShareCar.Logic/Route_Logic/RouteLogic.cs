@@ -68,6 +68,7 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     if(ride.DriverEmail != email && ride.RideDateTime >= routeDto.FromTime && ride.isActive)
                     {
+                        ride.Route = null;
                         rides.Add(ride);
                     }
                 }

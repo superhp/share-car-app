@@ -11,24 +11,15 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         private readonly ApplicationDbContext _databaseContext;
 
-
         public RideRequestRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
         }
 
-
         public void AddRequest(RideRequest request)
         {
             _databaseContext.Requests.Add(request);
             _databaseContext.SaveChanges();
-        }
-
-        public IEnumerable<RideRequest> GetDriverRequests(string email)
-        {
-
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
-
         }
 
         public IEnumerable<RideRequest> GetRequestsByRideId(int rideId)

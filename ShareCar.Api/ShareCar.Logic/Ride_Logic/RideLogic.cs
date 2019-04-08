@@ -62,21 +62,23 @@ namespace ShareCar.Logic.Ride_Logic
         {
             IEnumerable<Ride> rides = _rideRepository.GetRidesByDriver(email);
 
-
-            List<RideDto> dtoRide = new List<RideDto>();
-            int count = 0;
-
-
+            List<RideDto> dtoRides = new List<RideDto>();
 
             foreach (var ride in rides)
             {
+                var dtoRide = _mapper.Map<Ride, RideDto>(ride);
 
-                RouteDto route = _routeLogic.GetRouteById(ride.RouteId);
-                dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
-                dtoRide[count].Route = route;
-                count++;
+                dtoRides.Add(dtoRide);
+                  foreach (var request in dtoRide.Requests)
+                {
+                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
+                    request.PassengerFirstName = user.FirstName;
+                    request.PassengerLastName = user.LastName;
+                    request.PassengerPhone = user.Phone;
+                }
             }
-            return dtoRide;
+
+            return dtoRides;
         }
 
         public IEnumerable<RideDto> GetRidesByStartPoint(int addressFromId)
@@ -97,14 +99,6 @@ namespace ShareCar.Logic.Ride_Logic
 
             return MapToList(passengers);
         }
-        /*  
-          public IEnumerable<RideDto> FindRidesByPassenger(PassengerDto passenger)
-          {
-
-              IEnumerable<Ride> rides =  _rideRepository.FindRidesByPassenger(_mapper.Map<PassengerDto,Passenger>(passenger));
-
-              return MapToList(rides);
-          }*/
 
         public void AddRide(RideDto ride, string email)
         {
@@ -126,7 +120,7 @@ namespace ShareCar.Logic.Ride_Logic
 
         public void SetRideAsInactive(RideDto rideDto)
         {
-        _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
+            _rideRepository.SetRideAsInactive(_mapper.Map<RideDto, Ride>(rideDto));
         }
 
         public bool DoesUserBelongsToRide(string email, int rideId)

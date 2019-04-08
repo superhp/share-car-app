@@ -30,19 +30,19 @@ namespace ShareCar.Test
             {
                 new RideRequestDto
                 {
-                    RequestId = 1,
+                    RideRequestId = 1,
                     SeenByPassenger = true,
                     Status = Status.ACCEPTED,
                 },
                 new RideRequestDto
                 {
-                    RequestId = 2,
+                    RideRequestId = 2,
                     SeenByPassenger = true,
                     Status = Status.WAITING,
                 },
                 new RideRequestDto
                 {
-                    RequestId = 3,
+                    RideRequestId = 3,
                     SeenByPassenger = false,
                     Status = Status.ACCEPTED,
                 },

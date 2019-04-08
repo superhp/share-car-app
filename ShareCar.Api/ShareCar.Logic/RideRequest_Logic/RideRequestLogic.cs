@@ -47,7 +47,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
             requestDto.DriverEmail = driverEmail;
-            int addressId = _addressLogic.GetAddressId(new AddressDto { City = requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longitude = requestDto.Longitude, Latitude = requestDto.Latitude });
+            int addressId = _addressLogic.GetAddressId(requestDto.Address);
 
             if(addressId == -1)
             {
@@ -83,7 +83,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public void UpdateRequest(RideRequestDto request)
         {
-            var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);
+            var entityRequest = _rideRequestRepository.GetRequestById(request.RideRequestId);
             var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
 
             if(request.Status == previousStatus)
@@ -143,7 +143,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)
+        public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
 
@@ -155,36 +155,13 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                 dtoRequests[count].Route = route;
 
-                if (isDriver)
-                {
-                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
-                    dtoRequests[count].PassengerFirstName = user.FirstName;
-                    dtoRequests[count].PassengerLastName = user.LastName;
-                    dtoRequests[count].PassengerPhone = user.Phone;
-                }
-                else
-                {
                     var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.DriverEmail);
                     dtoRequests[count].DriverFirstName = user.FirstName;
                     dtoRequests[count].DriverLastName = user.LastName;
-                }
 
                  AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
-                dtoRequests[count].City = address.City;
-                dtoRequests[count].Street = address.Street;
-                dtoRequests[count].HouseNumber = address.Number;
-                dtoRequests[count].Longitude = address.Longitude;
-                dtoRequests[count].Latitude = address.Latitude;
-                RideDto ride = _rideLogic.GetRideById(request.RideId);
-                if (ride != null)
-                {
-                    dtoRequests[count].RideDate = ride.RideDateTime;
-                }
-                else
-                {
-                    dtoRequests[count].RideDate = new DateTime();
-                }
+                dtoRequests[count].Address = address;
                 count++;
             }
             return dtoRequests;
@@ -214,18 +191,10 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             entityRequest = _rideRequestRepository.GetPassengerRequests(email);
 
-            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest);
 
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
 
-        public IEnumerable<RideRequestDto> GetDriverRequests(string email)
-        {
-            IEnumerable<RideRequest> entityRequest;
-            entityRequest = _rideRequestRepository.GetDriverRequests(email);
-
-            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
-            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
-        }
     }
 }
