@@ -16,7 +16,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         IEnumerable<Passenger> GetPassengersByRideId(int rideId);
         void UpdateRide(Ride ride);
         void SetRideAsInactive(Ride ride);
-        void AddRide(Ride ride);
+        Ride AddRide(Ride ride);
         IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId);
         IEnumerable<Ride> GetRidesByPassenger(Passenger passenger);
         IEnumerable<Ride> GetRidesByRoute(string routeGeometry);

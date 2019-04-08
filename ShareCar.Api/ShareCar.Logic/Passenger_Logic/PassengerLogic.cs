@@ -56,7 +56,7 @@ namespace ShareCar.Logic.Passenger_Logic
                 passenger.Ride.Requests = passenger.Ride.Requests.Where(x => x.PassengerEmail == passenger.Email && x.Status == Db.Entities.Status.ACCEPTED).ToList();
                 var dtoPassenger = _mapper.Map<Passenger, PassengerDto>(passenger);
                 var address = _addressLogic.GetAddressById(passenger.Ride.Requests[0].AddressId);
-                var route = _routeLogic.GetRouteByRequest(passenger.Ride.Requests[0].RequestId);
+                var route = _routeLogic.GetRouteByRequest(passenger.Ride.Requests[0].RideRequestId);
                 dtoPassenger.Longitude = address.Longitude;
                 dtoPassenger.Latitude = address.Latitude;
                 dtoPassenger.Route = route;

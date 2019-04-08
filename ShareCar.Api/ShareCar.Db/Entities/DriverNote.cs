@@ -9,6 +9,8 @@ namespace ShareCar.Db.Entities
     {
         public int DriverNoteId { get; set; }
         public string Text { get; set; }
+        public Ride Ride { get; set; }
+        public int RideId { get; set; }
         public List<DriverSeenNote> DriverSeenNotes { get; set; }
     }
 }

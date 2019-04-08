@@ -23,6 +23,8 @@ namespace ShareCar.Db
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<RideRequest>()
+    .HasKey(x => x.RideRequestId);
             modelBuilder.Entity<Passenger>()
                 .HasKey(x => new { x.Email, x.RideId });
             modelBuilder.Entity<Route>()
@@ -35,7 +37,9 @@ namespace ShareCar.Db
                 .Property(x => x.isActive)
                 .HasDefaultValue(true);
 
-
+            modelBuilder.Entity<DriverNote>()
+            .HasMany(x => x.DriverSeenNotes)
+            .WithOne(y => y.Note);
 
 
 

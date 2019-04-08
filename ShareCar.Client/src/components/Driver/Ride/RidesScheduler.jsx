@@ -64,19 +64,25 @@ class RidesScheduler extends React.Component {
   createRide(from, to, element) {
 
     const ride = {
-      fromNumber: from.number,
-      fromStreet: from.street,
-      fromCity: from.city,
-      fromCountry: "Lithuania",
-      toNumber: to.number,
-      toStreet: to.street,
-      toCity: to.city,
-      toCountry: "Lithuania",
-      routeGeometry: this.props.routeInfo.routeGeometry,
-      fromLongitude: from.longitude,
-      fromLatitude: from.latitude,
-      toLongitude: to.longitude,
-      toLatitude: to.latitude,
+      route:{
+        AddressFrom:{
+          Number: from.number,
+          Street: from.street,
+          City: from.city,
+          Country: "Lithuania",
+          Longitude: from.longitude,
+          Latitude: from.latitude,
+        },
+        AddressTo:{
+          Number: to.number,
+          Street: to.street,
+          City: to.city,
+          Country: "Lithuania",
+          Longitude: to.longitude,
+          Latitude: to.latitude,
+        },
+        Geometry: this.props.routeInfo.routeGeometry,
+      },
       rideDateTime:
         element.getFullYear() +
         "-" +

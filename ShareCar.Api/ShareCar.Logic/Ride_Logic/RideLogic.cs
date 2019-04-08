@@ -73,21 +73,7 @@ namespace ShareCar.Logic.Ride_Logic
 
                 RouteDto route = _routeLogic.GetRouteById(ride.RouteId);
                 dtoRide.Add(_mapper.Map<Ride, RideDto>(ride));
-                AddressDto fromAddress = _addressLogic.GetAddressById(route.FromId);
-                dtoRide[count].FromCountry = fromAddress.Country;
-                dtoRide[count].FromCity = fromAddress.City;
-                dtoRide[count].FromStreet = fromAddress.Street;
-                dtoRide[count].FromNumber = fromAddress.Number;
-                dtoRide[count].FromLongitude = fromAddress.Longitude;
-                dtoRide[count].FromLatitude = fromAddress.Latitude;
-
-                AddressDto toAddress = _addressLogic.GetAddressById(route.ToId);
-                dtoRide[count].ToCountry = toAddress.Country;
-                dtoRide[count].ToCity = toAddress.City;
-                dtoRide[count].ToStreet = toAddress.Street;
-                dtoRide[count].ToNumber = toAddress.Number;
-                dtoRide[count].ToLongitude = toAddress.Longitude;
-                dtoRide[count].ToLatitude = toAddress.Latitude;
+                dtoRide[count].Route = route;
                 count++;
             }
             return dtoRide;
@@ -126,14 +112,16 @@ namespace ShareCar.Logic.Ride_Logic
 
             ride.Requests = new List<RideRequestDto>();
 
-            if(ride.NoteText != null){
-                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.NoteText });
-                ride.DriverNoteId = note.DriverNoteId;
-            }
+
 
             AddRouteIdToRide(ride);
 
-            _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+            var entity = _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
+            if (ride.NoteText != null)
+            {
+                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.NoteText, RideId = entity.RideId });
+                ride.DriverNoteId = note.DriverNoteId;
+            }
         }
 
         public void SetRideAsInactive(RideDto rideDto)
@@ -190,36 +178,21 @@ namespace ShareCar.Logic.Ride_Logic
 
         private void AddRouteIdToRide(RideDto ride)
         {
-            AddressDto fromAddress = new AddressDto
-            {
-                City = ride.FromCity,
-                Street = ride.FromStreet,
-                Number = ride.FromNumber,
-                Longitude = ride.FromLongitude,
-                Latitude = ride.FromLatitude
-            };
-            AddressDto toAddress = new AddressDto
-            {
-                City = ride.ToCity,
-                Street = ride.ToStreet,
-                Number = ride.ToNumber,
-                Longitude = ride.ToLongitude,
-                Latitude = ride.ToLatitude
-            };
 
-            if (fromAddress.Longitude != 0 && fromAddress.Latitude != 0 && toAddress.Longitude != 0 && toAddress.Latitude != 0)
+
+            if (ride.Route.AddressFrom.Longitude != 0 && ride.Route.AddressFrom.Latitude != 0 && ride.Route.AddressTo.Longitude != 0 && ride.Route.AddressTo.Latitude != 0)
             {
                 RouteDto route = new RouteDto();
-                route.FromId = _addressLogic.GetAddressId(fromAddress);
-                route.ToId = _addressLogic.GetAddressId(toAddress);
-                route.Geometry = ride.RouteGeometry;
-                route.AddressFrom = fromAddress;
-                route.AddressTo = toAddress;
+                route.FromId = _addressLogic.GetAddressId(ride.Route.AddressFrom);
+                route.ToId = _addressLogic.GetAddressId(ride.Route.AddressTo);
+                route.Geometry = ride.Route.Geometry;
+                route.AddressFrom = ride.Route.AddressFrom;
+                route.AddressTo = ride.Route.AddressTo;
 
                 int routeId = _routeLogic.GetRouteId(route.Geometry);
                 if (routeId == -1)
                 {
-                    route.Geometry = ride.RouteGeometry;
+                    route.Geometry = ride.Route.Geometry;
                     _routeLogic.AddRoute(route);
                     ride.RouteId = _routeLogic.GetRouteId(route.Geometry);
                 }

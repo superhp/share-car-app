@@ -12,8 +12,8 @@ using System;
 namespace ShareCar.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190407091957_note entities")]
-    partial class noteentities
+    [Migration("20190408092344_Ride and driver note entities foreign keys inverted#")]
+    partial class Rideanddrivernoteentitiesforeignkeysinverted
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,13 +155,13 @@ namespace ShareCar.Db.Migrations
                     b.Property<int>("DriverNoteId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DriverEmail");
+                    b.Property<int>("RideId");
 
                     b.Property<string>("Text");
 
                     b.HasKey("DriverNoteId");
 
-                    b.HasIndex("DriverEmail");
+                    b.HasIndex("RideId");
 
                     b.ToTable("DriverNotes");
                 });
@@ -237,7 +237,7 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.RideRequest", b =>
                 {
-                    b.Property<int>("RequestId")
+                    b.Property<int>("RideRequestId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AddressId");
@@ -254,7 +254,7 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<int>("Status");
 
-                    b.HasKey("RequestId");
+                    b.HasKey("RideRequestId");
 
                     b.HasIndex("AddressId");
 
@@ -272,19 +272,13 @@ namespace ShareCar.Db.Migrations
                     b.Property<int>("RideRequestNoteId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Email");
-
-                    b.Property<int>("RideId");
+                    b.Property<int>("RideRequestId");
 
                     b.Property<string>("Text");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("RideRequestNoteId");
 
-                    b.HasIndex("RideId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("RideRequestId");
 
                     b.ToTable("RideRequestNotes");
                 });
@@ -451,9 +445,10 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.DriverNote", b =>
                 {
-                    b.HasOne("ShareCar.Db.Entities.User", "Driver")
+                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
                         .WithMany()
-                        .HasForeignKey("DriverEmail");
+                        .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.DriverSeenNote", b =>
@@ -512,14 +507,10 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.RideRequestNote", b =>
                 {
-                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
+                    b.HasOne("ShareCar.Db.Entities.RideRequest", "RideRequest")
                         .WithMany()
-                        .HasForeignKey("RideId")
+                        .HasForeignKey("RideRequestId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ShareCar.Db.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Route", b =>

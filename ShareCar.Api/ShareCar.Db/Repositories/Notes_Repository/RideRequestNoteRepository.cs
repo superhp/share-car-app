@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ShareCar.Db.Repositories.Notes_Repository
 {
-    public class RideRequestRepository : IRideRequestNoteRepository
+    public class RideRequestNoteRepository : IRideRequestNoteRepository
     {
         private readonly ApplicationDbContext _databaseContext;
 
-        public RideRequestRepository(ApplicationDbContext databaseContext)
+        public RideRequestNoteRepository(ApplicationDbContext databaseContext)
         {
             _databaseContext = databaseContext;
         }

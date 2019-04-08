@@ -15,6 +15,8 @@ using ShareCar.Db.Repositories.Route_Repository;
 using ShareCar.Db.Repositories.Ride_Repository;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Logic.Identity_Logic;
+using ShareCar.Db.Repositories.Notes_Repository;
+using ShareCar.Logic.Note_Logic;
 
 namespace ShareCar.Logic.DI
 {
@@ -39,10 +41,12 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IRideLogic, RideLogic>();
             services.AddScoped<IRouteLogic, RouteLogic>();
             services.AddScoped<IRideRequestLogic, RideRequestLogic>();
-            services.AddScoped<User_Logic.IUserLogic, UserLogic>();
+            services.AddScoped<IUserLogic, UserLogic>();
             services.AddScoped<IAddressLogic, AddressLogic>();
             services.AddScoped<IPassengerLogic, PassengerLogic>();
             services.AddScoped<ICognizantIdentity, CognizantIdentity>();
+            services.AddScoped<IDriverNoteLogic, DriverNoteLogic>();
+            services.AddScoped<IRideRequestNoteLogic, RideRequestNoteLogic>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
@@ -54,8 +58,10 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IRideRepository, RideRepository>();
 
             services.AddScoped<IPassengerRepository, PassengerRepository>();
+            services.AddScoped<IDriverNoteRepository, DriverNoteRepository>();
+            services.AddScoped<IRideRequestNoteRepository, RideRequestNoteRepository>();
 
-            services.AddScoped<Db.Repositories.User_Repository.IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
 

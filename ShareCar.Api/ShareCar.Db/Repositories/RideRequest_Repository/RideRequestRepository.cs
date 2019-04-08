@@ -40,7 +40,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         {
             foreach (RideRequest request in requests)
             {
-                RideRequest toUpdate = _databaseContext.Requests.Find(request.RequestId);
+                RideRequest toUpdate = _databaseContext.Requests.Find(request.RideRequestId);
                 if (toUpdate == null)
                 {
                     throw new ArgumentException("User not found.");
@@ -71,7 +71,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
             foreach (int id in requests)
             {
-                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RideRequestId == id);
                 toUpdate.SeenByDriver = true;
             }
 
@@ -80,7 +80,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public void SeenByPassenger(int[] requests)
         {
-            IEnumerable<RideRequest> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
+            IEnumerable<RideRequest> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RideRequestId));
 
             foreach (var request in toUpdate)
             {
@@ -91,7 +91,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public void UpdateRequest(RideRequest request)
         {
-            RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+            RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RideRequestId == request.RideRequestId);
             toUpdate.Status = request.Status;
             toUpdate.SeenByPassenger = request.SeenByPassenger;
             toUpdate.SeenByDriver = request.SeenByDriver;

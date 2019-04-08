@@ -22,12 +22,13 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         }
 
 
-        public void AddRide(Ride ride)
+        public Ride AddRide(Ride ride)
         {
                 ride.isActive = true;
-                _databaseContext.Rides.Add(ride);
+               var entity = _databaseContext.Rides.Add(ride).Entity;
 
                 _databaseContext.SaveChanges();
+            return entity;
             }
 
         public IEnumerable<Ride> GetRidesByDate(DateTime date)

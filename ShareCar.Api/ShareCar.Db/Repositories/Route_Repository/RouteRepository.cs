@@ -27,7 +27,7 @@ namespace ShareCar.Db.Repositories.Route_Repository
         }
         public Route GetRouteById(int id)
         {
-                return _databaseContext.Routes.Find(id); 
+                return _databaseContext.Routes.Include(x => x.FromAddress).Include(x => x.ToAddress).Single(x => x.RouteId == id); 
         }
         public void AddRoute(Route route)
         {
@@ -74,7 +74,7 @@ namespace ShareCar.Db.Repositories.Route_Repository
             var result = from route in _databaseContext.Routes.Include(x => x.ToAddress).Include(x => x.FromAddress)
                          from rides in route.Rides
                          from requests in rides.Requests
-                         where requests.RequestId == requestId
+                         where requests.RideRequestId == requestId
                          select route;
                     
             return result.ToList()[0];

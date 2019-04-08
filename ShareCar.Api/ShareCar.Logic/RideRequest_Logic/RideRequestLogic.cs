@@ -151,7 +151,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             foreach (var request in entityRequests)
             {
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
-                var route = _routeLogic.GetRouteByRequest(request.RequestId);
+                var route = _routeLogic.GetRouteByRequest(request.RideRequestId);
 
                 dtoRequests[count].Route = route;
 
