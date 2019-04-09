@@ -77,7 +77,7 @@ export class PassengerMap extends React.Component {
       .then((response) => {
         this.setState({ users: response.data });
       })
-      .catch(() => {
+      .catch((err) => {
         this.showSnackBar("Something went wrong.", 2)
       });
   }

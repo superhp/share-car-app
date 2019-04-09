@@ -9,14 +9,9 @@ import { AddressInput } from "../../common/AddressInput";
 import { fromAlgoliaAddress } from "../../../utils/addressUtils";
 
 import "./../../../styles/genericStyles.css";
+import "./../../../styles/driverAutoSuggest.css";
 
-// Teach Autosuggest how to calculate suggestions for any given input value.
- 
-
-// When suggestion is clicked, Autosuggest needs to populate the input
-// based on the clicked suggestion. Teach Autosuggest how to calculate the
-// input value for every given suggestion.
-
+const escapeRegexCharacters = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export class PassengerRouteSelection extends React.Component {
 
@@ -24,64 +19,69 @@ export class PassengerRouteSelection extends React.Component {
         address: this.props.initialAddress,
         direction: this.props.direction,
         value: '',
-        users:[],
+        users: [],
         suggestions: []
     }
 
-     getSuggestionValue = suggestion => suggestion.name;
 
-    // Use your imagination to render suggestions.
-     renderSuggestion = suggestion => (
-        <div>
-            {suggestion.name}
-        </div>
-    );
-
-    getSuggestions = value => {
-        const inputValue = value.trim().toLowerCase();
-        const inputLength = inputValue.length;
+     getSuggestions = value => {
+        const escapedValue = escapeRegexCharacters(value.trim());
+        
+        if (escapedValue === '') {
+          return [];
+        }
+      
+        const regex = new RegExp('^' + escapedValue, 'i');
+        const suggestions = this.state.users.filter(x => regex.test(x.name));
     
-        return inputLength === 0 ? [] : this.state.users.filter(lang =>
-            lang.name.toLowerCase().slice(0, inputLength) === inputValue
-        );
+        
+        return suggestions;
+      }
 
-    };
+
+    onChange = (event, { newValue, method }) => {
+        this.setState({
+          value: newValue
+        });
+      };
+    
+      getSuggestionValue = suggestion => {
+        if (suggestion.isAddNew) {
+          return this.state.value;
+        }
+        
+        return suggestion.name;
+      };
+    
+      renderSuggestion = suggestion => {
+        return suggestion.name;
+      };
+      
+      onSuggestionsFetchRequested = ({ value }) => {
+        this.setState({
+          suggestions: this.getSuggestions(value)
+        });
+      };
+    
+      onSuggestionsClearRequested = () => {
+        this.setState({
+          suggestions: []
+        });
+      };
 
     componentWillReceiveProps(props) {
         var users = [];
         for (var i = 0; i < this.props.users.length; i++) {
-            users.push({name:this.props.users[i].firstName + " " + this.props.users[i].lastName});
+            users.push({ name: this.props.users[i].firstName + " " + this.props.users[i].lastName });
         }
-        this.setState({users});
+        this.setState({ users });
     }
 
-    onChange = (event, { newValue }) => {
-        this.setState({
-            value: newValue
-        });
-    };
-
-    // Autosuggest will call this function every time you need to update suggestions.
-    // You already implemented this logic above, so just use it.
-    onSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: this.getSuggestions(value)
-        });
-    };
-
-    // Autosuggest will call this function every time you need to clear suggestions.
-    onSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: []
-        });
-    };
 
     handleFilterringChange(address, direction) {
         this.setState({ address: address, direction: direction });
         this.props.onChange(address, direction);
     }
-
-
 
     render() {
         const { value, suggestions } = this.state;
@@ -93,6 +93,7 @@ export class PassengerRouteSelection extends React.Component {
             onChange: this.onChange
         };
         return (
+            <div>
             <Grid
                 className="from-to-container"
                 alignItems="flex-start"
@@ -156,18 +157,20 @@ export class PassengerRouteSelection extends React.Component {
                             <SimpleMenu
                                 handleSelection={(address) => { this.handleFilterringChange(address, this.state.direction) }}
                             />
-                            <Autosuggest
-                                suggestions={suggestions}
-                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                                getSuggestionValue={this.getSuggestionValue}
-                                renderSuggestion={this.renderSuggestion}
-                                inputProps={inputProps}
-                            />
                         </Grid>
                     </Card>
                 </Grid>
+                <Autosuggest 
+                            suggestions={suggestions}
+                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                            getSuggestionValue={this.getSuggestionValue}
+                            renderSuggestion={this.renderSuggestion}
+                            inputProps={inputProps} 
+                          />
             </Grid>
+
+                          </div>
         );
     }
 }
