@@ -23,5 +23,7 @@ namespace ShareCar.Logic.User_Logic
         UserDto GetUserByEmail(EmailType type, string email);
         bool DoesUserExist(EmailType type, string cognizantEmail);
         int GetPoints(string userEmail);
+        List<UserDto> GetDrivers(string email);
+
     }
 }
