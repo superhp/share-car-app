@@ -6,7 +6,6 @@ import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Grid from "@material-ui/core/Grid";
-
 import { centerMap } from "./../../utils/mapUtils";
 import { PassengerRouteSelection } from "./Route/PassengerRouteSelection";
 import { PassengerNavigationButton } from "./PassengerNavigationButton";
@@ -36,6 +35,7 @@ export class PassengerMap extends React.Component {
     passengerAddress: null,
     direction: "from",
     routes: [],
+    users: [],
     pickUpPointFeature: null,
     currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
     currentRouteIndex: 0,
@@ -50,6 +50,7 @@ export class PassengerMap extends React.Component {
     this.map = map;
     this.vectorSource = vectorSource;
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,6 +59,7 @@ export class PassengerMap extends React.Component {
       passengerAddress: null,
       direction: "from",
       routes: [],
+      users: [],
       pickUpPointFeature: null,
       currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
       currentRouteIndex: 0,
@@ -67,6 +69,17 @@ export class PassengerMap extends React.Component {
       snackBarVariant: null,
     });
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
+  }
+
+  getUsers() {
+    api.get("user/getAll")
+      .then((response) => {
+        this.setState({ users: response.data });
+      })
+      .catch(() => {
+        this.showSnackBar("Something went wrong.", 2)
+      });
   }
 
   initializeMap() {
@@ -90,7 +103,7 @@ export class PassengerMap extends React.Component {
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
-    setTimeout( () => { this.map.updateSize();}, 200);
+    setTimeout(() => { this.map.updateSize(); }, 200);
     return { map, vectorSource };
   }
 
@@ -325,6 +338,7 @@ export class PassengerMap extends React.Component {
           <PassengerRouteSelection
             direction={this.state.direction}
             initialAddress={OfficeAddresses[0]}
+            users={this.state.users}
             displayName={addressToString(this.state.passengerAddress)}
             onChange={(address, direction) => this.getAllRoutes(address, direction)}
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
@@ -340,51 +354,51 @@ export class PassengerMap extends React.Component {
         </div>
         {this.state.routes.length > 1
           ? <Grid className="navigation-buttons">
-              <Media query="(min-width: 714px)">
-                {matches => matches ? 
-                  <div>
-                    <PassengerNavigationButton
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
-                      text="View Previous Route"
-                    />
-                    <PassengerNavigationButton
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
-                      text="View Next Route"
-                    />
-                  </div>
+            <Media query="(min-width: 714px)">
+              {matches => matches ?
+                <div>
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Previous Route"
+                  />
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Next Route"
+                  />
+                </div>
                 : <div>
                   <Button
-                      variant="contained"
-                      className="next-button"
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
                   >
-                      <NavigateBefore fontSize="large" />
+                    <NavigateBefore fontSize="large" />
                   </Button>
                   <Button
-                      variant="contained"
-                      className="next-button"
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
                   >
                     <NavigateNext fontSize="large" />
                   </Button>
                 </div>}
-              </Media>
+            </Media>
           </Grid>
           : <div />
         }
