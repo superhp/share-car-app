@@ -73,7 +73,7 @@ export class PassengerMap extends React.Component {
   }
 
   getUsers() {
-    api.get("user/getAll")
+    api.get("user/getDrivers")
       .then((response) => {
         this.setState({ users: response.data });
       })
