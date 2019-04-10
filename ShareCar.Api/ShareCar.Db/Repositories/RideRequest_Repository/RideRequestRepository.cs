@@ -47,6 +47,11 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status == Status.ACCEPTED || x.Status == Status.WAITING)).ToList();
         }
 
+        public IEnumerable<RideRequest> GetDriverRequests(string email)
+        {
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
+        }
+
         public RideRequest GetRequestById(int id)
         {
             return _databaseContext.Requests.Find(id);

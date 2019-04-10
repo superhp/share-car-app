@@ -80,6 +80,13 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
 
+            var requests = _rideRequestLogic.GetDriverRequests(userDto.Email);
+
+              foreach (var ride in rides)
+            {
+                ride.Requests = requests.Where(x => x.RideId == ride.RideId).ToList();
+            }
+
             return Ok(rides);
         }
 

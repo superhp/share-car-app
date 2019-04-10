@@ -14,6 +14,8 @@ using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.Ride_Repository;
 using ShareCar.Logic.User_Logic;
 using ShareCar.Logic.Note_Logic;
+using ShareCar.Dto.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ShareCar.Logic.Ride_Logic
 {
@@ -64,25 +66,31 @@ namespace ShareCar.Logic.Ride_Logic
 
             List<RideDto> dtoRides = new List<RideDto>();
 
+            var passengers = _passengerLogic.GetPassengersByDriver(email);
+
+            List<UserDto> users = new List<UserDto>();
+
+
+            foreach (var passenger in passengers.GroupBy(x => x.Email).Select(g => g.First()).ToList())
+            {
+                users.Add(_userLogic.GetUserByEmail(EmailType.LOGIN, passenger.Email));
+            }
+
+            foreach (var passenger in passengers)
+            {
+                var user = users.Single(x => x.Email == passenger.Email);
+                passenger.FirstName = user.FirstName;
+                passenger.LastName = user.LastName;
+                passenger.Phone = user.Phone;
+            }
+
             foreach (var ride in rides)
             {
-               
                 var dtoRide = _mapper.Map<Ride, RideDto>(ride);
                 dtoRide.Route = _routeLogic.GetRouteById(ride.RouteId);
                 dtoRide.Route.Rides = null;
+                dtoRide.Passengers = passengers.Where(x => x.RideId == ride.RideId).ToList();
                 dtoRides.Add(dtoRide);
-                  foreach (var request in dtoRide.Requests)
-                {
-                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
-                    request.PassengerFirstName = user.FirstName;
-                    request.PassengerLastName = user.LastName;
-                    request.PassengerPhone = user.Phone;
-                    request.Address = _addressLogic.GetAddressById(request.AddressId);
-                }
-                foreach (var passenger in dtoRide.Passengers)
-                {
-                    passenger.Ride = null;
-                }
             }
 
             return dtoRides;
@@ -110,13 +118,8 @@ namespace ShareCar.Logic.Ride_Logic
         public void AddRide(RideDto ride, string email)
         {
             ride.DriverEmail = email;
-
             ride.Requests = new List<RideRequestDto>();
-
-
-
             AddRouteIdToRide(ride);
-
             var entity = _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
             if (ride.NoteText != null)
             {

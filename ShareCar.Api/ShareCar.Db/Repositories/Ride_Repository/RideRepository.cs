@@ -90,8 +90,6 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         public IEnumerable<Ride> GetRidesByDriver(string email)
         {
             return _databaseContext.Rides
-                .Include(x=>x.Requests)
-                .Include(x => x.Passengers)
                 .Where(x => x.DriverEmail == email && x.isActive == true);
         }
 

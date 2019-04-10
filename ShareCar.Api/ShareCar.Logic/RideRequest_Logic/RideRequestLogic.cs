@@ -143,7 +143,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests)
+        public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
 
@@ -155,17 +155,28 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                 dtoRequests[count].Route = route;
 
+                if (isDriver)
+                {
+                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
+                    dtoRequests[count].PassengerFirstName = user.FirstName;
+                    dtoRequests[count].PassengerLastName = user.LastName;
+                    dtoRequests[count].PassengerPhone = user.Phone;
+                }
+                else
+                {
                     var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.DriverEmail);
                     dtoRequests[count].DriverFirstName = user.FirstName;
                     dtoRequests[count].DriverLastName = user.LastName;
-
-                 AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+                }
+                AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
                 dtoRequests[count].Address = address;
+                RideDto ride = _rideLogic.GetRideById(request.RideId);
                 count++;
             }
             return dtoRequests;
         }
+
 
         //Changes request status to deleted
         public void DeletedRide(int rideId)
@@ -185,13 +196,22 @@ namespace ShareCar.Logic.RideRequest_Logic
             return dtoRequests;
         }
 
+        public IEnumerable<RideRequestDto> GetDriverRequests(string email)
+        {
+            IEnumerable<RideRequest> entityRequest;
+            entityRequest = _rideRequestRepository.GetDriverRequests(email);
+
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
+        }
+
         public IEnumerable<RideRequestDto> GetPassengerRequests(string email)
         {
             IEnumerable<RideRequest> entityRequest;
 
             entityRequest = _rideRequestRepository.GetPassengerRequests(email);
 
-            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest);
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
 
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
