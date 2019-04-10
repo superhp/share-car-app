@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using ShareCar.Db.Entities;
 
 namespace ShareCar.Db.Repositories.Notes_Repository
@@ -19,6 +20,11 @@ namespace ShareCar.Db.Repositories.Notes_Repository
             var entity = _databaseContext.Add(note).Entity;
             _databaseContext.SaveChanges();
             return entity;
+        }
+
+        public IEnumerable<DriverNote> GetNotesByDriver(string email)
+        {
+            return _databaseContext.DriverNotes.Include(x => x.Ride).Where(x => x.Ride.DriverEmail == email);
         }
 
         public void RemoveNote(int id)

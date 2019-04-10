@@ -7,6 +7,7 @@ namespace ShareCar.Db.Repositories.Notes_Repository
 {
     public interface IDriverNoteRepository
     {
+        IEnumerable<DriverNote> GetNotesByDriver(string email);
         DriverNote AddNote(DriverNote note);
         void UpdateNote(DriverNote note);
         void RemoveNote(int id);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using ShareCar.Db.Entities;
@@ -17,6 +18,12 @@ namespace ShareCar.Logic.Note_Logic
         {
             _driverNoteRepository = driverNoteRepository;
             _mapper = mapper;
+        }
+
+        public List<DriverNoteDto> GetNotesByDriver(string email)
+        {
+            var driverNotes = _driverNoteRepository.GetNotesByDriver(email).ToList();
+            return _mapper.Map<List<DriverNote>, List<DriverNoteDto>>(driverNotes);
         }
 
         public DriverNoteDto AddNote(DriverNoteDto note)

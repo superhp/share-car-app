@@ -3,14 +3,13 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "../../styles/note.css"
 import "../../styles/genericStyles.css"
-import api from "../../helpers/axiosHelper"
 
 export class Note extends React.Component {
 
     state = {
         editing: false,
-        value: this.props.noteValue ? this.props.noteValue : "",
-        temporaryValue: this.props.noteValue ? this.props.noteValue : ""
+        value: this.props.noteText ? this.props.noteText : "",
+        temporaryValue: this.props.noteText ? this.props.noteText : ""
     }
 
     render() {

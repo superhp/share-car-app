@@ -7,6 +7,7 @@ namespace ShareCar.Logic.Note_Logic
 {
     public interface IDriverNoteLogic
     {
+        List<DriverNoteDto> GetNotesByDriver(string email);
         DriverNoteDto AddNote(DriverNoteDto note);
         void UpdateNote(DriverNoteDto note);
         void RemoveNote(int id);

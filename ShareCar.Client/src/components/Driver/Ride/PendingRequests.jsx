@@ -30,13 +30,8 @@ export class PendingRequests extends React.Component {
             Text: text,
             RideId: this.props.ride.rideId,
         }
-        api.post("Ride/updateNote", data).then(res => {
-            if (res.status === 200) {
-           //   this.showSnackBar("Rides successfully created!", 0);
-            }
-          }).catch(() => {
-          //  this.showSnackBar("Failed to create rides", 2);
-      
+        api.post("Ride/updateNote", data).then().catch(() => {
+            this.showSnackBar("Failed to update note", 2);
           });
     }
 
@@ -53,7 +48,7 @@ export class PendingRequests extends React.Component {
                     <DialogTitle className="dialog-title">Note</DialogTitle>
                     <Note
                         rideId={this.props.ride ? this.props.ride.rideId : null}
-                        note={this.props.ride ? this.props.ride.note : null}
+                        noteText={this.props.ride ? this.props.ride.noteText : null}
                         updateNote={(note) => {this.updateNote(note)}}
                     />
                     <DialogTitle className="dialog-title">Requests</DialogTitle>

@@ -68,8 +68,9 @@ namespace ShareCar.Logic.Ride_Logic
 
             var passengers = _passengerLogic.GetPassengersByDriver(email);
 
-            List<UserDto> users = new List<UserDto>();
+            var notes = _driverNoteLogic.GetNotesByDriver(email);
 
+            List<UserDto> users = new List<UserDto>();
 
             foreach (var passenger in passengers.GroupBy(x => x.Email).Select(g => g.First()).ToList())
             {
@@ -89,6 +90,11 @@ namespace ShareCar.Logic.Ride_Logic
                 var dtoRide = _mapper.Map<Ride, RideDto>(ride);
                 dtoRide.Route = _routeLogic.GetRouteById(ride.RouteId);
                 dtoRide.Route.Rides = null;
+                var note = notes.FirstOrDefault(x => x.RideId == ride.RideId);
+                if(note != null)
+                {
+                    dtoRide.NoteText = note.Text;
+                }
                 dtoRide.Passengers = passengers.Where(x => x.RideId == ride.RideId).ToList();
                 dtoRides.Add(dtoRide);
             }
