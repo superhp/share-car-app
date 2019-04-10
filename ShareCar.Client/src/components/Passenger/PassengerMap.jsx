@@ -124,6 +124,7 @@ export class PassengerMap extends React.Component {
 
   displayRoute() {
     this.setState({ showDriver: true });
+    console.log(this.state.currentRouteIndex)
     this.vectorSource.clear();
     if (this.state.pickUpPointFeature) {
       this.vectorSource.addFeature(this.state.pickUpPointFeature);

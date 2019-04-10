@@ -28,7 +28,7 @@ export class PassengerRouteSelection extends React.Component {
 
     componentDidMount() {
         document.onclick = (e) => {
-            if (e.target !== this.autosuggestRef.current.input) {
+            if (e.target !== this.autosuggestRef.current.input && document.activeElement === this.autosuggestRef.current.input) {
                 this.autosuggestRef.current.input.blur();
                 this.onBlur();
             }
