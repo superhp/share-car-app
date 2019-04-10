@@ -34,6 +34,7 @@ export class PassengerMap extends React.Component {
   state = {
     passengerAddress: null,
     direction: "from",
+    fetchedRoutes: [],
     routes: [],
     users: [],
     pickUpPointFeature: null,
@@ -41,7 +42,7 @@ export class PassengerMap extends React.Component {
     currentRouteIndex: 0,
     showDriver: false,
     snackBarMessage: "",
-    snackBarClick: false,
+    snackBarClicked: false,
     snackBarVariant: null,
   }
 
@@ -82,6 +83,20 @@ export class PassengerMap extends React.Component {
       });
   }
 
+  onDriverSelection(email) {
+    let routes = [...this.state.fetchedRoutes];
+    routes = routes.filter(x => x.rides.filter(y => y.driverEmail === email).length > 0)
+    this.setState({ routes, currentRouteIndex: 0 }, this.displayRoute);
+  }
+
+  onDriverSelectionClear(resetRoutes, clearRoutes) {
+    if(resetRoutes){
+    this.setState({ routes: this.state.fetchedRoutes, currentRouteIndex: 0 }, this.displayRoute);
+  }else if(clearRoutes){
+    this.setState({ routes: [], currentRouteIndex: 0 }, this.displayRoute);
+  }
+}
+
   initializeMap() {
     const vectorSource = new SourceVector();
     const vectorLayer = new LayerVector({ source: vectorSource });
@@ -107,23 +122,14 @@ export class PassengerMap extends React.Component {
     return { map, vectorSource };
   }
 
-  removeRoute(routeFeature, fromFeature, toFeature) {
-    if (routeFeature)
-      this.vectorSource.removeFeature(routeFeature);
-    if (fromFeature)
-      this.vectorSource.removeFeature(fromFeature);
-    if (toFeature)
-      this.vectorSource.removeFeature(toFeature);
-  }
-
   displayRoute() {
     this.setState({ showDriver: true });
-    const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
-    this.removeRoute(routeFeature, fromFeature, toFeature);
-
+    this.vectorSource.clear();
+    if (this.state.pickUpPointFeature) {
+      this.vectorSource.addFeature(this.state.pickUpPointFeature);
+    }
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
-
 
       const routeFeature = createRouteFeature(route.geometry);
       const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
@@ -243,6 +249,7 @@ export class PassengerMap extends React.Component {
   }
 
   distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
+
   distToSegmentSquared(pivot, point1, point2) {
     var l2 = this.distanceBetweenPoints(point1, point2);
     if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
@@ -277,9 +284,7 @@ export class PassengerMap extends React.Component {
         routeDto = { AddressFrom: address };
       api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
         if (res.status === 200 && res.data !== "") {
-          const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
-          this.removeRoute(routeFeature, fromFeature, toFeature);
-          this.setState({ routes: res.data, currentRoute: { ...this.state.currentRoute, routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
+          this.setState({ routes: res.data, fetchedRoutes: res.data, currentRoute: { routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
         }
       }).catch((error) => {
         this.showSnackBar("Failed to load routes", 2)
@@ -339,6 +344,8 @@ export class PassengerMap extends React.Component {
             direction={this.state.direction}
             initialAddress={OfficeAddresses[0]}
             users={this.state.users}
+            onDriverSelection={(email) => { this.onDriverSelection(email) }}
+            onDriverSelectionClear={(resetRoutes, clearRoutes) => { this.onDriverSelectionClear(resetRoutes, clearRoutes) }}
             displayName={addressToString(this.state.passengerAddress)}
             onChange={(address, direction) => this.getAllRoutes(address, direction)}
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}

@@ -23,6 +23,14 @@ export class PassengerRouteSelection extends React.Component {
         suggestions: []
     }
 
+    componentWillReceiveProps(props) {
+        var users = [];
+        for (var i = 0; i < this.props.users.length; i++) {
+            users.push({ name: this.props.users[i].firstName + " " + this.props.users[i].lastName, email: this.props.users[i].email });
+        }
+        this.setState({ users });
+    }
+
 
      getSuggestions = value => {
         const escapedValue = escapeRegexCharacters(value.trim());
@@ -67,16 +75,13 @@ export class PassengerRouteSelection extends React.Component {
         this.setState({
           suggestions: []
         });
+
+        this.props.onDriverSelectionClear();
       };
 
-    componentWillReceiveProps(props) {
-        var users = [];
-        for (var i = 0; i < this.props.users.length; i++) {
-            users.push({ name: this.props.users[i].firstName + " " + this.props.users[i].lastName });
-        }
-        this.setState({ users });
-    }
-
+    onSuggestionSelected = (event, { suggestion }) => {
+        this.props.onDriverSelection(suggestion.email);
+      };
 
     handleFilterringChange(address, direction) {
         this.setState({ address: address, direction: direction });
@@ -86,11 +91,10 @@ export class PassengerRouteSelection extends React.Component {
     render() {
         const { value, suggestions } = this.state;
 
-        // Autosuggest will pass through all these props to the input.
         const inputProps = {
             placeholder: 'Type a driver\'s name',
             value,
-            onChange: this.onChange
+            onChange: this.onChange,
         };
         return (
             <div>
@@ -166,6 +170,7 @@ export class PassengerRouteSelection extends React.Component {
                             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                             getSuggestionValue={this.getSuggestionValue}
                             renderSuggestion={this.renderSuggestion}
+                            onSuggestionSelected={this.onSuggestionSelected}
                             inputProps={inputProps} 
                           />
             </Grid>

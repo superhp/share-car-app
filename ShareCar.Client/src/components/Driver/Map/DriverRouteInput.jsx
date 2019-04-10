@@ -26,7 +26,7 @@ export class DriverRouteInput extends React.Component {
     };
 
     handleClick = () => {
-        this.setState({ open: !this.state.open },() =>{console.log(this.props)});
+        this.setState({ open: !this.state.open });
         };
     render() {
         return (
