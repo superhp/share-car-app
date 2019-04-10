@@ -14,7 +14,10 @@ import "./../../../styles/driverAutoSuggest.css";
 const escapeRegexCharacters = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export class PassengerRouteSelection extends React.Component {
-
+constructor(props){
+    super(props);
+    this.autosuggestRef = React.createRef();
+}
     state = {
         address: this.props.initialAddress,
         direction: this.props.direction,
@@ -22,6 +25,14 @@ export class PassengerRouteSelection extends React.Component {
         users: [],
         suggestions: []
     }
+
+componentDidMount(){
+    document.onclick = (e) => {
+        if(e.target !== this.autosuggestRef.current.input){
+        this.autosuggestRef.current.input.blur();
+        }
+    };
+}
 
     componentWillReceiveProps(props) {
         var users = [];
@@ -34,15 +45,11 @@ export class PassengerRouteSelection extends React.Component {
 
      getSuggestions = value => {
         const escapedValue = escapeRegexCharacters(value.trim());
-        
         if (escapedValue === '') {
           return [];
         }
-      
         const regex = new RegExp('^' + escapedValue, 'i');
         const suggestions = this.state.users.filter(x => regex.test(x.name));
-    
-        
         return suggestions;
       }
 
@@ -172,6 +179,7 @@ export class PassengerRouteSelection extends React.Component {
                             renderSuggestion={this.renderSuggestion}
                             onSuggestionSelected={this.onSuggestionSelected}
                             inputProps={inputProps} 
+                            ref = {this.autosuggestRef}
                           />
             </Grid>
 
