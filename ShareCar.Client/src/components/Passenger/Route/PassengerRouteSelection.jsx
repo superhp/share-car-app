@@ -14,10 +14,10 @@ import "./../../../styles/driverAutoSuggest.css";
 const escapeRegexCharacters = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export class PassengerRouteSelection extends React.Component {
-constructor(props){
-    super(props);
-    this.autosuggestRef = React.createRef();
-}
+    constructor(props) {
+        super(props);
+        this.autosuggestRef = React.createRef();
+    }
     state = {
         address: this.props.initialAddress,
         direction: this.props.direction,
@@ -26,13 +26,27 @@ constructor(props){
         suggestions: []
     }
 
-componentDidMount(){
-    document.onclick = (e) => {
-        if(e.target !== this.autosuggestRef.current.input){
-        this.autosuggestRef.current.input.blur();
+    componentDidMount() {
+        document.onclick = (e) => {
+            if (e.target !== this.autosuggestRef.current.input) {
+                this.autosuggestRef.current.input.blur();
+                this.onBlur();
+            }
+        };
+    }
+
+    onBlur = () => {
+        var user = this.state.users.find(x => x.name === this.state.value);
+        if (user) {
+            this.props.onDriverSelection(user.email);
+        } else {
+            if (this.state.value === "") {
+                this.props.onAutosuggestBlur(true);
+            } else {
+                this.props.onAutosuggestBlur(false);
+            }
         }
-    };
-}
+    }
 
     componentWillReceiveProps(props) {
         var users = [];
@@ -43,52 +57,51 @@ componentDidMount(){
     }
 
 
-     getSuggestions = value => {
+    getSuggestions = value => {
         const escapedValue = escapeRegexCharacters(value.trim());
         if (escapedValue === '') {
-          return [];
+            return [];
         }
         const regex = new RegExp('^' + escapedValue, 'i');
         const suggestions = this.state.users.filter(x => regex.test(x.name));
         return suggestions;
-      }
+    }
 
 
     onChange = (event, { newValue, method }) => {
         this.setState({
-          value: newValue
+            value: newValue
         });
-      };
-    
-      getSuggestionValue = suggestion => {
+    };
+
+    getSuggestionValue = suggestion => {
         if (suggestion.isAddNew) {
-          return this.state.value;
+            return this.state.value;
         }
-        
+
         return suggestion.name;
-      };
-    
-      renderSuggestion = suggestion => {
+    };
+
+    renderSuggestion = suggestion => {
         return suggestion.name;
-      };
-      
-      onSuggestionsFetchRequested = ({ value }) => {
+    };
+
+    onSuggestionsFetchRequested = ({ value }) => {
         this.setState({
-          suggestions: this.getSuggestions(value)
+            suggestions: this.getSuggestions(value)
         });
-      };
-    
-      onSuggestionsClearRequested = () => {
+    };
+
+    onSuggestionsClearRequested = () => {
         this.setState({
-          suggestions: []
+            suggestions: []
         });
 
-        this.props.onDriverSelectionClear();
-      };
+    };
 
     onSuggestionSelected = (event, { suggestion }) => {
         this.props.onDriverSelection(suggestion.email);
-      };
+    };
 
     handleFilterringChange(address, direction) {
         this.setState({ address: address, direction: direction });
@@ -102,88 +115,89 @@ componentDidMount(){
             placeholder: 'Type a driver\'s name',
             value,
             onChange: this.onChange,
+            onBlur: this.onBlur
         };
         return (
             <div>
-            <Grid
-                className="from-to-container"
-                alignItems="flex-start"
-                justify="center"
-                container
-            >
-                <Grid item xs={10}>
-                    <Grid
-                        container
-                        alignItems="center"
-                        justify="center"
-                    >
-                        <AddressInput
-                            displayName={this.props.displayName}
-                            placeholder="Type in meetup point or click on the map"
-                            onChange={(suggestion) => this.props.onMeetupAddressChange(fromAlgoliaAddress(suggestion))}
-                        />
-                    </Grid>
-                    <Card className="paper-background">
-                        <Grid container justify="center">
-                            <Grid
-                                container
-                                alignItems="center"
-                                justify="center"
-                                item xs={6}
-                            >
-                                <Grid container item xs={6} justify="center">
-                                    <Typography variant="body1">From office</Typography>
-                                </Grid>
-                                <Grid container item xs={6} justify="center">
-                                    <Radio
-                                        color="primary"
-                                        checked={this.props.direction === "from"}
-                                        onClick={() => { this.handleFilterringChange(this.state.address, "from") }}
-                                        value="to"
-                                        name="radio-button-demo"
-                                        aria-label="A"
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                container
-                                alignItems="center"
-                                justify="center"
-                                item xs={6}
-                            >
-                                <Grid container item xs={6} justify="center">
-                                    <Typography variant="body1">To office</Typography>
-                                </Grid>
-                                <Grid container item xs={6} justify="center">
-                                    <Radio
-                                        color="primary"
-                                        checked={this.props.direction === "to"}
-                                        onClick={() => { this.handleFilterringChange(this.state.address, "to") }}
-                                        value="from"
-                                        name="radio-button-demo"
-                                        aria-label="A"
-                                    />
-                                </Grid>
-                            </Grid>
-                            <SimpleMenu
-                                handleSelection={(address) => { this.handleFilterringChange(address, this.state.direction) }}
+                <Grid
+                    className="from-to-container"
+                    alignItems="flex-start"
+                    justify="center"
+                    container
+                >
+                    <Grid item xs={10}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            justify="center"
+                        >
+                            <AddressInput
+                                displayName={this.props.displayName}
+                                placeholder="Type in meetup point or click on the map"
+                                onChange={(suggestion) => this.props.onMeetupAddressChange(fromAlgoliaAddress(suggestion))}
                             />
                         </Grid>
-                    </Card>
+                        <Card className="paper-background">
+                            <Grid container justify="center">
+                                <Grid
+                                    container
+                                    alignItems="center"
+                                    justify="center"
+                                    item xs={6}
+                                >
+                                    <Grid container item xs={6} justify="center">
+                                        <Typography variant="body1">From office</Typography>
+                                    </Grid>
+                                    <Grid container item xs={6} justify="center">
+                                        <Radio
+                                            color="primary"
+                                            checked={this.props.direction === "from"}
+                                            onClick={() => { this.handleFilterringChange(this.state.address, "from") }}
+                                            value="to"
+                                            name="radio-button-demo"
+                                            aria-label="A"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Grid
+                                    container
+                                    alignItems="center"
+                                    justify="center"
+                                    item xs={6}
+                                >
+                                    <Grid container item xs={6} justify="center">
+                                        <Typography variant="body1">To office</Typography>
+                                    </Grid>
+                                    <Grid container item xs={6} justify="center">
+                                        <Radio
+                                            color="primary"
+                                            checked={this.props.direction === "to"}
+                                            onClick={() => { this.handleFilterringChange(this.state.address, "to") }}
+                                            value="from"
+                                            name="radio-button-demo"
+                                            aria-label="A"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <SimpleMenu
+                                    handleSelection={(address) => { this.handleFilterringChange(address, this.state.direction) }}
+                                />
+                            </Grid>
+                        </Card>
+                    </Grid>
+                    <Autosuggest
+                        suggestions={suggestions}
+                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                        getSuggestionValue={this.getSuggestionValue}
+                        renderSuggestion={this.renderSuggestion}
+                        onSuggestionSelected={this.onSuggestionSelected}
+                        inputProps={inputProps}
+                        ref={this.autosuggestRef}
+                    />
                 </Grid>
-                <Autosuggest 
-                            suggestions={suggestions}
-                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                            getSuggestionValue={this.getSuggestionValue}
-                            renderSuggestion={this.renderSuggestion}
-                            onSuggestionSelected={this.onSuggestionSelected}
-                            inputProps={inputProps} 
-                            ref = {this.autosuggestRef}
-                          />
-            </Grid>
 
-                          </div>
+            </div>
         );
     }
 }

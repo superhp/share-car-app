@@ -89,10 +89,10 @@ export class PassengerMap extends React.Component {
     this.setState({ routes, currentRouteIndex: 0 }, this.displayRoute);
   }
 
-  onDriverSelectionClear(resetRoutes, clearRoutes) {
+  onAutosuggestBlur(resetRoutes) {
     if(resetRoutes){
     this.setState({ routes: this.state.fetchedRoutes, currentRouteIndex: 0 }, this.displayRoute);
-  }else if(clearRoutes){
+  }else{
     this.setState({ routes: [], currentRouteIndex: 0 }, this.displayRoute);
   }
 }
@@ -345,7 +345,7 @@ export class PassengerMap extends React.Component {
             initialAddress={OfficeAddresses[0]}
             users={this.state.users}
             onDriverSelection={(email) => { this.onDriverSelection(email) }}
-            onDriverSelectionClear={(resetRoutes, clearRoutes) => { this.onDriverSelectionClear(resetRoutes, clearRoutes) }}
+            onAutosuggestBlur={(resetRoutes) => { this.onAutosuggestBlur(resetRoutes) }}
             displayName={addressToString(this.state.passengerAddress)}
             onChange={(address, direction) => this.getAllRoutes(address, direction)}
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
