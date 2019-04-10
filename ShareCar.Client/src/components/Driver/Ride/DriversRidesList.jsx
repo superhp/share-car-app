@@ -99,7 +99,7 @@ export class DriversRidesList extends React.Component {
         <PendingRequests
           open={this.state.open}
           rideRequests={this.props.requests.filter(x => x.rideId === this.props.selectedRide)}
-          route={this.props.rides.find(x => x.rideId === this.props.selectedRide) ? this.props.rides.find(x => x.rideId === this.props.selectedRide).route : null}
+          ride={this.props.rides.find(x => x.rideId === this.props.selectedRide) ? this.props.rides.find(x => x.rideId === this.props.selectedRide) : null}
           passengers={this.props.passengers.filter(x => x.rideId === this.props.selectedRide)}
           handleClose={() => this.handleClose()}
           handleRequestResponse={(response, rideRequestId, rideId, driverEmail) => this.props.handleRequestResponse(response, rideRequestId, rideId, driverEmail)}

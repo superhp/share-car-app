@@ -75,7 +75,6 @@ export class Rides extends React.Component {
                     let rides = response.data;
                     let requests = [];
                     let passengers = [];
-console.log(response);
                     for (var i = 0; i < rides.length; i++) {
                         if (rides[i].requests.length > 0) {
                             requests = requests.concat(rides[i].requests);

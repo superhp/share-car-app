@@ -8,6 +8,7 @@ import { PendingRequestCard } from "./PendingRequestCard";
 import { RidePassengersList } from "./RidePassengersList";
 import { Status } from "../../../utils/status";
 import "../../../styles/genericStyles.css";
+import { Note } from "../Note";
 
 export class PendingRequests extends React.Component {
 
@@ -23,18 +24,38 @@ export class PendingRequests extends React.Component {
             });
         }
     }
+//
+    updateNote(text) {
+        let data = {
+            Text: text,
+            RideId: this.props.ride.rideId,
+        }
+        api.post("Ride/updateNote", data).then(res => {
+            if (res.status === 200) {
+           //   this.showSnackBar("Rides successfully created!", 0);
+            }
+          }).catch(() => {
+          //  this.showSnackBar("Failed to create rides", 2);
+      
+          });
+    }
 
     componentWillReceiveProps(props) {
-        if(props.open){
-        this.seenRequests(props.rideRequests);
-    }
+        if (props.open) {
+            this.seenRequests(props.rideRequests);
+        }
     }
 
     render() {
         return (
             <Dialog onClose={() => this.props.handleClose()} aria-labelledby="simple-dialog-title" open={this.props.open}>
-            {console.log(this.props.rideRequests)}
                 <div className="pending-requests">
+                    <DialogTitle className="dialog-title">Note</DialogTitle>
+                    <Note
+                        rideId={this.props.ride ? this.props.ride.rideId : null}
+                        note={this.props.ride ? this.props.ride.note : null}
+                        updateNote={(note) => {this.updateNote(note)}}
+                    />
                     <DialogTitle className="dialog-title">Requests</DialogTitle>
                     <List>
                         {this.props.rideRequests.length > 0
@@ -43,7 +64,7 @@ export class PendingRequests extends React.Component {
                                     <PendingRequestCard
                                         req={req}
                                         index={index}
-                                        route={this.props.route}
+                                        route={this.props.ride ? this.props.ride.route : null}
                                         onAcceptClick={() => this.props.handleRequestResponse(1, req.rideRequestId, req.rideId, req.driverEmail)}
                                         onDenyClick={() => { this.props.handleRequestResponse(2, req.rideRequestId, req.rideId) }}
                                     />
@@ -54,8 +75,7 @@ export class PendingRequests extends React.Component {
                     <DialogTitle className="dialog-title">Passengers</DialogTitle>
                     <RidePassengersList
                         passengers={this.props.passengers}
-                        route={this.props.route}
-
+                        route={this.props.ride ? this.props.ride.route : null}
                     />
                 </div>
             </Dialog>

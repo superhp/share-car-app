@@ -50,7 +50,6 @@ export default class MapComponent extends React.Component<{}> {
     const vectorSource = new SourceVector();
     const vectorLayer = new LayerVector({ source: vectorSource });
     const { pickUpPoint, route} = this.props;
-    console.log(this.props);
     const map = new Map({
       target: "map" + this.props.index,
       controls: [],

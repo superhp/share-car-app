@@ -77,7 +77,6 @@ export class PassengerRideRequestsList extends React.Component {
             .get("RideRequest/passenger")
             .then(response => {
                 if (response.data !== "") {
-                    console.log(response)
                     this.setState({ requests: response.data, loading: false });
                 }
             })

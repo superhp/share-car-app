@@ -31,7 +31,7 @@ namespace ShareCar.Api.Controllers
         private readonly IDriverNoteLogic _driverNoteLogic;
         private readonly IAddressLogic _addressLogic;
 
-        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
+        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic, IDriverNoteLogic driverNoteLogic)
         {
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -39,6 +39,7 @@ namespace ShareCar.Api.Controllers
             _routeLogic = routeLogic;
             _userRepository = userRepository;
             _passengerLogic = passengerLogic;
+            _driverNoteLogic = driverNoteLogic;
         }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
@@ -50,7 +51,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("updateNote")]
-        public IActionResult UpdateNote(DriverNoteDto note)
+        public IActionResult UpdateNote([FromBody]DriverNoteDto note)
         {
              _driverNoteLogic.UpdateNote(note);
              return Ok();
