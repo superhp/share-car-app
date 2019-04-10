@@ -81,7 +81,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                 {this.state.show ? (
                     <Card className="request-card requestMap">
                         <MapComponent
-                            pickUpPoint={{longitude: this.props.request.longitude, latitude: this.props.request.latitude}}
+                            pickUpPoint={{longitude: this.props.request.address.longitude, latitude: this.props.request.address.latitude}}
                             route={this.props.route}
                             index={this.props.index}
                         />

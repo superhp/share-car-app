@@ -284,11 +284,13 @@ export class PassengerMap extends React.Component {
       const request = {
         RideId: ride.rideId,
         DriverEmail: ride.driverEmail,
+        Address:{
         Longitude: this.state.passengerAddress.longitude,
         Latitude: this.state.passengerAddress.latitude
+        }
       };
 
-      api.post(`https://localhost:44347/api/RideRequest`, request).then(response => {
+      api.post(`RideRequest`, request).then(response => {
 
         this.showSnackBar("Ride requested!", 0)
 

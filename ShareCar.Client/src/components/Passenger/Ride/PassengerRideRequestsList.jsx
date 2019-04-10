@@ -77,6 +77,7 @@ export class PassengerRideRequestsList extends React.Component {
             .get("RideRequest/passenger")
             .then(response => {
                 if (response.data !== "") {
+                    console.log(response)
                     this.setState({ requests: response.data, loading: false });
                 }
             })
@@ -112,6 +113,7 @@ export class PassengerRideRequestsList extends React.Component {
                             <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
                                     request={req}
+                                    route={req.route}
                                     key={i}
                                     index={i}
                                     cancelRequest ={id => {this.cancelRequest(id)}}

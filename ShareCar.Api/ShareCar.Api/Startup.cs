@@ -52,7 +52,9 @@ namespace ShareCar.Api
 
             ConfigureAuthentication(services);
 
-            services.AddMvc();
+            services.AddMvc()
+            .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddAutoMapper();
 
             var applicationContainer = Bootstrapper.AddRegistrationsToDIContainer(services);
