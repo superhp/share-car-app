@@ -5,12 +5,19 @@ import "../../styles/note.css"
 import "../../styles/genericStyles.css"
 
 export class Note extends React.Component {
-
+constructor(props){
+    super(props);
+    this.r = React.createRef();
+}
     state = {
         editing: false,
         value: this.props.noteText ? this.props.noteText : "",
         temporaryValue: this.props.noteText ? this.props.noteText : ""
     }
+
+componentDidMount(){
+  console.log(this.r);
+}
 
     render() {
         return (
@@ -32,7 +39,7 @@ export class Note extends React.Component {
                         <div>
                             <Button
                                 variant="contained"
-                                className="generic-color"
+                                className="edit-btn"
                                 onClick={() => { this.setState({ editing: true }) }}
                             >
                                 Edit
@@ -48,6 +55,7 @@ export class Note extends React.Component {
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.temporaryValue}
+                                ref={this.r}
                             />
                         </div>
                         <div>

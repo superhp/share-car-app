@@ -64,6 +64,8 @@ class RideSchedulerHelper extends React.Component {
                                 onBlur={(e) => {this.props.handleNoteChange(e.target.value) }}
                                 margin="normal"
                                 variant="outlined"
+                                placeholder="Leave a note for your passengers"
+                                fullWidth
                             />          
                     </Grid>
                     <Grid item xs={12} className="create-rides-button">

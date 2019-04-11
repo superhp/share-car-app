@@ -13,7 +13,16 @@
     color: white!important;
     margin: 3px!important;
   }
+  .edit-btn {
+    background-color: #0a2239!important;
+    color: #e8e9eb!important;
+    margin: 3px!important;
+  }
   
+  .edit-btn:hover {
+    background-color: #10365a!important;
+    margin: 3px!important;
+  }
  .cancel-btn:hover {
     background-color: #f96f59!important;
   }
@@ -21,4 +30,5 @@
   .note-container{
       text-align:center !important;
       display:block;
+      overflow:hidden;
   }
