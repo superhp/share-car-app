@@ -77,7 +77,6 @@ export class PassengerRideRequestsList extends React.Component {
             Text: noteText,
             RideRequestId: requestId
         };
-console.log(data);
         api.post("RideRequest/updateNote", data).then()
         .catch(error => {
                 this.showSnackBar("Failed to update note", 2);
