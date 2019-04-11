@@ -32,6 +32,11 @@ namespace ShareCar.Db.Repositories.Notes_Repository
            return _databaseContext.RideRequestNotes.Include(x => x.RideRequest).FirstOrDefault(x => x.RideRequest.RideId == rideId);
         }
 
+        public RideRequestNote GetNoteByRideRequest(int rideRequestId)
+        {
+            return _databaseContext.RideRequestNotes.FirstOrDefault(x => x.RideRequestId == rideRequestId);
+        }
+
         public void UpdateNote(RideRequestNote note)
         {
             var entity = _databaseContext.RideRequestNotes.Include(x => x.RideRequest).Single(x => x.RideRequest.RideRequestId == note.RideRequestId);

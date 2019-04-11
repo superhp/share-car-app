@@ -75,7 +75,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             if(requestDto.NoteText != null)
             {
-               var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideId = requestDto.RideId, Text = requestDto.NoteText });
+               var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = requestDto.RideRequestId, Text = requestDto.NoteText });
                 requestDto.RideRequestNoteId = note.RideRequestNoteId;
             }
 

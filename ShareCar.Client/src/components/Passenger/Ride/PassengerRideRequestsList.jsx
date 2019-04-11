@@ -72,6 +72,18 @@ export class PassengerRideRequestsList extends React.Component {
 
     }
 
+    updateNote(noteText, requestId) {
+        let data = {
+            Text: noteText,
+            RideRequestId: requestId
+        };
+
+        api.post("RideRequest/updateNote", data).then()
+        .catch(error => {
+                this.showSnackBar("Failed to update note", 2);
+            });
+    }
+
     showPassengerRequests() {
         api
             .get("RideRequest/passenger")
@@ -112,6 +124,7 @@ export class PassengerRideRequestsList extends React.Component {
                             <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
                                     request={req}
+                                    updateNote={(noteText, requestId) => {this.updateNote(noteText, requestId)}}
                                     route={req.route}
                                     key={i}
                                     index={i}

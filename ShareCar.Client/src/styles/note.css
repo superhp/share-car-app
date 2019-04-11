@@ -30,7 +30,7 @@
   .note-container{
       text-align:center !important;
       display:block;
-      overflow:hidden;
+      overflow-x:hidden;
       padding-left: 5px;
       padding-right: 5px;  }
 

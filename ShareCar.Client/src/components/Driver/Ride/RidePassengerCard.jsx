@@ -45,7 +45,7 @@ export default class RidePassengerCard extends React.Component {
                     </Grid>
                 </Card>
                     {this.state.show ?
-                        <Card className="requestMap rides-card generic-card">
+                        <Card className="request-map rides-card generic-card">
                             <Grid container justify="center">
                                 <Grid item xs={12} zeroMinWidth>
                                     <MapComponent

@@ -44,7 +44,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpPost("updateNote")]
-        public IActionResult UpdateNote(RideRequestNoteDto note)
+        public IActionResult UpdateNote([FromBody] RideRequestNoteDto note)
         {
             _noteLogic.UpdateNote(note);
             return Ok();

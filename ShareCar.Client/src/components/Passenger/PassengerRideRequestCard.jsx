@@ -94,11 +94,11 @@ export default class PassengerRideRequestsCard extends React.Component {
                 </Card>
 
                 {this.state.showNotes ? (
-                    <Card className="request-card requestMap">
+                    <Card className="request-card">
                         <DialogTitle className="dialog-title">Your note</DialogTitle>
                         <Note
-                         //   noteText={this.props.ride ? this.props.ride.noteText : null}
-                        //    updateNote={(note) => { this.updateNote(note) }}
+                            noteText={this.props.request.noteText}
+                            updateNote={(note) => { this.props.updateNote(note, this.props.request.rideRequestId) }}
                         />
                         <DialogTitle className="dialog-title">Driver's note</DialogTitle>
                         <div className="note-container">
@@ -109,7 +109,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                             fullWidth
                             margin="normal"
                             variant="outlined"
-                            //value={this.state.temporaryValue}
+                            value={this.props.request.driverNoteText}
                         />
                         </div>
                     </Card>
@@ -118,7 +118,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                     )}
 
                 {this.state.showMap ? (
-                    <Card className="request-card requestMap">
+                    <Card className="request-card request-map">
                         <MapComponent
                             pickUpPoint={{ longitude: this.props.request.address.longitude, latitude: this.props.request.address.latitude }}
                             route={this.props.route}

@@ -34,14 +34,30 @@ namespace ShareCar.Logic.Note_Logic
         public RideRequestNoteDto GetNoteByRide(int rideId)
         {
             var entityNote = _rideRequestNoteRepository.GetNoteByRide(rideId);
+            if (entityNote == null)
+            {
+                return null;
+            }
             var dtoNote = _mapper.Map<RideRequestNote, RideRequestNoteDto>(entityNote);
             dtoNote.RideId = entityNote.RideRequest.RideId;
             return dtoNote;
         }
 
+        public RideRequestNoteDto GetNoteByRideRequest(int rideRequestId)
+        {
+            var entityNote = _rideRequestNoteRepository.GetNoteByRideRequest(rideRequestId);
+            if(entityNote == null)
+            {
+                return null;
+            }
+            var dtoNote = _mapper.Map<RideRequestNote, RideRequestNoteDto>(entityNote);
+            dtoNote.RideRequestId = entityNote.RideRequestId;
+            return dtoNote;
+        }
+
         public void UpdateNote(RideRequestNoteDto note)
         {
-            var dtoNote = GetNoteByRide(note.RideId);
+            var dtoNote = GetNoteByRideRequest(note.RideId);
             if (dtoNote != null)
             {
                 _rideRequestNoteRepository.UpdateNote(_mapper.Map<RideRequestNoteDto, RideRequestNote>(note));
