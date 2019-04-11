@@ -9,6 +9,7 @@ namespace ShareCar.Db.Repositories.Notes_Repository
     {
         RideRequestNote AddNote(RideRequestNote note);
         void UpdateNote(RideRequestNote note);
-        void RemoveNote(int id);
+        RideRequestNote GetNoteByRide(int rideId);
+        IEnumerable<RideRequestNote> GetNoteByPassenger(string email);
     }
 }

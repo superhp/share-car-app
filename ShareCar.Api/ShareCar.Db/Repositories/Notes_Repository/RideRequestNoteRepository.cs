@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +22,20 @@ namespace ShareCar.Db.Repositories.Notes_Repository
             return entity;
         }
 
-        public void RemoveNote(int id)
+        public IEnumerable<RideRequestNote> GetNoteByPassenger(string email)
         {
-            var note = _databaseContext.RideRequestNotes.Single(x => x.RideRequestNoteId == id);
-            _databaseContext.Remove(note);
-            _databaseContext.SaveChanges();
+            return _databaseContext.RideRequestNotes.Include(x => x.RideRequest).Where(x => x.RideRequest.PassengerEmail == email);
+        }
+
+        public RideRequestNote GetNoteByRide(int rideId)
+        {
+           return _databaseContext.RideRequestNotes.Include(x => x.RideRequest).FirstOrDefault(x => x.RideRequest.RideId == rideId);
         }
 
         public void UpdateNote(RideRequestNote note)
         {
-            var entity = _databaseContext.RideRequestNotes.Single(x => x.RideRequestNoteId == note.RideRequestNoteId);
+            var entity = _databaseContext.RideRequestNotes.Include(x => x.RideRequest).Single(x => x.RideRequest.RideRequestId == note.RideRequestId);
+
             entity.Text = note.Text;
             _databaseContext.Update(entity);
             _databaseContext.SaveChanges();

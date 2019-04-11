@@ -9,7 +9,6 @@ namespace ShareCar.Db.Entities
     {
         public int RideRequestNoteId { get; set; }
         public string Text { get; set; }
-
         public int RideRequestId { get; set; }
         public RideRequest RideRequest { get; set; }
     }

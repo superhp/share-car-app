@@ -29,8 +29,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IMapper _mapper;
         private readonly IUserLogic _userLogic;
         private readonly IRideRequestNoteLogic _rideRequestNoteLogic;
+        private readonly IDriverNoteLogic _driverNoteLogic;
 
-        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
+        public RideRequestLogic(IDriverNoteLogic driverNoteLogic, IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _addressLogic = addressLogic;
@@ -40,6 +41,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _passengerLogic = passengerLogic;
             _routeLogic = routeLogic;
             _rideRequestNoteLogic = rideRequestNoteLogic;
+            _driverNoteLogic = driverNoteLogic;
         }
 
         public void AddRequest(RideRequestDto requestDto, string driverEmail)
@@ -177,7 +179,6 @@ namespace ShareCar.Logic.RideRequest_Logic
             return dtoRequests;
         }
 
-
         //Changes request status to deleted
         public void DeletedRide(int rideId)
         {
@@ -207,11 +208,27 @@ namespace ShareCar.Logic.RideRequest_Logic
 
         public IEnumerable<RideRequestDto> GetPassengerRequests(string email)
         {
-            IEnumerable<RideRequest> entityRequest;
+            IEnumerable<RideRequest>  entityRequest = _rideRequestRepository.GetPassengerRequests(email);
 
-            entityRequest = _rideRequestRepository.GetPassengerRequests(email);
+            var notes = _rideRequestNoteLogic.GetNoteByPassenger(email);
 
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
+
+            foreach(var request in converted)
+            {
+                var note = notes.FirstOrDefault(x => x.RideRequestId == request.RideRequestId);
+                var driverNote = _driverNoteLogic.GetNoteByRide(request.RideId);
+
+                if(driverNote != null)
+                {
+                    request.DriverNoteText = driverNote.Text;
+                }
+
+                if (note != null)
+                {
+                    request.NoteText = note.Text;
+                }
+            }
 
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
         }
