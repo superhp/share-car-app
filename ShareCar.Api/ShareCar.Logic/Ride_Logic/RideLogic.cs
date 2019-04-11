@@ -188,8 +188,6 @@ namespace ShareCar.Logic.Ride_Logic
 
         private void AddRouteIdToRide(RideDto ride)
         {
-
-
             if (ride.Route.FromAddress.Longitude != 0 && ride.Route.FromAddress.Latitude != 0 && ride.Route.ToAddress.Longitude != 0 && ride.Route.ToAddress.Latitude != 0)
             {
                 RouteDto route = new RouteDto();

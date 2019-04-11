@@ -165,6 +165,7 @@ export class Rides extends React.Component {
                         rides={this.state.rides}
                         requests={this.state.requests}
                         passengers={this.state.passengers}
+                        showSnackBar={(message, variant) => {this.showSnackBar(message,variant)}}
                     />
                 }
                 <SnackBars

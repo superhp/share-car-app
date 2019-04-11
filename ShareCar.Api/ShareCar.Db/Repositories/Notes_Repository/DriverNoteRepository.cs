@@ -22,21 +22,20 @@ namespace ShareCar.Db.Repositories.Notes_Repository
             return entity;
         }
 
+        public DriverNote GetNoteByRide(int rideId)
+        {
+            return _databaseContext.DriverNotes.Include(x => x.Ride).FirstOrDefault(x => x.Ride.RideId == rideId);
+
+        }
+
         public IEnumerable<DriverNote> GetNotesByDriver(string email)
         {
             return _databaseContext.DriverNotes.Include(x => x.Ride).Where(x => x.Ride.DriverEmail == email);
         }
 
-        public void RemoveNote(int id)
-        {
-            var note = _databaseContext.DriverNotes.Single(x => x.DriverNoteId == id);
-            _databaseContext.Remove(note);
-            _databaseContext.SaveChanges();
-        }
-
         public void UpdateNote(DriverNote note)
         {
-            var entity = _databaseContext.DriverNotes.Single(x => x.DriverNoteId == note.DriverNoteId);
+            var entity = _databaseContext.DriverNotes.Include(x => x.Ride).Single(x => x.Ride.RideId == note.RideId);
             entity.Text = note.Text;
             _databaseContext.Update(entity);
             _databaseContext.SaveChanges();

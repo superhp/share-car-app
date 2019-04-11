@@ -9,7 +9,7 @@ namespace ShareCar.Logic.Note_Logic
     {
         List<DriverNoteDto> GetNotesByDriver(string email);
         DriverNoteDto AddNote(DriverNoteDto note);
+        DriverNoteDto GetNoteByRide(int rideId);
         void UpdateNote(DriverNoteDto note);
-        void RemoveNote(int id);
     }
 }

@@ -103,7 +103,8 @@ export class DriversRidesList extends React.Component {
           passengers={this.props.passengers.filter(x => x.rideId === this.props.selectedRide)}
           handleClose={() => this.handleClose()}
           handleRequestResponse={(response, rideRequestId, rideId, driverEmail) => this.props.handleRequestResponse(response, rideRequestId, rideId, driverEmail)}
-        />
+          showSnackBar={(message, variant) => {this.props.showSnackBar(message,variant)}}
+       />
       </Grid>
     );
   }

@@ -24,7 +24,6 @@ export class PendingRequests extends React.Component {
             });
         }
     }
-//
     updateNote(text) {
         let data = {
             Text: text,

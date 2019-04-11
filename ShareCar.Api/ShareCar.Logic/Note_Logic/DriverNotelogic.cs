@@ -33,14 +33,13 @@ namespace ShareCar.Logic.Note_Logic
             return _mapper.Map<DriverNote, DriverNoteDto>(entity);
         }
 
-        public void RemoveNote(int id)
-        {
-            _driverNoteRepository.RemoveNote(id);
-        }
+
 
         public void UpdateNote(DriverNoteDto note)
         {
-            if (note.DriverNoteId != 0)
+            var dtoNote = GetNoteByRide(note.RideId);
+
+            if (dtoNote != null)
             {
                 _driverNoteRepository.UpdateNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
             }
@@ -48,6 +47,12 @@ namespace ShareCar.Logic.Note_Logic
             {
                 _driverNoteRepository.AddNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
             }
+        }
+
+        public DriverNoteDto GetNoteByRide(int rideId)
+        {
+            var entity = _driverNoteRepository.GetNoteByRide(rideId);
+            return _mapper.Map<DriverNote, DriverNoteDto>(entity);
         }
     }
 }
