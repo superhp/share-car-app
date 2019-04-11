@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import TimePickers from "../../common/TimePickers";
+import TextField from "@material-ui/core/TextField";
 
 import "../../../styles/newRideForm.css";
 import { calendarStyle } from "../../../utils/calendarStyle";
@@ -23,7 +24,7 @@ function Transition(props) {
 
 class RideSchedulerHelper extends React.Component {
     state = {
-        open: true
+        open: true,
     };
 
     handleClose = () => {
@@ -55,6 +56,15 @@ class RideSchedulerHelper extends React.Component {
                     </Grid>
                     <Grid item xs={12}>
                         <TimePickers onTimeSet={value => this.props.handleTime(value)} />
+                    </Grid>
+                    <Grid item xs={12}>
+                    <TextField
+                                id="outlined-disabled"
+                                multiline
+                                onBlur={(e) => {this.props.handleNoteChange(e.target.value) }}
+                                margin="normal"
+                                variant="outlined"
+                            />          
                     </Grid>
                     <Grid item xs={12} className="create-rides-button">
                         <Button
