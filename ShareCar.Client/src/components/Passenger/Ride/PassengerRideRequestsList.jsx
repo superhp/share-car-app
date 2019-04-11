@@ -72,9 +72,9 @@ export class PassengerRideRequestsList extends React.Component {
 
     }
 
-    updateNote(noteText, requestId) {
+    updateNote(note, requestId) {
         let data = {
-            Text: noteText,
+            Text: note,
             RideRequestId: requestId
         };
         api.post("RideRequest/updateNote", data).then()
@@ -123,7 +123,7 @@ export class PassengerRideRequestsList extends React.Component {
                             <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
                                     request={req}
-                                    updateNote={(noteText, requestId) => {this.updateNote(noteText, requestId)}}
+                                    updateNote={(note, requestId) => {this.updateNote(note, requestId)}}
                                     route={req.route}
                                     key={i}
                                     index={i}

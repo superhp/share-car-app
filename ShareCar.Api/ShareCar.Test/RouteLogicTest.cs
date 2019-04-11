@@ -22,7 +22,7 @@ namespace ShareCar.Test
         public void GetRoutes_RideToOffice_SingleRouteContainingSingleRide()
         {
             DateTime baseDate = new DateTime(2000, 1, 1, 12, 0, 0);
-            RouteDto routeParam = new RouteDto { FromAddress = new AddressDto(), AddressTo = new AddressDto(), FromTime = baseDate};
+            RouteDto routeParam = new RouteDto { FromAddress = new AddressDto(), ToAddress = new AddressDto(), FromTime = baseDate};
             string loggedInUser = "user";
             string otherUser1 = "user1";
             string otherUser2 = "user2";

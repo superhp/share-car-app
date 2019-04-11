@@ -22,11 +22,11 @@ class RidesScheduler extends React.Component {
     selectedDates: [],
     time: "07:00",
     snackBarClicked: false,
-    noteText: ""
+    note: ""
   };
 
-  handleNoteChange(noteText){
-    this.setState({noteText});
+  handleNoteChange(note){
+    this.setState({note});
   }
 
   handleSelect(e) {
@@ -60,7 +60,7 @@ class RidesScheduler extends React.Component {
     let ridesToPost = [];
     const { fromAddress, toAddress } = this.props.routeInfo;
     this.state.selectedDates.forEach(element => {
-      ridesToPost.push(this.createRide(fromAddress, toAddress, element, this.state.noteText));
+      ridesToPost.push(this.createRide(fromAddress, toAddress, element, this.state.note));
     });
 
     this.postRides(ridesToPost);
@@ -88,7 +88,7 @@ class RidesScheduler extends React.Component {
         },
         Geometry: this.props.routeInfo.routeGeometry,
       },
-      noteText:note,
+      Note:note,
       rideDateTime:
         element.getFullYear() +
         "-" +
@@ -148,7 +148,7 @@ class RidesScheduler extends React.Component {
           handleClose={() => this.handleClose()}
           flex={this.props.flex}
           selectedDates={this.state.selectedDates}
-          handleNoteChange={(noteText) => this.handleNoteChange(noteText)}
+          handleNoteChange={(note) => this.handleNoteChange(note)}
           handleCreate={() => this.handleCreate()}
           handleSelect={e => this.handleSelect(e)}
           handleTime={value => this.handleTime(value)}

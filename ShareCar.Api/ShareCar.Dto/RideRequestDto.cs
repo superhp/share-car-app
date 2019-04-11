@@ -19,8 +19,10 @@ namespace ShareCar.Dto
         public bool SeenByDriver { get; set; }
         public bool SeenByPassenger { get; set; }
         public int RideId { get; set; }
-        public string NoteText { get; set; }
-        public string DriverNoteText { get; set; }
+        public string RequestNote { get; set; }
+        public bool RequestNoteSeen { get; set; }
+        public string RideNote { get; set; }
+        public bool RideNoteSeen { get; set; }
         public int RideRequestNoteId { get; set; }
         public int AddressId { get; set; }
         public Status Status { get; set; }

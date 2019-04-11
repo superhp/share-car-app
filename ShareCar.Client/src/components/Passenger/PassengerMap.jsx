@@ -287,7 +287,7 @@ this.setState({note});
       const request = {
         RideId: ride.rideId,
         DriverEmail: ride.driverEmail,
-        NoteText:this.state.note,
+        RequestNote:this.state.note,
         Address: {
           Longitude: this.state.passengerAddress.longitude,
           Latitude: this.state.passengerAddress.latitude

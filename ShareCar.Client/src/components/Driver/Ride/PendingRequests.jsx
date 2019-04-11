@@ -46,7 +46,7 @@ export class PendingRequests extends React.Component {
                 <div className="pending-requests">
                     <DialogTitle className="dialog-title">Note</DialogTitle>
                     <Note
-                        noteText={this.props.ride ? this.props.ride.noteText : null}
+                        note={this.props.ride ? this.props.ride.note : null}
                         updateNote={(note) => {this.updateNote(note)}}
                     />
                     <DialogTitle className="dialog-title">Requests</DialogTitle>

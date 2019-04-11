@@ -11,5 +11,6 @@ namespace ShareCar.Db.Entities
         public string Text { get; set; }
         public int RideRequestId { get; set; }
         public RideRequest RideRequest { get; set; }
+        public bool Seen { get; set; }
     }
 }

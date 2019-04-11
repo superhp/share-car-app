@@ -93,7 +93,7 @@ namespace ShareCar.Logic.Ride_Logic
                 var note = notes.FirstOrDefault(x => x.RideId == ride.RideId);
                 if(note != null)
                 {
-                    dtoRide.NoteText = note.Text;
+                    dtoRide.Note = note.Text;
                 }
                 dtoRide.Passengers = passengers.Where(x => x.RideId == ride.RideId).ToList();
                 dtoRides.Add(dtoRide);
@@ -127,9 +127,9 @@ namespace ShareCar.Logic.Ride_Logic
             ride.Requests = new List<RideRequestDto>();
             AddRouteIdToRide(ride);
             var entity = _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-            if (ride.NoteText != null)
+            if (ride.Note != null)
             {
-                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.NoteText, RideId = entity.RideId });
+                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.Note, RideId = entity.RideId });
                 ride.DriverNoteId = note.DriverNoteId;
             }
         }

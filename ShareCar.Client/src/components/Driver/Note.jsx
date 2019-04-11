@@ -8,8 +8,8 @@ export class Note extends React.Component {
 
     state = {
         editing: false,
-        value: this.props.noteText ? this.props.noteText : "",
-        temporaryValue: this.props.noteText ? this.props.noteText : ""
+        value: this.props.note ? this.props.note : "",
+        temporaryValue: this.props.note ? this.props.note : ""
     }
 
     render() {

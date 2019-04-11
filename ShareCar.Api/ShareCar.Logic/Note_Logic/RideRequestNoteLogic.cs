@@ -57,6 +57,7 @@ namespace ShareCar.Logic.Note_Logic
 
         public void UpdateNote(RideRequestNoteDto note)
         {
+            note.Seen = false;
             var dtoNote = GetNoteByRideRequest(note.RideRequestId);
             if (dtoNote != null)
             {

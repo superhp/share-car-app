@@ -97,7 +97,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                     <Card className="request-card">
                         <DialogTitle className="dialog-title">Your note</DialogTitle>
                         <Note
-                            noteText={this.props.request.noteText}
+                            note={this.props.request.requestNote}
                             updateNote={(note) => { this.props.updateNote(note, this.props.request.rideRequestId) }}
                         />
                         <DialogTitle className="dialog-title">Driver's note</DialogTitle>
@@ -109,7 +109,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                             fullWidth
                             margin="normal"
                             variant="outlined"
-                            value={this.props.request.driverNoteText}
+                            value={this.props.request.rideNote}
                         />
                         </div>
                     </Card>

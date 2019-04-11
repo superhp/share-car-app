@@ -113,7 +113,7 @@ export class PendingRequestCard extends React.Component {
                                     fullWidth
                                     margin="none"
                                     variant="outlined"
-                                    value={this.props.req.noteText}
+                                    value={this.props.req.requestNote}
                                 />
                     </Card>
                     : <div></div>

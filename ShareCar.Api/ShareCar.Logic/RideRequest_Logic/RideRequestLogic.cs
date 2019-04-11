@@ -76,9 +76,9 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.AddressId = addressId;
            var entity = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
 
-            if (requestDto.NoteText != null)
+            if (requestDto.RequestNote != null)
             {
-                var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.NoteText });
+                var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.RequestNote });
                 requestDto.RideRequestNoteId = note.RideRequestNoteId;
             }
         }
@@ -209,7 +209,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 var note = _rideRequestNoteLogic.GetNoteByRideRequest(request.RideRequestId);
                 if(note != null)
                 {
-                    request.NoteText = note.Text;
+                    request.RequestNote = note.Text;
                 }
             }
 
@@ -231,12 +231,12 @@ namespace ShareCar.Logic.RideRequest_Logic
 
                 if(driverNote != null)
                 {
-                    request.DriverNoteText = driverNote.Text;
+                    request.RideNote = driverNote.Text;
                 }
 
                 if (note != null)
                 {
-                    request.NoteText = note.Text;
+                    request.RequestNote = note.Text;
                 }
             }
 
