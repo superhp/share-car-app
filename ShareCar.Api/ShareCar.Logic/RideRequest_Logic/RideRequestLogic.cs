@@ -73,14 +73,14 @@ namespace ShareCar.Logic.RideRequest_Logic
                 throw new AlreadyRequestedException();
             }
 
-            if(requestDto.NoteText != null)
+            requestDto.AddressId = addressId;
+           var entity = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
+
+            if (requestDto.NoteText != null)
             {
-               var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = requestDto.RideRequestId, Text = requestDto.NoteText });
+                var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.NoteText });
                 requestDto.RideRequestNoteId = note.RideRequestNoteId;
             }
-
-            requestDto.AddressId = addressId;
-            _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
         }
 
         public void UpdateRequest(RideRequestDto request)

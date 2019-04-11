@@ -29,7 +29,8 @@ class DriverRoutesSugestionsModal extends React.Component {
                     <DriverRoutesSugestions
                       rides={this.props.rides}
                       onRegister={ride => this.props.onRegister(ride)}
-                    />
+                      handleNoteUpdate={(note) => {this.props.handleNoteUpdate(note)}}
+                      />
                 </Dialog>
             </div>
       );

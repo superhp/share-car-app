@@ -57,7 +57,7 @@ namespace ShareCar.Logic.Note_Logic
 
         public void UpdateNote(RideRequestNoteDto note)
         {
-            var dtoNote = GetNoteByRideRequest(note.RideId);
+            var dtoNote = GetNoteByRideRequest(note.RideRequestId);
             if (dtoNote != null)
             {
                 _rideRequestNoteRepository.UpdateNote(_mapper.Map<RideRequestNoteDto, RideRequestNote>(note));

@@ -39,6 +39,7 @@ export class PassengerMap extends React.Component {
     pickUpPointFeature: null,
     currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
     currentRouteIndex: 0,
+    note:"",
     showDriver: false,
     snackBarMessage: "",
     snackBarClick: false,
@@ -90,7 +91,7 @@ export class PassengerMap extends React.Component {
       const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
       this.handleMapClick(longitude, latitude);
     });
-    setTimeout( () => { this.map.updateSize();}, 200);
+    setTimeout(() => { this.map.updateSize(); }, 200);
     return { map, vectorSource };
   }
 
@@ -254,6 +255,10 @@ export class PassengerMap extends React.Component {
     }
   }
 
+  handleNoteUpdate(note) {
+this.setState({note});
+  }
+
   getAllRoutes(address, direction) {
     if (address) {
       let routeDto;
@@ -276,17 +281,16 @@ export class PassengerMap extends React.Component {
 
   handleRegister(ride) {
     if (!this.state.passengerAddress) {
-
       this.showSnackBar("Choose your pick up point", 2)
-
     }
     else {
       const request = {
         RideId: ride.rideId,
         DriverEmail: ride.driverEmail,
-        Address:{
-        Longitude: this.state.passengerAddress.longitude,
-        Latitude: this.state.passengerAddress.latitude
+        NoteText:this.state.note,
+        Address: {
+          Longitude: this.state.passengerAddress.longitude,
+          Latitude: this.state.passengerAddress.latitude
         }
       };
 
@@ -335,6 +339,7 @@ export class PassengerMap extends React.Component {
             <DriverRoutesSugestionsModal
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
+              handleNoteUpdate={(note) => { this.handleNoteUpdate(note) }}
             />
           ) : (
               <div></div>
@@ -342,51 +347,51 @@ export class PassengerMap extends React.Component {
         </div>
         {this.state.routes.length > 1
           ? <Grid className="navigation-buttons">
-              <Media query="(min-width: 714px)">
-                {matches => matches ? 
-                  <div>
-                    <PassengerNavigationButton
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
-                      text="View Previous Route"
-                    />
-                    <PassengerNavigationButton
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
-                      text="View Next Route"
-                    />
-                  </div>
+            <Media query="(min-width: 714px)">
+              {matches => matches ?
+                <div>
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Previous Route"
+                  />
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Next Route"
+                  />
+                </div>
                 : <div>
                   <Button
-                      variant="contained"
-                      className="next-button"
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
                   >
-                      <NavigateBefore fontSize="large" />
+                    <NavigateBefore fontSize="large" />
                   </Button>
                   <Button
-                      variant="contained"
-                      className="next-button"
-                      onClick={() => this.setState({
-                        currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
-                      },
-                        this.displayRoute
-                      )}
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
                   >
                     <NavigateNext fontSize="large" />
                   </Button>
                 </div>}
-              </Media>
+            </Media>
           </Grid>
           : <div />
         }

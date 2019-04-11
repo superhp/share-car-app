@@ -124,3 +124,8 @@ div.passengers-card {
 .rides-badge{
   position: absolute !important;
 }
+
+.ride-request-note{
+  padding-left: 16px;
+  padding-right: 16px;
+}

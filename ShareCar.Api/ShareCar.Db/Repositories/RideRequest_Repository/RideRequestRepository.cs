@@ -16,10 +16,11 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
             _databaseContext = context;
         }
 
-        public void AddRequest(RideRequest request)
+        public RideRequest AddRequest(RideRequest request)
         {
-            _databaseContext.Requests.Add(request);
+          var entity = _databaseContext.Requests.Add(request).Entity;
             _databaseContext.SaveChanges();
+            return entity;
         }
 
         public IEnumerable<RideRequest> GetRequestsByRideId(int rideId)
