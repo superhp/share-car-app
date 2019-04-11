@@ -39,8 +39,8 @@ class RideSchedulerHelper extends React.Component {
                 TransitionComponent={Transition}
             >
                 <DialogTitle >Schedule Your Rides</DialogTitle>
-                <Grid container>
-                    <Grid item xs={12} className="calendar-container">
+                <Grid container className="scheduler-container">
+                    <Grid item xs={12} >
                         <InfiniteCalendar
                             onSelect={e => this.props.handleSelect(e)}
                             Component={withMultipleDates(Calendar)}

@@ -5,19 +5,12 @@ import "../../styles/note.css"
 import "../../styles/genericStyles.css"
 
 export class Note extends React.Component {
-constructor(props){
-    super(props);
-    this.r = React.createRef();
-}
+
     state = {
         editing: false,
         value: this.props.noteText ? this.props.noteText : "",
         temporaryValue: this.props.noteText ? this.props.noteText : ""
     }
-
-componentDidMount(){
-  console.log(this.r);
-}
 
     render() {
         return (
@@ -28,10 +21,11 @@ componentDidMount(){
                     ? <div>
                         <div>
                             <TextField
+                                className="note"
                                 disabled
-                                id="outlined-disabled"
                                 margin="normal"
                                 multiline
+                                fullWidth
                                 variant="outlined"
                                 value={this.state.value}
                             />
@@ -49,27 +43,27 @@ componentDidMount(){
                     : <div>
                         <div>
                             <TextField
-                                id="outlined-disabled"
+                                className="note"
                                 multiline
+                                fullWidth
                                 onChange={(e) => { this.setState({ temporaryValue: e.target.value }) }}
                                 margin="normal"
                                 variant="outlined"
                                 value={this.state.temporaryValue}
-                                ref={this.r}
                             />
                         </div>
                         <div>
                             <Button
                                 variant="contained"
                                 className="save-btn"
-                                onClick={() => { this.setState({ editing: false, value:this.state.temporaryValue }, () => {this.props.updateNote(this.state.value)}) }}
+                                onClick={() => { this.setState({ editing: false, value: this.state.temporaryValue }, () => { this.props.updateNote(this.state.value) }) }}
                             >
                                 Save
                                         </Button>
                             <Button
                                 variant="contained"
                                 className="cancel-btn"
-                                onClick={() => { this.setState({ temporaryValue : this.state.value, editing: false }) }}
+                                onClick={() => { this.setState({ temporaryValue: this.state.value, editing: false }) }}
                             >
                                 Cancel
                                         </Button>
