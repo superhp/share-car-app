@@ -55,6 +55,11 @@ namespace ShareCar.Logic.Note_Logic
             return dtoNote;
         }
 
+        public void NoteSeen(int requestId)
+        {
+            _rideRequestNoteRepository.NoteSeen(requestId);
+        }
+
         public void UpdateNote(RideRequestNoteDto note)
         {
             note.Seen = false;

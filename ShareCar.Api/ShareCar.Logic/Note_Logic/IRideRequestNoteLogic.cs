@@ -12,5 +12,6 @@ namespace ShareCar.Logic.Note_Logic
         RideRequestNoteDto GetNoteByRideRequest(int rideRequestId);
         List<RideRequestNoteDto> GetNoteByPassenger(string email);
         void UpdateNote(RideRequestNoteDto note);
+        void NoteSeen(int requestId);
     }
 }

@@ -210,6 +210,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                 if(note != null)
                 {
                     request.RequestNote = note.Text;
+                    request.RequestNoteSeen = note.Seen;
                 }
             }
 

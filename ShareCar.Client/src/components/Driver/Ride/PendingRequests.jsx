@@ -34,6 +34,10 @@ export class PendingRequests extends React.Component {
           });
     }
 
+    requestNoteSeen(requestId){
+        api.get("RideRequest/" + requestId).then().catch();
+    }
+
     componentWillReceiveProps(props) {
         if (props.open) {
             this.seenRequests(props.rideRequests);
@@ -57,6 +61,7 @@ export class PendingRequests extends React.Component {
                                     <PendingRequestCard
                                         req={req}
                                         index={index}
+                                        requestNoteSeen={(requestId) => {this.requestNoteSeen(requestId)}}
                                         route={this.props.ride ? this.props.ride.route : null}
                                         onAcceptClick={() => this.props.handleRequestResponse(1, req.rideRequestId, req.rideId, req.driverEmail)}
                                         onDenyClick={() => { this.props.handleRequestResponse(2, req.rideRequestId, req.rideId) }}

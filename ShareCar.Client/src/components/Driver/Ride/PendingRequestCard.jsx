@@ -16,6 +16,15 @@ export class PendingRequestCard extends React.Component {
         showMap: false,
         showNote: false
     }
+
+    onViewNoteClick(){
+        this.setState({ showNote: !this.state.showNote }, () =>{
+            if(!this.props.req.requestNoteSeen){
+                this.props.requestNoteSeen(this.props.req.rideRequestId)
+            }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -23,7 +32,7 @@ export class PendingRequestCard extends React.Component {
                     <Grid container justify="center">
                         <Grid item xs={12} zeroMinWidth>
                             <Grid container justify="center" className="request-person-info">
-                                {!this.props.req.seenByDriver ? (
+                                {!this.props.req.seenByDriver? (
                                     <Badge
                                         className="new-badge"
                                         badgeContent={"new"}
@@ -51,10 +60,18 @@ export class PendingRequestCard extends React.Component {
 
                                     </Grid>
                                     <Grid item md={3} className="pending-request-button">
+                                    {!this.props.req.requestNoteSeen ? (
+                                    <Badge
+                                        className="new-badge"
+                                        badgeContent={"new"}
+                                        color="primary"
+                                        children={""}
+                                    />
+                                ) : null}
                                         <Button
                                             variant="contained"
                                             className="show-on-map"
-                                            onClick={() => { this.setState({ showNote: !this.state.showNote }) }}
+                                            onClick={() => { this.onViewNoteClick() }}
                                         >
                                             View note
                                         </Button>

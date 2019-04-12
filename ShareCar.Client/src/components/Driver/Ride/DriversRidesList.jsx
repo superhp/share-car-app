@@ -37,11 +37,10 @@ export class DriversRidesList extends React.Component {
       <Grid container>
         {this.props.rides.length > 0 ? this.props.rides.map((ride, index) => (
           <Grid style={style} key={index} item xs={12}>
-
             <Card className="rides-card generic-card">
               <Grid container className="active-rides-card-container">
                 <Grid item xs={8}>
-                  {this.props.requests.filter(x => x.rideId === ride.rideId && !x.seenByDriver).length > 0
+                  {this.props.requests.filter(x => x.rideId === ride.rideId && (!x.seenByDriver || !x.requestNoteSeen)).length > 0
                     ? <Badge
                       className="rides-badge"
                       badgeContent={"new"}
@@ -55,7 +54,7 @@ export class DriversRidesList extends React.Component {
                       From {ride.route.fromAddress.street} {ride.route.fromAddress.number}, {ride.route.fromAddress.city}
                     </Typography>
                     <Typography color="textSecondary">
-                    To {ride.route.toAddress.street} {ride.route.toAddress.number}, {ride.route.toAddress.city}
+                      To {ride.route.toAddress.street} {ride.route.toAddress.number}, {ride.route.toAddress.city}
                     </Typography>
                     <Typography color="textSecondary">
                       {moment(ride.rideDateTime).format("dddd MMM DD YYYY hh:mm")}
@@ -103,8 +102,8 @@ export class DriversRidesList extends React.Component {
           passengers={this.props.passengers.filter(x => x.rideId === this.props.selectedRide)}
           handleClose={() => this.handleClose()}
           handleRequestResponse={(response, rideRequestId, rideId, driverEmail) => this.props.handleRequestResponse(response, rideRequestId, rideId, driverEmail)}
-          showSnackBar={(message, variant) => {this.props.showSnackBar(message,variant)}}
-       />
+          showSnackBar={(message, variant) => { this.props.showSnackBar(message, variant) }}
+        />
       </Grid>
     );
   }

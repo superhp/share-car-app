@@ -43,6 +43,13 @@ namespace ShareCar.Api.Controllers
             return Ok(request);
         }
 
+        [HttpGet("{requestId}")]
+        public IActionResult UpdateNote(int requestId)
+        {
+            _noteLogic.NoteSeen(requestId);
+            return Ok();
+        }
+
         [HttpPost("updateNote")]
         public IActionResult UpdateNote([FromBody] RideRequestNoteDto note)
         {
