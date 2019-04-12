@@ -20,5 +20,6 @@ namespace ShareCar.Db.Repositories.User_Repository
         void UpdateUser(User user);
         User GetUserByEmail(EmailType type, string email);
         void DeleteUser(string email);
+        IEnumerable<User> GetDrivers(string email);
     }
 }

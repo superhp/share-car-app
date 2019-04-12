@@ -279,5 +279,16 @@ namespace ShareCar.Logic.User_Logic
         {
             return CountPoints(userEmail);
         }
+
+        public List<UserDto> GetDrivers(string email)
+        {
+            var drivers = _userRepository.GetDrivers(email).ToList();
+            var dtoDrivers = new List<UserDto>();
+            foreach(var driver in drivers)
+            {
+                dtoDrivers.Add(MapToDto(driver));
+            }
+            return dtoDrivers;
+        }
     }
 }

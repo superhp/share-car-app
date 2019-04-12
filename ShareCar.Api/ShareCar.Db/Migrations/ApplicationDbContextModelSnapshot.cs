@@ -173,9 +173,7 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<string>("DriverEmail");
 
-                    b.Property<int>("NumberOfSeats")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(4);
+                    b.Property<int>("NumberOfSeats");
 
                     b.Property<DateTime>("RideDateTime");
 
@@ -194,7 +192,7 @@ namespace ShareCar.Db.Migrations
 
             modelBuilder.Entity("ShareCar.Db.Entities.RideRequest", b =>
                 {
-                    b.Property<int>("RequestId")
+                    b.Property<int>("RideRequestId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AddressId");
@@ -211,7 +209,7 @@ namespace ShareCar.Db.Migrations
 
                     b.Property<int>("Status");
 
-                    b.HasKey("RequestId");
+                    b.HasKey("RideRequestId");
 
                     b.HasIndex("AddressId");
 
@@ -313,7 +311,9 @@ namespace ShareCar.Db.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<int>("NumberOfSeats");
+                    b.Property<int>("NumberOfSeats")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(4);
 
                     b.Property<string>("PasswordHash");
 

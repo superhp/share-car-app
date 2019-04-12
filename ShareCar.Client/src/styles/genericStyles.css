@@ -27,6 +27,7 @@ button:focus {
   outline:0!important;
 }
 
+
 .generic {
   display: flex;
   flex-direction: column;

@@ -142,5 +142,10 @@ namespace ShareCar.Db.Repositories.User_Repository
             return null;
         }
 
+        public IEnumerable<User> GetDrivers(string email)
+        {
+            var emails = _databaseContext.Rides.Where(x => x.DriverEmail != email && x.isActive).Select(x => x.DriverEmail).Distinct();
+            return _databaseContext.User.Where(x => emails.Contains(x.Email));
+        }
     }
 }
