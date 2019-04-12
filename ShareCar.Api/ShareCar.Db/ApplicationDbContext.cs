@@ -30,9 +30,19 @@ namespace ShareCar.Db
             modelBuilder.Entity<Route>()
                 .HasIndex(u => u.Geometry)
                 .IsUnique();
+
             modelBuilder.Entity<Ride>()
                 .Property(x => x.NumberOfSeats)
                 .HasDefaultValue(4);
+
+            modelBuilder.Entity<RideRequestNote>()
+             .Property(x => x.Seen)
+             .HasDefaultValue(true);
+
+            modelBuilder.Entity<DriverSeenNote>()
+            .Property(x => x.Seen)
+            .HasDefaultValue(true);
+
             modelBuilder.Entity<Ride>()
                 .Property(x => x.isActive)
                 .HasDefaultValue(true);

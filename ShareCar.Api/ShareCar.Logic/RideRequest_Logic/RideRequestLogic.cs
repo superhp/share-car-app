@@ -212,6 +212,10 @@ namespace ShareCar.Logic.RideRequest_Logic
                     request.RequestNote = note.Text;
                     request.RequestNoteSeen = note.Seen;
                 }
+                else
+                {
+                    request.RequestNoteSeen = true;
+                }
             }
 
             return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
