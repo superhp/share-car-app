@@ -56,11 +56,10 @@ namespace ShareCar.Logic.DI
             services.AddScoped<IPassengerRepository, PassengerRepository>();
             services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IRideRepository, RideRepository>();
-
             services.AddScoped<IPassengerRepository, PassengerRepository>();
             services.AddScoped<IDriverNoteRepository, DriverNoteRepository>();
+            services.AddScoped<IDriverSeenNoteRepository, DriverSeenNoteRepository>();
             services.AddScoped<IRideRequestNoteRepository, RideRequestNoteRepository>();
-
             services.AddScoped<IUserRepository, UserRepository>();
         }
 

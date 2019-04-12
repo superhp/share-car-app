@@ -9,6 +9,5 @@ namespace ShareCar.Dto
         public int RideId { get; set; }
         public int DriverNoteId { get; set; }
         public string Text { get; set; }
-        public List<DriverSeenNoteDto> DriverSeenNotes { get; set; }
     }
 }

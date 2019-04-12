@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
+using ShareCar.Db.Repositories.Notes_Repository;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
@@ -30,8 +31,9 @@ namespace ShareCar.Api.Controllers
         private readonly IPassengerLogic _passengerLogic;
         private readonly IDriverNoteLogic _driverNoteLogic;
         private readonly IAddressLogic _addressLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteRepository;
 
-        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic, IDriverNoteLogic driverNoteLogic)
+        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IDriverSeenNoteRepository driverSeenNoteRepository, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic, IDriverNoteLogic driverNoteLogic)
         {
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -40,6 +42,7 @@ namespace ShareCar.Api.Controllers
             _userRepository = userRepository;
             _passengerLogic = passengerLogic;
             _driverNoteLogic = driverNoteLogic;
+            _driverSeenNoteRepository = driverSeenNoteRepository;
         }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
@@ -56,6 +59,14 @@ namespace ShareCar.Api.Controllers
              _driverNoteLogic.UpdateNote(note);
              return Ok();
         }
+
+        [HttpGet("{requestId}")]
+        public IActionResult SeenNote(int requestId)
+        {
+            _driverSeenNoteRepository.NoteSeen(requestId);
+            return Ok();
+        }
+
 
         [HttpPost("passengerResponse")]
         public async Task<IActionResult> PassengerResponseAsync([FromBody]PassengerResponseDto response)

@@ -15,6 +15,7 @@ using System;
 using System.Linq;
 using ShareCar.Logic.Exceptions;
 using ShareCar.Logic.Note_Logic;
+using ShareCar.Db.Repositories.Notes_Repository;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -30,8 +31,9 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IUserLogic _userLogic;
         private readonly IRideRequestNoteLogic _rideRequestNoteLogic;
         private readonly IDriverNoteLogic _driverNoteLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteReposiotory;
 
-        public RideRequestLogic(IDriverNoteLogic driverNoteLogic, IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
+        public RideRequestLogic(IDriverNoteLogic driverNoteLogic, IDriverSeenNoteRepository driverSeenNoteLogic, IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _addressLogic = addressLogic;
@@ -42,6 +44,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             _routeLogic = routeLogic;
             _rideRequestNoteLogic = rideRequestNoteLogic;
             _driverNoteLogic = driverNoteLogic;
+            _driverSeenNoteReposiotory = driverSeenNoteLogic;
         }
 
         public void AddRequest(RideRequestDto requestDto, string driverEmail)
@@ -76,10 +79,14 @@ namespace ShareCar.Logic.RideRequest_Logic
             requestDto.AddressId = addressId;
            var entity = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
 
+            var driverNote = _driverNoteLogic.GetNoteByRide(requestDto.RideId);
+
+
+            _driverSeenNoteReposiotory.AddNote(new DriverSeenNote { RideRequestId = entity.RideRequestId, DriverNoteId = driverNote.DriverNoteId });
+
             if (requestDto.RequestNote != null)
             {
-                var note = _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.RequestNote });
-                requestDto.RideRequestNoteId = note.RideRequestNoteId;
+                _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.RequestNote });
             }
         }
 
@@ -226,7 +233,7 @@ namespace ShareCar.Logic.RideRequest_Logic
             IEnumerable<RideRequest>  entityRequest = _rideRequestRepository.GetPassengerRequests(email);
 
             var notes = _rideRequestNoteLogic.GetNoteByPassenger(email);
-
+            var driverSeenNotes =_driverSeenNoteReposiotory.GetNotesByPassenger(email);
             IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
 
             foreach(var request in converted)
@@ -237,6 +244,11 @@ namespace ShareCar.Logic.RideRequest_Logic
                 if(driverNote != null)
                 {
                     request.RideNote = driverNote.Text;
+                    request.RideNoteSeen = driverSeenNotes.Single(x => x.RideRequestId == request.RideRequestId).Seen;
+                }
+                else
+                {
+                    request.RideNoteSeen = true;
                 }
 
                 if (note != null)

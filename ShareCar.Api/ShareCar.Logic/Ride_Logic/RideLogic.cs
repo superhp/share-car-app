@@ -127,11 +127,9 @@ namespace ShareCar.Logic.Ride_Logic
             ride.Requests = new List<RideRequestDto>();
             AddRouteIdToRide(ride);
             var entity = _rideRepository.AddRide(_mapper.Map<RideDto, Ride>(ride));
-            if (ride.Note != null)
-            {
-                var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.Note, RideId = entity.RideId });
-                ride.DriverNoteId = note.DriverNoteId;
-            }
+            
+            var note = _driverNoteLogic.AddNote(new DriverNoteDto { Text = ride.Note, RideId = entity.RideId });
+            ride.DriverNoteId = note.DriverNoteId;
         }
 
         public void SetRideAsInactive(RideDto rideDto)

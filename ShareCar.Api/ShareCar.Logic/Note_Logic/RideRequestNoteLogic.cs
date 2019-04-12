@@ -20,10 +20,9 @@ namespace ShareCar.Logic.Note_Logic
             _mapper = mapper;
         }
 
-        public RideRequestNoteDto AddNote(RideRequestNoteDto note)
+        public void AddNote(RideRequestNoteDto note)
         {
-            var entity = _rideRequestNoteRepository.AddNote(_mapper.Map<RideRequestNoteDto, RideRequestNote>(note));
-            return _mapper.Map<RideRequestNote, RideRequestNoteDto>(entity);
+            _rideRequestNoteRepository.AddNote(_mapper.Map<RideRequestNoteDto, RideRequestNote>(note));
         }
 
         public List<RideRequestNoteDto> GetNoteByPassenger(string email)

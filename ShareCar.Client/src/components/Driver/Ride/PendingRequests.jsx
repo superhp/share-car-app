@@ -30,7 +30,7 @@ export class PendingRequests extends React.Component {
             RideId: this.props.ride.rideId,
         }
         api.post("Ride/updateNote", data).then().catch(() => {
-            this.showSnackBar("Failed to update note", 2);
+            this.props.showSnackBar("Failed to update note", 2);
           });
     }
 

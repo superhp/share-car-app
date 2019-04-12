@@ -26,8 +26,6 @@ namespace ShareCar.Logic.ObjectMapping
             CreateMap<UserDto, User>();
             CreateMap<DriverNote, DriverNoteDto>();
             CreateMap<DriverNoteDto, DriverNote>();
-            CreateMap<DriverSeenNote, DriverSeenNoteDto>();
-            CreateMap<DriverSeenNoteDto, DriverSeenNote>();
             CreateMap<RideRequestNote, RideRequestNoteDto>();
             CreateMap<RideRequestNoteDto, RideRequestNote>();
         }

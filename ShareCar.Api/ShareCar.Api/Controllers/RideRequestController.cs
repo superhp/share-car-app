@@ -12,6 +12,7 @@ using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Logic.Exceptions;
 using ShareCar.Logic.Note_Logic;
+using ShareCar.Db.Repositories.Notes_Repository;
 
 namespace ShareCar.Api.Controllers
 {
@@ -24,13 +25,15 @@ namespace ShareCar.Api.Controllers
         private readonly IRideRequestNoteLogic _noteLogic;
         private readonly IUserRepository _userRepository;
         private readonly IRideLogic _rideLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteRepository;
 
-        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository, IRideLogic rideLogic, IRideRequestNoteLogic noteLogic)
+        public RideRequestController(IRideRequestLogic requestLogic, IDriverSeenNoteRepository driverSeenNoteRepository, IUserRepository userRepository, IRideLogic rideLogic, IRideRequestNoteLogic noteLogic)
         {
             _requestLogic = requestLogic;
             _userRepository = userRepository;
             _rideLogic = rideLogic;
             _noteLogic = noteLogic;
+            _driverSeenNoteRepository = driverSeenNoteRepository;
         }
 
         [HttpGet("passenger")]
@@ -44,7 +47,7 @@ namespace ShareCar.Api.Controllers
         }
 
         [HttpGet("{requestId}")]
-        public IActionResult UpdateNote(int requestId)
+        public IActionResult NoteSeen(int requestId)
         {
             _noteLogic.NoteSeen(requestId);
             return Ok();

@@ -18,6 +18,7 @@ export class DriverRideRequestsList extends React.Component {
           handleRequestResponse={(button, response, rideRequestId, rideId, driverEmail) =>
             this.props.handleRequestResponse(button, response, rideRequestId, rideId, driverEmail)}
           passengers={this.props.passengers}
+          showSnackBar={(message, variant) => {this.props.showSnackBar(message, variant)}}
           handleClose={() => this.props.handleClose()}
           open={this.props.open}
         />

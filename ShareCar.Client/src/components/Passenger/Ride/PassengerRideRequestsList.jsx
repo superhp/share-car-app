@@ -92,7 +92,7 @@ export class PassengerRideRequestsList extends React.Component {
                 }
             })
             .then(() => {
-                const unseenRequests = [];
+                let unseenRequests = [];
 
                 for (let i = 0; i < this.state.requests.length; i++) {
                     if (!this.state.requests[i].seenByPassenger) {
@@ -101,8 +101,7 @@ export class PassengerRideRequestsList extends React.Component {
                 }
 
                 if (unseenRequests.length !== 0) {
-                    api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
-                    });
+                    api.post("RideRequest/seenPassenger", unseenRequests).catch();
                 }
             })
             .catch((error) => {
@@ -110,6 +109,9 @@ export class PassengerRideRequestsList extends React.Component {
             });
     }
 
+    noteSeen(requestId) {
+        api.get("Ride/"+requestId).catch();
+    }
 
     render() {
         return (
@@ -124,6 +126,7 @@ export class PassengerRideRequestsList extends React.Component {
                                 <PassengerRideRequestCard
                                     request={req}
                                     updateNote={(note, requestId) => {this.updateNote(note, requestId)}}
+                                    noteSeen={(requestId) => {this.noteSeen(requestId)}}
                                     route={req.route}
                                     key={i}
                                     index={i}

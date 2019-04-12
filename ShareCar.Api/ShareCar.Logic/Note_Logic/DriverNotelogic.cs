@@ -12,10 +12,12 @@ namespace ShareCar.Logic.Note_Logic
     public class DriverNoteLogic : IDriverNoteLogic
     {
         private readonly IDriverNoteRepository _driverNoteRepository;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteRepository;
         private readonly IMapper _mapper;
 
-        public DriverNoteLogic(IDriverNoteRepository driverNoteRepository, IMapper mapper)
+        public DriverNoteLogic(IDriverNoteRepository driverNoteRepository, IDriverSeenNoteRepository driverSeenNoteRepository, IMapper mapper)
         {
+            _driverSeenNoteRepository = driverSeenNoteRepository;
             _driverNoteRepository = driverNoteRepository;
             _mapper = mapper;
         }
@@ -28,25 +30,14 @@ namespace ShareCar.Logic.Note_Logic
 
         public DriverNoteDto AddNote(DriverNoteDto note)
         {
-            note.DriverSeenNotes = new List<DriverSeenNoteDto>();
             var entity = _driverNoteRepository.AddNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
             return _mapper.Map<DriverNote, DriverNoteDto>(entity);
         }
 
-
-
         public void UpdateNote(DriverNoteDto note)
         {
-            var dtoNote = GetNoteByRide(note.RideId);
-
-            if (dtoNote != null)
-            {
-                _driverNoteRepository.UpdateNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
-            }
-            else
-            {
-                _driverNoteRepository.AddNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
-            }
+                var entity = _driverNoteRepository.UpdateNote(_mapper.Map<DriverNoteDto, DriverNote>(note));
+                _driverSeenNoteRepository.NoteUnseen(entity.DriverNoteId);
         }
 
         public DriverNoteDto GetNoteByRide(int rideId)

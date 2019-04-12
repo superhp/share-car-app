@@ -47,14 +47,6 @@ namespace ShareCar.Db
                 .Property(x => x.isActive)
                 .HasDefaultValue(true);
 
-            modelBuilder.Entity<DriverNote>()
-            .HasMany(x => x.DriverSeenNotes)
-            .WithOne(y => y.Note);
-
-
-
-
-
         }
     }
 }

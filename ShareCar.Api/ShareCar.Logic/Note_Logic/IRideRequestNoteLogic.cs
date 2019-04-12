@@ -7,7 +7,7 @@ namespace ShareCar.Logic.Note_Logic
 {
     public interface IRideRequestNoteLogic
     {
-        RideRequestNoteDto AddNote(RideRequestNoteDto note);
+        void AddNote(RideRequestNoteDto note);
         RideRequestNoteDto GetNoteByRide(int rideId);
         RideRequestNoteDto GetNoteByRideRequest(int rideRequestId);
         List<RideRequestNoteDto> GetNoteByPassenger(string email);

@@ -6,7 +6,7 @@ import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {Note} from "../Driver/Note";
+import { Note } from "../Driver/Note";
 import Badge from "@material-ui/core/Badge";
 import MapComponent from "../Maps/MapComponent";
 import { Status } from "../../utils/status";
@@ -23,7 +23,6 @@ export default class PassengerRideRequestsCard extends React.Component {
         showMap: false,
         showNotes: false,
     }
-
     render() {
         return (
             <div>
@@ -51,18 +50,29 @@ export default class PassengerRideRequestsCard extends React.Component {
                             </CardContent>
                         </Grid>
                         <Grid item xs={4} className="list-buttons">
-                            <Button
-                                variant="contained"
-                                className="show-on-map"
-                                onClick={() => {
-                                    this.setState({
-                                        showNotes: !this.state.showNotes
-                                    });
+                            <Grid item>
+                                {!this.props.request.rideNoteSeen ?
 
-                                }}
-                            >
-                                View notes
+                                    <Badge
+                                        className="rides-badge"
+                                        badgeContent={"new"}
+                                        color="primary"
+                                        children={""}
+                                    />
+                                    : null}
+                                <Button
+                                    variant="contained"
+                                    className="show-on-map"
+                                    onClick={() => {
+                                        this.setState({
+                                            showNotes: !this.state.showNotes
+                                        }, () => { this.props.noteSeen(this.props.request.rideRequestId) });
+                                    }}
+                                >
+                                    View notes
                         </Button>
+                            </Grid>
+
                             <Button
                                 variant="contained"
                                 className="show-on-map"
@@ -70,7 +80,6 @@ export default class PassengerRideRequestsCard extends React.Component {
                                     this.setState({
                                         showMap: !this.state.showMap
                                     });
-
                                 }}
                             >
                                 Show on map
@@ -89,7 +98,6 @@ export default class PassengerRideRequestsCard extends React.Component {
                             }
                         </Grid>
 
-
                     </Grid>
                 </Card>
 
@@ -102,15 +110,15 @@ export default class PassengerRideRequestsCard extends React.Component {
                         />
                         <DialogTitle className="dialog-title">Driver's note</DialogTitle>
                         <div className="note-container">
-                        <TextField
-                            disabled
-                            id="outlined-disabled"
-                            multiline
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                            value={this.props.request.rideNote}
-                        />
+                            <TextField
+                                disabled
+                                id="outlined-disabled"
+                                multiline
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"
+                                value={this.props.request.rideNote}
+                            />
                         </div>
                     </Card>
                 ) : (

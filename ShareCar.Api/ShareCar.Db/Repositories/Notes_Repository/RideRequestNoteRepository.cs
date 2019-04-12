@@ -15,11 +15,10 @@ namespace ShareCar.Db.Repositories.Notes_Repository
         {
             _databaseContext = databaseContext;
         }
-        public RideRequestNote AddNote(RideRequestNote note)
+        public void AddNote(RideRequestNote note)
         {
-            var entity = _databaseContext.Add(note).Entity;
+            _databaseContext.Add(note);
             _databaseContext.SaveChanges();
-            return entity;
         }
 
         public IEnumerable<RideRequestNote> GetNoteByPassenger(string email)
