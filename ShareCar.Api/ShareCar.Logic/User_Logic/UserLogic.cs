@@ -62,6 +62,9 @@ namespace ShareCar.Logic.User_Logic
                 _userToUpdate.FirstName = updatedUser.FirstName;
                 _userToUpdate.LastName = updatedUser.LastName;
                 _userToUpdate.Phone = updatedUser.Phone;
+                _userToUpdate.CarModel = updatedUser.CarModel;
+                _userToUpdate.CarColor = updatedUser.CarColor;
+                _userToUpdate.NumberOfSeats = updatedUser.NumberOfSeats;
                 _userToUpdate.LicensePlate = updatedUser.LicensePlate;
 
                 var _user = MapToEntity(_userToUpdate);
@@ -245,7 +248,10 @@ namespace ShareCar.Logic.User_Logic
                 CognizantEmail = user.CognizantEmail,
                 Email = user.Email,
                 LicensePlate = user.LicensePlate,
-                Phone = user.Phone
+                Phone = user.Phone,
+                CarModel = user.CarModel,
+                CarColor = user.CarColor,
+                NumberOfSeats = user.NumberOfSeats
             };
         }
 
@@ -262,13 +268,27 @@ namespace ShareCar.Logic.User_Logic
                 CognizantEmail = user.CognizantEmail,
                 Email = user.Email,
                 LicensePlate = user.LicensePlate,
-                Phone = user.Phone
+                Phone = user.Phone,
+                CarModel = user.CarModel,
+                CarColor = user.CarColor,
+                NumberOfSeats = user.NumberOfSeats
             };
         }
 
         public int GetPoints(string userEmail)
         {
             return CountPoints(userEmail);
+        }
+
+        public List<UserDto> GetDrivers(string email)
+        {
+            var drivers = _userRepository.GetDrivers(email).ToList();
+            var dtoDrivers = new List<UserDto>();
+            foreach(var driver in drivers)
+            {
+                dtoDrivers.Add(MapToDto(driver));
+            }
+            return dtoDrivers;
         }
     }
 }

@@ -6,7 +6,6 @@ import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Grid from "@material-ui/core/Grid";
-
 import { centerMap } from "./../../utils/mapUtils";
 import { PassengerRouteSelection } from "./Route/PassengerRouteSelection";
 import { PassengerNavigationButton } from "./PassengerNavigationButton";
@@ -35,14 +34,16 @@ export class PassengerMap extends React.Component {
   state = {
     passengerAddress: null,
     direction: "from",
+    fetchedRoutes: [],
     routes: [],
+    users: [],
     pickUpPointFeature: null,
     currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
     currentRouteIndex: 0,
     note:"",
     showDriver: false,
     snackBarMessage: "",
-    snackBarClick: false,
+    snackBarClicked: false,
     snackBarVariant: null,
   }
 
@@ -51,6 +52,7 @@ export class PassengerMap extends React.Component {
     this.map = map;
     this.vectorSource = vectorSource;
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +61,7 @@ export class PassengerMap extends React.Component {
       passengerAddress: null,
       direction: "from",
       routes: [],
+      users: [],
       pickUpPointFeature: null,
       currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
       currentRouteIndex: 0,
@@ -68,7 +71,32 @@ export class PassengerMap extends React.Component {
       snackBarVariant: null,
     });
     this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
   }
+
+  getUsers() {
+    api.get("user/getDrivers")
+      .then((response) => {
+        this.setState({ users: response.data });
+      })
+      .catch((err) => {
+        this.showSnackBar("Something went wrong.", 2)
+      });
+  }
+
+  onDriverSelection(email) {
+    let routes = [...this.state.fetchedRoutes];
+    routes = routes.filter(x => x.rides.filter(y => y.driverEmail === email).length > 0)
+    this.setState({ routes, currentRouteIndex: 0 }, this.displayRoute);
+  }
+
+  onAutosuggestBlur(resetRoutes) {
+    if(resetRoutes){
+    this.setState({ routes: this.state.fetchedRoutes, currentRouteIndex: 0 }, this.displayRoute);
+  }else{
+    this.setState({ routes: [], currentRouteIndex: 0 }, this.displayRoute);
+  }
+}
 
   initializeMap() {
     const vectorSource = new SourceVector();
@@ -95,23 +123,15 @@ export class PassengerMap extends React.Component {
     return { map, vectorSource };
   }
 
-  removeRoute(routeFeature, fromFeature, toFeature) {
-    if (routeFeature)
-      this.vectorSource.removeFeature(routeFeature);
-    if (fromFeature)
-      this.vectorSource.removeFeature(fromFeature);
-    if (toFeature)
-      this.vectorSource.removeFeature(toFeature);
-  }
-
   displayRoute() {
     this.setState({ showDriver: true });
-    const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
-    this.removeRoute(routeFeature, fromFeature, toFeature);
-
+    console.log(this.state.currentRouteIndex)
+    this.vectorSource.clear();
+    if (this.state.pickUpPointFeature) {
+      this.vectorSource.addFeature(this.state.pickUpPointFeature);
+    }
     if (this.state.routes.length > 0) {
       const route = this.state.routes[this.state.currentRouteIndex];
-
 
       const routeFeature = createRouteFeature(route.geometry);
       const fromFeature = createPointFeature(route.fromAddress.longitude, route.fromAddress.latitude);
@@ -231,6 +251,7 @@ export class PassengerMap extends React.Component {
   }
 
   distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
+
   distToSegmentSquared(pivot, point1, point2) {
     var l2 = this.distanceBetweenPoints(point1, point2);
     if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
@@ -269,9 +290,7 @@ this.setState({note});
         routeDto = { FromAddress: address };
       api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
         if (res.status === 200 && res.data !== "") {
-          const { routeFeature, fromFeature, toFeature } = this.state.currentRoute;
-          this.removeRoute(routeFeature, fromFeature, toFeature);
-          this.setState({ routes: res.data, currentRoute: { ...this.state.currentRoute, routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
+          this.setState({ routes: res.data, fetchedRoutes: res.data, currentRoute: { routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
         }
       }).catch((error) => {
         this.showSnackBar("Failed to load routes", 2)
@@ -331,6 +350,9 @@ this.setState({note});
           <PassengerRouteSelection
             direction={this.state.direction}
             initialAddress={OfficeAddresses[0]}
+            users={this.state.users}
+            onDriverSelection={(email) => { this.onDriverSelection(email) }}
+            onAutosuggestBlur={(resetRoutes) => { this.onAutosuggestBlur(resetRoutes) }}
             displayName={addressToString(this.state.passengerAddress)}
             onChange={(address, direction) => this.getAllRoutes(address, direction)}
             onMeetupAddressChange={address => this.onMeetupAddressChange(address)}

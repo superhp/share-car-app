@@ -16,6 +16,7 @@ export class AddressInput extends React.Component {
         this.placesAutocomplete = places({
             container: this.algoliaRef.current.autocomplete.autocomplete[0],
         });
+        this.placesAutocomplete.setVal(this.props.displayName ? this.props.displayName : "");
     }
 
     componentWillReceiveProps(nextProps) {

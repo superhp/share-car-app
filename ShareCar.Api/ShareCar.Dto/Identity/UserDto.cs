@@ -16,5 +16,8 @@
         public string Email { get; set; }
         public string LicensePlate { get; set; }
         public string Phone { get; set; }
+        public string CarColor { get; set; }
+        public string CarModel { get; set; }
+        public int NumberOfSeats { get; set; }
     }
 }
