@@ -49,6 +49,7 @@ namespace ShareCar.Db.Repositories.Notes_Repository
             var entity = _databaseContext.RideRequestNotes.Include(x => x.RideRequest).Single(x => x.RideRequest.RideRequestId == note.RideRequestId);
 
             entity.Text = note.Text;
+            entity.Seen = note.Seen;
             _databaseContext.Update(entity);
             _databaseContext.SaveChanges();
         }
