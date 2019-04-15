@@ -17,7 +17,6 @@ import "../../../styles/newRideForm.css";
 import { calendarStyle } from "../../../utils/calendarStyle";
 
 const today = new Date();
-
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
@@ -55,7 +54,7 @@ class RideSchedulerHelper extends React.Component {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TimePickers onTimeSet={value => this.props.handleTime(value)} />
+                        <TimePickers onTimeSet={(value)=>{this.props.handleTime(value)}} />
                     </Grid>
                     <Grid item xs={12}>
                     <TextField
