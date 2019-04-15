@@ -98,7 +98,7 @@ namespace ShareCar.Logic.Ride_Logic
                 dtoRide.Passengers = passengers.Where(x => x.RideId == ride.RideId).ToList();
                 dtoRides.Add(dtoRide);
             }
-
+            dtoRides = dtoRides.OrderByDescending(x => x.RideDateTime).ToList();
             return dtoRides;
         }
 

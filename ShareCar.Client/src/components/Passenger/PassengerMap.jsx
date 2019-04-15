@@ -313,7 +313,6 @@ this.setState({note});
       };
 
       api.post(`RideRequest`, request).then(response => {
-
         this.showSnackBar("Ride requested!", 0)
 
       })
