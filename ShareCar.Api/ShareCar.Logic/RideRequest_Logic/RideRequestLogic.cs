@@ -176,6 +176,7 @@ namespace ShareCar.Logic.RideRequest_Logic
                     var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.DriverEmail);
                     dtoRequests[count].DriverFirstName = user.FirstName;
                     dtoRequests[count].DriverLastName = user.LastName;
+                    dtoRequests[count].RideDateTime = request.RequestedRide.RideDateTime;
                 }
                 AddressDto address = _addressLogic.GetAddressById(request.AddressId);
 
@@ -238,6 +239,7 @@ namespace ShareCar.Logic.RideRequest_Logic
 
             foreach(var request in converted)
             {
+
                 var note = notes.FirstOrDefault(x => x.RideRequestId == request.RideRequestId);
                 var driverNote = _driverNoteLogic.GetNoteByRide(request.RideId);
 
