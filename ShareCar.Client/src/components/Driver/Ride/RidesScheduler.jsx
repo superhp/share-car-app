@@ -21,8 +21,13 @@ class RidesScheduler extends React.Component {
   state = {
     selectedDates: [],
     time: "07:00",
-    snackBarClicked: false
+    snackBarClicked: false,
+    note: ""
   };
+
+  handleNoteChange(note){
+    this.setState({note});
+  }
 
   handleSelect(e) {
     if (this.state.selectedDates.length > 0) {
@@ -55,28 +60,35 @@ class RidesScheduler extends React.Component {
     let ridesToPost = [];
     const { fromAddress, toAddress } = this.props.routeInfo;
     this.state.selectedDates.forEach(element => {
-      ridesToPost.push(this.createRide(fromAddress, toAddress, element));
+      ridesToPost.push(this.createRide(fromAddress, toAddress, element, this.state.note));
     });
 
     this.postRides(ridesToPost);
   };
 
-  createRide(from, to, element) {
+  createRide(from, to, element, note) {
 
     const ride = {
-      fromNumber: from.number,
-      fromStreet: from.street,
-      fromCity: from.city,
-      fromCountry: "Lithuania",
-      toNumber: to.number,
-      toStreet: to.street,
-      toCity: to.city,
-      toCountry: "Lithuania",
-      routeGeometry: this.props.routeInfo.routeGeometry,
-      fromLongitude: from.longitude,
-      fromLatitude: from.latitude,
-      toLongitude: to.longitude,
-      toLatitude: to.latitude,
+      route:{
+        FromAddress:{
+          Number: from.number,
+          Street: from.street,
+          City: from.city,
+          Country: "Lithuania",
+          Longitude: from.longitude,
+          Latitude: from.latitude,
+        },
+        ToAddress:{
+          Number: to.number,
+          Street: to.street,
+          City: to.city,
+          Country: "Lithuania",
+          Longitude: to.longitude,
+          Latitude: to.latitude,
+        },
+        Geometry: this.props.routeInfo.routeGeometry,
+      },
+      Note:note,
       rideDateTime:
         element.getFullYear() +
         "-" +
@@ -136,6 +148,7 @@ class RidesScheduler extends React.Component {
           handleClose={() => this.handleClose()}
           flex={this.props.flex}
           selectedDates={this.state.selectedDates}
+          handleNoteChange={(note) => this.handleNoteChange(note)}
           handleCreate={() => this.handleCreate()}
           handleSelect={e => this.handleSelect(e)}
           handleTime={value => this.handleTime(value)}

@@ -45,12 +45,12 @@ export default class RidePassengerCard extends React.Component {
                     </Grid>
                 </Card>
                     {this.state.show ?
-                        <Card className="requestMap rides-card generic-card">
+                        <Card className="request-map rides-card generic-card">
                             <Grid container justify="center">
                                 <Grid item xs={12} zeroMinWidth>
                                     <MapComponent
                                         pickUpPoint={{ longitude: this.props.passenger.longitude, latitude: this.props.passenger.latitude }}
-                                        route={this.props.passenger.route}
+                                        route={this.props.route}
                                         index={this.props.index}
                                     />
                                 </Grid>

@@ -4,6 +4,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 import Badge from "@material-ui/core/Badge";
 import MapComponent from "../../Maps/MapComponent";
 
@@ -12,8 +13,18 @@ import "../../../styles/genericStyles.css";
 
 export class PendingRequestCard extends React.Component {
     state = {
-        show: false
+        showMap: false,
+        showNote: false
     }
+
+    onViewNoteClick(){
+        this.setState({ showNote: !this.state.showNote }, () =>{
+            if(!this.props.req.requestNoteSeen){
+                this.props.requestNoteSeen(this.props.req.rideRequestId)
+            }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -21,7 +32,7 @@ export class PendingRequestCard extends React.Component {
                     <Grid container justify="center">
                         <Grid item xs={12} zeroMinWidth>
                             <Grid container justify="center" className="request-person-info">
-                                {!this.props.req.seenByDriver ? (
+                                {!this.props.req.seenByDriver? (
                                     <Badge
                                         className="new-badge"
                                         badgeContent={"new"}
@@ -38,16 +49,34 @@ export class PendingRequestCard extends React.Component {
                         <Grid item xs={12} zeroMinWidth>
                             <CardActions>
                                 <Grid container spacing={16} className="pending-requests-container">
-                                    <Grid item md={4} className="pending-request-button">
+                                    <Grid item md={3} className="pending-request-button">
                                         <Button
                                             variant="contained"
                                             className="show-on-map"
-                                            onClick={() => { this.setState({ show: !this.state.show }) }}
+                                            onClick={() => { this.setState({ showMap: !this.state.showMap }) }}
                                         >
                                             Show on map
                                         </Button>
+
                                     </Grid>
-                                    <Grid item md={8}>
+                                    <Grid item md={3} className="pending-request-button">
+                                    {!this.props.req.requestNoteSeen ? (
+                                    <Badge
+                                        className="new-badge"
+                                        badgeContent={"new"}
+                                        color="primary"
+                                        children={""}
+                                    />
+                                ) : null}
+                                        <Button
+                                            variant="contained"
+                                            className="show-on-map"
+                                            onClick={() => { this.onViewNoteClick() }}
+                                        >
+                                            View note
+                                        </Button>
+                                    </Grid>
+                                    <Grid item md={6}>
                                         {this.props.req.status !== 4 ?
                                             <Grid container spacing={8}>
                                                 <Grid item md={6} className="pending-request-button">
@@ -79,17 +108,30 @@ export class PendingRequestCard extends React.Component {
                         </Grid>
                     </Grid>
                 </Card>
-                {this.state.show ?
-                    <Card className="requestMap rides-card generic-card">
+                {this.state.showMap ?
+                    <Card className="request-map rides-card generic-card">
                         <Grid container justify="center">
                             <Grid item xs={12} zeroMinWidth>
                                 <MapComponent
-                                    pickUpPoint={{ longitude: this.props.req.longitude, latitude: this.props.req.latitude }}
-                                    route={this.props.req.route}
+                                    pickUpPoint={{ longitude: this.props.req.address.longitude, latitude: this.props.req.address.latitude }}
+                                    route={this.props.route}
                                     index={this.props.index}
                                 />
                             </Grid>
                         </Grid>
+                    </Card>
+                    : <div></div>
+                }
+                {this.state.showNote ?
+                    <Card className="rides-card generic-card">
+                                <TextField
+                                    disabled
+                                    multiline
+                                    fullWidth
+                                    margin="none"
+                                    variant="outlined"
+                                    value={this.props.req.requestNote}
+                                />
                     </Card>
                     : <div></div>
                 }

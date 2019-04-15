@@ -22,12 +22,13 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         }
 
 
-        public void AddRide(Ride ride)
+        public Ride AddRide(Ride ride)
         {
                 ride.isActive = true;
-                _databaseContext.Rides.Add(ride);
+               var entity = _databaseContext.Rides.Add(ride).Entity;
 
                 _databaseContext.SaveChanges();
+            return entity;
             }
 
         public IEnumerable<Ride> GetRidesByDate(DateTime date)
@@ -89,8 +90,6 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         public IEnumerable<Ride> GetRidesByDriver(string email)
         {
             return _databaseContext.Rides
-                .Include(x=>x.Requests)
-                .Include(x=>x.Passengers)
                 .Where(x => x.DriverEmail == email && x.isActive == true);
         }
 

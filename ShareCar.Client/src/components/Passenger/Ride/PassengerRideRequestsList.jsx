@@ -50,11 +50,11 @@ export class PassengerRideRequestsList extends React.Component {
 
     cancelRequest(id) {
         var requests = this.state.requests;
-        var index = requests.findIndex(x => x.requestId === id);
+        var index = requests.findIndex(x => x.rideRequestId === id);
         var request = requests[index];
 
         let data = {
-            RequestId: request.requestId,
+            RideRequestId: request.rideRequestId,
             Status: Status[4],
             RideId: request.rideId,
             DriverEmail: request.driverEmail
@@ -72,6 +72,17 @@ export class PassengerRideRequestsList extends React.Component {
 
     }
 
+    updateNote(note, requestId) {
+        let data = {
+            Text: note,
+            RideRequestId: requestId
+        };
+        api.post("RideRequest/updateNote", data).then()
+        .catch(error => {
+                this.showSnackBar("Failed to update note", 2);
+            });
+    }
+
     showPassengerRequests() {
         api
             .get("RideRequest/passenger")
@@ -81,17 +92,16 @@ export class PassengerRideRequestsList extends React.Component {
                 }
             })
             .then(() => {
-                const unseenRequests = [];
+                let unseenRequests = [];
 
                 for (let i = 0; i < this.state.requests.length; i++) {
                     if (!this.state.requests[i].seenByPassenger) {
-                        unseenRequests.push(this.state.requests[i].requestId);
+                        unseenRequests.push(this.state.requests[i].rideRequestId);
                     }
                 }
 
                 if (unseenRequests.length !== 0) {
-                    api.post("RideRequest/seenPassenger", unseenRequests).then(res => {
-                    });
+                    api.post("RideRequest/seenPassenger", unseenRequests).catch();
                 }
             })
             .catch((error) => {
@@ -99,6 +109,9 @@ export class PassengerRideRequestsList extends React.Component {
             });
     }
 
+    noteSeen(requestId) {
+        api.get("Ride/"+requestId).catch();
+    }
 
     render() {
         return (
@@ -112,6 +125,9 @@ export class PassengerRideRequestsList extends React.Component {
                             <Grid style={style} key={i} item xs={12}>
                                 <PassengerRideRequestCard
                                     request={req}
+                                    updateNote={(note, requestId) => {this.updateNote(note, requestId)}}
+                                    noteSeen={(requestId) => {this.noteSeen(requestId)}}
+                                    route={req.route}
                                     key={i}
                                     index={i}
                                     cancelRequest ={id => {this.cancelRequest(id)}}

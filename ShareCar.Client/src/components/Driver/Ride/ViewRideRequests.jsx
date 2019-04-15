@@ -20,10 +20,10 @@ export class ViewRideRequests extends React.Component {
       ? this.showDriverRequests(this.props.selectedRide)
       : this.showPassengerRequests();
   }
-  handleRequestClick(requestId) {
+  handleRequestClick(rideRequestId) {
     this.setState({
       driverRequests: this.state.driverRequests.filter(
-        x => x.requestId !== requestId
+        x => x.rideRequestId !== rideRequestId
       )
     });
   }
@@ -50,11 +50,11 @@ export class ViewRideRequests extends React.Component {
 
   cancelRequest(id) {
     var requests = this.state.passengerRequests;
-    var index = requests.findIndex(x => x.requestId === id);
+    var index = requests.findIndex(x => x.rideRequestId === id);
     var request = requests[index];
 
     let data = {
-      RequestId: request.requestId,
+      RideRequestId: request.rideRequestId,
       Status: Status[4],
       RideId: request.rideId,
       DriverEmail: request.driverEmail
@@ -84,7 +84,7 @@ export class ViewRideRequests extends React.Component {
 
         for (let i = 0; i < this.state.passengerRequests.length; i++) {
           if (!this.state.passengerRequests[i].seenByPassenger) {
-            unseenRequests.push(this.state.passengerRequests[i].requestId);
+            unseenRequests.push(this.state.passengerRequests[i].rideRequestId);
           }
         }
 
@@ -110,7 +110,7 @@ export class ViewRideRequests extends React.Component {
 
         for (let i = 0; i < this.state.driverRequests.length; i++) {
           if (!this.state.driverRequests[i].seenByDriver) {
-            unseenRequests.push(this.state.driverRequests[i].requestId);
+            unseenRequests.push(this.state.driverRequests[i].rideRequestId);
           }
         }
 
@@ -124,10 +124,10 @@ export class ViewRideRequests extends React.Component {
       });
   }
 
-  sendRequestResponse(button, response, requestId, rideId, driverEmail) {
-    this.props.onRequestClick(button, requestId);
+  sendRequestResponse(button, response, rideRequestId, rideId, driverEmail) {
+    this.props.onRequestClick(button, rideRequestId);
     let data = {
-      RequestId: requestId,
+      RideRequestId: rideRequestId,
       Status: response,
       RideId: rideId,
       DriverEmail: driverEmail
@@ -136,7 +136,7 @@ export class ViewRideRequests extends React.Component {
       if (res.status === 200) {
         if (response === 1) {
           this.props.showSnackBar("Request accepted", 0)
-          var request = this.props.rideRequests.find(x => x.requestId === requestId);
+          var request = this.props.rideRequests.find(x => x.rideRequestId === rideRequestId);
           this.setState(prevState => ({
             passengers: [...prevState.passengers, { firstName: request.passengerFirstName, passengerLastName: request.lastName, phone: request.phone }],
             clickedRequest: true

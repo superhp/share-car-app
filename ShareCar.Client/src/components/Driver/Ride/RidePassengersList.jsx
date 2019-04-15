@@ -15,6 +15,7 @@ export class RidePassengersList extends React.Component {
                 
                 <RidePassengerCard
                   passenger={passenger}
+                  route={this.props.route}
                   index={index}
                 />
               </ListItem>

@@ -68,11 +68,11 @@ namespace ShareCar.Test
             var actualKeys = new List<UserDto>(points.Select(x => x.Item1));
             var keyStrings = new List<string>(actualKeys.Select(x => x.Email));
 
-        
-            Assert.AreEqual(points[0].Item2, 21);
-            Assert.AreEqual(points[1].Item2, 11);
-            Assert.AreEqual(points[2].Item2, 9);
-            Assert.AreEqual(points[3].Item2, 8);
+            Assert.AreEqual(points[0].Item2, 67);
+            Assert.AreEqual(points[1].Item2, 21);
+            Assert.AreEqual(points[2].Item2, 11);
+            Assert.AreEqual(points[3].Item2, 9);
+            Assert.AreEqual(points[4].Item2, 8);
 
             Assert.AreEqual(points.Count, 5);
 

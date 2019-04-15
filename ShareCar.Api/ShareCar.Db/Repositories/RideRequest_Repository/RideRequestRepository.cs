@@ -11,24 +11,16 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         private readonly ApplicationDbContext _databaseContext;
 
-
         public RideRequestRepository(ApplicationDbContext context)
         {
             _databaseContext = context;
         }
 
-
-        public void AddRequest(RideRequest request)
+        public RideRequest AddRequest(RideRequest request)
         {
-            _databaseContext.Requests.Add(request);
+          var entity = _databaseContext.Requests.Add(request).Entity;
             _databaseContext.SaveChanges();
-        }
-
-        public IEnumerable<RideRequest> GetDriverRequests(string email)
-        {
-
-            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
-
+            return entity;
         }
 
         public IEnumerable<RideRequest> GetRequestsByRideId(int rideId)
@@ -40,7 +32,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         {
             foreach (RideRequest request in requests)
             {
-                RideRequest toUpdate = _databaseContext.Requests.Find(request.RequestId);
+                RideRequest toUpdate = _databaseContext.Requests.Find(request.RideRequestId);
                 if (toUpdate == null)
                 {
                     throw new ArgumentException("User not found.");
@@ -54,6 +46,11 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
         public IEnumerable<RideRequest> GetPassengerRequests(string email)
         {
             return _databaseContext.Requests.Where(x => x.PassengerEmail == email && (x.SeenByPassenger == false || x.Status == Status.ACCEPTED || x.Status == Status.WAITING)).ToList();
+        }
+
+        public IEnumerable<RideRequest> GetDriverRequests(string email)
+        {
+            return _databaseContext.Requests.Where(x => x.DriverEmail == email && (x.Status == Status.WAITING || (x.Status == Status.CANCELED && !x.SeenByDriver))).ToList();
         }
 
         public RideRequest GetRequestById(int id)
@@ -71,7 +68,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
             foreach (int id in requests)
             {
-                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == id);
+                RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RideRequestId == id);
                 toUpdate.SeenByDriver = true;
             }
 
@@ -80,7 +77,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public void SeenByPassenger(int[] requests)
         {
-            IEnumerable<RideRequest> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RequestId));
+            IEnumerable<RideRequest> toUpdate = _databaseContext.Requests.Where(x => requests.Contains(x.RideRequestId));
 
             foreach (var request in toUpdate)
             {
@@ -91,7 +88,7 @@ namespace ShareCar.Db.Repositories.RideRequest_Repository
 
         public void UpdateRequest(RideRequest request)
         {
-            RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RequestId == request.RequestId);
+            RideRequest toUpdate = _databaseContext.Requests.Single(x => x.RideRequestId == request.RideRequestId);
             toUpdate.Status = request.Status;
             toUpdate.SeenByPassenger = request.SeenByPassenger;
             toUpdate.SeenByDriver = request.SeenByDriver;

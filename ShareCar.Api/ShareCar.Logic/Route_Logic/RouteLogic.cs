@@ -47,13 +47,13 @@ namespace ShareCar.Logic.Route_Logic
         // Returns routes by passengers criteria
         public List<RouteDto> GetRoutes(RouteDto routeDto, string email)
         {
-            Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
+            Address address = _mapper.Map<AddressDto,Address>(routeDto.ToAddress);
             bool isFromOffice = false;
 
-            if (routeDto.AddressFrom != null)
+            if (routeDto.FromAddress != null)
             {
                 // If user needs a ride to office, he recieves routes independently from his location
-                address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
+                address = _mapper.Map<AddressDto, Address>(routeDto.FromAddress);
                 isFromOffice = true;                
             }
 
@@ -68,6 +68,7 @@ namespace ShareCar.Logic.Route_Logic
                 {
                     if(ride.DriverEmail != email && ride.RideDateTime >= routeDto.FromTime && ride.isActive)
                     {
+                        ride.Route = null;
                         rides.Add(ride);
                     }
                 }
@@ -83,8 +84,8 @@ namespace ShareCar.Logic.Route_Logic
                     }
                     if (mappedRoute.Rides.Count > 0)
                     {
-                        mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
-                        mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
+                        mappedRoute.FromAddress = _mapper.Map<Address, AddressDto>(route.FromAddress);
+                        mappedRoute.ToAddress = _mapper.Map<Address, AddressDto>(route.ToAddress);
                         mappedRoute.FromId = route.FromId;
                         mappedRoute.Geometry = route.Geometry;
 
@@ -102,8 +103,8 @@ namespace ShareCar.Logic.Route_Logic
                 FromId = route.FromId,
                 ToId = route.ToId,
                 Geometry = route.Geometry,
-                FromAddress = _mapper.Map<AddressDto,Address>(route.AddressFrom),
-                ToAddress = _mapper.Map<AddressDto, Address>(route.AddressTo)
+                FromAddress = _mapper.Map<AddressDto,Address>(route.FromAddress),
+                ToAddress = _mapper.Map<AddressDto, Address>(route.ToAddress)
 
 
             };
@@ -116,8 +117,8 @@ namespace ShareCar.Logic.Route_Logic
             
             var dto = _mapper.Map<Route, RouteDto>(entity);
 
-            dto.AddressTo = _mapper.Map<Address, AddressDto>(entity.ToAddress);
-            dto.AddressFrom = _mapper.Map<Address, AddressDto>(entity.FromAddress);
+            dto.ToAddress = _mapper.Map<Address, AddressDto>(entity.ToAddress);
+            dto.FromAddress = _mapper.Map<Address, AddressDto>(entity.FromAddress);
 
             return dto;
         }

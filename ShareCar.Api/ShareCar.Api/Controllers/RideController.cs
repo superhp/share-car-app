@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using ShareCar.Db.Entities;
 using ShareCar.Db.Repositories;
+using ShareCar.Db.Repositories.Notes_Repository;
 using ShareCar.Db.Repositories.User_Repository;
 using ShareCar.Dto;
 using ShareCar.Logic.Address_Logic;
+using ShareCar.Logic.Note_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Logic.RideRequest_Logic;
@@ -26,9 +29,11 @@ namespace ShareCar.Api.Controllers
         private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IUserRepository _userRepository;
         private readonly IPassengerLogic _passengerLogic;
+        private readonly IDriverNoteLogic _driverNoteLogic;
         private readonly IAddressLogic _addressLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteRepository;
 
-        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic)
+        public RideController(IAddressLogic addressLogic, IRideRequestLogic rideRequestLogic, IDriverSeenNoteRepository driverSeenNoteRepository, IRideLogic rideLogic, IRouteLogic routeLogic, IUserRepository userRepository, IPassengerLogic passengerLogic, IDriverNoteLogic driverNoteLogic)
         {
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
@@ -36,6 +41,8 @@ namespace ShareCar.Api.Controllers
             _routeLogic = routeLogic;
             _userRepository = userRepository;
             _passengerLogic = passengerLogic;
+            _driverNoteLogic = driverNoteLogic;
+            _driverSeenNoteRepository = driverSeenNoteRepository;
         }
         [HttpGet("simillarRides={rideId}")]
         public IActionResult GetSimillarRides(int rideId)
@@ -45,6 +52,21 @@ namespace ShareCar.Api.Controllers
             IEnumerable<RideDto> rides = _rideLogic.GetSimilarRides(ride);
             return Ok(rides);
         }
+
+        [HttpPost("updateNote")]
+        public IActionResult UpdateNote([FromBody]DriverNoteDto note)
+        {
+             _driverNoteLogic.UpdateNote(note);
+             return Ok();
+        }
+
+        [HttpGet("{requestId}")]
+        public IActionResult SeenNote(int requestId)
+        {
+            _driverSeenNoteRepository.NoteSeen(requestId);
+            return Ok();
+        }
+
 
         [HttpPost("passengerResponse")]
         public async Task<IActionResult> PassengerResponseAsync([FromBody]PassengerResponseDto response)
@@ -70,14 +92,11 @@ namespace ShareCar.Api.Controllers
             var userDto = await _userRepository.GetLoggedInUser(User);
             List<RideDto> rides = (List<RideDto>)_rideLogic.GetRidesByDriver(userDto.Email);
 
-            foreach (var ride in rides)
+            var requests = _rideRequestLogic.GetDriverRequests(userDto.Email);
+
+              foreach (var ride in rides)
             {
-                foreach (var req in ride.Requests)
-                {
-                    AddressDto adr = _addressLogic.GetAddressById(req.AddressId);
-                    req.Longitude = adr.Longitude;
-                    req.Latitude = adr.Latitude;
-                }
+                ride.Requests = requests.Where(x => x.RideId == ride.RideId).ToList();
             }
 
             return Ok(rides);
@@ -115,7 +134,7 @@ namespace ShareCar.Api.Controllers
         public async Task<IActionResult> GetRoutesAsync([FromBody]RouteDto routeDto)
         {
 
-            if (routeDto.AddressFrom == null && routeDto.AddressTo == null)
+            if (routeDto.FromAddress == null && routeDto.ToAddress == null)
             { 
             return BadRequest();
         }

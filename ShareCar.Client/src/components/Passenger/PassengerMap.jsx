@@ -40,6 +40,7 @@ export class PassengerMap extends React.Component {
     pickUpPointFeature: null,
     currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
     currentRouteIndex: 0,
+    note:"",
     showDriver: false,
     snackBarMessage: "",
     snackBarClicked: false,
@@ -133,8 +134,8 @@ export class PassengerMap extends React.Component {
       const route = this.state.routes[this.state.currentRouteIndex];
 
       const routeFeature = createRouteFeature(route.geometry);
-      const fromFeature = createPointFeature(route.addressFrom.longitude, route.addressFrom.latitude);
-      const toFeature = createPointFeature(route.addressTo.longitude, route.addressTo.latitude);
+      const fromFeature = createPointFeature(route.fromAddress.longitude, route.fromAddress.latitude);
+      const toFeature = createPointFeature(route.toAddress.longitude, route.toAddress.latitude);
 
       this.setState({ currentRoute: { ...this.state.currentRoute, routeFeature: routeFeature, fromFeature: fromFeature, toFeature: toFeature } });
       this.vectorSource.addFeature(routeFeature);
@@ -275,14 +276,18 @@ export class PassengerMap extends React.Component {
     }
   }
 
+  handleNoteUpdate(note) {
+this.setState({note});
+  }
+
   getAllRoutes(address, direction) {
     if (address) {
       let routeDto;
       this.setState({ direction: direction });
       if (direction === "to")
-        routeDto = { AddressTo: address };
+        routeDto = { ToAddress: address };
       else
-        routeDto = { AddressFrom: address };
+        routeDto = { FromAddress: address };
       api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
         if (res.status === 200 && res.data !== "") {
           this.setState({ routes: res.data, fetchedRoutes: res.data, currentRoute: { routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
@@ -295,19 +300,20 @@ export class PassengerMap extends React.Component {
 
   handleRegister(ride) {
     if (!this.state.passengerAddress) {
-
       this.showSnackBar("Choose your pick up point", 2)
-
     }
     else {
       const request = {
         RideId: ride.rideId,
         DriverEmail: ride.driverEmail,
-        Longitude: this.state.passengerAddress.longitude,
-        Latitude: this.state.passengerAddress.latitude
+        RequestNote:this.state.note,
+        Address: {
+          Longitude: this.state.passengerAddress.longitude,
+          Latitude: this.state.passengerAddress.latitude
+        }
       };
 
-      api.post(`https://localhost:44347/api/RideRequest`, request).then(response => {
+      api.post(`RideRequest`, request).then(response => {
 
         this.showSnackBar("Ride requested!", 0)
 
@@ -355,6 +361,7 @@ export class PassengerMap extends React.Component {
             <DriverRoutesSugestionsModal
               rides={this.state.routes[this.state.currentRouteIndex].rides}
               onRegister={ride => this.handleRegister(ride)}
+              handleNoteUpdate={(note) => { this.handleNoteUpdate(note) }}
             />
           ) : (
               <div></div>

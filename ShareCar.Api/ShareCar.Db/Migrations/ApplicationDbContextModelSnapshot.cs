@@ -149,6 +149,44 @@ namespace ShareCar.Db.Migrations
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("ShareCar.Db.Entities.DriverNote", b =>
+                {
+                    b.Property<int>("DriverNoteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RideId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("DriverNoteId");
+
+                    b.HasIndex("RideId");
+
+                    b.ToTable("DriverNotes");
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.DriverSeenNote", b =>
+                {
+                    b.Property<int>("DriverSeenNoteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DriverNoteId");
+
+                    b.Property<int>("RideRequestId");
+
+                    b.Property<bool>("Seen")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
+                    b.HasKey("DriverSeenNoteId");
+
+                    b.HasIndex("DriverNoteId");
+
+                    b.HasIndex("RideRequestId");
+
+                    b.ToTable("DriverSeenNotes");
+                });
+
             modelBuilder.Entity("ShareCar.Db.Entities.Passenger", b =>
                 {
                     b.Property<string>("Email");
@@ -156,6 +194,8 @@ namespace ShareCar.Db.Migrations
                     b.Property<int>("RideId");
 
                     b.Property<bool>("Completed");
+
+                    b.Property<int>("PassengerId");
 
                     b.Property<bool>("PassengerResponded");
 
@@ -220,6 +260,26 @@ namespace ShareCar.Db.Migrations
                     b.HasIndex("RideId");
 
                     b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.RideRequestNote", b =>
+                {
+                    b.Property<int>("RideRequestNoteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RideRequestId");
+
+                    b.Property<bool>("Seen")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("RideRequestNoteId");
+
+                    b.HasIndex("RideRequestId");
+
+                    b.ToTable("RideRequestNotes");
                 });
 
             modelBuilder.Entity("ShareCar.Db.Entities.Route", b =>
@@ -390,6 +450,27 @@ namespace ShareCar.Db.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ShareCar.Db.Entities.DriverNote", b =>
+                {
+                    b.HasOne("ShareCar.Db.Entities.Ride", "Ride")
+                        .WithMany()
+                        .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.DriverSeenNote", b =>
+                {
+                    b.HasOne("ShareCar.Db.Entities.DriverNote", "Note")
+                        .WithMany("DriverSeenNotes")
+                        .HasForeignKey("DriverNoteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ShareCar.Db.Entities.RideRequest", "Request")
+                        .WithMany()
+                        .HasForeignKey("RideRequestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ShareCar.Db.Entities.Passenger", b =>
                 {
                     b.HasOne("ShareCar.Db.Entities.User", "User")
@@ -429,6 +510,14 @@ namespace ShareCar.Db.Migrations
                     b.HasOne("ShareCar.Db.Entities.Ride", "RequestedRide")
                         .WithMany("Requests")
                         .HasForeignKey("RideId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ShareCar.Db.Entities.RideRequestNote", b =>
+                {
+                    b.HasOne("ShareCar.Db.Entities.RideRequest", "RideRequest")
+                        .WithMany()
+                        .HasForeignKey("RideRequestId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
