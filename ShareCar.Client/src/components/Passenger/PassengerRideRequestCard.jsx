@@ -28,7 +28,7 @@ export default class PassengerRideRequestsCard extends React.Component {
             <div>
                 <Card className="request-card generic-card">
                     <Grid container className="requests-card-container">
-                        <Grid item xs={8}>
+                        <Grid item xs={6}>
                             {!this.props.request.seenByPassenger ?
                                 <Badge
                                     className="rides-badge"
@@ -49,7 +49,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                 </Typography>
                             </CardContent>
                         </Grid>
-                        <Grid item xs={4} className="list-buttons">
+                        <Grid item xs={6} className="list-buttons">
                             <Grid item>
                                 {!this.props.request.rideNoteSeen ?
 
@@ -62,7 +62,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                     : null}
                                 <Button
                                     variant="contained"
-                                    className="show-on-map"
+                                    className="view-notes"
                                     onClick={() => {
                                         this.setState({
                                             showNotes: !this.state.showNotes
@@ -72,6 +72,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                     View notes
                         </Button>
                             </Grid>
+                            <Grid item>
 
                             <Button
                                 variant="contained"
@@ -84,8 +85,11 @@ export default class PassengerRideRequestsCard extends React.Component {
                             >
                                 Show on map
                         </Button>
+                        </Grid>
+
                             {
                                 this.props.request.status === 0 || this.props.request.status === 1 ? (
+                                    <Grid item>
                                     <Button
                                         variant="contained"
                                         className="cancel-request"
@@ -93,6 +97,7 @@ export default class PassengerRideRequestsCard extends React.Component {
                                     >
                                         Cancel request
                         </Button>
+                        </Grid>
                                 )
                                     : (<div> </div>)
                             }

@@ -14,7 +14,7 @@ button:focus {
   text-align: center;
 }
 
-.pending-request-button .show-on-map, .show-on-map {
+.pending-request-button .show-on-map, .show-on-map, .view-notes {
   background-color: #0A2239!important;
   color: white!important;
   margin: 3px!important;
@@ -30,7 +30,7 @@ button:focus {
   vertical-align: middle;
 }
 
-.pending-request-button .show-on-map:hover, .show-on-map:hover {
+.pending-request-button .show-on-map:hover, .show-on-map:hover, .view-notes:hover {
   background-color: #10365a!important;
 }
 
@@ -99,3 +99,4 @@ div.requestListTable table tbody tr td {
 .pending-requests-container {
   justify-content: center;
 }
+
