@@ -54,7 +54,6 @@ const Manual = props => {
         You can also set your trip direction (to/from office) and an office address.
         Each trip must start or end at the Cognizant office.
       </p>
-      <img src={require("../images/RouteCreation.PNG")} alt=""/>
       <p>
         Once you have marked your route, click <span style={{color: "#3581b8"}}>CONTINUE</span> button in lower right corner.
         Now you see a pop up window, where you can mark days and time of your rides.
@@ -97,8 +96,6 @@ const Manual = props => {
         By clicking <span style={{color: "#3581b8"}}>SHOW DRIVERS</span> button you can see list of of available rides. Click <span style={{color: "#3581b8"}}>REGISTER</span> to send request to driver of desired ride.
       </p>
 
-
-      <img src={require("../images/RouteSelection.PNG")} alt=""/>
 
       <h5> Requests</h5>
 
