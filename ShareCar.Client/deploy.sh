@@ -103,21 +103,10 @@ echo Handling node.js deployment.
 # 1. Select node version
 selectNodeVersion
 
-# 2. Install npm packages
-if [ -e "$DEPLOYMENT_SOURCE\ShareCar.Client/package.json" ]; then
   cd "$DEPLOYMENT_SOURCE\ShareCar.Client"
   eval $NPM_CMD install
-  exitWithMessageOnError "npm failed"
-  cd - > /dev/null
-fi
-
-echo $DEPLOYMENT_SOURCE
-
-# 3. KuduSync
-if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE\ShareCar.Client/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
-  exitWithMessageOnError "Kudu Sync failed"
-fi
+  eval $NPM_CMD run-script build
+  xcopy /s $DEPLOYMENT_SOURCE\*.* $DEPLOYMENT_TARGET
 
 ##################################################################################################################################
 echo "Finished successfully."
