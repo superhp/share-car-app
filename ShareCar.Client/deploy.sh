@@ -106,7 +106,7 @@ selectNodeVersion
   cd "$DEPLOYMENT_SOURCE\ShareCar.Client"
   eval $NPM_CMD install
   eval $NPM_CMD run-script build
-  xcopy /s $DEPLOYMENT_SOURCE\*.* $DEPLOYMENT_TARGET
+  xcopy /s "$DEPLOYMENT_SOURCE\ShareCar.Client/build/*.*" $DEPLOYMENT_TARGET
 
 ##################################################################################################################################
 echo "Finished successfully."
