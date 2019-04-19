@@ -20,12 +20,14 @@ namespace ShareCar.Logic.ObjectMapping
             CreateMap<UserDto, User>();
             CreateMap<Route, RouteDto>();
             CreateMap<RouteDto, Route>();
-
-            //.ForMember(src => src.Title, dest => dest.MapFrom(x => x.VeryDifferentTitle));
-            /*      CreateMap<Status, TodoItemStatus>()
-                     .ProjectUsing(src => (TodoItemStatus)src);
-                  CreateMap<TodoItemStatus, Status>()
-                      .ProjectUsing(src => (Status)src);*/
+            CreateMap<UnauthorizedUser, UnauthorizedUserDto>();
+            CreateMap<UnauthorizedUserDto, UnauthorizedUser>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<DriverNote, DriverNoteDto>();
+            CreateMap<DriverNoteDto, DriverNote>();
+            CreateMap<RideRequestNote, RideRequestNoteDto>();
+            CreateMap<RideRequestNoteDto, RideRequestNote>();
         }
     }
 }

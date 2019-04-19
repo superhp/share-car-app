@@ -22,7 +22,9 @@ const styles = theme => ({
 
 class SimpleMenu extends React.Component {
   state = {
-    open: false
+    open: false,
+    address: OfficeAddresses[0].street + OfficeAddresses[0].number,
+    index: 0
   };
 
   handleToggle = () => {
@@ -33,9 +35,13 @@ class SimpleMenu extends React.Component {
     if (this.anchorEl.contains(event.target)) {
       return;
     }
-
-    this.setState({ open: false });
-    this.props.handleSelection(event, index, this.props.whichButton);
+    if(!index){
+      this.setState({open:false});
+      this.props.handleSelection(OfficeAddresses[this.state.index]);
+      return;
+    }
+    this.setState({ open: false, address: OfficeAddresses[index].street + OfficeAddresses[index].number, index:index });
+    this.props.handleSelection(OfficeAddresses[index]);
   };
 
   render() {
@@ -55,9 +61,7 @@ class SimpleMenu extends React.Component {
             aria-haspopup="true"
             onClick={this.handleToggle}
           >
-            {this.props.buttonText != null
-              ? this.props.buttonText
-              : "Or Select Office"}
+          {this.state.address}
           </Button>
           <Popper
             className="list-of-items"

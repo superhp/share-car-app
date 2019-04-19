@@ -1,8 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Paper from "@material-ui/core/Paper";
 import "typeface-roboto";
 
 import { WinnersList } from "./WinnersList";
@@ -19,41 +17,40 @@ export class WinnerBoard extends React.Component {
   componentDidMount() {
     this.showWinnersBoard();
   }
+
+  componentWillReceiveProps(nextProps){
+    this.showWinnersBoard();
+  }
+
   showWinnersBoard() {
-    api
-      .get("user/WinnerBoard")
+    api.get("user/WinnerBoard")
       .then(response => {
         if (response.status === 200) {
-          this.setState({ winners:  response.data.users });
-          this.setState({ points:  response.data.points });
+          this.setState({ winners:  response.data.users, points:  response.data.points });
         }
       })
-      .catch(function(error) {
+      .catch((error) => {
         console.error(error);
       });
   }
   render() {
     return (
-      <Paper>
-        <Grid container justify="center">
+        <Grid container className="winner-board">
           <Grid item xs={12}>
             <Grid container justify="center">
-              <AppBar position="static" color="primary" />
               <Typography
                 variant="display1"
-                color="inherit"
                 className="winner-container"
               >
                 TOP 5
               </Typography>
             </Grid>
           </Grid>
-        </Grid>
         <WinnersList
           winnersList={this.state.winners}
           pointsList={this.state.points}
         />
-      </Paper>
+      </Grid>
     );
   }
 }

@@ -1,324 +1,106 @@
 import * as React from "react";
-import axios from "axios";
-import { transform } from "ol/proj";
 import Map from "ol/Map";
 import View from "ol/View";
-import Feature from "ol/Feature";
 import SourceVector from "ol/source/Vector";
 import LayerVector from "ol/layer/Vector";
 import Tile from "ol/layer/Tile";
-import Point from "ol/geom/Point";
 import OSM from "ol/source/OSM";
-import Polyline from "ol/format/Polyline";
-import Grid from "@material-ui/core/Grid"
-
+import Grid from "@material-ui/core/Grid";
 import { centerMap } from "./../../utils/mapUtils";
-import { routeStyles, selectedRouteStyle } from "./../../utils/mapStyles";
-import { DriverRoutesSugestions } from "./Route/DriverRoutesSugestions";
 import { PassengerRouteSelection } from "./Route/PassengerRouteSelection";
 import { PassengerNavigationButton } from "./PassengerNavigationButton";
-import { OfficeAddresses } from "../../utils/AddressData";
 import api from "./../../helpers/axiosHelper";
-
+import {
+  fromLonLatToMapCoords, fromMapCoordsToLonLat,
+  getNearest, coordinatesToLocation, createPointFeature,
+  createRouteFeature
+} from "../../utils/mapUtils";
+import { fromLocationIqResponse, addressToString } from "../../utils/addressUtils";
+import { OfficeAddresses } from "../../utils/AddressData";
 import "./../../styles/genericStyles.css";
+import "../../styles/testmap.css";
+import SnackBars from "../common/Snackbars";
+import { SnackbarVariants } from "../common/SnackbarVariants";
+import DriverRoutesSugestionsModal from "./Route/DriverRoutesSugestionsModal";
+import Media from "react-media";
+import NavigateNext from "@material-ui/icons/NavigateNext";
+import NavigateBefore from "@material-ui/icons/NavigateBefore";
+import Button from "@material-ui/core/Button";
+
+const polylineDecoder = require('@mapbox/polyline');
+
 
 export class PassengerMap extends React.Component {
   state = {
-    passengerPickUpPointFeature: null,
-    selectedRoute: "",
-    filteredRoute: {
-      toOffice: false,
-      office: OfficeAddresses[0],
-      dateTimeFrom: "",
-      dateTimeTo: ""
-    }, // route object containing filttering information acocrding to which passenger will get route suggestions
-    pickUpPoint: [],
-    map: "",
-    accessToken: "ad45b0b60450a4", // required for reverse geocoding api
-    vectorSource: "",
-    features: {
-      startPointFeature: "",
-      destinationFeature: ""
-    },
-    route: {
-      fromAddress: "",
-      toAddress: "",
-      routeGeometry: ""
-    },
+    passengerAddress: null,
+    direction: "from",
+    fetchedRoutes: [],
+    routes: [],
+    users: [],
+    pickUpPointFeature: null,
+    currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
+    currentRouteIndex: 0,
+    note:"",
     showDriver: false,
-    showRides: false,
-    ridesOfRoute: [],
-    viewNext: false,
-    passengerRoutes: [],
-    passengerRouteFeatures: [],
-    passengerRouteFeaturesCounter: 0,
-    driverEmail: "",
-    pickUpPoints: []
-  };
-
-  selectRoute(value) {
-    let counter = this.state.passengerRouteFeaturesCounter;
-    const features = this.state.passengerRouteFeatures;
-    const featuresLength = features.length;
-    
-    if (featuresLength !== 0) {
-      this.setState({showDriver: true, showRoutes: false, showRides: false});
-
-      if (counter === 0) {
-        this.state.passengerRouteFeatures[featuresLength - 1]
-          .feature.setStyle(routeStyles.route);
-
-        if (featuresLength !== 1) {
-          features[1].feature.setStyle(routeStyles.route);
-        }
-      } 
-      else {
-          features[counter - 1].feature.setStyle(routeStyles.route);
-      
-          if (value === -1) {
-            if (counter !== featuresLength - 1) {
-              features[counter + 1].feature.setStyle(routeStyles.route);
-            } 
-            else {
-                  features[0].feature.setStyle(routeStyles.route);
-            }
-          }
-      }
-
-      features[counter].feature.setStyle(selectedRouteStyle.route);
-      this.setState(
-        {
-          selectedRoute: features[counter]
-        },
-        () => {
-          counter += value;
-
-          if (counter >= featuresLength) {
-            counter = 0;
-          }
-          if (counter < 0) {
-            counter = featuresLength - 1;
-          }
-          this.setState({ passengerRouteFeaturesCounter: counter });
-          this.getRidesByRoute(this.state.selectedRoute.route);
-        }
-      );
-    }
-  }
-
-  handleCloseDriver() {
-    this.setState({ showDriver: false });
-  }
-
-  //very suspicious function
-  getRidesByRoute(route) {
-    this.setState({ ridesOfRoute: route.rides, driversOfRoute: [] }, () => {
-      let drivers = [];
-
-      this.state.ridesOfRoute.forEach(ride => {
-        if (!drivers.includes(ride.driverFirstName + ride.driverLastName)) {
-          drivers.push(ride.driverFirstName + ride.driverLastName);
-
-          let driversArray = this.state.driversOfRoute;
-          driversArray.push({
-            firstName: ride.driverFirstName,
-            lastName: ride.driverLastName,
-            email: ride.driverEmail,
-            driverPhone: ride.driverPhone
-          });
-
-          this.setState({ driversOfRoute: driversArray });
-        }
-      });
-
-      if (drivers.length !== 0) {
-        this.setState({ showDriver: true });
-      } else {
-        this.setState({ showDriver: false });
-      }
-    });
-}
-
-  handleOfficeSelection(e, indexas, button) {
-    if (indexas) {
-      this.setState({
-        filteredRoute: {
-          ...this.state.filteredRoute, office: OfficeAddresses[indexas]
-        }},
-        () => this.showRoutes());
-    }
-  }
-
-  //removes passenger pick up point marker from map and clears states related with it
-  handleFromOfficeSelection() {
-    if (!this.state.filteredRoute.toOffice) {
-      let pickupFeature = this.state.passengerPickUpPointFeature;
-      if (pickupFeature) {
-        this.state.vectorSource.removeFeature(
-          pickupFeature
-        );
-        pickupFeature = null;
-      }
-      this.setState(
-        {
-          pickUpPoints: [
-            this.state.filteredRoute.office.longtitude,
-            this.state.filteredRoute.office.latitude
-          ]
-        }
-      );
-    }
-  }
-
-  showRoutes() {
-    this.state.vectorSource.clear();
-    centerMap(
-      this.state.filteredRoute.office.longtitude,
-      this.state.filteredRoute.office.latitude,
-      this.state.map
-    );
-    this.setState({
-      showDriver: true,
-      showRoutes: false,
-      driversOfRoute: [],
-      driverEmail: "",
-      showRides: false,
-      passengerRouteFeaturesCounter: 0
-    });
-    let routeDto;
-    this.state.filteredRoute.toOffice
-      ? (routeDto = {
-          AddressTo: this.buildAddress(this.state.filteredRoute)
-        })
-      : (routeDto = {
-          AddressFrom: this.buildAddress(this.state.filteredRoute)
-        });
-    
-    this.fetchRoutes(routeDto);
-  }
-
-  buildAddress(route) {
-    return {
-      City: route.office.city,
-      Street: route.office.street,
-      Number: route.office.number
-    }
-  }
-
-  fetchRoutes(routeDto) {
-    api.post("https://localhost:44360/api/Ride/routes", routeDto).then(res => {
-      if (res.status === 200 && res.data !== "") {
-        this.setState({ passengerRoutes: res.data, passengerRouteFeatures: [] });
-        res.data.forEach(element => {
-          this.createPassengerRoute(element);
-        });
-      }
-    });
-  }
-
-  createPassengerRoute(route) {
-    this.setState({route: 
-      {...this.state.route, routeGeometry: route.geometry}
-    });
-    let polyline = new Polyline({
-      factor: 1e5
-    }).readGeometry(route.geometry, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857"
-    });
-    let feature = new Feature({
-      type: "route",
-      geometry: polyline
-    });
-    feature.setStyle(routeStyles.route);
-
-
-    this.setState({passengerRouteFeatures: [
-      ...this.state.passengerRouteFeatures, 
-      {
-        feature: feature,
-        geometry: polyline.geometry,
-        route: route
-      }
-    ]})
-    this.state.vectorSource.addFeature(feature);
-  }
-
-  to4326(coordinates) {
-    return transform(
-      [parseFloat(coordinates[0]), parseFloat(coordinates[1])],
-      "EPSG:3857",
-      "EPSG:4326"
-    );
-  }
-
-  coordinatesToLocation(latitude, longtitude) {
-    return new Promise(function (resolve, reject) {
-      fetch(
-        "//eu1.locationiq.com/v1/reverse.php?key=ad45b0b60450a4&lat=" +
-        latitude +
-        "&lon=" +
-        longtitude +
-        "&format=json"
-      )
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (json) {
-          resolve(json);
-        });
-    });
-  }
-
-
-  passengerAddressInputSuggestion() {
-    let places = require("places.js");
-
-    let placesAutocompletePassenger = places({
-      container: document.querySelector("#passenger-address")
-    });
-    placesAutocompletePassenger.on("change", e => {
-      centerMap(
-        e.suggestion.latlng.lng,
-        e.suggestion.latlng.lat,
-        this.state.map
-      );
-    });
-  }
-
-  showRidesOfDriver(driver) {
-    if (this.state.showRides) {
-      if (driver.email === this.state.driverEmail) {
-        this.setState({ showRides: false, driverEmail: "" });
-      } else {
-        this.setState({ driverEmail: driver });
-      }
-    } else {
-      this.setState({ showRides: true, driverEmail: driver });
-    }
-  }
-
-  handlePassengerMapClick(evt) {
-    const feature = new Feature(new Point(evt.coordinate));
-    let lonlat = [];
-    lonlat = transform(evt.coordinate, "EPSG:3857", "EPSG:4326");
-    this.setState({ pickUpPoints: lonlat });
-
-    if (this.state.passengerPickUpPointFeature) {
-      this.state.vectorSource.removeFeature(
-        this.state.passengerPickUpPointFeature
-      );
-    }
-    this.setState({ passengerPickUpPointFeature: feature });
-    this.state.vectorSource.addFeature(feature);
+    snackBarMessage: "",
+    snackBarClicked: false,
+    snackBarVariant: null,
   }
 
   componentDidMount() {
-    const vectorSource = new SourceVector(),
-      vectorLayer = new LayerVector({
-        source: vectorSource
-      });
+    const { map, vectorSource } = this.initializeMap();
+    this.map = map;
+    this.vectorSource = vectorSource;
+    this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
+  }
 
+  componentWillReceiveProps(nextProps) {
+    this.vectorSource.clear();
+    this.setState({
+      passengerAddress: null,
+      direction: "from",
+      routes: [],
+      users: [],
+      pickUpPointFeature: null,
+      currentRoute: { routeFeature: null, fromFeature: null, toFeature: null },
+      currentRouteIndex: 0,
+      showDriver: false,
+      snackBarMessage: "",
+      snackBarClick: false,
+      snackBarVariant: null,
+    });
+    this.getAllRoutes(OfficeAddresses[0], this.state.direction);
+    this.getUsers();
+  }
+
+  getUsers() {
+    api.get("user/getDrivers")
+      .then((response) => {
+        this.setState({ users: response.data });
+      })
+      .catch((err) => {
+        this.showSnackBar("Something went wrong.", 2)
+      });
+  }
+
+  onDriverSelection(email) {
+    let routes = [...this.state.fetchedRoutes];
+    routes = routes.filter(x => x.rides.filter(y => y.driverEmail === email).length > 0)
+    this.setState({ routes, currentRouteIndex: 0 }, this.displayRoute);
+  }
+
+  onAutosuggestBlur(resetRoutes) {
+    if(resetRoutes){
+    this.setState({ routes: this.state.fetchedRoutes, currentRouteIndex: 0 }, this.displayRoute);
+  }else{
+    this.setState({ routes: [], currentRouteIndex: 0 }, this.displayRoute);
+  }
+}
+
+  initializeMap() {
+    const vectorSource = new SourceVector();
+    const vectorLayer = new LayerVector({ source: vectorSource });
     const map = new Map({
       target: "map",
       controls: [],
@@ -329,80 +111,314 @@ export class PassengerMap extends React.Component {
         vectorLayer
       ],
       view: new View({
-        center: [-5685003, -3504484],
-        zoom: 11,
-        minZoom: 9
+        center: fromLonLatToMapCoords(25.279652, 54.687157),
+        zoom: 13
       })
     });
+    map.on("click", e => {
+      const [longitude, latitude] = fromMapCoordsToLonLat(e.coordinate);
+      this.handleMapClick(longitude, latitude);
+    });
+    setTimeout(() => { this.map.updateSize(); }, 200);
+    return { map, vectorSource };
+  }
 
-    this.setState({ map, vectorSource }, function() {
-      centerMap(25.279652, 54.687157, this.state.map);
+  displayRoute() {
+    this.setState({ showDriver: true });
+    this.vectorSource.clear();
+    if (this.state.pickUpPointFeature) {
+      this.vectorSource.addFeature(this.state.pickUpPointFeature);
+    }
+    if (this.state.routes.length > 0) {
+      const route = this.state.routes[this.state.currentRouteIndex];
 
-      this.showRoutes();
-      this.passengerAddressInputSuggestion();
+      const routeFeature = createRouteFeature(route.geometry);
+      const fromFeature = createPointFeature(route.fromAddress.longitude, route.fromAddress.latitude);
+      const toFeature = createPointFeature(route.toAddress.longitude, route.toAddress.latitude);
 
-      if (this.state.filteredRoute.toOffice) {
+      this.setState({ currentRoute: { ...this.state.currentRoute, routeFeature: routeFeature, fromFeature: fromFeature, toFeature: toFeature } });
+      this.vectorSource.addFeature(routeFeature);
+      this.vectorSource.addFeature(fromFeature);
+      this.vectorSource.addFeature(toFeature);
+    }
+  }
+
+  changePickUpPoint() {
+    if (this.state.pickUpPointFeature) {
+      this.vectorSource.removeFeature(this.state.pickUpPointFeature);
+    }
+    const { passengerAddress } = this.state;
+    if (passengerAddress) {
+      const { longitude, latitude } = passengerAddress;
+      let feature = createPointFeature(longitude, latitude);
+      this.setState({ pickUpPointFeature: feature })
+      this.vectorSource.addFeature(feature);
+    }
+  }
+
+  handleMapClick(longitude, latitude) {
+    getNearest(longitude, latitude)
+      .then(([long, lat]) => coordinatesToLocation(lat, long))
+      .then(response => {
+        const address = fromLocationIqResponse(response);
+        address.longitude = longitude;
+        address.latitude = latitude;
+        this.sortRoutes(address);
+        this.displayRoute();
+        this.setState({ passengerAddress: address, currentRouteIndex: 0 }, this.changePickUpPoint);
+      }).catch();
+  }
+
+  sortRoutes(address) {
+
+    let routePoints = this.decodeRoutes(this.state.routes.map(x => x.geometry));
+    let distances = this.calculateDisntances(routePoints, address);
+    let routeCopy = [...this.state.routes];
+    for (let i = 0; i < distances.length; i++) {
+      routeCopy[i].distance = distances[i];
+    }
+
+    routeCopy = this.mergeSort(routeCopy);
+
+    this.setState({ routes: routeCopy });
+  }
+
+  mergeSort(arr) {
+    if (arr.length < 2) {
+      return arr;
+    }
+
+    const middle = Math.floor(arr.length / 2);
+    const left = arr.slice(0, middle);
+    const right = arr.slice(middle);
+
+    return this.merge(
+      this.mergeSort(left),
+      this.mergeSort(right)
+    )
+  }
+
+  merge(left, right) {
+    let result = []
+    let indexLeft = 0
+    let indexRight = 0
+
+    while (indexLeft < left.length && indexRight < right.length) {
+      if (left[indexLeft].distance < right[indexRight].distance) {
+        result.push(left[indexLeft])
+        indexLeft++
       } else {
-        this.handleFromOfficeSelection();
+        result.push(right[indexRight])
+        indexRight++
       }
-    });
+    }
 
-    map.on("click", evt => {
-      if (this.state.filteredRoute.toOffice) {
-        this.handlePassengerMapClick(evt);
+    return result.concat(left.slice(indexLeft)).concat(right.slice(indexRight))
+
+  }
+
+  decodeRoutes(routes) {
+
+    let points = [];
+    for (let i = 0; i < routes.length; i++) {
+      points.push(polylineDecoder.decode(routes[i]));
+    }
+    return points;
+  }
+
+  calculateDisntances(routePoints, pickUpPoint) {
+
+    const { longitude, latitude } = pickUpPoint;
+    let shortestDistances = [];
+
+    for (let i = 0; i < routePoints.length; i++) {
+      let shortestDistance = 999999;
+      for (let j = 0; j < routePoints[i].length - 1; j++) {
+        let x1 = routePoints[i][j][1];
+        let y1 = routePoints[i][j][0];
+        let x2 = routePoints[i][j + 1][1];
+        let y2 = routePoints[i][j + 1][0];
+
+        let distance = this.distanceToSegment({ x: longitude, y: latitude }, { x: x1, y: y1 }, { x: x2, y: y2 })
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+        }
       }
+      shortestDistances.push(shortestDistance);
+    }
+    return shortestDistances;
+  }
+
+  distanceBetweenPoints(point1, point2) { return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2) }
+
+  distToSegmentSquared(pivot, point1, point2) {
+    var l2 = this.distanceBetweenPoints(point1, point2);
+    if (l2 == 0) return this.distanceBetweenPoints(pivot, point1);
+    var t = ((pivot.x - point1.x) * (point2.x - point1.x) + (pivot.y - point1.y) * (point2.y - point1.y)) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return this.distanceBetweenPoints(pivot, {
+      x: point1.x + t * (point2.x - point1.x),
+      y: point1.y + t * (point2.y - point1.y)
     });
+  }
+  distanceToSegment(pivot, point1, point2) { return Math.sqrt(this.distToSegmentSquared(pivot, point1, point2)); }
+
+  onMeetupAddressChange(newAddress) {
+    if (newAddress) {
+      var address = addressToString(newAddress);
+      if (address) {
+        this.setState({ passengerAddress: newAddress }, this.changePickUpPoint);
+        if (newAddress) {
+          centerMap(newAddress.longitude, newAddress.latitude, this.map);
+        }
+      }
+    }
+  }
+
+  handleNoteUpdate(note) {
+this.setState({note});
+  }
+
+  getAllRoutes(address, direction) {
+    if (address) {
+      let routeDto;
+      this.setState({ direction: direction });
+      if (direction === "to")
+        routeDto = { ToAddress: address };
+      else
+        routeDto = { FromAddress: address };
+      api.post("https://localhost:44347/api/Ride/routes", routeDto).then(res => {
+        if (res.status === 200 && res.data !== "") {
+          this.setState({ routes: res.data, fetchedRoutes: res.data, currentRoute: { routeFeature: null, fromFeature: null, toFeature: null } }, this.displayRoute);
+        }
+      }).catch((error) => {
+        this.showSnackBar("Failed to load routes", 2)
+      });
+    }
+  }
+
+  handleRegister(ride) {
+    if (!this.state.passengerAddress) {
+      this.showSnackBar("Choose your pick up point", 2)
+    }
+    else {
+      const request = {
+        RideId: ride.rideId,
+        DriverEmail: ride.driverEmail,
+        RequestNote:this.state.note,
+        Address: {
+          Longitude: this.state.passengerAddress.longitude,
+          Latitude: this.state.passengerAddress.latitude
+        }
+      };
+
+      api.post(`RideRequest`, request).then(response => {
+        this.showSnackBar("Ride requested!", 0)
+
+      })
+        .catch((error) => {
+          if (error.response && error.response.status === 409) {
+            this.showSnackBar(error.response.data, 2)
+          } else {
+            this.showSnackBar("Failed to request ride", 2)
+          }
+        });
+    }
+  }
+
+  showSnackBar(message, variant) {
+    this.setState({
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
   }
 
   render() {
     return (
       <div>
+        <div id="map"></div>
         <div className="passengerForm">
-          <PassengerRouteSelection 
-            filteredRouteToOffice={this.state.filteredRoute.toOffice}
-            showRoutes={() => this.showRoutes()}
-            directionToOffice={() => this.setState({filteredRoute: 
-              {...this.state.filteredRoute, toOffice: !this.state.filteredRoute.toOffice}
-            })}
-            handleFromOfficeSelection={() => this.handleFromOfficeSelection()}
-            handleOfficeSelection={(e, indexas, button) => 
-              this.handleOfficeSelection(e, indexas, button)
-            }
+          <PassengerRouteSelection
+            direction={this.state.direction}
+            initialAddress={OfficeAddresses[0]}
+            users={this.state.users}
+            onDriverSelection={(email) => { this.onDriverSelection(email) }}
+            onAutosuggestBlur={(resetRoutes) => { this.onAutosuggestBlur(resetRoutes) }}
+            displayName={addressToString(this.state.passengerAddress)}
+            onChange={(address, direction) => this.getAllRoutes(address, direction)}
+            onMeetupAddressChange={address => this.onMeetupAddressChange(address)}
           />
-          <Grid container justify="center" className="algolia-input" item xs={10}>
-            <input
-              type="search"
-              className="form-group"
-              id="passenger-address"
-              placeholder="Center map by location..."
-            />
-          </Grid>
-          {this.state.showDriver ? (
-            <DriverRoutesSugestions 
-              driversOfRoute={this.state.driversOfRoute}
-              showRides={this.state.showRides}
-              ridesOfRoute={this.state.ridesOfRoute}
-              driverEmail={this.state.driverEmail}
-              pickUpPoints={this.state.pickUpPoints}
-              handleCloseDriver={() => this.handleCloseDriver()}
-              showRidesOfDriver={driver => this.showRidesOfDriver(driver)}
+          {this.state.showDriver && this.state.routes.length > 0 ? (
+            <DriverRoutesSugestionsModal
+              rides={this.state.routes[this.state.currentRouteIndex].rides}
+              onRegister={ride => this.handleRegister(ride)}
+              handleNoteUpdate={(note) => { this.handleNoteUpdate(note) }}
             />
           ) : (
-              <div />
+              <div></div>
             )}
-          <div />
         </div>
-        <div id="map" />
-        <PassengerNavigationButton 
-          onClick={() => this.selectRoute(-1)}
-          text="View Previous Route"
-        />
-        <PassengerNavigationButton 
-          onClick={() => {
-            this.setState({ viewNext: !this.state.viewNext });
-            this.selectRoute(1);
-          }}
-          text="View Next Route"
+        {this.state.routes.length > 1
+          ? <Grid className="navigation-buttons">
+            <Media query="(min-width: 714px)">
+              {matches => matches ?
+                <div>
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Previous Route"
+                  />
+                  <PassengerNavigationButton
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                    text="View Next Route"
+                  />
+                </div>
+                : <div>
+                  <Button
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex - 1 + this.state.routes.length) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                  >
+                    <NavigateBefore fontSize="large" />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className="next-button"
+                    onClick={() => this.setState({
+                      currentRouteIndex: (this.state.currentRouteIndex + 1) % this.state.routes.length
+                    },
+                      this.displayRoute
+                    )}
+                  >
+                    <NavigateNext fontSize="large" />
+                  </Button>
+                </div>}
+            </Media>
+          </Grid>
+          : <div />
+        }
+        <SnackBars
+          message={this.state.snackBarMessage}
+          snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
         />
       </div>
     );

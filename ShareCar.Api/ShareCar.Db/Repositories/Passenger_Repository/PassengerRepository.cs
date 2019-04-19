@@ -1,4 +1,5 @@
-﻿using ShareCar.Db.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareCar.Db.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,39 +25,11 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
             return points;
         }
 
-        public bool AddNewPassenger(Passenger passenger)
+        public void AddNewPassenger(Passenger passenger)
         {
-            try
-            {
-                var p = _databaseContext.Passengers.FirstOrDefault(x => x.Email == passenger.Email && x.RideId == passenger.RideId);
-
-                if(p != null)
-                {
-                    return false;
-                }
-
                 _databaseContext.Passengers.Add(passenger);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
-        }
 
-        public bool RemovePassenger(Passenger passenger)
-        {
-            try
-            {
-                _databaseContext.Passengers.Remove(passenger);
-                _databaseContext.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public IEnumerable<Passenger> GetUnrepondedPassengersByEmail(string email)
@@ -65,25 +38,40 @@ namespace ShareCar.Db.Repositories.Passenger_Repository
 
         }
 
-        public IEnumerable<Passenger> GetPassengersByRideId(int rideId)
+        public IEnumerable<Passenger> GetPassengersByDriver(string email)
         {
-            return _databaseContext.Passengers.Where(x => x.RideId == rideId);
+            return _databaseContext.Passengers.Include(x => x.Ride.Requests).Where(x => x.Ride.DriverEmail == email);
         }
 
-        public bool RespondToRide(bool response, int rideId, string passengerEmail)
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            try {
                 Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == passengerEmail);
                 passenger.PassengerResponded = true;
                 passenger.Completed = response;
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
+
             }
 
+        public void RemovePassenger(string email, int rideId)
+        {
+            Passenger passenger = _databaseContext.Passengers.Single(x => x.RideId == rideId && x.Email == email);
+            _databaseContext.Remove(passenger);
+        }
+
+        public bool IsUserAlreadyAPassenger(int rideId, string email)
+        {
+            var passenger = _databaseContext.Passengers.FirstOrDefault(x => x.Email == email && x.RideId == rideId);
+
+            return passenger != null;
+        }
+
+        public void RemovePassengerByRide(int rideId)
+        {
+            var passengers = _databaseContext.Passengers.Where(x => x.RideId == rideId);
+            foreach (var passenger in passengers)
+            {
+                _databaseContext.Remove(passenger);
+            }
+        }
     }
 }

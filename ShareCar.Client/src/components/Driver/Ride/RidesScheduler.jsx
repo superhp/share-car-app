@@ -1,16 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import Slide from "@material-ui/core/Slide";
-import Grid from "@material-ui/core/Grid";
 import "react-infinite-calendar/styles.css"; // only needs to be imported once
-
 import api from "../../../helpers/axiosHelper";
 import "../../common/TimePickers";
-import addressParser from "../../../helpers/addressParser";
 import SnackBars from "../../common/Snackbars";
-import { RideSchedulerHelper } from "./RideSchedulerHelper";
+import { SnackbarVariants } from "../../common/SnackbarVariants";
+import RideSchedulerHelper from "./RideSchedulerHelper";
 
 const styles = {
   appBar: {
@@ -21,24 +17,16 @@ const styles = {
   }
 };
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-
 class RidesScheduler extends React.Component {
   state = {
-    open: true,
     selectedDates: [],
     time: "07:00",
-    snackBarClicked: false
+    snackBarClicked: false,
+    note: ""
   };
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  componentDidMount() {
-      addressParser.parseCustomAddress(this.props.routeInfo.fromAddress);
+  handleNoteChange(note){
+    this.setState({note});
   }
 
   handleSelect(e) {
@@ -67,44 +55,47 @@ class RidesScheduler extends React.Component {
       }));
     }
   }
-  handleClose = () => {
-    this.setState({ open: false });
-  };
 
   handleCreate = () => {
     let ridesToPost = [];
-    const fromAddressParsed = addressParser.parseCustomAddress(
-      this.props.routeInfo.fromAddress
-    );
-    const toAddressParsed = addressParser.parseCustomAddress(
-      this.props.routeInfo.toAddress
-    );
-
+    const { fromAddress, toAddress } = this.props.routeInfo;
     this.state.selectedDates.forEach(element => {
-      ridesToPost.push(this.createRide(fromAddressParsed, toAddressParsed, element));
+      ridesToPost.push(this.createRide(fromAddress, toAddress, element, this.state.note));
     });
-    
+
     this.postRides(ridesToPost);
   };
 
-  createRide(from, to, element) {
+  createRide(from, to, element, note) {
+
     const ride = {
-      fromNumber: from.number,
-      fromStreet: from.street,
-      fromCity: from.city,
-      fromCountry: "Lithuania",
-      toNumber: to.number,
-      toStreet: to.street,
-      toCity: to.city,
-      toCountry: "Lithuania",
-      routeGeometry: this.props.routeInfo.routeGeometry,
+      route:{
+        FromAddress:{
+          Number: from.number,
+          Street: from.street,
+          City: from.city,
+          Country: "Lithuania",
+          Longitude: from.longitude,
+          Latitude: from.latitude,
+        },
+        ToAddress:{
+          Number: to.number,
+          Street: to.street,
+          City: to.city,
+          Country: "Lithuania",
+          Longitude: to.longitude,
+          Latitude: to.latitude,
+        },
+        Geometry: this.props.routeInfo.routeGeometry,
+      },
+      Note:note,
       rideDateTime:
         element.getFullYear() +
         "-" +
-        (element.getMonth() + 1) + 
+        (element.getMonth() + 1) +
         "-" +
         element.getDate() +
-        "T" +
+        "  " +
         this.state.time
     };
     return ride;
@@ -113,26 +104,34 @@ class RidesScheduler extends React.Component {
   postRides(ridesToPost) {
     api.post("Ride", ridesToPost).then(res => {
       if (res.status === 200) {
-        this.setState({
-          open: false,
-          snackBarClicked: true,
-          snackBarMessage: "Rides successfully created!"
-        });
-        setTimeout(
-          function() {
-            this.setState({ snackBarClicked: false });
-          }.bind(this),
-          3000
-        );
+        this.showSnackBar("Rides successfully created!", 0);
       }
+    }).catch(() => {
+      this.showSnackBar("Failed to create rides", 2);
+
     });
+  }
+
+  showSnackBar(message, variant) {
+    this.setState({
+      open: false,
+      snackBarClicked: true,
+      snackBarMessage: message,
+      snackBarVariant: SnackbarVariants[variant]
+    });
+    setTimeout(
+      function () {
+        this.setState({ snackBarClicked: false });
+      }.bind(this),
+      3000
+    );
   }
 
   handleTime = value => {
     this.setState({ time: value });
   };
 
-  checkForDateDuplicate = function(needle, haystack) {
+  checkForDateDuplicate = function (needle, haystack) {
     for (let i = 0; i < haystack.length; i++) {
       if (needle.getTime() === haystack[i].getTime()) {
         return true;
@@ -141,38 +140,24 @@ class RidesScheduler extends React.Component {
     return false;
   };
 
-  returnUnique = function(duplicateArray) {
-    let uniqueDates = [];
-    for (let i = 0; i < duplicateArray.length; i++) {
-      if (!this.checkForDateDuplicate(duplicateArray[i], uniqueDates)) {
-        uniqueDates.push(duplicateArray[i]);
-      }
-    }
-    return uniqueDates;
-  };
-
   render() {
     return (
       <div>
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={() => this.handleClose()}
-          TransitionComponent={Transition}
-        >
-          <RideSchedulerHelper 
-            appBar={this.props.appBar}
-            handleClose={() => this.handleClose()}
-            flex={this.props.flex}
-            selectedDates={this.state.selectedDates}
-            handleCreate={() => this.handleCreate()}
-            handleSelect={e => this.handleSelect(e)}
-            handleTime={value => this.handleTime(value)}
-          />
-        </Dialog>
+        <RideSchedulerHelper
+          appBar={this.props.appBar}
+          handleClose={() => this.handleClose()}
+          flex={this.props.flex}
+          selectedDates={this.state.selectedDates}
+          handleNoteChange={(note) => this.handleNoteChange(note)}
+          handleCreate={() => this.handleCreate()}
+          handleSelect={e => this.handleSelect(e)}
+          handleTime={value => this.handleTime(value)}
+        />
         <SnackBars
           message={this.state.snackBarMessage}
           snackBarClicked={this.state.snackBarClicked}
+          variant={this.state.snackBarVariant}
+
         />
       </div>
     );

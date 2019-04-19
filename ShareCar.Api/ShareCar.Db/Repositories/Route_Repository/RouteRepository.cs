@@ -14,11 +14,11 @@ namespace ShareCar.Db.Repositories.Route_Repository
         {
             _databaseContext = databaseContext;
         }
-        public int GetRouteId(int fromId, int toId)
+        public int GetRouteId(string geometry)
         {
             try
             {
-                return _databaseContext.Routes.Single(x => x.FromId == fromId && x.ToId == toId).RouteId;
+                return _databaseContext.Routes.Single(x => x.Geometry == geometry).RouteId;
             }
             catch
             {
@@ -27,25 +27,15 @@ namespace ShareCar.Db.Repositories.Route_Repository
         }
         public Route GetRouteById(int id)
         {
-                return _databaseContext.Routes.Find(id); 
+                return _databaseContext.Routes.Include(x => x.FromAddress).Include(x => x.ToAddress).Single(x => x.RouteId == id); 
         }
-        public bool AddRoute(Route route)
+        public void AddRoute(Route route)
         {
-            try
-            {
                 _databaseContext.Routes.Add(route);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
-        public bool UpdateRoute(Route route)
+        public void UpdateRoute(Route route)
         {
-            try
-            {
                 Route routeToUpdate = GetRouteById(route.RouteId);
                 if (routeToUpdate.Rides == null)
                 {
@@ -58,12 +48,6 @@ namespace ShareCar.Db.Repositories.Route_Repository
 
                 _databaseContext.Routes.Update(routeToUpdate);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
 
         public IEnumerable<Route> GetRoutes(bool isFromOffice, Address address)
@@ -83,6 +67,17 @@ namespace ShareCar.Db.Repositories.Route_Repository
                     .Where(x => x.ToAddress.City == address.City && x.ToAddress.Street == address.Street && x.ToAddress.Number == address.Number);
             }
         }
-        
+
+        public Route GetRouteByRequest(int requestId)
+        {
+
+            var result = from route in _databaseContext.Routes.Include(x => x.ToAddress).Include(x => x.FromAddress)
+                         from rides in route.Rides
+                         from requests in rides.Requests
+                         where requests.RideRequestId == requestId
+                         select route;
+                    
+            return result.ToList()[0];
+        }
     }
 }

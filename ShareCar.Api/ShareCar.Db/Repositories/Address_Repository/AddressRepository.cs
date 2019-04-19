@@ -15,19 +15,12 @@ namespace ShareCar.Db.Repositories.Address_Repository
         {
             _databaseContext = context;
         }
-        public bool AddNewAddress(Address address)
+        public Address AddNewAddress(Address address)
         {
-            try
-            {
-                _databaseContext.Addresses.Add(address);
-                _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
-
+             var entity = _databaseContext.Addresses.Add(address);
+             _databaseContext.SaveChanges();
+            return entity.Entity;
+            
         }
 
         // Address consists of street, house number and city or geo coordinates
@@ -47,12 +40,12 @@ namespace ShareCar.Db.Repositories.Address_Repository
             }
 
 
-              else  if (address.Longtitude != 0 && address.Latitude != 0)
+              else  if (address.Longitude != 0 && address.Latitude != 0)
                 {
                     try
                     {
 
-                        return _databaseContext.Addresses.Single(x => x.Longtitude == address.Longtitude && x.Latitude == address.Latitude).AddressId;
+                        return _databaseContext.Addresses.Single(x => x.Longitude == address.Longitude && x.Latitude == address.Latitude).AddressId;
 
                     }
                     catch
@@ -71,5 +64,6 @@ namespace ShareCar.Db.Repositories.Address_Repository
         {
            return _databaseContext.Addresses.Find(id);
         }
+
     }
 }

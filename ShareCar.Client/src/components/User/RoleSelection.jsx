@@ -12,6 +12,9 @@ import { RoleContext } from "../../helpers/roles";
 import "../../styles/roleSelection.css";
 import driverLogo from "../../images/driver.png";
 import passengerLogo from "../../images/passenger.png";
+import { CircularProgress, withStyles } from "@material-ui/core";
+import {styles} from "../../utils/spinnerStyle";
+import "../../styles/genericStyles.css";
 
 class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   userService = new UserService();
@@ -58,11 +61,11 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
   }
 
   render() {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading..</em>
-      </p>
-    ) : this.state.user === null ? (
+    const content = this.state.loading ? 
+      <div className="progress-circle">
+        <CircularProgress/>
+      </div>
+     : this.state.user === null ? (
       <p>Failed</p>
     ) : (
       <div>
@@ -75,12 +78,12 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
           {({ role, changeRole }) => (
             <div className="role-container">
               <Link to="/driver/rides" onClick={changeRole("driver")}>
-                <img className="role-image" src={driverLogo} />
+                <img className="role-image" src={driverLogo} alt=""/>
               </Link>
               <h2 className="role-selection">Driver</h2>
 
               <Link to="/passenger/Requests" onClick={changeRole("passenger")}>
-                <img className="role-image" src={passengerLogo} />
+                <img className="role-image" src={passengerLogo} alt=""/>
               </Link>
               <h2 className="role-selection">Passenger</h2>
             </div>
@@ -91,4 +94,4 @@ class RoleSelection extends Component<RoleSelectionState, MyProfileState> {
     return <div>{content}</div>;
   }
 }
-export default RoleSelection;
+export default withStyles(styles) (RoleSelection);

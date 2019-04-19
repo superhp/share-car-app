@@ -5,7 +5,6 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20%;
-  margin-top: 16%;
 }
 
 s div.form-group {
@@ -27,11 +26,25 @@ div.form-group input {
   width: 100%;
 }
 
+button:focus {
+  outline:0!important;
+}
+
+.profile-save-button {
+  background-color: #f74428!important;
+  color: #e8e9eb!important;
+}
+
+.profile-save-button:hover {
+  background-color: #f96f59!important;
+}
+
 img.thumbnail {
   height: 10%;
   margin: 0 auto;
   text-align: center;
   display: block;
+  border-radius: 50%;
 }
 .logout-button {
   flex: 1 100%;

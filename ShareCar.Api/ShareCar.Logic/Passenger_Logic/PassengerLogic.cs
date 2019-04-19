@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories.Passenger_Repository;
+using ShareCar.Dto.Identity;
+using ShareCar.Logic.User_Logic;
 
 namespace ShareCar.Logic.Passenger_Logic
 {
@@ -17,19 +19,21 @@ namespace ShareCar.Logic.Passenger_Logic
     {
 
         private readonly IPassengerRepository _passengerRepository;
+        private readonly IAddressLogic _addressLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
 
-        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository)
+        public PassengerLogic(IMapper mapper, IPassengerRepository passengerRepository, IAddressLogic addressLogic, IRouteLogic routeLogic)
         {
             _mapper = mapper;
             _passengerRepository = passengerRepository;
+            _addressLogic = addressLogic;
+            _routeLogic = routeLogic;
         }
 
-        public bool AddPassenger(PassengerDto passenger)
+        public void AddPassenger(PassengerDto passenger)
         {
-
-            return _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
-
+            _passengerRepository.AddNewPassenger(_mapper.Map<PassengerDto, Passenger>(passenger));
         }
 
         public List<PassengerDto> GetUnrepondedPassengersByEmail(string email)
@@ -43,25 +47,50 @@ namespace ShareCar.Logic.Passenger_Logic
             return dtoPassengers;
         }
 
-        public List<PassengerDto> GetPassengersByRideId(int rideId)
+        public List<PassengerDto> GetPassengersByDriver(string email)
         {
-            IEnumerable<Passenger> passengers = _passengerRepository.GetPassengersByRideId(rideId);
+            IEnumerable<Passenger> passengers = _passengerRepository.GetPassengersByDriver(email);
             List<PassengerDto> dtoPassengers = new List<PassengerDto>();
+
             foreach (Passenger passenger in passengers)
             {
-                dtoPassengers.Add(_mapper.Map<Passenger, PassengerDto>(passenger));
+                passenger.Ride.Requests = passenger.Ride.Requests.Where(x => x.PassengerEmail == passenger.Email && x.Status == Db.Entities.Status.ACCEPTED).ToList();
+                var dtoPassenger = _mapper.Map<Passenger, PassengerDto>(passenger);
+                var address = _addressLogic.GetAddressById(passenger.Ride.Requests[0].AddressId);
+                var route = _routeLogic.GetRouteByRequest(passenger.Ride.Requests[0].RideRequestId);
+                dtoPassenger.Longitude = address.Longitude;
+                dtoPassenger.Latitude = address.Latitude;
+                dtoPassenger.Route = route;
+                dtoPassenger.Ride = null;
+                dtoPassenger.Route.Rides = null;
+                dtoPassengers.Add(dtoPassenger);
             }
             return dtoPassengers;
         }
-        public bool RespondToRide(bool response, int rideId, string passengerEmail)
+        public void RespondToRide(bool response, int rideId, string passengerEmail)
         {
-            return _passengerRepository.RespondToRide(response, rideId, passengerEmail);
+            _passengerRepository.RespondToRide(response, rideId, passengerEmail);
 
         }
         public int GetUsersPoints(string email)
         {
             int points = _passengerRepository.GetUsersPoints(email);
             return points;
+        }
+
+        public void RemovePassenger(string email, int rideId)
+        {
+            _passengerRepository.RemovePassenger(email, rideId);
+        }
+
+        public bool IsUserAlreadyAPassenger(int rideId, string email)
+        {
+            return _passengerRepository.IsUserAlreadyAPassenger(rideId, email);
+        }
+
+        public void RemovePassengerByRide(int rideId)
+        {
+            _passengerRepository.RemovePassengerByRide(rideId);
         }
     }
 }

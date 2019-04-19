@@ -16,4 +16,31 @@
     color: white;
     font-size: 20px;
   }
+
+.winner-board {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.points-card {
+  padding-bottom: 0!important;
+}
+
+.button-card {
+  padding-top: 0!important;
+}
+
+.winner-points {
+  color: #f96f59!important;
+  margin-right: 10px;
+  margin-left: 10px;
+}
   
+button:focus {
+  outline:0!important;
+}
+
+a:link, a:hover {
+  text-decoration: none!important;
+}

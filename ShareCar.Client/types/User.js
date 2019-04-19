@@ -7,15 +7,15 @@ type User = {
 };
 
 type UserProfileData = 
-user: {
+ {
   firstName: string,
   lastName: string,
   profilePicture: string,
   email: string,
   licensePlate: string,
   phone: string
-},
-pointCount: number
+};
+pointCount: number;
 
 type MyProfileState = {
   loading: boolean,

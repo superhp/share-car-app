@@ -15,21 +15,19 @@ namespace ShareCar.Logic.Route_Logic
     public class RouteLogic: IRouteLogic
     {
         private readonly IMapper _mapper;
-        //private readonly IRideRequestLogic _rideRequestLogic;
         private readonly IRouteRepository _routeRepository;
         private readonly IAddressLogic _addressLogic;
         
         public RouteLogic(IRouteRepository routeRepository, IMapper mapper, IAddressLogic addressLogic)
         {
-            //_rideRequestLogic = rideRequestLogic;
             _routeRepository = routeRepository;
             _mapper = mapper;
             _addressLogic = addressLogic;
         }
 
-        public int GetRouteId(int fromId, int toId)
+        public int GetRouteId(string geometry)
         {
-            int routeId = _routeRepository.GetRouteId(fromId, toId);
+            int routeId = _routeRepository.GetRouteId(geometry);
             return routeId;
         }
         
@@ -43,31 +41,21 @@ namespace ShareCar.Logic.Route_Logic
 
             RouteDto routeDto = _mapper.Map<Route, RouteDto>(route);
                 
-              /*  = new RouteDto
-            {
-                AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress),
-                AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress),
-                FromId = route.FromId,
-                ToId = route.ToId,
-                RouteId = route.RouteId,
-                Geometry = route.Geometry
-            };*/
             return routeDto;
         }
  
         // Returns routes by passengers criteria
         public List<RouteDto> GetRoutes(RouteDto routeDto, string email)
         {
-            Address address = _mapper.Map<AddressDto,Address>(routeDto.AddressTo);
+            Address address = _mapper.Map<AddressDto,Address>(routeDto.ToAddress);
             bool isFromOffice = false;
 
-            if (routeDto.AddressFrom != null)
+            if (routeDto.FromAddress != null)
             {
                 // If user needs a ride to office, he recieves routes independently from his location
-                address = _mapper.Map<AddressDto, Address>(routeDto.AddressFrom);
+                address = _mapper.Map<AddressDto, Address>(routeDto.FromAddress);
                 isFromOffice = true;                
             }
-
 
             IEnumerable<Route> entityRoutes = _routeRepository.GetRoutes(isFromOffice, address);
             List<RouteDto> dtoRoutes = new List<RouteDto>();
@@ -78,42 +66,61 @@ namespace ShareCar.Logic.Route_Logic
                 List<Ride> rides = new List<Ride>();
                 foreach(var ride in route.Rides)
                 {
-                    if(!((ride.DriverEmail == email) || (ride.RideDateTime < routeDto.FromTime) || (ride.isActive == false)))
+                    if(ride.DriverEmail != email && ride.RideDateTime >= routeDto.FromTime && ride.isActive)
                     {
+                        ride.Route = null;
                         rides.Add(ride);
                     }
                 }
                 route.Rides = rides;
                 if (route.Rides.Count != 0)
-                {                  
-                    mappedRoute.AddressFrom = _mapper.Map<Address, AddressDto>(route.FromAddress);
-                    mappedRoute.AddressTo = _mapper.Map<Address, AddressDto>(route.ToAddress);
-                    mappedRoute.FromId = route.FromId;
-                    mappedRoute.Geometry = route.Geometry;
-                    foreach(var ride in route.Rides)
+                {
+                    foreach (var ride in route.Rides)
                     {
-                        mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
+                        if (ride.NumberOfSeats > 0 && ride.RideDateTime >= DateTime.Now)
+                        {
+                            mappedRoute.Rides.Add(_mapper.Map<Ride, RideDto>(ride));
+                        }
                     }
-                    dtoRoutes.Add(mappedRoute);
+                    if (mappedRoute.Rides.Count > 0)
+                    {
+                        mappedRoute.FromAddress = _mapper.Map<Address, AddressDto>(route.FromAddress);
+                        mappedRoute.ToAddress = _mapper.Map<Address, AddressDto>(route.ToAddress);
+                        mappedRoute.FromId = route.FromId;
+                        mappedRoute.Geometry = route.Geometry;
+
+                        dtoRoutes.Add(mappedRoute);
+                    }
                 }
             }
             return dtoRoutes;
         }
 
-        public bool AddRoute(RouteDto route)
+        public void AddRoute(RouteDto route)
         {
             Route entityRoute = new Route
             {
                 FromId = route.FromId,
                 ToId = route.ToId,
                 Geometry = route.Geometry,
-                FromAddress = _mapper.Map<AddressDto,Address>(route.AddressFrom),
-                ToAddress = _mapper.Map<AddressDto, Address>(route.AddressTo)
+                FromAddress = _mapper.Map<AddressDto,Address>(route.FromAddress),
+                ToAddress = _mapper.Map<AddressDto, Address>(route.ToAddress)
 
 
             };
-            //Route routes = _mapper.Map<RouteDto, Route>(route);
-            return _routeRepository.AddRoute(entityRoute);
+             _routeRepository.AddRoute(entityRoute);
+        }
+
+        public RouteDto GetRouteByRequest(int requestId)
+        {
+            var entity = _routeRepository.GetRouteByRequest(requestId);
+            
+            var dto = _mapper.Map<Route, RouteDto>(entity);
+
+            dto.ToAddress = _mapper.Map<Address, AddressDto>(entity.ToAddress);
+            dto.FromAddress = _mapper.Map<Address, AddressDto>(entity.FromAddress);
+
+            return dto;
         }
     }
 }

@@ -22,20 +22,13 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         }
 
 
-        public bool AddRide(Ride ride)
+        public Ride AddRide(Ride ride)
         {
-            try
-            {
                 ride.isActive = true;
-                _databaseContext.Rides.Add(ride);
+               var entity = _databaseContext.Rides.Add(ride).Entity;
 
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
+            return entity;
             }
 
         public IEnumerable<Ride> GetRidesByDate(DateTime date)
@@ -52,14 +45,7 @@ namespace ShareCar.Db.Repositories.Ride_Repository
 
         public Ride GetRideById(int id)
         {
-            try
-            {
-                return _databaseContext.Rides.Single(x => x.RideId == id && x.isActive == true); 
-            }
-            catch
-            {
-                return null;
-            }
+                return _databaseContext.Rides.SingleOrDefault(x => x.RideId == id && x.isActive == true); 
         }
 
         public IEnumerable<Ride> GetRidesByStartPoint(int addressFromId)
@@ -77,10 +63,8 @@ namespace ShareCar.Db.Repositories.Ride_Repository
             return _databaseContext.Rides.Where(x => x.Passengers.Contains(passenger) && x.isActive == true);
         }
 
-        public bool UpdateRide(Ride ride)
+        public void UpdateRide(Ride ride)
         {
-            try
-            {
                 var rideToUpdate = _databaseContext.Rides.Find(ride.RideId); 
                 rideToUpdate.RouteId = ride.RouteId;
                 rideToUpdate.RideDateTime = ride.RideDateTime;
@@ -89,27 +73,13 @@ namespace ShareCar.Db.Repositories.Ride_Repository
                 
                 _databaseContext.Rides.Update(rideToUpdate);
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
-        public bool SetRideAsInactive(Ride ride)
+        public void SetRideAsInactive(Ride ride)
         {
-            try
-            {
                 var rideToDelete = _databaseContext.Rides.Include(x => x.Requests).Single(x => x.RideId == ride.RideId);
 
                 rideToDelete.isActive = false;
                 _databaseContext.SaveChanges();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
 
         public IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId)
@@ -120,14 +90,22 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         public IEnumerable<Ride> GetRidesByDriver(string email)
         {
             return _databaseContext.Rides
-                .Include(x=>x.Requests)
-                .Include(x=>x.Passengers)
                 .Where(x => x.DriverEmail == email && x.isActive == true);
         }
 
         public IEnumerable<Ride> GetRidesByRoute(string routeGeometry)
         {
             return _databaseContext.Rides.Where(x => x.Route.Geometry == routeGeometry && x.isActive == true);
+        }
+
+        public bool IsRideRequested(int rideId, string passengerEmail)
+        {
+            var ride = _databaseContext.Rides.Include(x => x.Requests).Single(x => x.RideId == rideId);
+            if(ride.Requests.Where(x => x.PassengerEmail == passengerEmail && (x.Status == Status.ACCEPTED || x.Status == Status.WAITING)).Count() > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -8,6 +8,5 @@ namespace ShareCar.Dto
     {
         public bool Response { get; set; }
         public int RideId { get; set; }
-
     }
 }

@@ -1,71 +1,39 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
-import Phone from "@material-ui/icons/Phone";
-import Button from "@material-ui/core/Button";
 
-import RidesOfDriver from "../Ride/RidesOfDriver";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
+import TextField from "@material-ui/core/TextField";
 
-import "./../../../styles/genericStyles.css";
+import { DriverRouteSuggestionsItem } from "./DriverRouteSuggestionsItem";
 
-export const DriverRoutesSugestions = (props) => (
-    <Grid container justify="center" item xs={10}>
-        <Card>
-            {props.driversOfRoute.map(driver => (
-            <Grid
-                className="driver-button-container"
-                justify="center"
-                item xs={12}
-                key={driver.id}
-            >
-                <Grid 
-                    container 
-                    alignItems="center" 
-                    justify="center" 
-                    className="names-and-phones" 
-                    item xs={12}
+import "../../../styles/driversRidesList.css";
+
+export class DriverRoutesSugestions extends React.Component {
+    render() {
+        return (
+            <div className="drivers-list-root">
+                <List
+                    subheader={<ListSubheader component="div" className="drivers-list-header">Drivers for this route</ListSubheader>}
                 >
-                    <Grid container className="driver-name" item xs={12}>
-                        <Typography variant="caption">Driver </Typography>
-                        <Typography variant="body1">
-                            {driver.firstName} {driver.lastName}
-                        </Typography>
-                    </Grid>
-                    <Grid className="call" item xs={12}>
-                        <Phone />
-                        <Typography variant="body1">
-                        {driver.driverPhone}
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    style={{ "background-color": "#007bff" }}
-                    onClick={() => props.showRidesOfDriver(driver)}
-                >
-                    View Time
-                </Button>{" "}
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={() => props.handleCloseDriver()}
-                >
-                    Close
-                </Button>{" "}
-            </Grid>
-            ))}
-            {props.showRides ? (
-                <RidesOfDriver
-                    rides={props.ridesOfRoute}
-                    driver={props.driverEmail}
-                    pickUpPoints={props.pickUpPoints}
-                    className="date-display"
-                />
-            ) : (
-                <div />
-            )}
-            </Card>
-    </Grid>
-);
+                    {this.props.rides.map((ride, i) => (
+                        <DriverRouteSuggestionsItem
+                            key={i}
+                            ride={ride}
+                            onRegister={() => this.props.onRegister(ride)}
+                        />
+                    ))}
+                    <div className="ride-request-note">
+                        <TextField
+                            margin="normal"
+                            multiline
+                            fullWidth
+                            variant="outlined"
+                            placeholder="Leave a note for drivers"
+                            onBlur={(e) => {this.props.handleNoteUpdate(e.target.value)}}
+                        />
+                    </div>
+                </List>
+            </div>
+        )
+    }
+}

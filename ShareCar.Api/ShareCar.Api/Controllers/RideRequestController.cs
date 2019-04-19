@@ -10,6 +10,9 @@ using ShareCar.Logic.RideRequest_Logic;
 using Microsoft.AspNetCore.Authorization;
 using ShareCar.Logic.Ride_Logic;
 using ShareCar.Db.Repositories.User_Repository;
+using ShareCar.Logic.Exceptions;
+using ShareCar.Logic.Note_Logic;
+using ShareCar.Db.Repositories.Notes_Repository;
 
 namespace ShareCar.Api.Controllers
 {
@@ -19,26 +22,42 @@ namespace ShareCar.Api.Controllers
     public class RideRequestController : Controller
     {
         private readonly IRideRequestLogic _requestLogic;
+        private readonly IRideRequestNoteLogic _noteLogic;
         private readonly IUserRepository _userRepository;
         private readonly IRideLogic _rideLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteRepository;
 
-        public RideRequestController(IRideRequestLogic requestLogic, IUserRepository userRepository, IRideLogic rideLogic)
+        public RideRequestController(IRideRequestLogic requestLogic, IDriverSeenNoteRepository driverSeenNoteRepository, IUserRepository userRepository, IRideLogic rideLogic, IRideRequestNoteLogic noteLogic)
         {
             _requestLogic = requestLogic;
             _userRepository = userRepository;
             _rideLogic = rideLogic;
+            _noteLogic = noteLogic;
+            _driverSeenNoteRepository = driverSeenNoteRepository;
         }
 
-        [HttpGet("{driver}")]
-        public async Task<IActionResult> GetUserRequestsAsync(string driver)
+        [HttpGet("passenger")]
+        public async Task<IActionResult> GetPassengerRequests()
         {
             var userDto = await _userRepository.GetLoggedInUser(User);
 
-            bool isDriver = Boolean.Parse(driver); 
-
-            IEnumerable<RideRequestDto> request = await _requestLogic.GetUsersRequests(isDriver, userDto.Email);
+            IEnumerable<RideRequestDto> request = _requestLogic.GetPassengerRequests(userDto.Email);
 
             return Ok(request);
+        }
+
+        [HttpGet("{requestId}")]
+        public IActionResult NoteSeen(int requestId)
+        {
+            _noteLogic.NoteSeen(requestId);
+            return Ok();
+        }
+
+        [HttpPost("updateNote")]
+        public IActionResult UpdateNote([FromBody] RideRequestNoteDto note)
+        {
+            _noteLogic.UpdateNote(note);
+            return Ok();
         }
 
         [HttpPost]
@@ -46,27 +65,20 @@ namespace ShareCar.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Invalid parameter");
+                return BadRequest();
             }
             var userDto = await _userRepository.GetLoggedInUser(User);
             request.PassengerEmail = userDto.Email;
-            string email = _rideLogic.GetRideById(request.RideId).DriverEmail;
+            var ride = _rideLogic.GetRideById(request.RideId);
 
-            if (email == null)
+            if(ride == null)
             {
-                return BadRequest("Invalid parameter");
+                throw new RideNoLongerExistsException();
             }
 
-            bool result = _requestLogic.AddRequest(request, email);
-            
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            _requestLogic.AddRequest(request, ride.DriverEmail);
+
+            return Ok();
         }
 
         [HttpPost("seenPassenger")]
@@ -86,18 +98,12 @@ namespace ShareCar.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Invalid parameter");
+                return BadRequest();
             }
 
-            bool result = _requestLogic.UpdateRequest(request);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Operation failed");
-            }
+            _requestLogic.UpdateRequest(request);
+
+            return Ok();
 
         }
     }

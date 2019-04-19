@@ -5,10 +5,11 @@ namespace ShareCar.Db.Repositories.Route_Repository
 {
     public interface IRouteRepository
     {
-        int GetRouteId(int fromId, int toId);
+        int GetRouteId(string geometry);
         Route GetRouteById(int id);
-        bool AddRoute(Route route);
-        bool UpdateRoute(Route route);
+        void AddRoute(Route route);
+        void UpdateRoute(Route route);
         IEnumerable<Route> GetRoutes(bool isOfficeAddress, Address address);
+        Route GetRouteByRequest(int requestId);
     }
 }

@@ -16,6 +16,8 @@ using ShareCar.Db.Entities;
 using ShareCar.Dto.Identity;
 using ShareCar.Dto.Identity.Facebook;
 using AutoMapper;
+using ShareCar.Dto;
+using System.Collections.Generic;
 
 namespace ShareCar.Api
 {
@@ -50,7 +52,9 @@ namespace ShareCar.Api
 
             ConfigureAuthentication(services);
 
-            services.AddMvc();
+            services.AddMvc()
+            .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddAutoMapper();
 
             var applicationContainer = Bootstrapper.AddRegistrationsToDIContainer(services);
@@ -76,7 +80,13 @@ namespace ShareCar.Api
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}");
+            });
+
         }
 
         private void ConfigureAuthentication(IServiceCollection services)
@@ -92,6 +102,8 @@ namespace ShareCar.Api
         {
             // Register the ConfigurationBuilder instance of FacebookAuthSettings
             services.Configure<FacebookAuthSettings>(Configuration.GetSection(nameof(FacebookAuthSettings)));
+
+            services.Configure<SendGridSettings>(Configuration.GetSection(nameof(SendGridSettings)));
 
             // jwt wire up
             // Get options from app settings

@@ -9,7 +9,7 @@ namespace ShareCar.Db.Entities
     public class RideRequest
     {
         [Key]
-        public int RequestId { get; set; }
+        public int RideRequestId { get; set; }
         public string PassengerEmail { get; set; }
         public string DriverEmail { get; set; }
         public int AddressId { get; set; }
@@ -32,6 +32,7 @@ namespace ShareCar.Db.Entities
         WAITING,
         ACCEPTED,
         DENIED,
-        DELETED
+        DELETED,
+        CANCELED
     }
 }

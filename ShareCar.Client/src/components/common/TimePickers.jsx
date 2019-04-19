@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 
+import "../../styles/newRideForm.css";
+var time = null;
+
 const styles = theme => ({
   container: {
     display: "flex",
@@ -17,14 +20,13 @@ const styles = theme => ({
 
 function TimePickers(props) {
   const { classes } = props;
-
   return (
     <form className={classes.container} noValidate>
       <TextField
         id="time"
         label="Select default time of rides"
         type="time"
-        onChange={e => {
+        onBlur={e => {
           props.onTimeSet(e.target.value);
         }}
         defaultValue="07:00"

@@ -1,8 +1,9 @@
 import Icon from "ol/style/Icon";
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
+import point from "../images/point.png";
 
-const PLACE_ICON = "http://cdn.rawgit.com/openlayers/ol3/master/examples/data/icon.png";
+const PLACE_ICON = point;
 
 export const routeStyles = {
     route: new Style({

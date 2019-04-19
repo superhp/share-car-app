@@ -14,11 +14,12 @@ namespace ShareCar.Db.Repositories.Ride_Repository
         IEnumerable<Ride> GetRidesByDestination(int addressToId);
         IEnumerable<Ride> GetRidesByStartPoint(int addressFromId);
         IEnumerable<Passenger> GetPassengersByRideId(int rideId);
-        bool UpdateRide(Ride ride);
-        bool SetRideAsInactive(Ride ride);
-        bool AddRide(Ride ride);
+        void UpdateRide(Ride ride);
+        void SetRideAsInactive(Ride ride);
+        Ride AddRide(Ride ride);
         IEnumerable<Ride> GetSimmilarRides(string driverEmail, int routeId, int rideId);
         IEnumerable<Ride> GetRidesByPassenger(Passenger passenger);
         IEnumerable<Ride> GetRidesByRoute(string routeGeometry);
+        bool IsRideRequested(int rideId, string passengerEmail);
     }
 }

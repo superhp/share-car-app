@@ -9,16 +9,19 @@ import UserService from "../../services/userService";
 import AuthenticationService from "../../services/authenticationService";
 import NavBar from "./NavBar";
 import { LinksToHeadings } from "../LinkDictionary";
+import history from "../../helpers/history";
 
 import "../../styles/layout.css";
 import "../../styles/genericStyles.css";
+import { SecondaryHeader } from "./SecondaryHeader";
+import Media from "react-media";
 
 type LayoutProps = {
   children?: React.Node
 };
 
 class Layout extends React.Component<LayoutProps, MyProfileState> {
-  state: MyProfileState = { loading: true, user: null };
+  state : UserProfileData = { loading: true, user: null};
   userService = new UserService();
   authService = new AuthenticationService();
 
@@ -30,24 +33,61 @@ class Layout extends React.Component<LayoutProps, MyProfileState> {
     this.setState({ user: user });
   };
 
+  logout = () => {
+    this.authService.logout(this.userLoggedOut);
+  };
+
+  refetch = () => {
+    this.props.refetch();
+  };
+
+  userLoggedOut = () => {
+    history.push("/login");
+  };
+
   render() {
     return (
       <div className="app">
         <div className="content">
           <Grid container justify="center">
-            <Grid item xs={12}>
               <AppBar
                 position="static"
-                color="primary"
                 className="generic-container-color"
               >
-                <Toolbar>
-                  <Typography variant="title" color="inherit">
-                    {LinksToHeadings[this.props.location.pathname]}
-                  </Typography>
-                </Toolbar>
+                <Media query="(max-width: 713px)">
+                  {matches => matches ? 
+                    <div>
+                      <Grid item xs={12} className="header-text heading-small-device">
+                        <Typography variant="title" color="inherit">
+                          {LinksToHeadings[this.props.location.pathname]}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <SecondaryHeader 
+                          logout={() => this.logout()} 
+                          refetch={() => this.refetch()}
+                          isDriver={this.props.location.pathname.includes("driver") ? true : false}
+                          className="secondary-header-small-device"
+                        />
+                      </Grid>
+                    </div>
+                    : <Toolbar>
+                          <Grid item xs={12} sm={7}>
+                            <Typography variant="title" color="inherit" className="header-big-device">
+                              {LinksToHeadings[this.props.location.pathname]}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={5}>
+                            <SecondaryHeader 
+                              logout={() => this.logout()} 
+                              refetch={() => this.refetch()}
+                              isDriver={this.props.location.pathname.includes("driver") ? true : false}
+                            />
+                          </Grid>
+                      </Toolbar>
+                    }
+                </Media>
               </AppBar>
-            </Grid>
           </Grid>
           {this.props.children}
           {this.props.location.pathname.includes("driver") ? (

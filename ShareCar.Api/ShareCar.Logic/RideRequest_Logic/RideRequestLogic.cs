@@ -11,6 +11,11 @@ using AutoMapper;
 using ShareCar.Logic.Route_Logic;
 using ShareCar.Logic.Passenger_Logic;
 using ShareCar.Db.Repositories.RideRequest_Repository;
+using System;
+using System.Linq;
+using ShareCar.Logic.Exceptions;
+using ShareCar.Logic.Note_Logic;
+using ShareCar.Db.Repositories.Notes_Repository;
 
 namespace ShareCar.Logic.RideRequest_Logic
 {
@@ -21,54 +26,120 @@ namespace ShareCar.Logic.RideRequest_Logic
         private readonly IRideLogic _rideLogic;
         private readonly IPassengerLogic _passengerLogic;
         private readonly IAddressLogic _addressLogic;
+        private readonly IRouteLogic _routeLogic;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserLogic _userLogic;
+        private readonly IRideRequestNoteLogic _rideRequestNoteLogic;
+        private readonly IDriverNoteLogic _driverNoteLogic;
+        private readonly IDriverSeenNoteRepository _driverSeenNoteReposiotory;
 
-        public RideRequestLogic(IRideRequestRepository rideRequestRepository, IUserLogic personLogic, IAddressLogic addressLogic, UserManager<User> userManager, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic)
+        public RideRequestLogic(IDriverNoteLogic driverNoteLogic, IDriverSeenNoteRepository driverSeenNoteLogic, IRideRequestRepository rideRequestRepository, IRideRequestNoteLogic rideRequestNoteLogic, IAddressLogic addressLogic, IUserLogic userLogic, IMapper mapper, IPassengerLogic passengerLogic, IRideLogic rideLogic, IRouteLogic routeLogic)
         {
             _rideRequestRepository = rideRequestRepository;
             _addressLogic = addressLogic;
             _rideLogic = rideLogic;
-            _userManager = userManager;
+            _userLogic = userLogic;
             _mapper = mapper;
             _passengerLogic = passengerLogic;
+            _routeLogic = routeLogic;
+            _rideRequestNoteLogic = rideRequestNoteLogic;
+            _driverNoteLogic = driverNoteLogic;
+            _driverSeenNoteReposiotory = driverSeenNoteLogic;
         }
 
-        public bool AddRequest(RideRequestDto requestDto, string driverEmail)
+        public void AddRequest(RideRequestDto requestDto, string driverEmail)
         {
             requestDto.SeenByDriver = false;
             requestDto.SeenByPassenger = true;
             requestDto.DriverEmail = driverEmail;
-            int addressId = _addressLogic.GetAddressId(new AddressDto {City=requestDto.City, Street = requestDto.Street, Number = requestDto.HouseNumber, Longtitude = requestDto.Longtitude, Latitude = requestDto.Latitude });
+            int addressId = _addressLogic.GetAddressId(requestDto.Address);
+
+            if(addressId == -1)
+            {
+                throw new ArgumentException("Failed to get address id");
+            }
+
+            var ride = _rideLogic.GetRideById(requestDto.RideId);
+
+            if (ride == null)
+            {
+                throw new RideNoLongerExistsException();
+            }
+
+            if (ride.NumberOfSeats <= 0)
+            {
+                throw new NoSeatsInRideException();
+            }
+
+            if (_rideLogic.IsRideRequested(requestDto.RideId, requestDto.PassengerEmail))
+            {
+                throw new AlreadyRequestedException();
+            }
 
             requestDto.AddressId = addressId;
-            var isCreated = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
-            return isCreated;
+           var entity = _rideRequestRepository.AddRequest(_mapper.Map<RideRequestDto, RideRequest>(requestDto));
+
+            var driverNote = _driverNoteLogic.GetNoteByRide(requestDto.RideId);
+
+
+            _driverSeenNoteReposiotory.AddNote(new DriverSeenNote { RideRequestId = entity.RideRequestId, DriverNoteId = driverNote.DriverNoteId });
+
+            if (requestDto.RequestNote != null)
+            {
+                _rideRequestNoteLogic.AddNote(new RideRequestNoteDto { RideRequestId = entity.RideRequestId, Text = requestDto.RequestNote });
+            }
         }
 
-        public bool UpdateRequest(RideRequestDto request)
+        public void UpdateRequest(RideRequestDto request)
         {
-            request.SeenByPassenger = false;
-            var isUpdated =_rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
-            if (isUpdated && request.Status == Dto.Status.ACCEPTED)
+            var entityRequest = _rideRequestRepository.GetRequestById(request.RideRequestId);
+            var previousStatus = _mapper.Map<Db.Entities.Status, Dto.Status>(entityRequest.Status);
+
+            if(request.Status == previousStatus)
             {
-                var entityRequest = _rideRequestRepository.GetRequestById(request.RequestId);      
-                var rideToUpdate = _rideLogic.GetRideById(request.RideId);
+                return; // Should exception be thrown ? This is unexpected behavior, though returning prevents any undesired consequences
+            }
+
+            if (request.Status == Dto.Status.CANCELED)
+            {
+                request.SeenByDriver = false;
+                request.SeenByPassenger = true;
+
+            }
+            else
+            {
+                request.SeenByDriver = true;
+                request.SeenByPassenger = false;
+            }
+            var rideToUpdate = _rideLogic.GetRideById(request.RideId);
+
+            if (request.Status == Dto.Status.ACCEPTED && previousStatus == Dto.Status.WAITING)
+            {
                 if (rideToUpdate.NumberOfSeats != 0)
                 {
-                    var added = _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
-                    if (added)
+                    if (_passengerLogic.IsUserAlreadyAPassenger(request.RideId, entityRequest.PassengerEmail))
                     {
-                        rideToUpdate.NumberOfSeats--;
-                        var updatedSeats = _rideLogic.UpdateRide(rideToUpdate);
+                        throw new AlreadyAPassengerException();
                     }
-                    return true;
-                } else
+                    else
+                    {
+                        _passengerLogic.AddPassenger(new PassengerDto { Email = entityRequest.PassengerEmail, RideId = request.RideId, Completed = false });
+                        rideToUpdate.NumberOfSeats--;
+                        _rideLogic.UpdateRide(rideToUpdate);
+                    }
+                }
+                else
                 {
-                    return false;
+                    throw new NoSeatsInRideException();
                 }
             }
-            return isUpdated;
+            else if (request.Status == Dto.Status.CANCELED && previousStatus == Dto.Status.ACCEPTED)
+            {
+                _passengerLogic.RemovePassenger(entityRequest.PassengerEmail, request.RideId);
+                rideToUpdate.NumberOfSeats++;
+                _rideLogic.UpdateRide(rideToUpdate);
+            }
+            _rideRequestRepository.UpdateRequest(_mapper.Map<RideRequestDto, RideRequest>(request));
         }
 
         void IRideRequestLogic.SeenByPassenger(int[] requests)
@@ -81,111 +152,115 @@ namespace ShareCar.Logic.RideRequest_Logic
             _rideRequestRepository.SeenByDriver(requests);
         }
 
-        public async Task<IEnumerable<RideRequestDto>> GetUsersRequests(bool driver, string email)
-        {
-
-            IEnumerable<RideRequest> entityRequest;
-            if (driver)
-            {
-                entityRequest = _rideRequestRepository.GetDriverRequests(email);                
-            }
-            else
-            {
-                entityRequest = _rideRequestRepository.GetPassengerRequests(email);
-            }
-           
-               IEnumerable<RideRequestDto> converted =  await ConvertRequestsToDtoAsync(entityRequest, driver);
-            return SortRequests(converted);
-            }       
-        
-        public List<RideRequestDto> SortRequests(IEnumerable<RideRequestDto> requests)
-        {
-            List<RideRequestDto> sorted = new List<RideRequestDto>();
-
-            foreach(var request in requests)
-            {
-                if(!request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.WAITING)
-                {
-                    sorted.Add(request);
-                }
-            }
-            foreach (var request in requests)
-            {
-                if (request.Status == Dto.Status.ACCEPTED && request.SeenByPassenger)
-                {
-                    sorted.Add(request);
-                }
-            }
-            return sorted;
-
-        }
-
-        public async Task<List<RideRequestDto>> ConvertRequestsToDtoAsync(IEnumerable<RideRequest> entityRequests, bool isDriver)
+        public List<RideRequestDto> ConvertRequestsToDto(IEnumerable<RideRequest> entityRequests, bool isDriver)
         {
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-            
+
             int count = 0;
             foreach (var request in entityRequests)
             {
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
+                var route = _routeLogic.GetRouteByRequest(request.RideRequestId);
 
-             
-                    if (isDriver)
-                    {
-                        var user = await _userManager.FindByEmailAsync(request.PassengerEmail);
-                        dtoRequests[count].PassengerFirstName = user.FirstName;
-                        dtoRequests[count].PassengerLastName = user.LastName;
-                    }
-                    else
-                    {
-                        var user = await _userManager.FindByEmailAsync(request.DriverEmail);
-                        dtoRequests[count].DriverFirstName = user.FirstName;
-                        dtoRequests[count].DriverLastName = user.LastName;
-                    }
+                dtoRequests[count].Route = route;
 
-                    AddressDto address = _addressLogic.GetAddressById(request.AddressId);
-
-                    dtoRequests[count].City = address.City;
-                    dtoRequests[count].Street = address.Street;
-                    dtoRequests[count].HouseNumber = address.Number;
-                    dtoRequests[count].Longtitude = address.Longtitude;
-                    dtoRequests[count].Latitude = address.Latitude;
-               RideDto ride = _rideLogic.GetRideById(request.RideId);
-                if (ride != null) {
-                    dtoRequests[count].RideDate = ride.RideDateTime;
-                    }
+                if (isDriver)
+                {
+                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.PassengerEmail);
+                    dtoRequests[count].PassengerFirstName = user.FirstName;
+                    dtoRequests[count].PassengerLastName = user.LastName;
+                    dtoRequests[count].PassengerPhone = user.Phone;
+                }
                 else
                 {
-                    dtoRequests[count].RideDate = new System.DateTime();
+                    var user = _userLogic.GetUserByEmail(EmailType.LOGIN, request.DriverEmail);
+                    dtoRequests[count].DriverFirstName = user.FirstName;
+                    dtoRequests[count].DriverLastName = user.LastName;
+                    dtoRequests[count].RideDateTime = request.RequestedRide.RideDateTime;
                 }
-                        count++;
+                AddressDto address = _addressLogic.GetAddressById(request.AddressId);
+
+                dtoRequests[count].Address = address;
+                RideDto ride = _rideLogic.GetRideById(request.RideId);
+                count++;
             }
             return dtoRequests;
         }
 
         //Changes request status to deleted
-        public bool DeletedRide(int rideId)
+        public void DeletedRide(int rideId)
         {
             IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetRequestsByRideId(rideId);
-            return _rideRequestRepository.DeletedRide(entityRequests);
+            _rideRequestRepository.DeletedRide(entityRequests);
         }
-        
+
         public List<RideRequestDto> GetAcceptedRequests(string passengerEmail)
         {
             IEnumerable<RideRequest> entityRequests = _rideRequestRepository.GetAcceptedRequests(passengerEmail);
             List<RideRequestDto> dtoRequests = new List<RideRequestDto>();
-            foreach(RideRequest request in entityRequests)
+            foreach (RideRequest request in entityRequests)
             {
                 dtoRequests.Add(_mapper.Map<RideRequest, RideRequestDto>(request));
             }
             return dtoRequests;
         }
+
+        public IEnumerable<RideRequestDto> GetDriverRequests(string email)
+        {
+            IEnumerable<RideRequest> entityRequest;
+            entityRequest = _rideRequestRepository.GetDriverRequests(email);
+
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, true);
+
+            foreach(var request in converted)
+            {
+                var note = _rideRequestNoteLogic.GetNoteByRideRequest(request.RideRequestId);
+                if(note != null)
+                {
+                    request.RequestNote = note.Text;
+                    request.RequestNoteSeen = note.Seen;
+                }
+                else
+                {
+                    request.RequestNoteSeen = true;
+                }
+            }
+
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
+        }
+
+        public IEnumerable<RideRequestDto> GetPassengerRequests(string email)
+        {
+            IEnumerable<RideRequest>  entityRequest = _rideRequestRepository.GetPassengerRequests(email);
+
+            var notes = _rideRequestNoteLogic.GetNoteByPassenger(email);
+            var driverSeenNotes =_driverSeenNoteReposiotory.GetNotesByPassenger(email);
+            IEnumerable<RideRequestDto> converted = ConvertRequestsToDto(entityRequest, false);
+
+            foreach(var request in converted)
+            {
+
+                var note = notes.FirstOrDefault(x => x.RideRequestId == request.RideRequestId);
+                var driverNote = _driverNoteLogic.GetNoteByRide(request.RideId);
+
+                if(driverNote != null)
+                {
+                    request.RideNote = driverNote.Text;
+                    request.RideNoteSeen = driverSeenNotes.Single(x => x.RideRequestId == request.RideRequestId).Seen;
+                }
+                else
+                {
+                    request.RideNoteSeen = true;
+                }
+
+                if (note != null)
+                {
+                    request.RequestNote = note.Text;
+                }
+            }
+
+            return converted.OrderByDescending(x => !x.SeenByPassenger).ThenByDescending(x => x.Status == Dto.Status.WAITING).ThenByDescending(x => x.Status == Dto.Status.ACCEPTED).ToList();
+        }
+
     }
 }
